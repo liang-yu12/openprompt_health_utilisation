@@ -2,9 +2,7 @@
 
 This is the code and configuration for op_health_cost_initial.
 
-You can run this project via [Gitpod](https://gitpod.io) in a web browser by clicking on this badge: [![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-908a85?logo=gitpod)](https://gitpod.io/#https://github.com/liang-yu12/op_health_cost_initial)
-
-* The paper is [here]()
+* The ongoing protocol is [here](https://docs.google.com/document/d/1mUlWRJa97_FfA7ByuWhfG3kal0I4RpJcqq-j7TMoFV8/edit)
 * Raw model outputs, including charts, crosstabs, etc, are in `released_outputs/`
 * If you are interested in how we defined our variables, take a look at the [study definition](analysis/study_definition.py); this is written in `python`, but non-programmers should be able to understand what is going on there
 * If you are interested in how we defined our code lists, look in the [codelists folder](./codelists/).
