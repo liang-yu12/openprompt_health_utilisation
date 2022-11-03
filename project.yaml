@@ -5,16 +5,12 @@ expectations:
 
 actions:
 
-  generate_study_population:
-    run: cohortextractor:latest generate_cohort --study-definition study_definition
+  generate_dataset:
+    run: 
+      databuilder:v0 generate_dataset
+        --dataset-definition analysis/dataset_definition.py
+        --dummy-data-file dummy_data.csv
+        --output output/dataset.csv
     outputs:
       highly_sensitive:
-        cohort: output/input.csv
-
-
-  describe:
-    run: r:latest analysis/report.R
-    needs: [generate_study_population]
-    outputs:
-      moderately_sensitive:
-        cohort: output/descriptive.png
+        cohort: output/dataset.csv
