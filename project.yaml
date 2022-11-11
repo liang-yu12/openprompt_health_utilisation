@@ -10,8 +10,14 @@ actions:
       databuilder:v0 generate-dataset
         analysis/dataset_definition.py
         --output output/dataset.csv
+    outputs:
+      highly_sensitive:
+        cohort: output/dataset.csv
+  generate_dataset: 
+    run: 
+      databuilder:v0 generate-dataset
         analysis/dataset_definition_longcovid_gp.py  
         --output output/dataset_lc.csv
     outputs:
       highly_sensitive:
-        cohort: output/dataset.csv
+        cohort: output/dataset_lc.csv
