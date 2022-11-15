@@ -1,4 +1,10 @@
-from cohortextractor import (codelist, codelist_from_csv, combine_codelists)
+from databuilder.codes import REGISTRY, Codelist, codelist_from_csv
+
+def combine_codelists(*codelists):
+    codes = set()
+    for codelist in codelists:
+        codes.update(codelist.codes)
+    return Codelist(codes=codes, category_maps={})
 
 
 # import different codelists:
