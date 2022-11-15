@@ -15,19 +15,19 @@ def combine_codelists(*codelists):
 
 # import different codelists:
 long_covid_assessment_codes = codelist_from_csv(
-    "codelists\opensafely-assessment-instruments-and-outcome-measures-for-long-covid.csv",
+    "codelists/opensafely-assessment-instruments-and-outcome-measures-for-long-covid.csv",
     system="snomedct", 
     column = "code"
 )     
     
 long_covid_dx_codes =  codelist_from_csv(
-    "codelists\opensafely-nice-managing-the-long-term-effects-of-covid-19.csv",
+    "codelists/opensafely-nice-managing-the-long-term-effects-of-covid-19.csv",
     system="snomedct", 
     column = "code"
 ) 
 
 long_covid_referral_codes = codelist_from_csv(
-    "codelists\opensafely-referral-and-signposting-for-long-covid.csv",
+    "codelists/opensafely-referral-and-signposting-for-long-covid.csv",
     system="snomedct", 
     column = "code"
 ) 
@@ -40,11 +40,12 @@ lc_codelists_combined = combine_codelists(
 )
 
 # 2. Filter people with the diagnoses, keep the earliest record
-lc_dx = clinical_events.snomedct_code.is_in(lc_codelists_combined) \
+lc_dx = clinical_events.take(clinical_events.snomedct_code.is_in(lc_codelists_combined)) \
     .sort_by(clinical_events.date) \
     .first_for_patient()
 
 # generate dummy tidy dataset
 dataset = Dataset()
-dataset.set_population(lc_dx)
-dataset.dx_date = clinical_events.date
+dataset.set_population(lc_dx.exists_for_patient())
+dataset.dx_date = lc_dx.date
+dataset.lc_dx=lc_dx.snomedct_code
