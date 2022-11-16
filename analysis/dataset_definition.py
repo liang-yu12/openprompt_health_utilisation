@@ -3,7 +3,7 @@ from datetime import date
 from databuilder.ehrql import Dataset
 from databuilder.tables.beta.tpp import patients, practice_registrations, clinical_events
 
-from codelists_ehrql import lc_codelists_combined
+from codelists import lc_codelists_combined
 
 index_date = date(2020, 11, 1)
 age = patients.date_of_birth.difference_in_years(index_date)
