@@ -1,7 +1,8 @@
 from datetime import date
 
 from databuilder.ehrql import Dataset
-from databuilder.tables.beta.tpp import patients, practice_registrations, clinical_events
+from databuilder.tables.beta.tpp import patients, practice_registrations, clinical_events, \
+    sgss_covid_all_tests
 
 from codelists import lc_codelists_combined
 
@@ -24,6 +25,12 @@ lc_dx = clinical_events.take(clinical_events.snomedct_code.is_in(lc_codelists_co
     .sort_by(clinical_events.date) \
     .first_for_patient()
 
+# covid tests
+latest_test_before_diagnosis = sgss_covid_all_tests \
+    .take(sgss_covid_all_tests.is_positive) \
+    .drop(sgss_covid_all_tests.specimen_taken_date >= lc_dx.date.subtract_days(30)) \
+    .sort_by(sgss_covid_all_tests.specimen_taken_date).last_for_patient()
+
 dataset = Dataset()
 dataset.set_population((age >= 18) & registration.exists_for_patient())
 dataset.age = age
@@ -31,3 +38,5 @@ dataset.registration_date = registration.start_date
 dataset.historical_comparison_group = historical_registration.exists_for_patient()
 dataset.has_lc_dx = lc_dx.exists_for_patient()
 dataset.dx_date = lc_dx.date
+dataset.has_positive_covid_test = latest_test_before_diagnosis.exists_for_patient()
+dataset.date_of_latest_positive_test_before_diagnosis = latest_test_before_diagnosis.specimen_taken_date
