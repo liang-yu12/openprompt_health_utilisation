@@ -17,11 +17,8 @@ historical_registration = practice_registrations \
     .drop(practice_registrations.start_date > date(2018, 11, 1)) \
     .drop(practice_registrations.end_date < date(2019, 11, 1))
 
-age_okay = age >= 18
-registered_okay = registration.exists_for_patient()
-
 dataset = Dataset()
-dataset.set_population(age_okay & registered_okay)
+dataset.set_population((age >= 18) & registration.exists_for_patient())
 dataset.age = age
 dataset.registration_date = registration.start_date
 dataset.historical_comparison_group = historical_registration.exists_for_patient()
