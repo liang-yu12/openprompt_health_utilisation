@@ -6,6 +6,7 @@ __pycache__
 /output/*
 metadata/*
 venv/
+.venv/
 .DS_Store
 .Rhistory
 .Rproj.user/
