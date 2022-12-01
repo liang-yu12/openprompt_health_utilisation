@@ -1,79 +1,42 @@
 from datetime import date
 
-from databuilder.ehrql import Dataset
-from databuilder.tables.beta.tpp import (
-    patients, 
-    addresses,
-    practice_registrations,
-    vaccinations,
-)
+from databuilder.ehrql import Dataset, days, years
+from databuilder.tables.beta.tpp import patients, practice_registrations, clinical_events, \
+    sgss_covid_all_tests
 
-# Index date issue: How to defining comparator groups' index date 
-# 1. For people with long COVID: the date being diagnosed as COVID. 
-# 2. For people with COVID but no long COVID: 4 weeks after COVID diagnosis; match diagnostic month with LC people
-# 3. For people without COVID: match diagnostic month of LC people
+from codelists import lc_codelists_combined
 
 index_date = date(2020, 11, 1)
-age = patients.date_of_birth.difference_in_years(index_date)
+age = (index_date - patients.date_of_birth).years
 
-
-# end of follow-up 
-# - Death
-# - End of registration
-# - end of follow-up 1 year after index date. 
-# - Final date: 2022-12-31
-
-# Age
-age_okay = age >= 18
-
-# Sex
-
-# Ethnicity 
-# # ?????
-
-# IMD
-# # 1. drop the start date records after index date
-# # 2. sort the date, keep the latest
-
-index_date_address = addresses.drop(addresses.start_date > index_date) \
-    .sort_by(addresses.start_date) \
-    .last_for_patient()
-
-# Region
-# # practice_registrations.practice_stp
-
-
-# GP registration: registered to GP for at leat 1 year 
-# # Current registration
+# current registration
 registration = practice_registrations \
-    .drop(practice_registrations.start_date.difference_in_years(index_date) < 1) \
+    .drop(practice_registrations.start_date > index_date - years(1)) \
     .drop(practice_registrations.end_date <= index_date) \
     .sort_by(practice_registrations.start_date).last_for_patient()
 
-registered_okay = registration.exists_for_patient()
-
-# # Historical registration
+# historical registration
 historical_registration = practice_registrations \
     .drop(practice_registrations.start_date > date(2018, 11, 1)) \
     .drop(practice_registrations.end_date < date(2019, 11, 1))
 
+# long covid diagnoses
+lc_dx = clinical_events.take(clinical_events.snomedct_code.is_in(lc_codelists_combined)) \
+    .sort_by(clinical_events.date) \
+    .first_for_patient()
 
-# Vaccination status:# Goal: record the number of doses (0/1/2/more) before index date
-# class vaccinations(EventFrame):
-#     vaccination_id = Series(int)
-#     date = Series(datetime.date)
-#     target_disease = Series(str)
-#     product_name = Series(str)
-
-# Generate dummy data
+# covid tests
+latest_test_before_diagnosis = sgss_covid_all_tests \
+    .take(sgss_covid_all_tests.is_positive) \
+    .drop(sgss_covid_all_tests.specimen_taken_date >= lc_dx.date - days(30)) \
+    .sort_by(sgss_covid_all_tests.specimen_taken_date).last_for_patient()
 
 dataset = Dataset()
-dataset.set_population(age_okay & registered_okay)
+dataset.set_population((age >= 18) & registration.exists_for_patient())
 dataset.age = age
-dataset.sex = patients.sex
-dataset.imd = index_date_address.imd_rounded
-dataset.urban_rural_classification = index_date_address.rural_urban_classification 
-dataset.region = registration.practice_stp
 dataset.registration_date = registration.start_date
 dataset.historical_comparison_group = historical_registration.exists_for_patient()
-dataset.gp_practice = registration.practice_pseudo_id
+dataset.has_lc_dx = lc_dx.exists_for_patient()
+dataset.dx_date = lc_dx.date
+dataset.has_positive_covid_test = latest_test_before_diagnosis.exists_for_patient()
+dataset.date_of_latest_positive_test_before_diagnosis = latest_test_before_diagnosis.specimen_taken_date

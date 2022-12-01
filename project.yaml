@@ -13,13 +13,3 @@ actions:
     outputs:
       highly_sensitive:
         cohort: output/dataset.csv
-
-
-  generate_longcovid:
-    run: 
-      databuilder:v0 generate-dataset
-        analysis/dataset_definition_longcovid.py
-        --output output/dataset_longcovid.csv
-    outputs:
-      highly_sensitive:
-        cohort: output/dataset_longcovid.csv
