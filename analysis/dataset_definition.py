@@ -12,6 +12,14 @@ from codelists import lc_codelists_combined
 index_date = date(2020, 11, 1)
 age = (index_date - patients.date_of_birth).years
 
+# IMD
+# # 1. drop the start date records after index date
+# # 2. sort the date, keep the latest
+
+index_date_address = addresses.drop(addresses.start_date > index_date) \
+    .sort_by(addresses.start_date) \
+    .last_for_patient()
+
 # current registration
 registration = practice_registrations \
     .drop(practice_registrations.start_date > index_date - years(1)) \
@@ -38,6 +46,7 @@ dataset = Dataset()
 dataset.set_population((age >= 18) & registration.exists_for_patient())
 dataset.age = age
 dataset.sex = patients.sex
+dataset.imd = index_date_address.imd_rounded
 dataset.urban_rural_classification = index_date_address.rural_urban_classification 
 dataset.region = registration.practice_stp
 dataset.gp_practice = registration.practice_pseudo_id
