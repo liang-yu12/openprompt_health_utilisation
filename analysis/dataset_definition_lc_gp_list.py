@@ -18,4 +18,5 @@ registration = practice_registrations \
 
 dataset = Dataset()
 dataset.set_population(lc_dx.exists_for_patient())
-dataset.lc_gp_practice = registration.practice_pseudo_id
+dataset.gp_practice = registration.practice_pseudo_id
+# dataset.gp_use_lc_dx == 1
