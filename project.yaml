@@ -5,7 +5,7 @@ expectations:
 
 actions:
 
-  generate_dataset:
+  generate_dataset_exp_lc:
     run: 
       databuilder:v0 generate-dataset
         analysis/dataset_definition_exp_lc.py
@@ -14,7 +14,7 @@ actions:
       highly_sensitive:
         cohort: output/dataset_exp_lc.csv
 
-  generate_dataset:
+  generate_dataset_lc_gp:
     run: 
       databuilder:v0 generate-dataset
         analysis/dataset_definition_lc_gp.py
@@ -24,7 +24,7 @@ actions:
         cohort: output/dataset_lc_gp.csv
 
 
-  generate_dataset:
+  generate_dataset_comparator_large:
     run: 
       databuilder:v0 generate-dataset
         analysis/dataset_definition_comparator_large.py
