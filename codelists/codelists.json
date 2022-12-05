@@ -17,6 +17,12 @@
       "url": "https://codelists.opensafely.org/codelist/opensafely/assessment-instruments-and-outcome-measures-for-long-covid/79c0fa8a/",
       "downloaded_at": "2022-11-11 14:40:04.534396Z",
       "sha": "f09228d28e9a43ea823b4570e7d82ff3714a0010"
+    },
+    "opensafely-ethnicity.csv": {
+      "id": "opensafely/ethnicity/2020-04-27",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/ethnicity/2020-04-27/",
+      "downloaded_at": "2022-12-05 22:28:21.640033Z",
+      "sha": "3d2f3998b71863a80b24d60f6f4282e14191ae13"
     }
   }
 }

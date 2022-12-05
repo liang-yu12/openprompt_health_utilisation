@@ -33,3 +33,9 @@ lc_codelists_combined = combine_codelists(
     long_covid_referral_codes,
     long_covid_assessment_codes
 )
+
+ethnicity = codelist_from_csv(
+    "codelists/opensafely-ethnicity.csv",
+    system="ctv3",
+    column="Code",
+)
