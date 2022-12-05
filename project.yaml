@@ -17,11 +17,11 @@ actions:
   generate_dataset_lc_gp:
     run: 
       databuilder:v0 generate-dataset
-        analysis/dataset_definition_lc_gp.py
-        --output output/dataset_lc_gp.csv
+        analysis/dataset_definition_lc_gp_list.py
+        --output output/dataset_lc_gp_list.csv
     outputs:
       highly_sensitive:
-        cohort: output/dataset_lc_gp.csv
+        cohort: output/dataset_lc_gp_list.csv
 
 
   generate_dataset_comparator_large:
