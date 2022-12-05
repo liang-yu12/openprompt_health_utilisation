@@ -8,8 +8,27 @@ actions:
   generate_dataset:
     run: 
       databuilder:v0 generate-dataset
-        analysis/dataset_definition.py
-        --output output/dataset.csv
+        analysis/dataset_definition_exp_lc.py
+        --output output/dataset_exp_lc.csv
     outputs:
       highly_sensitive:
-        cohort: output/dataset.csv
+        cohort: output/dataset_exp_lc.csv
+
+  generate_dataset:
+    run: 
+      databuilder:v0 generate-dataset
+        analysis/dataset_definition_lc_gp.py
+        --output output/dataset_lc_gp.csv
+    outputs:
+      highly_sensitive:
+        cohort: output/dataset_lc_gp.csv
+
+
+  generate_dataset:
+    run: 
+      databuilder:v0 generate-dataset
+        analysis/dataset_definition_comparator_large.py
+        --output output/dataset_comparator_large.csv
+    outputs:
+      highly_sensitive:
+        cohort: output/dataset_comparator_large.csv
