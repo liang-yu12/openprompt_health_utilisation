@@ -5,7 +5,6 @@ from databuilder.tables.beta.tpp import (
     patients, addresses, 
     practice_registrations, clinical_events,
     sgss_covid_all_tests,
-    vaccinations
 )
 from codelists import lc_codelists_combined
 
