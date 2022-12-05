@@ -7,9 +7,17 @@ from databuilder.tables.beta.tpp import (
     sgss_covid_all_tests,
 )
 from codelists import lc_codelists_combined
+import codelists
 
 index_date = date(2020, 11, 1)
 age = (index_date - patients.date_of_birth).years
+
+# Ethnicity
+
+ethnicity = clinical_events.take(clinical_events.ctv3_code.is_in(codelists.ethnicity)) \
+    .sort_by(clinical_events.date) \
+    .last_for_patient() \
+    .ctv3_code.to_category(codelists.ethnicity.Grouping_6)
 
 # IMD
 # # 1. drop the start date records after index date
@@ -45,6 +53,7 @@ dataset = Dataset()
 dataset.set_population((age >= 18) & registration.exists_for_patient())
 dataset.age = age
 dataset.sex = patients.sex
+dataset.ethnicity = ethnicity
 dataset.imd = index_date_address.imd_rounded
 dataset.urban_rural_classification = index_date_address.rural_urban_classification 
 dataset.region = registration.practice_stp
