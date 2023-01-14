@@ -2,9 +2,9 @@ from datetime import date
 
 from databuilder.ehrql import Dataset, days, years
 from databuilder.tables.beta.tpp import (
-    patients, addresses, 
+    patients, addresses, appointments,
     practice_registrations, clinical_events,
-    sgss_covid_all_tests, ons_deaths,
+    sgss_covid_all_tests, ons_deaths, 
 )
 from codelists import lc_codelists_combined
 import pandas as pd
@@ -41,16 +41,18 @@ death_date = ons_deaths.sort_by(ons_deaths.date) \
     .last_for_patient().date
 end_reg_date = registration.end_date
 
-# end_date = (one_year_after_start + death_date + end_reg_date) doesn't work
+# Q: end_date = (one_year_after_start + death_date + end_reg_date) doesn't work 
 
 
 
 # minimum_for_patient()
 
 
-# gp visit 1 month 
-
-# .count_for_patient()
+# Q: gp visit 1 month 
+gp_app_m1 = appointments \
+    .sort_by(appointments.start_date) \
+    .take(appointments.start_date >= lc_dx.date) \
+    .drop(appointments.start_date >= (lc_dx.date + 30)).count_for_patient()
 
 
 dataset = Dataset()
@@ -65,4 +67,5 @@ dataset.covid_dx_month = latest_test_before_diagnosis.specimen_taken_date.to_fir
 dataset.long_covid_dx = lc_dx.exists_for_patient()
 dataset.long_covid_dx_date = lc_dx.date
 dataset.index_date = lc_dx.date
+dataset.gp_visit_m1 = gp_app_m1
 # dataset.end_date = end_follow / death_date / end_reg_date
