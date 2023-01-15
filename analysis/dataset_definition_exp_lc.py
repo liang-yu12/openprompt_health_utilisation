@@ -50,9 +50,8 @@ end_reg_date = registration.end_date
 
 # Q: gp visit 1 month 
 gp_app_m1 = appointments \
-    .sort_by(appointments.start_date) \
-    .take(appointments.start_date >= lc_dx.date) \
-    .drop(appointments.start_date >= (lc_dx.date + 30)).count_for_patient()
+    .take((appointments.start_date >= lc_dx.date) & appointments.start_date <= (lc_dx.date + days(30))) \
+    .count_for_patient()
 
 
 dataset = Dataset()
