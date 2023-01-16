@@ -39,9 +39,9 @@ one_year_after_start = lc_dx.date + days(365)
 death_date = ons_deaths.sort_by(ons_deaths.date) \
     .last_for_patient().date
 end_reg_date = registration.end_date
-# lc_cure = clinical_events.take(clinical_events.snomedct_code.is_in("1326351000000108")) \
-#     .sort_by(clinical_events.date) \
-#     .first_for_patient()
+lc_cure = clinical_events.take(clinical_events.snomedct_code.is_in(1326351000000108)) \
+    .sort_by(clinical_events.date) \
+    .first_for_patient()
 # #first recorded lc cure date
 
 # GP visit 1 month after index date
