@@ -23,7 +23,6 @@ actions:
       highly_sensitive:
         cohort: output/dataset_lc_gp_list.csv
 
-
   generate_dataset_comparator_large:
     run: 
       databuilder:v0 generate-dataset
@@ -32,3 +31,11 @@ actions:
     outputs:
       highly_sensitive:
         cohort: output/dataset_comparator_large.csv
+
+  generate_dataset_comparator_filtered_gp:
+    run: r:latest analysis/dm01_filter_gp_without_lc_dx.R      
+    outputs:
+      highly_sensitive:
+        cohort: output/dataset_comparator_filtered_gp.csv
+
+
