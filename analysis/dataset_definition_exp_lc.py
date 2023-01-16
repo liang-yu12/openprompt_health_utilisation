@@ -32,25 +32,21 @@ latest_test_before_diagnosis = sgss_covid_all_tests \
     .drop(sgss_covid_all_tests.specimen_taken_date >= lc_dx.date - days(30)) \
     .sort_by(sgss_covid_all_tests.specimen_taken_date) \
     .last_for_patient()
-# only need the diagnostic month for sensitivity analysis matching
+# # only need the diagnostic month for sensitivity analysis matching
 
-
-# define end date: lc dx date +12 | death | derigistration
+# define end date: lc dx date +12 | death | derigistration | post COVID-19 syndrome resolved
 one_year_after_start = lc_dx.date + days(365) 
 death_date = ons_deaths.sort_by(ons_deaths.date) \
     .last_for_patient().date
 end_reg_date = registration.end_date
+lc_cure = clinical_events.take(clinical_events.snomedct_code.is_in("1326351000000108")) \
+    .sort_by(clinical_events.date) \
+    .first_for_patient()
+# #first recorded lc cure date
 
-# Q: end_date = (one_year_after_start + death_date + end_reg_date) doesn't work 
-
-
-
-# minimum_for_patient()
-
-
-# Q: gp visit 1 month 
+# GP visit 1 month after index date
 gp_app_m1 = appointments \
-    .take((appointments.start_date >= lc_dx.date) & appointments.start_date <= (lc_dx.date + days(30))) \
+    .take((appointments.start_date >= lc_dx.date) & (appointments.start_date <= (lc_dx.date + days(30)))) \
     .count_for_patient()
 
 
@@ -66,5 +62,8 @@ dataset.covid_dx_month = latest_test_before_diagnosis.specimen_taken_date.to_fir
 dataset.long_covid_dx = lc_dx.exists_for_patient()
 dataset.long_covid_dx_date = lc_dx.date
 dataset.index_date = lc_dx.date
+dataset.end_1y_after_index = one_year_after_start
+dataset.end_death = death_date
+dataset.end_deregist = end_reg_date
+dataset.end_lc_cure = lc_cure.date
 dataset.gp_visit_m1 = gp_app_m1
-# dataset.end_date = end_follow / death_date / end_reg_date
