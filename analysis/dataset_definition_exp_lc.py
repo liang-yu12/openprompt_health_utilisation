@@ -39,9 +39,9 @@ one_year_after_start = lc_dx.date + days(365)
 death_date = ons_deaths.sort_by(ons_deaths.date) \
     .last_for_patient().date
 end_reg_date = registration.end_date
-lc_cure = clinical_events.take(clinical_events.snomedct_code.is_in("1326351000000108")) \
-    .sort_by(clinical_events.date) \
-    .first_for_patient()
+# lc_cure = clinical_events.take(clinical_events.snomedct_code.is_in("1326351000000108")) \
+#     .sort_by(clinical_events.date) \
+#     .first_for_patient()
 # #first recorded lc cure date
 
 # GP visit 1 month after index date
@@ -49,6 +49,60 @@ gp_app_m1 = appointments \
     .take((appointments.start_date >= lc_dx.date) & (appointments.start_date <= (lc_dx.date + days(30)))) \
     .count_for_patient()
 
+# GP visit 2 month after index date
+gp_app_m2 = appointments \
+    .take((appointments.start_date >= lc_dx.date) & (appointments.start_date <= (lc_dx.date + days(60)))) \
+    .count_for_patient()
+
+# GP visit 3 month after index date
+gp_app_m3 = appointments \
+    .take((appointments.start_date >= lc_dx.date) & (appointments.start_date <= (lc_dx.date + days(90)))) \
+    .count_for_patient()
+
+# GP visit 4 month after index date
+gp_app_m4 = appointments \
+    .take((appointments.start_date >= lc_dx.date) & (appointments.start_date <= (lc_dx.date + days(120)))) \
+    .count_for_patient()
+
+# GP visit 5 month after index date
+gp_app_m5 = appointments \
+    .take((appointments.start_date >= lc_dx.date) & (appointments.start_date <= (lc_dx.date + days(150)))) \
+    .count_for_patient()
+
+# GP visit 6 month after index date
+gp_app_m6 = appointments \
+    .take((appointments.start_date >= lc_dx.date) & (appointments.start_date <= (lc_dx.date + days(180)))) \
+    .count_for_patient()
+
+# GP visit 7 month after index date
+gp_app_m7 = appointments \
+    .take((appointments.start_date >= lc_dx.date) & (appointments.start_date <= (lc_dx.date + days(210)))) \
+    .count_for_patient()
+
+# GP visit 8 month after index date
+gp_app_m8 = appointments \
+    .take((appointments.start_date >= lc_dx.date) & (appointments.start_date <= (lc_dx.date + days(240)))) \
+    .count_for_patient()
+
+# GP visit 9 months after index date
+gp_app_m9 = appointments \
+    .take((appointments.start_date >= lc_dx.date) & (appointments.start_date <= (lc_dx.date + days(270)))) \
+    .count_for_patient()
+
+# GP visit 10 months after index date
+gp_app_m10 = appointments \
+    .take((appointments.start_date >= lc_dx.date) & (appointments.start_date <= (lc_dx.date + days(300)))) \
+    .count_for_patient()
+
+# GP visit 11 months after index date
+gp_app_m11 = appointments \
+    .take((appointments.start_date >= lc_dx.date) & (appointments.start_date <= (lc_dx.date + days(330)))) \
+    .count_for_patient()
+
+# GP visit 12 months after index date
+gp_app_m12 = appointments \
+    .take((appointments.start_date >= lc_dx.date) & (appointments.start_date <= (lc_dx.date + days(360)))) \
+    .count_for_patient()
 
 dataset = Dataset()
 dataset.set_population((age >= 18) & registration.exists_for_patient())
@@ -65,5 +119,16 @@ dataset.index_date = lc_dx.date
 dataset.end_1y_after_index = one_year_after_start
 dataset.end_death = death_date
 dataset.end_deregist = end_reg_date
-dataset.end_lc_cure = lc_cure.date
+# dataset.end_lc_cure = lc_cure.date
 dataset.gp_visit_m1 = gp_app_m1
+dataset.gp_visit_m2 = gp_app_m2
+dataset.gp_visit_m3 = gp_app_m3
+dataset.gp_visit_m4 = gp_app_m4
+dataset.gp_visit_m5 = gp_app_m5
+dataset.gp_visit_m6 = gp_app_m6
+dataset.gp_visit_m7 = gp_app_m7
+dataset.gp_visit_m8 = gp_app_m8
+dataset.gp_visit_m9 = gp_app_m9
+dataset.gp_visit_m10 = gp_app_m10
+dataset.gp_visit_m11 = gp_app_m11
+dataset.gp_visit_m12 = gp_app_m12
