@@ -3,7 +3,7 @@ library(magrittr)
 
 # make a list of GP using long COVID diagnosis
 gp_list <- unlist(
-  fread(here::here("output","dataset_lc_gp_list.csv"), 
+  fread(here::here("./output","dataset_lc_gp_list.csv"), 
   select = "gp_practice")
 )
 
