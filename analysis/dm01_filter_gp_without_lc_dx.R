@@ -2,7 +2,7 @@ library(data.table)
 library(magrittr)
 
 # make a list of GP using long COVID diagnosis
-gp_list_data <- fread(here::here("output","dataset_lc_gp_list.csv")
+gp_list_data <- fread(here::here("output","dataset_lc_gp_list.csv"))
 
 
 
