@@ -6,8 +6,8 @@ from databuilder.tables.beta.tpp import (
     practice_registrations, clinical_events,
     sgss_covid_all_tests, ons_deaths, 
 )
+from databuilder.codes import SNOMEDCTCode
 from codelists import lc_codelists_combined
-import pandas as pd
 import codelists
 
 study_start_date = date(2020, 11, 1)
@@ -39,7 +39,7 @@ one_year_after_start = lc_dx.date + days(365)
 death_date = ons_deaths.sort_by(ons_deaths.date) \
     .last_for_patient().date
 end_reg_date = registration.end_date
-lc_cure = clinical_events.take(clinical_events.snomedct_code.is_in(1326351000000108)) \
+lc_cure = clinical_events.take(clinical_events.snomedct_code ==  SNOMEDCTCode("1326351000000108")) \
     .sort_by(clinical_events.date) \
     .first_for_patient()
 # #first recorded lc cure date
