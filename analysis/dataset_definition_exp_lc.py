@@ -2,13 +2,14 @@ from datetime import date
 
 from databuilder.ehrql import Dataset, days, years
 from databuilder.tables.beta.tpp import (
-    patients, addresses, appointments,
+    patients, addresses,
     practice_registrations, clinical_events,
     sgss_covid_all_tests, ons_deaths, 
 )
 from databuilder.codes import SNOMEDCTCode
 from codelists import lc_codelists_combined
 import codelists
+from variables import add_visits
 
 study_start_date = date(2020, 11, 1)
 
@@ -44,66 +45,6 @@ lc_cure = clinical_events.take(clinical_events.snomedct_code ==  SNOMEDCTCode("1
     .first_for_patient()
 # #first recorded lc cure date
 
-# GP visit 1 month after index date
-gp_app_m1 = appointments \
-    .take((appointments.start_date >= lc_dx.date) & (appointments.start_date <= (lc_dx.date + days(30)))) \
-    .count_for_patient()
-
-# GP visit 2 month after index date
-gp_app_m2 = appointments \
-    .take((appointments.start_date >= lc_dx.date) & (appointments.start_date <= (lc_dx.date + days(60)))) \
-    .count_for_patient()
-
-# GP visit 3 month after index date
-gp_app_m3 = appointments \
-    .take((appointments.start_date >= lc_dx.date) & (appointments.start_date <= (lc_dx.date + days(90)))) \
-    .count_for_patient()
-
-# GP visit 4 month after index date
-gp_app_m4 = appointments \
-    .take((appointments.start_date >= lc_dx.date) & (appointments.start_date <= (lc_dx.date + days(120)))) \
-    .count_for_patient()
-
-# GP visit 5 month after index date
-gp_app_m5 = appointments \
-    .take((appointments.start_date >= lc_dx.date) & (appointments.start_date <= (lc_dx.date + days(150)))) \
-    .count_for_patient()
-
-# GP visit 6 month after index date
-gp_app_m6 = appointments \
-    .take((appointments.start_date >= lc_dx.date) & (appointments.start_date <= (lc_dx.date + days(180)))) \
-    .count_for_patient()
-
-# GP visit 7 month after index date
-gp_app_m7 = appointments \
-    .take((appointments.start_date >= lc_dx.date) & (appointments.start_date <= (lc_dx.date + days(210)))) \
-    .count_for_patient()
-
-# GP visit 8 month after index date
-gp_app_m8 = appointments \
-    .take((appointments.start_date >= lc_dx.date) & (appointments.start_date <= (lc_dx.date + days(240)))) \
-    .count_for_patient()
-
-# GP visit 9 months after index date
-gp_app_m9 = appointments \
-    .take((appointments.start_date >= lc_dx.date) & (appointments.start_date <= (lc_dx.date + days(270)))) \
-    .count_for_patient()
-
-# GP visit 10 months after index date
-gp_app_m10 = appointments \
-    .take((appointments.start_date >= lc_dx.date) & (appointments.start_date <= (lc_dx.date + days(300)))) \
-    .count_for_patient()
-
-# GP visit 11 months after index date
-gp_app_m11 = appointments \
-    .take((appointments.start_date >= lc_dx.date) & (appointments.start_date <= (lc_dx.date + days(330)))) \
-    .count_for_patient()
-
-# GP visit 12 months after index date
-gp_app_m12 = appointments \
-    .take((appointments.start_date >= lc_dx.date) & (appointments.start_date <= (lc_dx.date + days(360)))) \
-    .count_for_patient()
-
 dataset = Dataset()
 dataset.set_population((age >= 18) & registration.exists_for_patient())
 dataset.age = age
@@ -120,15 +61,16 @@ dataset.end_1y_after_index = one_year_after_start
 dataset.end_death = death_date
 dataset.end_deregist = end_reg_date
 # dataset.end_lc_cure = lc_cure.date
-dataset.gp_visit_m1 = gp_app_m1
-dataset.gp_visit_m2 = gp_app_m2
-dataset.gp_visit_m3 = gp_app_m3
-dataset.gp_visit_m4 = gp_app_m4
-dataset.gp_visit_m5 = gp_app_m5
-dataset.gp_visit_m6 = gp_app_m6
-dataset.gp_visit_m7 = gp_app_m7
-dataset.gp_visit_m8 = gp_app_m8
-dataset.gp_visit_m9 = gp_app_m9
-dataset.gp_visit_m10 = gp_app_m10
-dataset.gp_visit_m11 = gp_app_m11
-dataset.gp_visit_m12 = gp_app_m12
+
+add_visits(dataset, lc_dx.date, num_months=1)
+add_visits(dataset, lc_dx.date, num_months=2)
+add_visits(dataset, lc_dx.date, num_months=3)
+add_visits(dataset, lc_dx.date, num_months=4)
+add_visits(dataset, lc_dx.date, num_months=5)
+add_visits(dataset, lc_dx.date, num_months=6)
+add_visits(dataset, lc_dx.date, num_months=7)
+add_visits(dataset, lc_dx.date, num_months=8)
+add_visits(dataset, lc_dx.date, num_months=9)
+add_visits(dataset, lc_dx.date, num_months=10)
+add_visits(dataset, lc_dx.date, num_months=11)
+add_visits(dataset, lc_dx.date, num_months=12)
