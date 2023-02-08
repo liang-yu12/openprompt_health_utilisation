@@ -2,7 +2,7 @@ from datetime import date
 
 from databuilder.ehrql import Dataset, days, years
 from databuilder.tables.beta.tpp import (
-    patients, addresses,
+    patients, addresses, appointments,
     practice_registrations, clinical_events,
     sgss_covid_all_tests, ons_deaths, 
 )
@@ -44,6 +44,7 @@ lc_cure = clinical_events.take(clinical_events.snomedct_code ==  SNOMEDCTCode("1
     .sort_by(clinical_events.date) \
     .first_for_patient()
 # #first recorded lc cure date
+
 
 dataset = Dataset()
 dataset.set_population((age >= 18) & registration.exists_for_patient())
