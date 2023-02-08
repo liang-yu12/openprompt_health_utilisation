@@ -4,7 +4,7 @@ from databuilder.ehrql import Dataset, days, years
 from databuilder.tables.beta.tpp import (
     patients, addresses, appointments,
     practice_registrations, clinical_events,
-    sgss_covid_all_tests, ons_deaths, 
+    sgss_covid_all_tests, ons_deaths, hospital_admissions,
 )
 from databuilder.codes import SNOMEDCTCode
 from codelists import lc_codelists_combined
@@ -45,6 +45,10 @@ lc_cure = clinical_events.take(clinical_events.snomedct_code ==  SNOMEDCTCode("1
     .first_for_patient()
 # #first recorded lc cure date
 
+# Admission times and length
+hospital = hospital_admissions \
+    .take(hospital_admissions.admission_date >= lc_dx.date) \
+    .
 
 dataset = Dataset()
 dataset.set_population((age >= 18) & registration.exists_for_patient())
@@ -75,3 +79,5 @@ add_visits(dataset, lc_dx.date, num_months=9)
 add_visits(dataset, lc_dx.date, num_months=10)
 add_visits(dataset, lc_dx.date, num_months=11)
 add_visits(dataset, lc_dx.date, num_months=12)
+
+
