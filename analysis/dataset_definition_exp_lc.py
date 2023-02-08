@@ -46,9 +46,8 @@ lc_cure = clinical_events.take(clinical_events.snomedct_code ==  SNOMEDCTCode("1
 # #first recorded lc cure date
 
 # Admission times and length
-hospital = hospital_admissions \
-    .take(hospital_admissions.admission_date >= lc_dx.date) \
-    .
+# hospital = hospital_admissions \
+#    .take(hospital_admissions.admission_date >= lc_dx.date) \
 
 dataset = Dataset()
 dataset.set_population((age >= 18) & registration.exists_for_patient())
