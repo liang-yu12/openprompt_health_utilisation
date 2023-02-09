@@ -13,12 +13,11 @@ match(
         "region": "category",
     },
     closest_match_variables=["age"],
+    index_date_variable = "index_date",
     replace_match_index_date_with_case="no_effect", 
     date_exclusion_variables={
         "death_date": "before",
         "dereg_date": "before",
-        "first_known_covid19": "before",
-        "covid_hosp": "before"
     },
     #  indicator_variable_name="indicatorVariableName", 
     output_suffix="_2019_stp10",
