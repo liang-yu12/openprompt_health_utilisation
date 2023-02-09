@@ -32,12 +32,12 @@ actions:
       highly_sensitive:
         cohort: output/dataset_comparator_large.csv
 
-  # generate_dataset_comparator_filtered_gp:
-  #   run: r:latest analysis/dm01_filter_gp_without_lc_dx.R      
-  #   needs: [generate_dataset_comparator_large, generate_dataset_lc_gp]
-  #   outputs:
-  #     highly_sensitive:
-  #       cohort: output/dataset_comparator_filtered_gp.csv
+  generate_dataset_comparator_filtered_gp:
+    run: r:latest analysis/dm01_filter_gp_without_lc_dx.R      
+    needs: [generate_dataset_comparator_large, generate_dataset_lc_gp]
+    outputs:
+      highly_sensitive:
+        cohort: output/dataset_comparator_filtered_gp.csv
 
 
   # match_comparators:
