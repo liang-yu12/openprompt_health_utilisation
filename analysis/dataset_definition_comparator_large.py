@@ -35,7 +35,7 @@ latest_test_before_diagnosis = sgss_covid_all_tests \
     .sort_by(sgss_covid_all_tests.specimen_taken_date).last_for_patient()
 
 # Potential end of follow-up before matching
-death_date = ons_deaths.sort_by(ons_deaths.date) \
+end_death = ons_deaths.sort_by(ons_deaths.date) \
     .last_for_patient().date
 end_reg_date = registration.end_date
 lc_dx_date = clinical_events.take(clinical_events.snomedct_code.is_in(lc_codelists_combined)) \
@@ -52,6 +52,6 @@ dataset.registration_date = registration.start_date
 dataset.historical_comparison_group = historical_registration.exists_for_patient()
 dataset.comp_positive_covid_test = latest_test_before_diagnosis.exists_for_patient()
 dataset.date_of_latest_positive_test_before_diagnosis = latest_test_before_diagnosis.specimen_taken_date.to_first_of_month() # only need the month 
-dataset.death_date = death_date
+dataset.end_death= end_death
 dataset.end_reg_date = end_reg_date
 dataset.lc_date = lc_dx_date

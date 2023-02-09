@@ -16,7 +16,7 @@ match(
     index_date_variable = "index_date",
     replace_match_index_date_with_case="no_effect", 
     date_exclusion_variables={
-        "death_date": "before",
+        "end_death": "before",
         "end_reg_date": "before",
         "lc_date": "before",
     },
