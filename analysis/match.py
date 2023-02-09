@@ -6,14 +6,14 @@ from osmatching import match
 match(
     case_csv="output\dataset_exp_lc.csv",
     match_csv="output\dataset_comparator_filtered_gp.csv",
-    matches_per_case=1,
+    matches_per_case=5,
     match_variables={
         "age": 1,
         "sex": "category",
         "region": "category",
     },
-    index_date_variable="case_index_date", 
-    replace_match_index_date_with_case="1_year_earlier", 
+    closest_match_variables=["age"],
+    replace_match_index_date_with_case="no_effect", 
     date_exclusion_variables={
         "death_date": "before",
         "dereg_date": "before",
