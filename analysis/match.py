@@ -21,6 +21,5 @@ match(
         "lc_date": "before",
     },
     #  indicator_variable_name="indicatorVariableName", 
-    output_suffix="matched_comparator_",
     output_path="output",
 )
