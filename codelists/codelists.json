@@ -23,6 +23,12 @@
       "url": "https://codelists.opensafely.org/codelist/opensafely/ethnicity/2020-04-27/",
       "downloaded_at": "2022-12-05 22:28:21.640033Z",
       "sha": "3d2f3998b71863a80b24d60f6f4282e14191ae13"
+    },
+    "opensafely-covid-identification.csv": {
+      "id": "opensafely/covid-identification/7bbfd8eb",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/covid-identification/7bbfd8eb/",
+      "downloaded_at": "2023-02-09 16:56:33.671614Z",
+      "sha": "124db6929439379b7dacd55ba26ae4f2ed9370bc"
     }
   }
 }
