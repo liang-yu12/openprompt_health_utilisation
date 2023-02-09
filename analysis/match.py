@@ -17,9 +17,10 @@ match(
     replace_match_index_date_with_case="no_effect", 
     date_exclusion_variables={
         "death_date": "before",
-        "dereg_date": "before",
+        "end_reg_date": "before",
+        "lc_date": "before",
     },
     #  indicator_variable_name="indicatorVariableName", 
-    output_suffix="_2019_stp10",
+    output_suffix="matched_comparator_",
     output_path="output",
 )
