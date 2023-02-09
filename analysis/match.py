@@ -17,8 +17,8 @@ match(
     replace_match_index_date_with_case="no_effect", 
     date_exclusion_variables={
         "end_death": "before",
-        "end_reg_date": "before",
-        "lc_date": "before",
+        "end_deregist": "before",
+        "long_covid_dx_date": "before",
     },
     #  indicator_variable_name="indicatorVariableName", 
     output_path="output",
