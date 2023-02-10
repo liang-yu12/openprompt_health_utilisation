@@ -20,6 +20,5 @@ match(
         "end_deregist": "before",
         "long_covid_dx_date": "before",
     },
-    #  indicator_variable_name="indicatorVariableName", 
     output_path="output",
 )
