@@ -1,5 +1,5 @@
 from databuilder.codes import REGISTRY, Codelist, codelist_from_csv
-
+from codelists import *
 
 # 1. Deal with codeslist
 def combine_codelists(*codelists):

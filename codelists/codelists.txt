@@ -3,3 +3,12 @@ opensafely/referral-and-signposting-for-long-covid/12d06dc0
 opensafely/assessment-instruments-and-outcome-measures-for-long-covid/79c0fa8a
 opensafely/ethnicity/2020-04-27
 opensafely/covid-identification/7bbfd8eb
+
+opensafely/hiv-snomed/1b5a24e5
+opensafely/lung-cancer-snomed/502bcb45
+opensafely/cancer-excluding-lung-and-haematological-snomed/7ce531c3
+opensafely/haematological-cancer-snomed/3469981a
+
+opensafely/hypertension-snomed/024ab1b0
+opensafely/diabetes-snomed/7a3271cd
+

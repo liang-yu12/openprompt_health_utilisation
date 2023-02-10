@@ -29,6 +29,42 @@
       "url": "https://codelists.opensafely.org/codelist/opensafely/covid-identification/7bbfd8eb/",
       "downloaded_at": "2023-02-09 16:56:33.671614Z",
       "sha": "124db6929439379b7dacd55ba26ae4f2ed9370bc"
+    },
+    "opensafely-hiv-snomed.csv": {
+      "id": "opensafely/hiv-snomed/1b5a24e5",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/hiv-snomed/1b5a24e5/",
+      "downloaded_at": "2023-02-10 17:49:50.112791Z",
+      "sha": "9273c81432c3cfba328a19a1037a0dc2621ef543"
+    },
+    "opensafely-lung-cancer-snomed.csv": {
+      "id": "opensafely/lung-cancer-snomed/502bcb45",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/lung-cancer-snomed/502bcb45/",
+      "downloaded_at": "2023-02-10 17:49:50.242630Z",
+      "sha": "f0debdf1c968242fa8790cd0b773662b8e169f43"
+    },
+    "opensafely-cancer-excluding-lung-and-haematological-snomed.csv": {
+      "id": "opensafely/cancer-excluding-lung-and-haematological-snomed/7ce531c3",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/cancer-excluding-lung-and-haematological-snomed/7ce531c3/",
+      "downloaded_at": "2023-02-10 17:49:50.426943Z",
+      "sha": "d43aff12fcb3b404c635e24f964ba2a368c96c98"
+    },
+    "opensafely-haematological-cancer-snomed.csv": {
+      "id": "opensafely/haematological-cancer-snomed/3469981a",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/haematological-cancer-snomed/3469981a/",
+      "downloaded_at": "2023-02-10 17:49:50.566926Z",
+      "sha": "c87e49e8d2965bc489f9baba670783f15ce73896"
+    },
+    "opensafely-hypertension-snomed.csv": {
+      "id": "opensafely/hypertension-snomed/024ab1b0",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/hypertension-snomed/024ab1b0/",
+      "downloaded_at": "2023-02-10 17:49:50.691251Z",
+      "sha": "5d5471bb6a8a01e362b191b3eb8e80c2febeb1da"
+    },
+    "opensafely-diabetes-snomed.csv": {
+      "id": "opensafely/diabetes-snomed/7a3271cd",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/diabetes-snomed/7a3271cd/",
+      "downloaded_at": "2023-02-10 17:49:50.836436Z",
+      "sha": "c255576081fb4ee8c4daf71445d54b0f1ef0a10e"
     }
   }
 }
