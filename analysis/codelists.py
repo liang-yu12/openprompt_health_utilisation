@@ -34,8 +34,19 @@ lc_codelists_combined = combine_codelists(
     long_covid_assessment_codes
 )
 
+# covariates
+
 ethnicity = codelist_from_csv(
     "codelists/opensafely-ethnicity.csv",
+    system="ctv3",
+    column="Code",
+)
+
+
+
+# Chronic diseases
+htn = codelist_from_csv(
+    "codelists/opensafely/hypertension/2020-04-28",
     system="ctv3",
     column="Code",
 )

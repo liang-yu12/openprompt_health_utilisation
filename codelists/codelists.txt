@@ -4,11 +4,16 @@ opensafely/assessment-instruments-and-outcome-measures-for-long-covid/79c0fa8a
 opensafely/ethnicity/2020-04-27
 opensafely/covid-identification/7bbfd8eb
 
-opensafely/hiv-snomed/1b5a24e5
-opensafely/lung-cancer-snomed/502bcb45
-opensafely/cancer-excluding-lung-and-haematological-snomed/7ce531c3
-opensafely/haematological-cancer-snomed/3469981a
+opensafely/hiv/0d7dbfce
+opensafely/lung-cancer/53469981
+opensafely/cancer-excluding-lung-and-haematological/2020-04-15
+opensafely/haematological-cancer/2020-04-15
+opensafely/multiple-sclerosis-v2/063627df
+opensafely/chronic-inflammatory-demyelinating-polyneuropathy-cidp/38550e49
+opensafely/antiphospholipid-syndrome/3a8c6298
+opensafely/rheumatoid-arthritis/68dc9931
+opensafely/systemic-lupus-erythematosus-sle/36bdb2c7
 
-opensafely/hypertension-snomed/024ab1b0
-opensafely/diabetes-snomed/7a3271cd
+opensafely/hypertension/2020-04-28
+opensafely/diabetes/2020-04-15
 
