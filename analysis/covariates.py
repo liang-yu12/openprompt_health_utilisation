@@ -6,7 +6,7 @@ from databuilder.tables.beta.tpp import (
     practice_registrations, clinical_events,
     sgss_covid_all_tests, ons_deaths, hospital_admissions,
 )
-from databuilder.codes import SNOMEDCTCode
+from databuilder.codes import CTV3Code, DMDCode, ICD10Code, SNOMEDCTCode
 import codelists
 from variables import add_visits
 
@@ -30,8 +30,12 @@ index_date_address = addresses.drop(addresses.start_date > study_start_date) \
     .sort_by(addresses.start_date) \
     .last_for_patient()
 
-# Chronic comorbidities
+
+# Contemporary comorbidities: 
+
 # # Hypertension
+htn = clinical_events.take(clinical_events.)
+
 
 
 
