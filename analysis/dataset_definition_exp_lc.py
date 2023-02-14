@@ -45,12 +45,9 @@ lc_cure = clinical_events.take(clinical_events.snomedct_code ==  SNOMEDCTCode("1
     .first_for_patient()
 # #first recorded lc cure date
 
-# Admission times and length
-# hospital = hospital_admissions \
-#    .take(hospital_admissions.admission_date >= lc_dx.date) \
 
 dataset = Dataset()
-dataset.set_population((age >= 18) & registration.exists_for_patient())
+dataset.set_population((age >= 18) & registration.exists_for_patient() & lc_dx.exists_for_patient())
 dataset.age = age
 dataset.sex = patients.sex
 dataset.region = registration.practice_stp
@@ -58,7 +55,7 @@ dataset.gp_practice = registration.practice_pseudo_id
 dataset.registration_date = registration.start_date
 dataset.covid_positive = latest_test_before_diagnosis.exists_for_patient()
 dataset.covid_dx_month = latest_test_before_diagnosis.specimen_taken_date.to_first_of_month() # only need dx month
-dataset.long_covid_dx = lc_dx.exists_for_patient().take(True)
+dataset.long_covid_dx = lc_dx.exists_for_patient()
 dataset.long_covid_dx_date = lc_dx.date
 dataset.index_date = lc_dx.date
 dataset.end_1y_after_index = one_year_after_start

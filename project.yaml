@@ -40,14 +40,14 @@ actions:
         cohort: output/dataset_comparator_filtered_gp.csv
 
 
-  match_comparators:
-    run:
-      python:latest python analysis/match.py
-    needs: [generate_dataset_comparator_filtered_gp, generate_dataset_exp_lc]
-    outputs: 
-      highly_sensitive:
-        matched_cases: output/matched_cases.csv
-        matched_matches: output/matched_matches.csv
-        matched_all: output/matched_combined.csv
-      moderately_sensitive: 
-        matching_report: output/matching_report.txt
+  # match_comparators:
+  #   run:
+  #     python:latest python analysis/match.py
+  #   needs: [generate_dataset_comparator_filtered_gp, generate_dataset_exp_lc]
+  #   outputs: 
+  #     highly_sensitive:
+  #       matched_cases: output/matched_cases.csv
+  #       matched_matches: output/matched_matches.csv
+  #       matched_all: output/matched_combined.csv
+  #     moderately_sensitive: 
+  #       matching_report: output/matching_report.txt
