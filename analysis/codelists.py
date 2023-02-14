@@ -42,11 +42,3 @@ ethnicity = codelist_from_csv(
     column="Code",
 )
 
-
-
-# Chronic diseases
-htn = codelist_from_csv(
-    "codelists/opensafely/hypertension/2020-04-28",
-    system="ctv3",
-    column="Code",
-)
