@@ -1,6 +1,6 @@
 from datetime import date
 
-from databuilder.ehrql import Dataset, days, years, months
+from databuilder.ehrql import Dataset, days, years
 from databuilder.tables.beta.tpp import (
     patients, addresses, appointments,
     practice_registrations, clinical_events,
@@ -18,7 +18,7 @@ age = (study_start_date - patients.date_of_birth).years
 
 # current registration
 registration = practice_registrations \
-    .drop(practice_registrations.start_date > study_start_date - months(3)) \
+    .drop(practice_registrations.start_date > study_start_date - years(1)) \
     .drop(practice_registrations.end_date <= study_start_date) \
     .sort_by(practice_registrations.start_date).last_for_patient()
 
