@@ -43,5 +43,12 @@ ethnicity = codelist_from_csv(
     column="Code",
 )
 
-
-# 3. 
+# 3. Mental issues:
+psychosis_schizophrenia_bipolar_codes = codelist_from_csv(
+    "codelists/opensafely-psychosis-schizophrenia-bipolar-affective-disease.csv",
+    system="ctv3",
+    column="CTV3Code",
+)
+depression_codes = codelist_from_csv(
+    "codelists/opensafely-depression.csv", system="ctv3", column="CTV3Code"
+)
