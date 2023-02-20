@@ -14,6 +14,5 @@ opensafely/antiphospholipid-syndrome/3a8c6298
 opensafely/rheumatoid-arthritis/68dc9931
 opensafely/systemic-lupus-erythematosus-sle/36bdb2c7
 
-opensafely/hypertension/2020-04-28
-opensafely/diabetes/2020-04-15
-
+opensafely/psychosis-schizophrenia-bipolar-affective-disease/0311653f
+opensafely/depression/1c20d874

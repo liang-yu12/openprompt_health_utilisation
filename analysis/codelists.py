@@ -1,14 +1,15 @@
 from databuilder.codes import REGISTRY, Codelist, codelist_from_csv
 from codelists import *
 
-# 1. Deal with codeslist
+# 0. define a function to combine multiple codeslists
 def combine_codelists(*codelists):
     codes = set()
     for codelist in codelists:
         codes.update(codelist.codes)
     return Codelist(codes=codes, category_maps={})
 
-# import different codelists:
+# 1. Long COVID
+# # import different long COVID codelists:
 long_covid_assessment_codes = codelist_from_csv(
     "codelists/opensafely-assessment-instruments-and-outcome-measures-for-long-covid.csv",
     system="snomedct", 
@@ -27,14 +28,14 @@ long_covid_referral_codes = codelist_from_csv(
     column = "code"
 ) 
 
-# combine long covid codelists
+# # Combine long covid codelists
 lc_codelists_combined = combine_codelists(
     long_covid_dx_codes,
     long_covid_referral_codes,
     long_covid_assessment_codes
 )
 
-# covariates
+# 2. Ethnicities: 
 
 ethnicity = codelist_from_csv(
     "codelists/opensafely-ethnicity.csv",
@@ -42,3 +43,5 @@ ethnicity = codelist_from_csv(
     column="Code",
 )
 
+
+# 3. 

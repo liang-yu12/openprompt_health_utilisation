@@ -35,18 +35,15 @@ index_date_address = addresses.drop(addresses.start_date > study_start_date) \
     .sort_by(addresses.start_date) \
     .last_for_patient()
 
-
-# Contemporary comorbidities: 
-
-# # Hypertension
-htn = clinical_events.take(clinical_events)
-
-
-
-
 # severe immunosuppression
 
 # vaccine dose: at least one dose/one dose/two dose/three doses or more
+
+# Mental issues:
+
+
+
+
 
 # The following codes will be removed later when the importing CSV file function is ready. 
 # Use these codes to test this is working. 
