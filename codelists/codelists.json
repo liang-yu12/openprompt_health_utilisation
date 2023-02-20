@@ -84,17 +84,17 @@
       "downloaded_at": "2023-02-13 11:32:43.975186Z",
       "sha": "a7354e610e9ccc2f22f8e8b9b1a7c329a971aa7c"
     },
-    "opensafely-hypertension.csv": {
-      "id": "opensafely/hypertension/2020-04-28",
-      "url": "https://codelists.opensafely.org/codelist/opensafely/hypertension/2020-04-28/",
-      "downloaded_at": "2023-02-13 11:32:44.091131Z",
-      "sha": "b0d7bbf6ea767366db458bc6f6d37955ae331cc7"
+    "opensafely-psychosis-schizophrenia-bipolar-affective-disease.csv": {
+      "id": "opensafely/psychosis-schizophrenia-bipolar-affective-disease/0311653f",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/psychosis-schizophrenia-bipolar-affective-disease/0311653f/",
+      "downloaded_at": "2023-02-20 14:49:07.810864Z",
+      "sha": "c7c23c83a155cab15a41b21e10e26f33ca17bc3f"
     },
-    "opensafely-diabetes.csv": {
-      "id": "opensafely/diabetes/2020-04-15",
-      "url": "https://codelists.opensafely.org/codelist/opensafely/diabetes/2020-04-15/",
-      "downloaded_at": "2023-02-13 11:32:44.243129Z",
-      "sha": "f2781f0c9a0617b30996d681a798eedd152a09af"
+    "opensafely-depression.csv": {
+      "id": "opensafely/depression/1c20d874",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/depression/1c20d874/",
+      "downloaded_at": "2023-02-20 14:49:07.943862Z",
+      "sha": "654835e97c0cee53307db7ebd8becf48d0e3f31b"
     }
   }
 }
