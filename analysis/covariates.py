@@ -1,3 +1,7 @@
+# Explanation: 
+# These covariates will be added to the matched datasets, so the final set.population 
+# codes will be removed later when the importing CSV file function is enable.
+
 # local variables for defining covariates
 from datetime import date
 from databuilder.ehrql import Dataset, days, years,  case, when
@@ -44,3 +48,5 @@ htn = clinical_events.take(clinical_events)
 
 # vaccine dose: at least one dose/one dose/two dose/three doses or more
 
+# The following codes will be removed later when the importing CSV file function is ready. 
+# Use these codes to test this is working. 
