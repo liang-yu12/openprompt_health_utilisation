@@ -18,6 +18,8 @@ from variables import add_visits
 study_start_date = date(2020, 11, 1)
 
 
+age = (study_start_date - patients.date_of_birth).years
+
 # Ethnicity ---
 
 ethnicity = clinical_events.take(clinical_events.ctv3_code.is_in(codelists.ethnicity)) \
@@ -36,7 +38,7 @@ bmi_record = (
     # Exclude out-of-range values
     .take((clinical_events.numeric_value > 4.0) & (clinical_events.numeric_value < 200.0))
     # Exclude measurements taken when patient was younger than 16
-    .take((clinical_events.date >= tpp.patients.date_of_birth + years(16)) and (clinical_events.date >= study_start_date - years(5)))
+    .take((clinical_events.date >= patients.date_of_birth + years(16)) & (clinical_events.date >= study_start_date - years(5)))
     .sort_by(clinical_events.date)
     .last_for_patient()
 )
@@ -68,8 +70,8 @@ index_date_address = addresses.drop(addresses.start_date > study_start_date) \
 # These codes are used for testing 
 
 dataset = Dataset()
-dataset.set_population()
-dataset.ethnicity = ethnicity..exists_for_patient()
+dataset.set_population(age >= 18)
+dataset.ethnicity = ethnicity
 dataset.bmi = bmi
 dataset.bmi_date = bmi_date
-dataset.imd
+dataset.imd= index_date_address.imd_rounded
