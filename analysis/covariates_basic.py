@@ -56,15 +56,6 @@ index_date_address = addresses.drop(addresses.start_date > study_start_date) \
     .sort_by(addresses.start_date) \
     .last_for_patient()
 
-# severe immunosuppression
-
-# vaccine dose: at least one dose/one dose/two dose/three doses or more
-
-# Mental issues:
-
-
-
-
 
 # The following codes will be removed later when the importing CSV file function is ready. 
 # These codes are used for testing 
