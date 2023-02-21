@@ -43,7 +43,7 @@ bmi_record = (
     .last_for_patient()
 )
 
-bmi = bmi_record.numeric_value
+bmi = bmi_record.numeric_value  # need to categorise them later. 
 bmi_date = bmi_record.date
 
 
