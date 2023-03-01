@@ -17,23 +17,26 @@ from variables import add_visits
 
 study_start_date = date(2020, 11, 1)
 
-# Demographic: ethnicity
-# # Ethnicity
+# age  (only for set.population)
+age = (study_start_date - patients.date_of_birth).years
 
+# Demographic: ethnicity
+# # Ethnicity 
 ethnicity = clinical_events.take(clinical_events.ctv3_code.is_in(codelists.ethnicity)) \
     .sort_by(clinical_events.date) \
     .last_for_patient() \
     .ctv3_code.to_category(codelists.ethnicity.Grouping_6)
 
-# SES: IMD
-
 # IMD
 # # 1. drop the start date records after index date
 # # 2. sort the date, keep the latest
-
-index_date_address = addresses.drop(addresses.start_date > study_start_date) \
+imd = addresses.drop(addresses.start_date > study_start_date) \
     .sort_by(addresses.start_date) \
-    .last_for_patient()
+    .last_for_patient().imd_rounded
+
+# Clinical factors:
+
+
 
 # severe immunosuppression
 
@@ -47,3 +50,7 @@ index_date_address = addresses.drop(addresses.start_date > study_start_date) \
 
 # The following codes will be removed later when the importing CSV file function is ready. 
 # Use these codes to test this is working. 
+dataset = Dataset()
+dataset.set_population(age>= 18)
+dataset.ethnicity = ethnicity
+dataset.imd = imd
