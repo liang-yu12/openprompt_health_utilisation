@@ -13,7 +13,7 @@ from databuilder.tables.beta.tpp import (
 from databuilder.codes import CTV3Code, DMDCode, ICD10Code, SNOMEDCTCode, Codelist
 import codelists
 
-from variables import add_visits
+from variables import add_visits, hospitalisation_diagnosis_matches
 
 study_start_date = date(2020, 11, 1)
 
@@ -54,6 +54,16 @@ bmi_date = bmi_record.date
 
 
 # Clinical factors:
+# 1. hospitalized due to COVID
+covid_hos = hospitalisation_diagnosis_matches(hospital_admissions, codelists.hosp_covid)
+
+    dataset.first_covid_hosp = covid_hospitalisations \
+        .sort_by(covid_hospitalisations.admission_date) \
+        .first_for_patient().admission_date
+    
+    dataset.all_covid_hosp = covid_hospitalisations \
+        .drop(covid_hospitalisations.admission_date >= end_date - days(covid_to_longcovid_lag)) \
+        .count_for_patient()
 
 
 
