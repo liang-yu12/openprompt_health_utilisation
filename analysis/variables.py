@@ -1,9 +1,14 @@
 from databuilder.ehrql import days, case, when
-from databuilder.tables.beta import (
+from databuilder.tables.beta.tpp import (
+    clinical_events,
     emergency_care_attendances,
     hospital_admissions,
-    appointments,
+    patients,
+    practice_registrations,
+    sgss_covid_all_tests,
+    ons_deaths,
 )
+from databuilder.codes import ICD10Code
 from codelists import *
 
 # Function codes for extracting monthly GP visit
