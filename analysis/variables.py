@@ -1,16 +1,41 @@
 from databuilder.ehrql import days, case, when
-from databuilder.tables.beta import tpp as schema
+from databuilder.tables.beta import (
+    emergency_care_attendances,
+    hospital_admissions,
+    appointments,
+)
 from codelists import *
 
+# Function codes for extracting monthly GP visit
 def add_visits(dataset, from_date, num_months):
     # Number of GP visits within `num_months` of `from_date`
     num_visits = appointments \
-        .take((schema.appointments.start_date >= from_date) &
-              (schema.appointments.start_date <= (from_date + days(num_months * 30)))) \
+        .take((appointments.start_date >= from_date) &
+              (appointments.start_date <= (from_date + days(num_months * 30)))) \
         .count_for_patient()
     setattr(dataset, f"gp_visit_m{num_months}", num_visits)
 
-# Codes for extracting hospitalisation records
+# Function codes for A&E visit counts
+def add_ae_visits(dataset, from_date, num_months):
+    # Number of A&E visits within `num_months` of `from_date`
+    num_visits = emergency_care_attendances \
+        .take((emergency_care_attendances.arrival_date >= from_date) &
+              (emergency_care_attendances.arrival_date  <= (from_date + days(num_months * 30)))) \
+        .count_for_patient()
+    setattr(dataset, f"gp_visit_m{num_months}", num_visits)
+
+
+# Function codes for hospitalisation visit counts
+def add_hos_visits(dataset, from_date, num_months):
+    # Number of Hospitalisation within `num_months` of `from_date`
+    num_visits = appointments \
+        .take((emergency_care_attendances.arrival_date >= from_date) &
+              (emergency_care_attendances.arrival_date  <= (from_date + days(num_months * 30)))) \
+        .count_for_patient()
+    setattr(dataset, f"gp_visit_m{num_months}", num_visits)
+
+
+# Function codes for extracting hospitalisation records
 def hospitalisation_diagnosis_matches(admissions, codelist):
   code_strings = set()
   for code in codelist:
@@ -36,3 +61,4 @@ def hospitalisation_diagnosis_matches(admissions, codelist):
     for code_string in code_strings
   ]
   return admissions.take(any_of(conditions))
+
