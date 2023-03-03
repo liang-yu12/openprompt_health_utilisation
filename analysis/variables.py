@@ -1,6 +1,7 @@
 from databuilder.ehrql import days, case, when
 from databuilder.tables.beta.tpp import (
     clinical_events,
+    appointments,
     emergency_care_attendances,
     hospital_admissions,
     patients,
