@@ -12,6 +12,8 @@ from databuilder.tables.beta.tpp import (
 from databuilder.codes import ICD10Code
 from codelists import *
 
+study_start_date = date(2020, 11, 1)
+
 # Function codes for extracting monthly GP visit
 def add_visits(dataset, from_date, num_months):
     # Number of GP visits within `num_months` of `from_date`
@@ -68,3 +70,11 @@ def hospitalisation_diagnosis_matches(admissions, codelist):
   ]
   return admissions.take(any_of(conditions))
 
+
+# Function for extracting clinical factors
+def clinical_dx_matches(clinical_events, codelist):
+  clinical_events.sort(clinical_events.date) \
+    .take(clinical_events.date <=study_start_date) \
+    .take(clinical_events.ctv3_code.is_in(codelist)) \
+    .last_for_patient()
+   

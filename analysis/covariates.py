@@ -73,6 +73,9 @@ previous_covid_hos = hospitalisation_diagnosis_matches(hospital_admissions, code
 
 # severe immunosuppression
 
+## Cancer: 
+cancer
+
 # vaccine dose: at least one dose/one dose/two dose/three doses or more
 
 # Mental issues:
