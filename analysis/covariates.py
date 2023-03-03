@@ -74,7 +74,7 @@ previous_covid_hos = hospitalisation_diagnosis_matches(hospital_admissions, code
 # severe immunosuppression
 
 ## Cancer: 
-cancer
+cancer_all = clinical_dx_matches(clinical_events, cancer_all_combined__codelist)
 
 # vaccine dose: at least one dose/one dose/two dose/three doses or more
 
@@ -93,3 +93,4 @@ dataset.imd = imd
 dataset.bmi = bmi
 dataset.bmi_date = bmi_date
 dataset.previous_covid_hosp = previous_covid_hos.exist.exists_for_patient()
+dataset.cancer_cov = cancer_all.exists_for_patient()
