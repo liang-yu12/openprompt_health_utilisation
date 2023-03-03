@@ -22,7 +22,7 @@ age = (study_start_date - patients.date_of_birth).years
 
 # Demographic: ethnicity
 ## Ethnicity 
-dataset.ethnicity = clinical_events.take(clinical_events.ctv3_code.is_in(codelists.ethnicity)) \
+ethnicity = clinical_events.take(clinical_events.ctv3_code.is_in(codelists.ethnicity)) \
     .sort_by(clinical_events.date) \
     .last_for_patient() \
     .ctv3_code.to_category(codelists.ethnicity.Grouping_6)
