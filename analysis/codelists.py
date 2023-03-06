@@ -29,6 +29,7 @@ lc_codelists_combined = (
 ethnicity = codelist_from_csv(
     "codelists/opensafely-ethnicity.csv",
     column="Code",
+    category_column="Grouping_6",
 )
 
 # 3. Mental issues:
