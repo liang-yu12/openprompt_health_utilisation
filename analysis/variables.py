@@ -1,3 +1,4 @@
+from datetime import date
 from databuilder.ehrql import days, case, when
 from databuilder.tables.beta.tpp import (
     clinical_events,

@@ -25,7 +25,7 @@ age = (study_start_date - patients.date_of_birth).years
 ethnicity = clinical_events.take(clinical_events.ctv3_code.is_in(codelists.ethnicity)) \
     .sort_by(clinical_events.date) \
     .last_for_patient() \
-    .ctv3_code.to_category(codelists.ethnicity.Grouping_6)
+    .ctv3_code.to_category(codelists.ethnicity)
 
 ## IMD
 # # 1. drop the start date records after index date
@@ -53,11 +53,11 @@ bmi = bmi_record.numeric_value
 bmi_date = bmi_record.date
 
 
-# Clinical factors:
-# 1. Previous hospitalized due to COVID
-previous_covid_hos = hospitalisation_diagnosis_matches(hospital_admissions, codelists.hosp_covid) \
-    .sort_by(hospital_admissions.admission_date) \
-    .first_for_patient() # need to further drop hospitalisation after index date
+# # Clinical factors:
+# # 1. Previous hospitalized due to COVID
+# previous_covid_hos = hospitalisation_diagnosis_matches(hospital_admissions, codelists.hosp_covid) \
+#     .sort_by(hospital_admissions.admission_date) \
+#     .first_for_patient() # need to further drop hospitalisation after index date
 
 
 
@@ -74,7 +74,7 @@ previous_covid_hos = hospitalisation_diagnosis_matches(hospital_admissions, code
 # severe immunosuppression
 
 ## Cancer: 
-cancer_all = clinical_dx_matches(clinical_events, cancer_all_combined__codelist)
+# cancer_all = clinical_dx_matches(clinical_events, cancer_all_combined__codelist)
 
 # vaccine dose: at least one dose/one dose/two dose/three doses or more
 
@@ -92,5 +92,5 @@ dataset.ethnicity = ethnicity
 dataset.imd = imd
 dataset.bmi = bmi
 dataset.bmi_date = bmi_date
-dataset.previous_covid_hosp = previous_covid_hos.exist.exists_for_patient()
-dataset.cancer_cov = cancer_all.exists_for_patient()
+# dataset.previous_covid_hosp = previous_covid_hos.exist.exists_for_patient()
+# dataset.cancer_cov = cancer_all.exists_for_patient()
