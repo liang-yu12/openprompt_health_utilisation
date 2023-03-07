@@ -50,17 +50,17 @@ hosp_covid = codelist_from_csv(
 
 # 4. Cancer codelist
 lung_cancer = codelist_from_csv(
-    "codelists\opensafely-lung-cancer.csv",
+    "codelists/opensafely-lung-cancer.csv",
     column="CTV3ID",
 )
 
 other_cancer = codelist_from_csv(
-    "codelists\opensafely-cancer-excluding-lung-and-haematological.csv",
+    "codelists/opensafely-cancer-excluding-lung-and-haematological.csv",
     column="CTV3ID",    
 )
 
 haema_cancer = codelist_from_csv(
-    "codelists\opensafely-haematological-cancer.csv",
+    "codelists/opensafely-haematological-cancer.csv",
     column="CTV3ID",        
 )
 cancer_all_combined__codelist = (
