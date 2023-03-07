@@ -12,6 +12,9 @@ from databuilder.tables.beta.tpp import (
 )
 from databuilder.codes import ICD10Code
 from codelists import *
+import operator
+from functools import reduce
+
 
 study_start_date = date(2020, 11, 1)
 
@@ -45,6 +48,9 @@ def add_visits(dataset, from_date, num_months):
 
 
 # Function codes for extracting hospitalisation records
+def any_of(conditions):
+    return reduce(operator.or_, conditions)
+
 def hospitalisation_diagnosis_matches(admissions, codelist):
   code_strings = set()
   for code in codelist:

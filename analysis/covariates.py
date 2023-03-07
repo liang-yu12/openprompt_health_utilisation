@@ -53,21 +53,12 @@ bmi = bmi_record.numeric_value
 bmi_date = bmi_record.date
 
 
-# # Clinical factors:
-# # 1. Previous hospitalized due to COVID
-# previous_covid_hos = hospitalisation_diagnosis_matches(hospital_admissions, codelists.hosp_covid) \
-#     .sort_by(hospital_admissions.admission_date) \
-#     .first_for_patient() # need to further drop hospitalisation after index date
-
-
-
-    # dataset.first_covid_hosp = covid_hospitalisations \
-    #     .sort_by(covid_hospitalisations.admission_date) \
-    #     .first_for_patient().admission_date
-    
-    # dataset.all_covid_hosp = covid_hospitalisations \
-    #     .drop(covid_hospitalisations.admission_date >= end_date - days(covid_to_longcovid_lag)) \
-    #     .count_for_patient()
+# Clinical factors:
+# 1. Previous hospitalized due to COVID (only look at hospitalisation before the index date)
+previous_covid_hos = hospitalisation_diagnosis_matches(hospital_admissions, codelists.hosp_covid) \
+    .take(hospital_admissions.admission_date < study_start_date) \
+    .sort_by(hospital_admissions.admission_date) \
+    .first_for_patient()
 
 
 
@@ -92,5 +83,5 @@ dataset.ethnicity = ethnicity
 dataset.imd = imd
 dataset.bmi = bmi
 dataset.bmi_date = bmi_date
-# dataset.previous_covid_hosp = previous_covid_hos.exist.exists_for_patient()
+dataset.previous_covid_hosp = previous_covid_hos.exists_for_patient()
 # dataset.cancer_cov = cancer_all.exists_for_patient()
