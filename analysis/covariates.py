@@ -13,7 +13,10 @@ from databuilder.tables.beta.tpp import (
 from databuilder.codes import CTV3Code, DMDCode, ICD10Code, SNOMEDCTCode
 import codelists
 
-from variables import add_visits, hospitalisation_diagnosis_matches
+from variables import (
+    add_visits, hospitalisation_diagnosis_matches,
+    clinical_ctv3_matches,
+)
 
 study_start_date = date(2020, 11, 1)
 
@@ -61,11 +64,15 @@ previous_covid_hos = hospitalisation_diagnosis_matches(hospital_admissions, code
     .first_for_patient()
 
 
-
 # severe immunosuppression
 
 ## Cancer: 
-# cancer_all = clinical_dx_matches(clinical_events, cancer_all_combined__codelist)
+cancer_all = clinical_ctv3_matches(clinical_events, codelists.cancer_all_combined__codelist) 
+
+# cancer_all = clinical_events.take((clinical_events.date <=study_start_date) & clinical_events.ctv3_code.is_in(codelists.cancer_all_combined__codelist)) \
+#     .sort_by(clinical_events.date).last_for_patient()
+
+
 
 # vaccine dose: at least one dose/one dose/two dose/three doses or more
 
@@ -84,4 +91,4 @@ dataset.imd = imd
 dataset.bmi = bmi
 dataset.bmi_date = bmi_date
 dataset.previous_covid_hosp = previous_covid_hos.exists_for_patient()
-# dataset.cancer_cov = cancer_all.exists_for_patient()
+dataset.cov_cancer = cancer_all.exists_for_patient()
