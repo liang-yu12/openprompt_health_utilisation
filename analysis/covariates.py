@@ -69,9 +69,6 @@ previous_covid_hos = hospitalisation_diagnosis_matches(hospital_admissions, code
 ## Cancer: 
 cancer_all = clinical_ctv3_matches(clinical_events, codelists.cancer_all_combined__codelist) 
 
-# cancer_all = clinical_events.take((clinical_events.date <=study_start_date) & clinical_events.ctv3_code.is_in(codelists.cancer_all_combined__codelist)) \
-#     .sort_by(clinical_events.date).last_for_patient()
-
 
 
 # vaccine dose: at least one dose/one dose/two dose/three doses or more
