@@ -71,4 +71,6 @@ cancer_all_combined__codelist = (
     lung_cancer 
     + other_cancer
     + haema_cancer
-) # combined cancer codelists
+)
+
+

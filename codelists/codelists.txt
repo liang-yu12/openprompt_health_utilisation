@@ -16,3 +16,6 @@ opensafely/systemic-lupus-erythematosus-sle/36bdb2c7
 
 opensafely/psychosis-schizophrenia-bipolar-affective-disease/0311653f
 opensafely/depression/1c20d874
+
+opensafely/asthma-diagnosis/2020-04-15
+opensafely/chronic-respiratory-disease/2020-04-10

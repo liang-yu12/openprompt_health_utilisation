@@ -74,9 +74,7 @@ cancer_all = clinical_ctv3_matches(clinical_events, codelists.cancer_all_combine
 mental_health_issues = clinical_ctv3_matches(clinical_events, codelists.mental_health_all)
 
 
-
-
-
+# the number of Covid-19 vaccinations doses (any vaccine) before the index date
 # vaccine dose: at least one dose/one dose/two dose/three doses or more
 
 
