@@ -74,11 +74,11 @@ cancer_all_combined__codelist = (
 )
 
 asthma = codelist_from_csv(
-    "codelists\opensafely-asthma-diagnosis.csv",
+    "codelists/opensafely-asthma-diagnosis.csv",
     column = "CTV3ID",
 )
 
 copd = codelist_from_csv(
-    "codelists\opensafely-chronic-respiratory-disease.csv",
+    "codelists/opensafely-chronic-respiratory-disease.csv",
     column = "CTV3ID",
 )
