@@ -73,6 +73,9 @@ cancer_all = clinical_ctv3_matches(clinical_events, codelists.cancer_all_combine
 # Mental issues:
 mental_health_issues = clinical_ctv3_matches(clinical_events, codelists.mental_health_all)
 
+# Respiratory condition: only include asthma
+asthma = clinical_ctv3_matches(clinical_events, codelists.asthma)
+copd = clinical_ctv3_matches(clinical_events, codelists.copd)
 
 # the number of Covid-19 vaccinations doses (any vaccine) before the index date
 # vaccine dose: at least one dose/one dose/two dose/three doses or more
@@ -92,3 +95,4 @@ dataset.bmi_date = bmi_date
 dataset.previous_covid_hosp = previous_covid_hos.exists_for_patient()
 dataset.cov_cancer = cancer_all.exists_for_patient()
 dataset.cov_mental_health = mental_health_issues.exists_for_patient()
+dataset.cov_asthm = asthma.exists_for_patient()
