@@ -67,13 +67,17 @@ previous_covid_hos = hospitalisation_diagnosis_matches(hospital_admissions, code
 # severe immunosuppression
 
 ## Cancer: 
+# ## Cancer diagnosed from GP records
 cancer_all = clinical_ctv3_matches(clinical_events, codelists.cancer_all_combined__codelist) 
+
+# Mental issues:
+mental_health_issues = clinical_ctv3_matches(clinical_events, codelists.mental_health_all)
+
+
 
 
 
 # vaccine dose: at least one dose/one dose/two dose/three doses or more
-
-# Mental issues:
 
 
 
@@ -89,3 +93,4 @@ dataset.bmi = bmi
 dataset.bmi_date = bmi_date
 dataset.previous_covid_hosp = previous_covid_hos.exists_for_patient()
 dataset.cov_cancer = cancer_all.exists_for_patient()
+dataset.cov_mental_health = mental_health_issues.exists_for_patient()

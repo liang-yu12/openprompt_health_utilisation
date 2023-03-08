@@ -41,6 +41,10 @@ depression_codes = codelist_from_csv(
     "codelists/opensafely-depression.csv", column="CTV3Code"
 )
 
+mental_health_all = (
+    psychosis_schizophrenia_bipolar_codes
+    + depression_codes
+)
 
 # 3. COVID hospitalisation
 hosp_covid = codelist_from_csv(
