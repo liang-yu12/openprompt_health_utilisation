@@ -95,4 +95,4 @@ dataset.bmi_date = bmi_date
 dataset.previous_covid_hosp = previous_covid_hos.exists_for_patient()
 dataset.cov_cancer = cancer_all.exists_for_patient()
 dataset.cov_mental_health = mental_health_issues.exists_for_patient()
-dataset.cov_asthm = asthma.exists_for_patient()
+dataset.cov_asthm = asthma.exists_for_patient() & ~copd.exists_for_patient()
