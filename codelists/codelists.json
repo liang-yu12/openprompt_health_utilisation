@@ -48,6 +48,18 @@
       "downloaded_at": "2023-03-10 12:13:52.750411Z",
       "sha": "d31d212d23c5f0e15f63236d2106282fb070bd7c"
     },
+    "opensafely-stroke-updated.csv": {
+      "id": "opensafely/stroke-updated/2020-06-02",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/stroke-updated/2020-06-02/",
+      "downloaded_at": "2023-03-10 12:19:39.250867Z",
+      "sha": "e62a8af49698022220de1e1e438d6b6c611e666e"
+    },
+    "opensafely-dementia.csv": {
+      "id": "opensafely/dementia/2020-04-22",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/dementia/2020-04-22/",
+      "downloaded_at": "2023-03-10 12:19:39.384237Z",
+      "sha": "9d40ff3a5c2428af4651c765f2c418de3a3ad4b4"
+    },
     "opensafely-hiv.csv": {
       "id": "opensafely/hiv/0d7dbfce",
       "url": "https://codelists.opensafely.org/codelist/opensafely/hiv/0d7dbfce/",

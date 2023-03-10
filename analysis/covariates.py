@@ -93,6 +93,9 @@ chronic_cardiac_disease = clinical_ctv3_matches(clinical_events, codelists.chron
 chronic_liver_disease = clinical_ctv3_matches(clinical_events, codelists.chronic_liver_disease_code)
 
 # Stroke or dementia
+stroke = clinical_ctv3_matches(clinical_events, codelists.stroke_code)
+dementia = clinical_ctv3_matches(clinical_events, codelists.dementia_code)
+
 # Other neurological condition 
 # Rheumatoid arthritis
 # Systemic lupus erythematosus 
@@ -116,3 +119,4 @@ dataset.cov_asthm = asthma.exists_for_patient() & ~copd.exists_for_patient()
 dataset.cov_organ_transplant = organ_transplant.exists_for_patient()
 dataset.cov_chronic_cardiac_disease = chronic_cardiac_disease.exists_for_patient()
 dataset.cov_chronic_liver_disease = chronic_liver_disease.exists_for_patient()
+dataset.cov_stroke_dementia = stroke.exists_for_patient() | dementia.exists_for_patient()

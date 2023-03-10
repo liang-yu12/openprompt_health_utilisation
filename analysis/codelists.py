@@ -97,3 +97,13 @@ chronic_liver_disease_code = codelist_from_csv(
     "codelists\opensafely-chronic-liver-disease.csv",
     column = "CTV3ID",        
 )
+
+stroke_code = codelist_from_csv(
+    "codelists\opensafely-stroke-updated.csv",
+    column = "CTV3ID",
+)
+
+dementia_code = codelist_from_csv(
+    "codelists\opensafely-dementia.csv",
+    column = "CTV3ID",
+)

@@ -7,6 +7,8 @@ opensafely/covid-identification/7bbfd8eb
 opensafely/solid-organ-transplantation/2020-04-10
 opensafely/chronic-cardiac-disease/2020-04-08
 opensafely/chronic-liver-disease/2020-06-02
+opensafely/stroke-updated/2020-06-02
+opensafely/dementia/2020-04-22
 
 opensafely/hiv/0d7dbfce
 opensafely/lung-cancer/53469981
