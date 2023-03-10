@@ -101,6 +101,8 @@ other_neuro_diseases = clinical_ctv3_matches(clinical_events, codelists.other_ne
 # Rheumatoid arthritis
 # Systemic lupus erythematosus 
 # Psoriasis
+ra_sle_psoriasis = clinical_ctv3_matches(clinical_events, codelists.ra_sle_psoriasis_code)
+
 # Other immunosuppressive conditions 3
 
 
@@ -122,3 +124,4 @@ dataset.cov_chronic_cardiac_disease = chronic_cardiac_disease.exists_for_patient
 dataset.cov_chronic_liver_disease = chronic_liver_disease.exists_for_patient()
 dataset.cov_stroke_dementia = stroke.exists_for_patient() | dementia.exists_for_patient()
 dataset.cov_other_neuro_diseases = other_neuro_diseases.exists_for_patient()
+dataset.cov_ra_sle_psoriasis = ra_sle_psoriasis.exists_for_patient()

@@ -112,3 +112,8 @@ other_neuro_code = codelist_from_csv(
     "codelists\opensafely-other-neurological-conditions.csv",
     column = "CTV3ID",
 )
+
+ra_sle_psoriasis_code = codelist_from_csv(
+    "codelists\opensafely-ra-sle-psoriasis.csv",
+    column = "CTV3ID",
+)

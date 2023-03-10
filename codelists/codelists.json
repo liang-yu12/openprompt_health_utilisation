@@ -66,6 +66,12 @@
       "downloaded_at": "2023-03-10 12:24:21.920302Z",
       "sha": "855e7e09a0500401ae2429c6a401978e8c9075ec"
     },
+    "opensafely-ra-sle-psoriasis.csv": {
+      "id": "opensafely/ra-sle-psoriasis/2020-04-14",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/ra-sle-psoriasis/2020-04-14/",
+      "downloaded_at": "2023-03-10 12:31:32.073131Z",
+      "sha": "51e59c80348f3b45f7ce323683a1df7cdb673c0e"
+    },
     "opensafely-hiv.csv": {
       "id": "opensafely/hiv/0d7dbfce",
       "url": "https://codelists.opensafely.org/codelist/opensafely/hiv/0d7dbfce/",
