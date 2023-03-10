@@ -25,7 +25,7 @@ age = (study_start_date - patients.date_of_birth).years
 
 # Demographic: ethnicity
 ## Ethnicity 
-ethnicity = (clinical_events.take(clinical_events.ctv3_code.is_in(codelists.ethnicity))
+ethnicity = (clinical_events.where(clinical_events.ctv3_code.is_in(codelists.ethnicity))
     .sort_by(clinical_events.date)
     .last_for_patient()
     .ctv3_code.to_category(codelists.ethnicity)
@@ -33,21 +33,21 @@ ethnicity = (clinical_events.take(clinical_events.ctv3_code.is_in(codelists.ethn
 ## IMD
 # # 1. drop the start date records after index date
 # # 2. sort the date, keep the latest
-imd = (addresses.drop(addresses.start_date > study_start_date)
+imd = (addresses.except_where(addresses.start_date > study_start_date)
     .sort_by(addresses.start_date)
     .last_for_patient().imd_rounded
 )
 ## BMI
 bmi_record = (
-    clinical_events.take(
+    clinical_events.where(
         clinical_events.snomedct_code.is_in(
             [SNOMEDCTCode("60621009"), SNOMEDCTCode("846931000000101")]
         )
     )
     # Exclude out-of-range values
-    .take((clinical_events.numeric_value > 4.0) & (clinical_events.numeric_value < 200.0))
+    .where((clinical_events.numeric_value > 4.0) & (clinical_events.numeric_value < 200.0))
     # Exclude measurements taken when patient was younger than 16
-    .take(clinical_events.date >= patients.date_of_birth + years(16))
+    .where(clinical_events.date >= patients.date_of_birth + years(16))
     .sort_by(clinical_events.date)
     .last_for_patient()
 )
@@ -59,7 +59,7 @@ bmi_date = bmi_record.date
 # Clinical factors:
 # 1. Previous hospitalized due to COVID (only look at hospitalisation before the index date)
 previous_covid_hos = (hospitalisation_diagnosis_matches(hospital_admissions, codelists.hosp_covid)
-    .take(hospital_admissions.admission_date < study_start_date)
+    .where(hospital_admissions.admission_date < study_start_date)
     .sort_by(hospital_admissions.admission_date)
     .first_for_patient()
 )
@@ -110,7 +110,7 @@ ra_sle_psoriasis = clinical_ctv3_matches(clinical_events, codelists.ra_sle_psori
 # The following codes will be removed later when the importing CSV file function is ready. 
 # Use these codes to test this is working. 
 dataset = Dataset()
-dataset.set_population(age>= 18)
+dataset.define_population(age>= 18)
 dataset.ethnicity = ethnicity
 dataset.imd = imd
 dataset.bmi = bmi
