@@ -5,6 +5,7 @@ opensafely/ethnicity/2020-04-27
 opensafely/covid-identification/7bbfd8eb
 
 opensafely/solid-organ-transplantation/2020-04-10
+opensafely/chronic-cardiac-disease/2020-04-08
 opensafely/hiv/0d7dbfce
 opensafely/lung-cancer/53469981
 opensafely/cancer-excluding-lung-and-haematological/2020-04-15
