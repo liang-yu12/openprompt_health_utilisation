@@ -92,3 +92,8 @@ chronic_cardiac_diseases_code = codelist_from_csv(
     "codelists\opensafely-chronic-cardiac-disease.csv",
     column = "CTV3ID",    
 )
+
+chronic_liver_disease_code = codelist_from_csv(
+    "codelists\opensafely-chronic-liver-disease.csv",
+    column = "CTV3ID",        
+)

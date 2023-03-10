@@ -90,6 +90,8 @@ organ_transplant = clinical_ctv3_matches(clinical_events, codelists.organ_transp
 chronic_cardiac_disease = clinical_ctv3_matches(clinical_events, codelists.chronic_cardiac_diseases_code)
 
 # Chronic liver disease
+chronic_liver_disease = clinical_ctv3_matches(clinical_events, codelists.chronic_liver_disease_code)
+
 # Stroke or dementia
 # Other neurological condition 
 # Rheumatoid arthritis
@@ -113,3 +115,4 @@ dataset.cov_mental_health = mental_health_issues.exists_for_patient()
 dataset.cov_asthm = asthma.exists_for_patient() & ~copd.exists_for_patient()
 dataset.cov_organ_transplant = organ_transplant.exists_for_patient()
 dataset.cov_chronic_cardiac_disease = chronic_cardiac_disease.exists_for_patient()
+dataset.cov_chronic_liver_disease = chronic_liver_disease.exists_for_patient()
