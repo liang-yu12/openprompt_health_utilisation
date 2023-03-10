@@ -82,3 +82,8 @@ copd = codelist_from_csv(
     "codelists/opensafely-chronic-respiratory-disease.csv",
     column = "CTV3ID",
 )
+
+organ_transplant_code = codelist_from_csv(
+    "codelists/opensafely-solid-organ-transplantation.csv",
+    column = "CTV3ID",
+)

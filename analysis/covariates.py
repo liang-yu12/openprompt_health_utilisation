@@ -25,18 +25,18 @@ age = (study_start_date - patients.date_of_birth).years
 
 # Demographic: ethnicity
 ## Ethnicity 
-ethnicity = clinical_events.take(clinical_events.ctv3_code.is_in(codelists.ethnicity)) \
-    .sort_by(clinical_events.date) \
-    .last_for_patient() \
+ethnicity = (clinical_events.take(clinical_events.ctv3_code.is_in(codelists.ethnicity))
+    .sort_by(clinical_events.date)
+    .last_for_patient()
     .ctv3_code.to_category(codelists.ethnicity)
-
+)
 ## IMD
 # # 1. drop the start date records after index date
 # # 2. sort the date, keep the latest
-imd = addresses.drop(addresses.start_date > study_start_date) \
-    .sort_by(addresses.start_date) \
+imd = (addresses.drop(addresses.start_date > study_start_date)
+    .sort_by(addresses.start_date)
     .last_for_patient().imd_rounded
-
+)
 ## BMI
 bmi_record = (
     clinical_events.take(
@@ -58,18 +58,11 @@ bmi_date = bmi_record.date
 
 # Clinical factors:
 # 1. Previous hospitalized due to COVID (only look at hospitalisation before the index date)
-previous_covid_hos = hospitalisation_diagnosis_matches(hospital_admissions, codelists.hosp_covid) \
-    .take(hospital_admissions.admission_date < study_start_date) \
-    .sort_by(hospital_admissions.admission_date) \
+previous_covid_hos = (hospitalisation_diagnosis_matches(hospital_admissions, codelists.hosp_covid)
+    .take(hospital_admissions.admission_date < study_start_date)
+    .sort_by(hospital_admissions.admission_date)
     .first_for_patient()
-
-
-# severe immunosuppression
-
-## Cancer: 
-# ## Cancer diagnosed from GP records
-cancer_all = clinical_ctv3_matches(clinical_events, codelists.cancer_all_combined__codelist) 
-
+)
 # Mental issues:
 mental_health_issues = clinical_ctv3_matches(clinical_events, codelists.mental_health_all)
 
@@ -79,8 +72,28 @@ copd = clinical_ctv3_matches(clinical_events, codelists.copd)
 
 # the number of Covid-19 vaccinations doses (any vaccine) before the index date
 # vaccine dose: at least one dose/one dose/two dose/three doses or more
+# level of multimorbidity ------
 
 
+# Non-haematological cancer
+# Haematological cancer 1
+
+# * need to saperate the heamatological cancers
+## Cancer: 
+# ## Cancer diagnosed from GP records
+cancer_all = clinical_ctv3_matches(clinical_events, codelists.cancer_all_combined__codelist) 
+
+# Organ transplant
+organ_transplant = clinical_ctv3_matches(clinical_events, codelists.organ_transplant_code)
+
+# Chronic cardiac disease
+# Chronic liver disease
+# Stroke or dementia
+# Other neurological condition 
+# Rheumatoid arthritis
+# Systemic lupus erythematosus 
+# Psoriasis
+# Other immunosuppressive conditions 3
 
 
 
