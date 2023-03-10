@@ -107,3 +107,8 @@ dementia_code = codelist_from_csv(
     "codelists\opensafely-dementia.csv",
     column = "CTV3ID",
 )
+
+other_neuro_code = codelist_from_csv(
+    "codelists\opensafely-other-neurological-conditions.csv",
+    column = "CTV3ID",
+)

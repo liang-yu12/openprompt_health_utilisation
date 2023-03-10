@@ -60,6 +60,12 @@
       "downloaded_at": "2023-03-10 12:19:39.384237Z",
       "sha": "9d40ff3a5c2428af4651c765f2c418de3a3ad4b4"
     },
+    "opensafely-other-neurological-conditions.csv": {
+      "id": "opensafely/other-neurological-conditions/2020-06-02",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/other-neurological-conditions/2020-06-02/",
+      "downloaded_at": "2023-03-10 12:24:21.920302Z",
+      "sha": "855e7e09a0500401ae2429c6a401978e8c9075ec"
+    },
     "opensafely-hiv.csv": {
       "id": "opensafely/hiv/0d7dbfce",
       "url": "https://codelists.opensafely.org/codelist/opensafely/hiv/0d7dbfce/",
