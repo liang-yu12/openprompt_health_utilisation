@@ -126,6 +126,12 @@
       "downloaded_at": "2023-02-13 11:32:43.975186Z",
       "sha": "a7354e610e9ccc2f22f8e8b9b1a7c329a971aa7c"
     },
+    "opensafely-asplenia.csv": {
+      "id": "opensafely/asplenia/2020-06-02",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/asplenia/2020-06-02/",
+      "downloaded_at": "2023-03-13 11:03:43.386771Z",
+      "sha": "7599ea87a8f3d9d92389a728966d3077b00ac828"
+    },
     "opensafely-psychosis-schizophrenia-bipolar-affective-disease.csv": {
       "id": "opensafely/psychosis-schizophrenia-bipolar-affective-disease/0311653f",
       "url": "https://codelists.opensafely.org/codelist/opensafely/psychosis-schizophrenia-bipolar-affective-disease/0311653f/",

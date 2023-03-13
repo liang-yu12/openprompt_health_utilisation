@@ -117,3 +117,8 @@ ra_sle_psoriasis_code = codelist_from_csv(
     "codelists/opensafely-ra-sle-psoriasis.csv",
     column = "CTV3ID",
 )
+
+asplenia_code = codelist_from_csv(
+    "codelists/opensafely-asplenia.csv",
+    column = "CTV3ID",
+)
