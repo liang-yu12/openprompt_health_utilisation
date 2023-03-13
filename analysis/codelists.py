@@ -142,3 +142,33 @@ temporary_immune_suppress_code = codelist_from_csv(
     "codelists\opensafely-temporary-immunosuppression.csv",
         column="CTV3ID",
 )
+
+# adminstered vaccine codes
+vac_adm_1 = codelist_from_csv(
+  "codelists/primis-covid19-vacc-uptake-covadm1.csv",
+  column="code"
+)
+vac_adm_2 = codelist_from_csv(
+  "codelists/primis-covid19-vacc-uptake-covadm2.csv",
+  column="code"
+)
+vac_adm_3 = codelist_from_csv(
+  "codelists/primis-covid19-vacc-uptake-covadm3_cod.csv",
+  column="code"
+)
+vac_adm_4 = codelist_from_csv(
+  "codelists/primis-covid19-vacc-uptake-covadm4_cod.csv",
+  column="code"
+)
+vac_adm_5 = codelist_from_csv(
+  "codelists/primis-covid19-vacc-uptake-covadm5_cod.csv",
+  column="code"
+)
+
+vac_adm_combine_code = (
+    vac_adm_1
+    + vac_adm_2
+    + vac_adm_3
+    + vac_adm_4
+    + vac_adm_5
+)

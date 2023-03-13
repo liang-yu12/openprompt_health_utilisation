@@ -31,3 +31,9 @@ opensafely/depression/1c20d874
 
 opensafely/asthma-diagnosis/2020-04-15
 opensafely/chronic-respiratory-disease/2020-04-10
+
+primis-covid19-vacc-uptake/covadm1/v.1.5.3
+primis-covid19-vacc-uptake/covadm2/v.1.5.3
+primis-covid19-vacc-uptake/covadm3_cod/v.1.5.3
+primis-covid19-vacc-uptake/covadm4_cod/v.1.5.3
+primis-covid19-vacc-uptake/covadm5_cod/v.1.5.3

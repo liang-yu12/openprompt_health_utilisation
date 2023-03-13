@@ -173,6 +173,36 @@
       "url": "https://codelists.opensafely.org/codelist/opensafely/chronic-respiratory-disease/2020-04-10/",
       "downloaded_at": "2023-03-08 13:55:57.265195Z",
       "sha": "77946d9b844f348daf5c8c9e81346b9776d13998"
+    },
+    "primis-covid19-vacc-uptake-covadm1.csv": {
+      "id": "primis-covid19-vacc-uptake/covadm1/v.1.5.3",
+      "url": "https://codelists.opensafely.org/codelist/primis-covid19-vacc-uptake/covadm1/v.1.5.3/",
+      "downloaded_at": "2023-03-13 11:44:39.410942Z",
+      "sha": "5e6a8bef2da93467d11c25affbd33755205e4204"
+    },
+    "primis-covid19-vacc-uptake-covadm2.csv": {
+      "id": "primis-covid19-vacc-uptake/covadm2/v.1.5.3",
+      "url": "https://codelists.opensafely.org/codelist/primis-covid19-vacc-uptake/covadm2/v.1.5.3/",
+      "downloaded_at": "2023-03-13 11:44:39.520580Z",
+      "sha": "85e09fabdd4cade8aca3b2c85a1ddc90c3f6eb8b"
+    },
+    "primis-covid19-vacc-uptake-covadm3_cod.csv": {
+      "id": "primis-covid19-vacc-uptake/covadm3_cod/v.1.5.3",
+      "url": "https://codelists.opensafely.org/codelist/primis-covid19-vacc-uptake/covadm3_cod/v.1.5.3/",
+      "downloaded_at": "2023-03-13 11:44:39.646683Z",
+      "sha": "b3cabd45827dc0b54a9761aa4761c4d4272465aa"
+    },
+    "primis-covid19-vacc-uptake-covadm4_cod.csv": {
+      "id": "primis-covid19-vacc-uptake/covadm4_cod/v.1.5.3",
+      "url": "https://codelists.opensafely.org/codelist/primis-covid19-vacc-uptake/covadm4_cod/v.1.5.3/",
+      "downloaded_at": "2023-03-13 11:44:39.763016Z",
+      "sha": "c64864f901908ba03222a26c157aa2a07a4978c2"
+    },
+    "primis-covid19-vacc-uptake-covadm5_cod.csv": {
+      "id": "primis-covid19-vacc-uptake/covadm5_cod/v.1.5.3",
+      "url": "https://codelists.opensafely.org/codelist/primis-covid19-vacc-uptake/covadm5_cod/v.1.5.3/",
+      "downloaded_at": "2023-03-13 11:44:39.886635Z",
+      "sha": "df9ff428071833205f8978ca9ccd0c07796ae183"
     }
   }
 }

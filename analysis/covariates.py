@@ -14,8 +14,9 @@ from databuilder.codes import CTV3Code, DMDCode, ICD10Code, SNOMEDCTCode
 import codelists
 
 from variables import (
-    add_visits, hospitalisation_diagnosis_matches,
-    clinical_ctv3_matches,
+    add_visits, 
+    hospitalisation_diagnosis_matches,
+    clinical_ctv3_matches, 
 )
 
 study_start_date = date(2020, 11, 1)
@@ -72,8 +73,14 @@ copd = clinical_ctv3_matches(clinical_events, codelists.copd)
 
 # the number of Covid-19 vaccinations doses (any vaccine) before the index date
 # vaccine dose: at least one dose/one dose/two dose/three doses or more
-# level of multimorbidity ------
 
+c19_vaccine_number = (
+    clinical_events.where(clinical_events.date <= study_start_date)
+    .where(clinical_events.snomedct_code.is_in(codelists.vac_adm_combine_code)
+    .count_for_patient()
+)
+
+# level of multimorbidity ------
 
 # Non-haematological cancer
 # Haematological cancer 1
@@ -142,3 +149,4 @@ dataset.cov_hiv = hiv.exists_for_patient()
 dataset.cov_aplastic_anemia = aplastic_anemia.exists_for_patient()
 dataset.cov_permanent_immune_suppress = permanent_immune_suppress.exists_for_patient()
 dataset.cov_temporary_immune_suppress = temporary_immune_suppress.exists_for_patient()
+dataset.cov_c19_vaccine_number = c19_vaccine_number
