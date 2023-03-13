@@ -132,6 +132,12 @@
       "downloaded_at": "2023-03-13 11:03:43.386771Z",
       "sha": "7599ea87a8f3d9d92389a728966d3077b00ac828"
     },
+    "opensafely-aplastic-anaemia.csv": {
+      "id": "opensafely/aplastic-anaemia/2020-04-24",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/aplastic-anaemia/2020-04-24/",
+      "downloaded_at": "2023-03-13 11:14:09.796890Z",
+      "sha": "bd34ff54f789dce031e3581006cc0befcee0b35c"
+    },
     "opensafely-psychosis-schizophrenia-bipolar-affective-disease.csv": {
       "id": "opensafely/psychosis-schizophrenia-bipolar-affective-disease/0311653f",
       "url": "https://codelists.opensafely.org/codelist/opensafely/psychosis-schizophrenia-bipolar-affective-disease/0311653f/",

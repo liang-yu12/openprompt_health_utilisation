@@ -22,6 +22,9 @@ opensafely/antiphospholipid-syndrome/3a8c6298
 opensafely/rheumatoid-arthritis/68dc9931
 opensafely/systemic-lupus-erythematosus-sle/36bdb2c7
 opensafely/asplenia/2020-06-02
+opensafely/aplastic-anaemia/2020-04-24
+
+
 
 opensafely/psychosis-schizophrenia-bipolar-affective-disease/0311653f
 opensafely/depression/1c20d874

@@ -105,9 +105,13 @@ ra_sle_psoriasis = clinical_ctv3_matches(clinical_events, codelists.ra_sle_psori
 
 # Other immunosuppressive conditions 
 # #  asplenia
-
 asplenia = clinical_ctv3_matches(clinical_events, codelists.asplenia_code)
 
+# # HIV
+hiv = clinical_ctv3_matches(clinical_events, codelists.hiv_code)
+
+# # Aplastic anemia
+aplastic_anemia = clinical_ctv3_matches(clinical_events, codelists.aplastic_anemia_code)
 
 # The following codes will be removed later when the importing CSV file function is ready. 
 # Use these codes to test this is working. 
@@ -128,3 +132,5 @@ dataset.cov_stroke_dementia = stroke.exists_for_patient() | dementia.exists_for_
 dataset.cov_other_neuro_diseases = other_neuro_diseases.exists_for_patient()
 dataset.cov_ra_sle_psoriasis = ra_sle_psoriasis.exists_for_patient()
 dataset.cov_asplenia = asplenia.exists_for_patient()
+dataset.cov_hiv = hiv.exists_for_patient()
+dataset.cov_aplastic_anemia = aplastic_anemia.exists_for_patient()

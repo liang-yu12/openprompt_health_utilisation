@@ -122,3 +122,13 @@ asplenia_code = codelist_from_csv(
     "codelists/opensafely-asplenia.csv",
     column = "CTV3ID",
 )
+
+hiv_code = codelist_from_csv(
+    "codelists/opensafely-hiv.csv",
+    column = "CTV3ID",
+)
+
+aplastic_anemia_code = codelist_from_csv(
+    "codelists/opensafely-aplastic-anaemia.csv",
+    column = "CTV3ID",
+)
