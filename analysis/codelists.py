@@ -137,3 +137,8 @@ permanent_immune_suppress_code = codelist_from_csv(
     "codelists/opensafely-permanent-immunosuppression.csv",
     column="CTV3ID",
 )
+
+temporary_immune_suppress_code = codelist_from_csv(
+    "codelists\opensafely-temporary-immunosuppression.csv",
+        column="CTV3ID",
+)
