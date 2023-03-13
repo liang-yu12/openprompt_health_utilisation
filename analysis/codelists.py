@@ -132,3 +132,8 @@ aplastic_anemia_code = codelist_from_csv(
     "codelists/opensafely-aplastic-anaemia.csv",
     column = "CTV3ID",
 )
+
+permanent_immune_suppress_code = codelist_from_csv(
+    "codelists/opensafely-permanent-immunosuppression.csv",
+    column="CTV3ID",
+)

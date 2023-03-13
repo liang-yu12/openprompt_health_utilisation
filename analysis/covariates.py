@@ -113,6 +113,10 @@ hiv = clinical_ctv3_matches(clinical_events, codelists.hiv_code)
 # # Aplastic anemia
 aplastic_anemia = clinical_ctv3_matches(clinical_events, codelists.aplastic_anemia_code)
 
+# # permanent immunosuppression
+permanent_immune_suppress = clinical_ctv3_matches(clinical_events, codelists.permanent_immune_suppress_code)
+
+
 # The following codes will be removed later when the importing CSV file function is ready. 
 # Use these codes to test this is working. 
 dataset = Dataset()
@@ -134,3 +138,4 @@ dataset.cov_ra_sle_psoriasis = ra_sle_psoriasis.exists_for_patient()
 dataset.cov_asplenia = asplenia.exists_for_patient()
 dataset.cov_hiv = hiv.exists_for_patient()
 dataset.cov_aplastic_anemia = aplastic_anemia.exists_for_patient()
+dataset.cov_permanent_immune_suppress = permanent_immune_suppress.exists_for_patient()

@@ -138,6 +138,12 @@
       "downloaded_at": "2023-03-13 11:14:09.796890Z",
       "sha": "bd34ff54f789dce031e3581006cc0befcee0b35c"
     },
+    "opensafely-permanent-immunosuppression.csv": {
+      "id": "opensafely/permanent-immunosuppression/2020-06-02",
+      "url": "https://codelists.opensafely.org/codelist/opensafely/permanent-immunosuppression/2020-06-02/",
+      "downloaded_at": "2023-03-13 11:17:26.782155Z",
+      "sha": "15dd49a1cbc8b8e9f4a9e05bbcbeb45b4e03106e"
+    },
     "opensafely-psychosis-schizophrenia-bipolar-affective-disease.csv": {
       "id": "opensafely/psychosis-schizophrenia-bipolar-affective-disease/0311653f",
       "url": "https://codelists.opensafely.org/codelist/opensafely/psychosis-schizophrenia-bipolar-affective-disease/0311653f/",
