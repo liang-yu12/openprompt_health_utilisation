@@ -74,9 +74,8 @@ copd = clinical_ctv3_matches(clinical_events, codelists.copd)
 # the number of Covid-19 vaccinations doses (any vaccine) before the index date
 # vaccine dose: at least one dose/one dose/two dose/three doses or more
 
-c19_vaccine_number = (
-    clinical_events.where(clinical_events.date <= study_start_date)
-    .where(clinical_events.snomedct_code.is_in(codelists.vac_adm_combine_code)
+c19_vaccine_number = (clinical_events.where(clinical_events.date <= study_start_date)
+    .where(clinical_events.snomedct_code.is_in(codelists.vac_adm_combine_code))
     .count_for_patient()
 )
 
