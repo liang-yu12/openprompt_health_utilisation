@@ -19,7 +19,7 @@ age = (study_start_date - patients.date_of_birth).years
 
 with open("output/dataset_comparator_filtered_gp.csv") as csv_file:
     reader = csv.DictReader(csv_file)
-    lc_gp = [row["gp_practice"] for row in reader]
+    lc_gp = [int(row["gp_practice"]) for row in reader]
 
 target_practices = practice_registrations.where(practice_registrations.practice_pseudo_id.is_in(lc_gp))
 
@@ -49,7 +49,7 @@ lc_dx_date = clinical_events.where(clinical_events.snomedct_code.is_in(lc_codeli
     .first_for_patient().date # LC dx dates
 
 dataset = Dataset()
-dataset.define_population((age >= 18) & registration.exists_for_patient() & target_practices.existes_for_patient())
+dataset.define_population((age >= 18) & registration.exists_for_patient() & target_practices.exists_for_patient())
 dataset.age = age
 dataset.sex = patients.sex
 dataset.region = registration.practice_stp
