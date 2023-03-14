@@ -17,9 +17,11 @@ study_start_date = date(2020, 11, 1)
 # age 
 age = (study_start_date - patients.date_of_birth).years
 
-lc_gp = csv.reader("output/dataset_comparator_filtered_gp.csv")
-filtered_practice_ids = list(lc_gp)
-target_practices = practice_registrations.where(practice_registrations.practice_pseudo_id.is_in(filtered_practice_ids))
+with open("output/dataset_comparator_filtered_gp.csv") as csv_file:
+    reader = csv.DictReader(csv_file)
+    lc_gp = [row["gp_practice"] for row in reader]
+
+target_practices = practice_registrations.where(practice_registrations.practice_pseudo_id.is_in(lc_gp))
 
 
 # current registration
