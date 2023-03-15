@@ -2,7 +2,7 @@ from datetime import date
 
 from databuilder.ehrql import Dataset, days, years
 from databuilder.tables.beta.tpp import (
-    patients, addresses,
+    patients, addresses, ons_deaths,
     practice_registrations, clinical_events,
 )
 from databuilder.codes import SNOMEDCTCode
