@@ -4,8 +4,8 @@ from osmatching import match
 ## MATCH SEPARATE STPS OF CASES AND CONTROLS
 
 match(
-    case_csv="dataset_exp_lc",
-    match_csv="dataset_comparator_filtered_gp",
+    case_csv="dataset_exp_lc_unmatched",
+    match_csv="dataset_comparator_unmatched",
     matches_per_case=5,
     match_variables={
         "age": 1,

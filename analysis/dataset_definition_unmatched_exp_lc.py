@@ -59,8 +59,8 @@ dataset.long_covid_dx = lc_dx.exists_for_patient()
 dataset.long_covid_dx_date = lc_dx.date
 dataset.index_date = lc_dx.date
 # dataset.end_1y_after_index = one_year_after_start
-# dataset.end_death = death_date
-# dataset.end_deregist = end_reg_date
+dataset.end_death = death_date
+dataset.end_deregist = end_reg_date
 # dataset.end_lc_cure = lc_cure.date
 
 # add_visits(dataset, lc_dx.date, num_months=1)
