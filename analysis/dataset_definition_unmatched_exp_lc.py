@@ -2,15 +2,15 @@ from datetime import date
 
 from databuilder.ehrql import Dataset, days, years
 from databuilder.tables.beta.tpp import (
-    patients, addresses, appointments,
+    patients, addresses,
     practice_registrations, clinical_events,
-    sgss_covid_all_tests, ons_deaths, hospital_admissions,
 )
 from databuilder.codes import SNOMEDCTCode
 from codelists import lc_codelists_combined
 import codelists
-from variables import add_visits
+# from variables import add_visits
 
+# study start date 
 study_start_date = date(2020, 11, 1)
 
 # age 
@@ -63,17 +63,17 @@ dataset.index_date = lc_dx.date
 # dataset.end_deregist = end_reg_date
 # dataset.end_lc_cure = lc_cure.date
 
-add_visits(dataset, lc_dx.date, num_months=1)
-add_visits(dataset, lc_dx.date, num_months=2)
-add_visits(dataset, lc_dx.date, num_months=3)
-add_visits(dataset, lc_dx.date, num_months=4)
-add_visits(dataset, lc_dx.date, num_months=5)
-add_visits(dataset, lc_dx.date, num_months=6)
-add_visits(dataset, lc_dx.date, num_months=7)
-add_visits(dataset, lc_dx.date, num_months=8)
-add_visits(dataset, lc_dx.date, num_months=9)
-add_visits(dataset, lc_dx.date, num_months=10)
-add_visits(dataset, lc_dx.date, num_months=11)
-add_visits(dataset, lc_dx.date, num_months=12)
+# add_visits(dataset, lc_dx.date, num_months=1)
+# add_visits(dataset, lc_dx.date, num_months=2)
+# add_visits(dataset, lc_dx.date, num_months=3)
+# add_visits(dataset, lc_dx.date, num_months=4)
+# add_visits(dataset, lc_dx.date, num_months=5)
+# add_visits(dataset, lc_dx.date, num_months=6)
+# add_visits(dataset, lc_dx.date, num_months=7)
+# add_visits(dataset, lc_dx.date, num_months=8)
+# add_visits(dataset, lc_dx.date, num_months=9)
+# add_visits(dataset, lc_dx.date, num_months=10)
+# add_visits(dataset, lc_dx.date, num_months=11)
+# add_visits(dataset, lc_dx.date, num_months=12)
 
 
