@@ -24,6 +24,7 @@ actions:
         cohort: output/dataset_lc_gp_list.csv
 
   generate_dataset_comparator_exclude_gp_no_long_covid:
+    needs: [generate_list_gp_use_long_covid_dx]
     run: 
       databuilder:v0 generate-dataset
         analysis/dataset_definition_unmatched_comparator.py
