@@ -8,11 +8,11 @@ actions:
   generate_long_covid_exposure_dataset:
     run: 
       databuilder:v0 generate-dataset
-        analysis/dataset_definition_exp_lc.py
-        --output output/dataset_exp_lc.csv
+        analysis/dataset_definition_unmatched_exp_lc.py
+        --output output/dataset_exp_lc_unmatched.csv
     outputs:
       highly_sensitive:
-        cohort: output/dataset_exp_lc.csv
+        cohort: output/dataset_exp_lc_unmatched.csv
 
   generate_list_gp_use_long_covid_dx:
     run: 
@@ -26,16 +26,16 @@ actions:
   generate_dataset_comparator_exclude_gp_no_long_covid:
     run: 
       databuilder:v0 generate-dataset
-        analysis/dataset_definition_comparator_large.py
-        --output output/dataset_comparator_large.csv
+        analysis/dataset_definition_unmatched_comparator.py
+        --output output/dataset_comparator_unmatched.csv
     outputs:
       highly_sensitive:
-        cohort: output/dataset_comparator_large.csv
+        cohort: output/dataset_comparator_unmatched.csv
 
   match_comparators:
     run:
       python:latest python analysis/match.py
-    needs: [generate_dataset_comparator_filtered_gp, generate_dataset_exp_lc]
+    needs: [generate_dataset_comparator_exclude_gp_no_long_covid, generate_long_covid_exposure_dataset]
     outputs: 
       highly_sensitive:
         matched_cases: output/matched_cases.csv
