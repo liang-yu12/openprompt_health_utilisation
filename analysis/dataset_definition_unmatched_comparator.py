@@ -19,7 +19,7 @@ age = (study_start_date - patients.date_of_birth).years
 
 
 # Import the filtered GP list to exclude GP that was not using the long COVID codes
-with open("output/dataset_comparator_filtered_gp.csv") as csv_file:
+with open("output/dataset_lc_gp_list.csv") as csv_file:
     reader = csv.DictReader(csv_file)
     lc_gp = [int(row["gp_practice"]) for row in reader]
 
