@@ -37,13 +37,13 @@ lc_dx = clinical_events.where(clinical_events.snomedct_code.is_in(lc_codelists_c
 
 # define end date: lc dx date +12 | death | derigistration | post COVID-19 syndrome resolved
 # one_year_after_start = lc_dx.date + days(365) 
-# death_date = ons_deaths.sort_by(ons_deaths.date) \
-#     .last_for_patient().date
-# end_reg_date = registration.end_date
+death_date = ons_deaths.sort_by(ons_deaths.date) \
+    .last_for_patient().date
+end_reg_date = registration.end_date
 # lc_cure = clinical_events.where(clinical_events.snomedct_code ==  SNOMEDCTCode("1326351000000108")) \
 #     .sort_by(clinical_events.date) \
 #     .first_for_patient()
-# #first recorded lc cure date
+#first recorded lc cure date
 
 
 dataset = Dataset()
