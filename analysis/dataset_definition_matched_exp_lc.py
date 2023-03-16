@@ -8,6 +8,7 @@ from databuilder.tables.beta.tpp import (
 from databuilder.codes import SNOMEDCTCode
 from codelists import lc_codelists_combined
 import codelists
+import csv 
 # from variables import add_visits
 
 # Use the filtered data to assign people we need
@@ -77,17 +78,18 @@ dataset.end_death = death_date
 dataset.end_deregist = end_reg_date
 dataset.end_lc_cure = lc_cure.date
 
-# add_visits(dataset, lc_dx.date, num_months=1)
-# add_visits(dataset, lc_dx.date, num_months=2)
-# add_visits(dataset, lc_dx.date, num_months=3)
-# add_visits(dataset, lc_dx.date, num_months=4)
-# add_visits(dataset, lc_dx.date, num_months=5)
-# add_visits(dataset, lc_dx.date, num_months=6)
-# add_visits(dataset, lc_dx.date, num_months=7)
-# add_visits(dataset, lc_dx.date, num_months=8)
-# add_visits(dataset, lc_dx.date, num_months=9)
-# add_visits(dataset, lc_dx.date, num_months=10)
-# add_visits(dataset, lc_dx.date, num_months=11)
-# add_visits(dataset, lc_dx.date, num_months=12)
 
+# Outcomes:
 
+add_visits(dataset, lc_dx.date, num_months=1)
+add_visits(dataset, lc_dx.date, num_months=2)
+add_visits(dataset, lc_dx.date, num_months=3)
+add_visits(dataset, lc_dx.date, num_months=4)
+add_visits(dataset, lc_dx.date, num_months=5)
+add_visits(dataset, lc_dx.date, num_months=6)
+add_visits(dataset, lc_dx.date, num_months=7)
+add_visits(dataset, lc_dx.date, num_months=8)
+add_visits(dataset, lc_dx.date, num_months=9)
+add_visits(dataset, lc_dx.date, num_months=10)
+add_visits(dataset, lc_dx.date, num_months=11)
+add_visits(dataset, lc_dx.date, num_months=12)
