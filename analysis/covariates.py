@@ -12,6 +12,7 @@ from databuilder.tables.beta.tpp import (
 )
 from databuilder.codes import CTV3Code, DMDCode, ICD10Code, SNOMEDCTCode
 import codelists
+from codelists import lc_codelists_combined
 
 from variables import (
     add_visits, 
