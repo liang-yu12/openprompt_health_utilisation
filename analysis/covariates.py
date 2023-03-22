@@ -21,8 +21,38 @@ from variables import (
 
 study_start_date = date(2020, 11, 1)
 
-# age  (only for set.population)
+
+# age 
 age = (study_start_date - patients.date_of_birth).years
+
+# current registration
+registration = practice_registrations \
+    .except_where(practice_registrations.start_date > study_start_date - years(1)) \
+    .except_where(practice_registrations.end_date <= study_start_date) \
+    .sort_by(practice_registrations.start_date).last_for_patient()
+
+# long covid diagnoses
+lc_dx = clinical_events.where(clinical_events.snomedct_code.is_in(lc_codelists_combined)) \
+    .sort_by(clinical_events.date) \
+    .first_for_patient()# had lc dx and dx dates
+
+# define end date: lc dx date +12 | death | derigistration | post COVID-19 syndrome resolved
+one_year_after_start = lc_dx.date + days(365) 
+death_date = ons_deaths.sort_by(ons_deaths.date) \
+    .last_for_patient().date
+end_reg_date = registration.end_date
+
+lc_cure = clinical_events.where(clinical_events.snomedct_code ==  SNOMEDCTCode("1326351000000108")) \
+    .sort_by(clinical_events.date) \
+    .first_for_patient()
+# The first recorded lc cure date
+
+# covid tests
+latest_test_before_diagnosis = sgss_covid_all_tests.where(sgss_covid_all_tests.is_positive) \
+    .except_where(sgss_covid_all_tests.specimen_taken_date >= lc_dx.date - days(90)) \
+    .sort_by(sgss_covid_all_tests.specimen_taken_date) \
+    .last_for_patient()
+# # only need the diagnostic month for sensitivity analysis matching
 
 # Demographic: ethnicity
 ## Ethnicity 
