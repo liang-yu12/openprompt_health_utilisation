@@ -28,7 +28,7 @@ age = (study_start_date - patients.date_of_birth).years
 
 # current registration
 registration = practice_registrations \
-    .except_where(practice_registrations.start_date > study_start_date - years(1)) \
+    .except_where(practice_registrations.start_date > study_start_date - years(3)) \
     .except_where(practice_registrations.end_date <= study_start_date) \
     .sort_by(practice_registrations.start_date).last_for_patient()
 

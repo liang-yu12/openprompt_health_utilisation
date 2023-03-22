@@ -19,7 +19,6 @@ dataset.sex = patients.sex
 dataset.region = registration.practice_stp
 dataset.gp_practice = registration.practice_pseudo_id
 dataset.registration_date = registration.start_date
-dataset.exposure_comparator = lc_dx.exists_for_patient()  # indicate this is exposure group
 dataset.long_covid_dx = lc_dx.exists_for_patient()
 dataset.long_covid_dx_date = lc_dx.date
 dataset.index_date = lc_dx.date
