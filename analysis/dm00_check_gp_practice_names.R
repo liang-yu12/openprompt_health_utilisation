@@ -3,10 +3,11 @@
 source("analysis/settings_packages.R")
 
 # gp practices using lc codes
-lc_gp_list <- fread(here("output","dataset_lc_gp_list.csv")) 
+lc_stp_list <- fread(here("output","dataset_exp_lc_unmatched.csv"), select = "region") 
+
 
 # save the output
-lc_gp_list %>% 
-      count(gp_practice) %>% 
+lc_stp_list %>% 
+      count(region) %>% 
       fwrite(here("output", "gp_list.csv"))
 
