@@ -9,5 +9,5 @@ lc_stp_list <- fread(here("output","dataset_exp_lc_unmatched.csv"), select = "re
 # save the output
 lc_stp_list %>% 
       count(region) %>% 
-      fwrite(here("output", "gp_list.csv"))
+      fwrite(here("output", "stp_regions_counts.csv"))
 
