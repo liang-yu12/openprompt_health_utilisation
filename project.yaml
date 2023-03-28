@@ -18,7 +18,7 @@ actions:
     needs: [generate_long_covid_exposure_dataset]
     run: r:latest analysis/dm00_check_stp_regions.R
     outputs:
-      moderate_seneitive: 
+      moderately_sensitive: 
         stp_region: output/stp_regions_counts.csv
 
   generate_list_gp_use_long_covid_dx:
