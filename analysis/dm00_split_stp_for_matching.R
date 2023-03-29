@@ -1,7 +1,7 @@
 # Data management: splitting exposure groups and comparator groups by the 
 # STP regions. 
 # load packages
-source(here::here("analysis/settings_packages.R"))
+source(here::here("analysis","settings_packages.R"))
 
 # 1. splitting exposure datasets: ----
 
