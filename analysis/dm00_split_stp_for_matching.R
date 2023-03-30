@@ -13,7 +13,7 @@ exp_split_list <- split(dataset_exp_lc_unmatched, by = "region")
 
 # Step 3: Save each split data.table to csv files using write.csv()
 lapply(names(exp_split_list), function(x) {
-      fwrite(exp_split_list[[x]], file = here("output", paste0("exp_stp_", x, ".csv")), 
+      fwrite(as.list(exp_split_list[[x]]), file = here("output", paste0("exp_stp_", x, ".csv")), 
              row.names = FALSE)
 })
 
@@ -27,7 +27,7 @@ comp_split_list <- split(dataset_comparator_unmatched, by = "region")
 
 # Step 3: Save each split data.table to csv files using write.csv()
 lapply(names(comp_split_list), function(x) {
-      write.csv(comp_split_list[[x]], file = here("output", paste0("comp_stp_", x, ".csv")), 
+      fwrite(as.list(comp_split_list[[x]]), file = here("output", paste0("comp_stp_", x, ".csv")), 
                 row.names = FALSE)
 })
 
