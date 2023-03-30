@@ -44,69 +44,71 @@ actions:
     needs: [generate_long_covid_exposure_dataset, generate_dataset_comparator_exclude_gp_no_long_covid]
     run: r:latest analysis/dm00_split_stp_for_matching.R
     outputs: 
-      highly_sensitive: 
-        exp_stp_1: output/exp_stp_E84000005.csv
-        exp_stp_2: output/exp_stp_E84000006.csv
-        exp_stp_3: output/exp_stp_E84000007.csv
-        exp_stp_4: output/exp_stp_E84000008.csv
-        exp_stp_5: output/exp_stp_E84000009.csv
-        exp_stp_6: output/exp_stp_E84000010.csv
-        exp_stp_7: output/exp_stp_E84000012.csv
-        exp_stp_8: output/exp_stp_E84000013.csv
-        exp_stp_9: output/exp_stp_E84000014.csv
-        exp_stp_10: output/exp_stp_E84000015.csv
-        exp_stp_11: output/exp_stp_E84000016.csv
-        exp_stp_12: output/exp_stp_E84000017.csv
-        exp_stp_13: output/exp_stp_E84000020.csv
-        exp_stp_14: output/exp_stp_E84000021.csv
-        exp_stp_15: output/exp_stp_E84000022.csv
-        exp_stp_16: output/exp_stp_E84000023.csv
-        exp_stp_17: output/exp_stp_E84000024.csv
-        exp_stp_18: output/exp_stp_E84000025.csv
-        exp_stp_19: output/exp_stp_E84000026.csv
-        exp_stp_20: output/exp_stp_E84000027.csv
-        exp_stp_21: output/exp_stp_E84000029.csv
-        exp_stp_22: output/exp_stp_E84000033.csv
-        exp_stp_23: output/exp_stp_E84000035.csv
-        exp_stp_24: output/exp_stp_E84000036.csv
-        exp_stp_25: output/exp_stp_E84000037.csv
-        exp_stp_26: output/exp_stp_E84000040.csv
-        exp_stp_27: output/exp_stp_E84000041.csv
-        exp_stp_28: output/exp_stp_E84000042.csv
-        exp_stp_29: output/exp_stp_E84000043.csv
-        exp_stp_30: output/exp_stp_E84000044.csv
-        exp_stp_31: output/exp_stp_E84000049.csv
-        com_stp_1: output/comp_stp_E84000005.csv
-        com_stp_2: output/comp_stp_E84000006.csv
-        com_stp_3: output/comp_stp_E84000007.csv
-        com_stp_4: output/comp_stp_E84000008.csv
-        com_stp_5: output/comp_stp_E84000009.csv
-        com_stp_6: output/comp_stp_E84000010.csv
-        com_stp_7: output/comp_stp_E84000012.csv
-        com_stp_8: output/comp_stp_E84000013.csv
-        com_stp_9: output/comp_stp_E84000014.csv
-        com_stp_10: output/comp_stp_E84000015.csv
-        com_stp_11: output/comp_stp_E84000016.csv
-        com_stp_12: output/comp_stp_E84000017.csv
-        com_stp_13: output/comp_stp_E84000020.csv
-        com_stp_14: output/comp_stp_E84000021.csv
-        com_stp_15: output/comp_stp_E84000022.csv
-        com_stp_16: output/comp_stp_E84000023.csv
-        com_stp_17: output/comp_stp_E84000024.csv
-        com_stp_18: output/comp_stp_E84000025.csv
-        com_stp_19: output/comp_stp_E84000026.csv
-        com_stp_20: output/comp_stp_E84000027.csv
-        com_stp_21: output/comp_stp_E84000029.csv
-        com_stp_22: output/comp_stp_E84000033.csv
-        com_stp_23: output/comp_stp_E84000035.csv
-        com_stp_24: output/comp_stp_E84000036.csv
-        com_stp_25: output/comp_stp_E84000037.csv
-        com_stp_26: output/comp_stp_E84000040.csv
-        com_stp_27: output/comp_stp_E84000041.csv
-        com_stp_28: output/comp_stp_E84000042.csv
-        com_stp_29: output/comp_stp_E84000043.csv
-        com_stp_30: output/comp_stp_E84000044.csv
-        com_stp_31: output/comp_stp_E84000049.csv
+      moderately_sensitive: output/exp_stp_names_numbers.csv
+      moderately_sensitive: output/com_stp_names_numbers.csv
+      # highly_sensitive: 
+      #   exp_stp_1: output/exp_stp_E84000005.csv
+      #   exp_stp_2: output/exp_stp_E84000006.csv
+      #   exp_stp_3: output/exp_stp_E84000007.csv
+      #   exp_stp_4: output/exp_stp_E84000008.csv
+      #   exp_stp_5: output/exp_stp_E84000009.csv
+      #   exp_stp_6: output/exp_stp_E84000010.csv
+      #   exp_stp_7: output/exp_stp_E84000012.csv
+      #   exp_stp_8: output/exp_stp_E84000013.csv
+      #   exp_stp_9: output/exp_stp_E84000014.csv
+      #   exp_stp_10: output/exp_stp_E84000015.csv
+      #   exp_stp_11: output/exp_stp_E84000016.csv
+      #   exp_stp_12: output/exp_stp_E84000017.csv
+      #   exp_stp_13: output/exp_stp_E84000020.csv
+      #   exp_stp_14: output/exp_stp_E84000021.csv
+      #   exp_stp_15: output/exp_stp_E84000022.csv
+      #   exp_stp_16: output/exp_stp_E84000023.csv
+      #   exp_stp_17: output/exp_stp_E84000024.csv
+      #   exp_stp_18: output/exp_stp_E84000025.csv
+      #   exp_stp_19: output/exp_stp_E84000026.csv
+      #   exp_stp_20: output/exp_stp_E84000027.csv
+      #   exp_stp_21: output/exp_stp_E84000029.csv
+      #   exp_stp_22: output/exp_stp_E84000033.csv
+      #   exp_stp_23: output/exp_stp_E84000035.csv
+      #   exp_stp_24: output/exp_stp_E84000036.csv
+      #   exp_stp_25: output/exp_stp_E84000037.csv
+      #   exp_stp_26: output/exp_stp_E84000040.csv
+      #   exp_stp_27: output/exp_stp_E84000041.csv
+      #   exp_stp_28: output/exp_stp_E84000042.csv
+      #   exp_stp_29: output/exp_stp_E84000043.csv
+      #   exp_stp_30: output/exp_stp_E84000044.csv
+      #   exp_stp_31: output/exp_stp_E84000049.csv
+      #   com_stp_1: output/comp_stp_E84000005.csv
+      #   com_stp_2: output/comp_stp_E84000006.csv
+      #   com_stp_3: output/comp_stp_E84000007.csv
+      #   com_stp_4: output/comp_stp_E84000008.csv
+      #   com_stp_5: output/comp_stp_E84000009.csv
+      #   com_stp_6: output/comp_stp_E84000010.csv
+      #   com_stp_7: output/comp_stp_E84000012.csv
+      #   com_stp_8: output/comp_stp_E84000013.csv
+      #   com_stp_9: output/comp_stp_E84000014.csv
+      #   com_stp_10: output/comp_stp_E84000015.csv
+      #   com_stp_11: output/comp_stp_E84000016.csv
+      #   com_stp_12: output/comp_stp_E84000017.csv
+      #   com_stp_13: output/comp_stp_E84000020.csv
+      #   com_stp_14: output/comp_stp_E84000021.csv
+      #   com_stp_15: output/comp_stp_E84000022.csv
+      #   com_stp_16: output/comp_stp_E84000023.csv
+      #   com_stp_17: output/comp_stp_E84000024.csv
+      #   com_stp_18: output/comp_stp_E84000025.csv
+      #   com_stp_19: output/comp_stp_E84000026.csv
+      #   com_stp_20: output/comp_stp_E84000027.csv
+      #   com_stp_21: output/comp_stp_E84000029.csv
+      #   com_stp_22: output/comp_stp_E84000033.csv
+      #   com_stp_23: output/comp_stp_E84000035.csv
+      #   com_stp_24: output/comp_stp_E84000036.csv
+      #   com_stp_25: output/comp_stp_E84000037.csv
+      #   com_stp_26: output/comp_stp_E84000040.csv
+      #   com_stp_27: output/comp_stp_E84000041.csv
+      #   com_stp_28: output/comp_stp_E84000042.csv
+      #   com_stp_29: output/comp_stp_E84000043.csv
+      #   com_stp_30: output/comp_stp_E84000044.csv
+      #   com_stp_31: output/comp_stp_E84000049.csv
 
   # match_comparators:
   #   run:
