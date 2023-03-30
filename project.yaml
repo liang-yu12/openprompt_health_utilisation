@@ -113,7 +113,7 @@ actions:
         com_stp_10: output/com_stp_10.csv
         com_stp_44: output/com_stp_44.csv
 
-  match_comparators:
+  match_comparators_05:
     run:
       python:latest python analysis/matching_05.py
     needs: [split_unmatched_data_by_stp_regions]
@@ -124,3 +124,392 @@ actions:
         matched_all: output/matched_combined_stp_05.csv
       moderately_sensitive: 
         matching_report: output/matching_report_stp_05.txt
+
+    match_comparators_24:
+    run:
+      python:latest python analysis/matching_24.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_24.csv
+        matched_matches: output/matched_matches_stp_24.csv
+        matched_all: output/matched_combined_stp_24.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_24.txt
+
+
+  match_comparators_26:
+    run:
+      python:latest python analysis/matching_26.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_26.csv
+        matched_matches: output/matched_matches_stp_26.csv
+        matched_all: output/matched_combined_stp_26.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_26.txt
+
+
+  match_comparators_23:
+    run:
+      python:latest python analysis/matching_23.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_23.csv
+        matched_matches: output/matched_matches_stp_23.csv
+        matched_all: output/matched_combined_stp_23.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_23.txt
+
+
+  match_comparators_6:
+    run:
+      python:latest python analysis/matching_6.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_6.csv
+        matched_matches: output/matched_matches_stp_6.csv
+        matched_all: output/matched_combined_stp_6.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_6.txt
+
+
+  match_comparators_13:
+    run:
+      python:latest python analysis/matching_13.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_13.csv
+        matched_matches: output/matched_matches_stp_13.csv
+        matched_all: output/matched_combined_stp_13.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_13.txt
+
+
+  match_comparators_49:
+    run:
+      python:latest python analysis/matching_49.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_49.csv
+        matched_matches: output/matched_matches_stp_49.csv
+        matched_all: output/matched_combined_stp_49.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_49.txt
+
+
+  match_comparators_15:
+    run:
+      python:latest python analysis/matching_15.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_15.csv
+        matched_matches: output/matched_matches_stp_15.csv
+        matched_all: output/matched_combined_stp_15.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_15.txt
+
+
+  match_comparators_41:
+    run:
+      python:latest python analysis/matching_41.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_41.csv
+        matched_matches: output/matched_matches_stp_41.csv
+        matched_all: output/matched_combined_stp_41.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_41.txt
+
+
+  match_comparators_09:
+    run:
+      python:latest python analysis/matching_09.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_09.csv
+        matched_matches: output/matched_matches_stp_09.csv
+        matched_all: output/matched_combined_stp_09.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_09.txt
+
+
+  match_comparators_17:
+    run:
+      python:latest python analysis/matching_17.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_17.csv
+        matched_matches: output/matched_matches_stp_17.csv
+        matched_all: output/matched_combined_stp_17.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_17.txt
+
+
+  match_comparators_25:
+    run:
+      python:latest python analysis/matching_25.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_25.csv
+        matched_matches: output/matched_matches_stp_25.csv
+        matched_all: output/matched_combined_stp_25.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_25.txt
+
+
+  match_comparators_16:
+    run:
+      python:latest python analysis/matching_16.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_16.csv
+        matched_matches: output/matched_matches_stp_16.csv
+        matched_all: output/matched_combined_stp_16.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_16.txt
+
+
+  match_comparators_07:
+    run:
+      python:latest python analysis/matching_07.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_07.csv
+        matched_matches: output/matched_matches_stp_07.csv
+        matched_all: output/matched_combined_stp_07.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_07.txt
+
+
+  match_comparators_42:
+    run:
+      python:latest python analysis/matching_42.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_42.csv
+        matched_matches: output/matched_matches_stp_42.csv
+        matched_all: output/matched_combined_stp_42.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_42.txt
+
+
+  match_comparators_21:
+    run:
+      python:latest python analysis/matching_21.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_21.csv
+        matched_matches: output/matched_matches_stp_21.csv
+        matched_all: output/matched_combined_stp_21.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_21.txt
+
+
+  match_comparators_40:
+    run:
+      python:latest python analysis/matching_40.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_40.csv
+        matched_matches: output/matched_matches_stp_40.csv
+        matched_all: output/matched_combined_stp_40.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_40.txt
+
+
+  match_comparators_27:
+    run:
+      python:latest python analysis/matching_27.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_27.csv
+        matched_matches: output/matched_matches_stp_27.csv
+        matched_all: output/matched_combined_stp_27.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_27.txt
+
+
+  match_comparators_14:
+    run:
+      python:latest python analysis/matching_14.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_14.csv
+        matched_matches: output/matched_matches_stp_14.csv
+        matched_all: output/matched_combined_stp_14.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_14.txt
+
+
+  match_comparators_20:
+    run:
+      python:latest python analysis/matching_20.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_20.csv
+        matched_matches: output/matched_matches_stp_20.csv
+        matched_all: output/matched_combined_stp_20.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_20.txt
+
+
+  match_comparators_29:
+    run:
+      python:latest python analysis/matching_29.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_29.csv
+        matched_matches: output/matched_matches_stp_29.csv
+        matched_all: output/matched_combined_stp_29.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_29.txt
+
+
+  match_comparators_43:
+    run:
+      python:latest python analysis/matching_43.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_43.csv
+        matched_matches: output/matched_matches_stp_43.csv
+        matched_all: output/matched_combined_stp_43.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_43.txt
+
+
+  match_comparators_08:
+    run:
+      python:latest python analysis/matching_08.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_08.csv
+        matched_matches: output/matched_matches_stp_08.csv
+        matched_all: output/matched_combined_stp_08.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_08.txt
+
+
+  match_comparators_37:
+    run:
+      python:latest python analysis/matching_37.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_37.csv
+        matched_matches: output/matched_matches_stp_37.csv
+        matched_all: output/matched_combined_stp_37.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_37.txt
+
+
+  match_comparators_22:
+    run:
+      python:latest python analysis/matching_22.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_22.csv
+        matched_matches: output/matched_matches_stp_22.csv
+        matched_all: output/matched_combined_stp_22.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_22.txt
+
+
+  match_comparators_12:
+    run:
+      python:latest python analysis/matching_12.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_12.csv
+        matched_matches: output/matched_matches_stp_12.csv
+        matched_all: output/matched_combined_stp_12.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_12.txt
+
+
+  match_comparators_33:
+    run:
+      python:latest python analysis/matching_33.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_33.csv
+        matched_matches: output/matched_matches_stp_33.csv
+        matched_all: output/matched_combined_stp_33.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_33.txt
+
+
+  match_comparators_35:
+    run:
+      python:latest python analysis/matching_35.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_35.csv
+        matched_matches: output/matched_matches_stp_35.csv
+        matched_all: output/matched_combined_stp_35.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_35.txt
+
+
+  match_comparators_36:
+    run:
+      python:latest python analysis/matching_36.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_36.csv
+        matched_matches: output/matched_matches_stp_36.csv
+        matched_all: output/matched_combined_stp_36.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_36.txt
+
+
+  match_comparators_10:
+    run:
+      python:latest python analysis/matching_10.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_10.csv
+        matched_matches: output/matched_matches_stp_10.csv
+        matched_all: output/matched_combined_stp_10.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_10.txt
+
+
+  match_comparators_44:
+    run:
+      python:latest python analysis/matching_44.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs:
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_44.csv
+        matched_matches: output/matched_matches_stp_44.csv
+        matched_all: output/matched_combined_stp_44.csv
+      moderately_sensitive:
+        matching_report: output/matching_report_stp_44.txt
