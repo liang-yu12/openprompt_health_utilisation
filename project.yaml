@@ -119,8 +119,8 @@ actions:
     needs: [split_unmatched_data_by_stp_regions]
     outputs: 
       highly_sensitive:
-        matched_cases: output/matched_cases_.csv
-        matched_matches: output/matched_matches.csv
-        matched_all: output/matched_combined.csv
+        matched_cases: output/matched_cases_stp_05.csv
+        matched_matches: output/matched_matches_stp_05.csv
+        matched_all: output/matched_combined_stp_05.csv
       moderately_sensitive: 
-        matching_report: output/matching_report.txt
+        matching_report: output/matching_report_stp_05.txt
