@@ -113,14 +113,14 @@ actions:
         com_stp_10: output/com_stp_10.csv
         com_stp_44: output/com_stp_44.csv
 
-  # match_comparators:
-  #   run:
-  #     python:latest python analysis/match.py
-  #   needs: [generate_dataset_comparator_exclude_gp_no_long_covid, generate_long_covid_exposure_dataset]
-  #   outputs: 
-  #     highly_sensitive:
-  #       matched_cases: output/matched_cases.csv
-  #       matched_matches: output/matched_matches.csv
-  #       matched_all: output/matched_combined.csv
-  #     moderately_sensitive: 
-  #       matching_report: output/matching_report.txt
+  match_comparators:
+    run:
+      python:latest python analysis/matching_05.py
+    needs: [split_unmatched_data_by_stp_regions]
+    outputs: 
+      highly_sensitive:
+        matched_cases: output/matched_cases.csv
+        matched_matches: output/matched_matches.csv
+        matched_all: output/matched_combined.csv
+      moderately_sensitive: 
+        matching_report: output/matching_report.txt
