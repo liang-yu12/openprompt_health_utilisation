@@ -18,13 +18,13 @@ data.frame(
 ) %>% as.list() %>% 
       fwrite(here("output", "exp_stp_names_numbers.csv"))
 
-# names(exp_split_list) <- str_sub(names(exp_split_list) # rename the list for saving
+names(exp_split_list) <- str_sub(names(exp_split_list)) # rename the list for saving
 
-# # Step 3: Save each split data.table to csv files using write.csv()
-# lapply(names(exp_split_list), function(x) {
-#       fwrite(as.list(exp_split_list[[x]]), file = here("output", paste0("exp_stp_", str_sub(names(x),-2, -1), ".csv")), 
-#              row.names = FALSE)
-# })
+# Step 3: Save each split data.table to csv files using write.csv()
+lapply(names(exp_split_list), function(x) {
+      fwrite(as.list(exp_split_list[[x]]), file = here("output", paste0("exp_stp_", str_sub(names(x),-2, -1), ".csv")),
+             row.names = FALSE)
+})
 
 # 2. Split comparator unmatched dataset ----
 
@@ -42,11 +42,11 @@ data.frame(
       fwrite(here("output", "com_stp_names_numbers.csv"))
 
        
-# names(comp_split_list) <- str_sub(names(com_split_list)
-# 
-# # Step 3: Save each split data.table to csv files using write.csv()
-# lapply(names(comp_split_list), function(x) {
-#       fwrite(as.list(comp_split_list[[x]]), file = here("output", paste0("comp_stp_", str_sub(names(x),-2, -1), ".csv")), 
-#                 row.names = FALSE)
-# })
+names(com_split_list) <- str_sub(names(com_split_list))
+
+# Step 3: Save each split data.table to csv files using write.csv()
+lapply(names(com_split_list), function(x) {
+      fwrite(as.list(com_split_list[[x]]), file = here("output", paste0("com_stp_", str_sub(names(x),-2, -1), ".csv")),
+                row.names = FALSE)
+})
 
