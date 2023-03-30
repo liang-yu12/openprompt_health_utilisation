@@ -48,7 +48,7 @@ actions:
         stp_exp_table: output/exp_stp_names_numbers.csv
         stp_com_table: output/com_stp_names_numbers.csv
       highly_sensitive: 
-        exp_stp_: output/exp_stp_.csv
+        # exp_stp_: output/exp_stp_.csv
         exp_stp_5: output/exp_stp_05.csv
         exp_stp_24: output/exp_stp_24.csv
         exp_stp_26: output/exp_stp_26.csv
@@ -80,7 +80,7 @@ actions:
         exp_stp_36: output/exp_stp_36.csv
         exp_stp_10: output/exp_stp_10.csv
         exp_stp_44: output/exp_stp_44.csv
-        com_stp_: output/com_stp_.csv
+        # com_stp_: output/com_stp_.csv
         com_stp_5: output/com_stp_05.csv
         com_stp_24: output/com_stp_24.csv
         com_stp_26: output/com_stp_26.csv
