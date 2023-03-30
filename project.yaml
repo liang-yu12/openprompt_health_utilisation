@@ -45,8 +45,8 @@ actions:
     run: r:latest analysis/dm00_split_stp_for_matching.R
     outputs: 
       moderately_sensitive: 
-        stp_table: output/exp_stp_names_numbers.csv
-        stp_table: output/com_stp_names_numbers.csv
+        stp_exp_table: output/exp_stp_names_numbers.csv
+        stp_com_table: output/com_stp_names_numbers.csv
       # highly_sensitive: 
       #   exp_stp_1: output/exp_stp_E84000005.csv
       #   exp_stp_2: output/exp_stp_E84000006.csv
