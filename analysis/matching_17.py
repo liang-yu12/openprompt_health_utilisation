@@ -19,6 +19,6 @@ match(
         "end_deregist": "before",
         "long_covid_dx_date": "before",
     },
-    output_suffix="matched_stp_17",
+    output_suffix="_stp_17",
     output_path="output",
 )
