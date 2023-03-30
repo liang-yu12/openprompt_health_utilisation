@@ -44,8 +44,9 @@ actions:
     needs: [generate_long_covid_exposure_dataset, generate_dataset_comparator_exclude_gp_no_long_covid]
     run: r:latest analysis/dm00_split_stp_for_matching.R
     outputs: 
-      moderately_sensitive: output/exp_stp_names_numbers.csv
-      moderately_sensitive: output/com_stp_names_numbers.csv
+      moderately_sensitive: 
+        output/exp_stp_names_numbers.csv
+        output/com_stp_names_numbers.csv
       # highly_sensitive: 
       #   exp_stp_1: output/exp_stp_E84000005.csv
       #   exp_stp_2: output/exp_stp_E84000006.csv
