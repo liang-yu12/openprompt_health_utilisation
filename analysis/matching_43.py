@@ -3,8 +3,8 @@ import pandas as pd
 from osmatching import match
 
 match(
-    case_csv="exp_stp_43.csv",
-    match_csv="com_stp_43.csv",
+    case_csv="exp_stp_43",
+    match_csv="com_stp_43",
     matches_per_case=5,
     match_variables={
         "age": 1,
