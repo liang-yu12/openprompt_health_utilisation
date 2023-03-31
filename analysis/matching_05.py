@@ -5,7 +5,7 @@ from osmatching import match
 match(
     case_csv="exp_stp_05",
     match_csv="com_stp_05",
-    matches_per_case=5,
+    matches_per_case= 3,
     match_variables={
         "age": 1,
         "sex": "category",
