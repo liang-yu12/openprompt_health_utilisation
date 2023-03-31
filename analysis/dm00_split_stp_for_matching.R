@@ -8,6 +8,13 @@ source(here::here("analysis","settings_packages.R"))
 # Step 1: Read in the csv file using fread
 dataset_exp_lc_unmatched <- fread(here::here("output","dataset_exp_lc_unmatched.csv"))
 
+
+to_be_dates <- c("registration_date", "long_covid_dx_date" , "index_date" ,
+                 "end_1y_after_index", "end_death", "end_lc_cure", "bmi_date")
+
+dataset_exp_lc_unmatched[,(to_be_dates) := lapply(.SD, as.Date), .SDcols = to_be_dates]
+
+
 # Step 2: Split the data.table by a variable level using data.table::split()
 exp_split_list <- split(dataset_exp_lc_unmatched, by = "region")
 
@@ -30,6 +37,13 @@ lapply(names(exp_split_list), function(x) {
 
 # Step 1: Read in the csv file using fread
 dataset_comparator_unmatched <- fread(here::here("output", "dataset_comparator_unmatched.csv"))
+
+to_be_dates2 <- c("registration_date", "long_covid_dx_date" , 
+                 "end_death", "bmi_date")
+
+
+dataset_comparator_unmatched[,(to_be_dates2) := lapply(.SD, as.Date), .SDcols = to_be_dates2]
+
 
 # Step 2: Split the data.table by a variable level using data.table::split()
 com_split_list <- split(dataset_comparator_unmatched, by = "region")
