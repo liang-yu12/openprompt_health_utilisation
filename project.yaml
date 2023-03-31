@@ -9,17 +9,17 @@ actions:
     run: 
       databuilder:v0 generate-dataset
         analysis/dataset_definition_unmatched_exp_lc.py
-        --output output/dataset_exp_lc_unmatched.csv.gz
+        --output output/dataset_exp_lc_unmatched.csv
     outputs:
       highly_sensitive:
-        cohort: output/dataset_exp_lc_unmatched.csv.gz
+        cohort: output/dataset_exp_lc_unmatched.csv
 
   check_stp_regions:
     needs: [generate_long_covid_exposure_dataset]
     run: r:latest analysis/dm00_check_stp_regions.R
     outputs:
       moderately_sensitive: 
-        stp_region: output/stp_regions_counts.csv.gz
+        stp_region: output/stp_regions_counts.csv
 
   generate_list_gp_use_long_covid_dx:
     run: 
@@ -35,10 +35,10 @@ actions:
     run: 
       databuilder:v0 generate-dataset
         analysis/dataset_definition_unmatched_comparator.py
-        --output output/dataset_comparator_unmatched.csv.gz
+        --output output/dataset_comparator_unmatched.csv
     outputs:
       highly_sensitive:
-        cohort: output/dataset_comparator_unmatched.csv.gz
+        cohort: output/dataset_comparator_unmatched.csv
 
   test_matching:
     run:
@@ -46,9 +46,9 @@ actions:
     needs: [generate_dataset_comparator_exclude_gp_no_long_covid, generate_long_covid_exposure_dataset]
     outputs: 
       highly_sensitive:
-        matched_cases: output/matched_cases_stp.csv.gz
-        matched_matches: output/matched_matches_stp.csv.gz
-        matched_all: output/matched_combined_stp.csv.gz
+        matched_cases: output/matched_cases_stp.csv
+        matched_matches: output/matched_matches_stp.csv
+        matched_all: output/matched_combined_stp.csv
       moderately_sensitive: 
         matching_report: output/matching_report_stp.txt
 
