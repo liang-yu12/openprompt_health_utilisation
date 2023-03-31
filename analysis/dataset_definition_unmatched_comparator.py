@@ -28,7 +28,7 @@ dataset.gp_practice = registration.practice_pseudo_id
 dataset.registration_date = registration.start_date
 dataset.long_covid_dx = lc_dx.exists_for_patient()
 dataset.long_covid_dx_date = lc_dx.date
-dataset.end_1y_after_index = one_year_after_start
+
 dataset.end_death = death_date
 dataset.end_deregist = end_reg_date
 dataset.end_lc_cure = lc_cure.date
