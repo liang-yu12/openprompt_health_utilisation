@@ -1,6 +1,6 @@
 # check the STP regions names: 
 # load packages:
-source(here::here("analysis"), "settings_packages.R")
+source("analysis/settings_packages.R")
 
 # gp practices using lc codes
 lc_stp_list <- fread(here("output","dataset_exp_lc_unmatched.csv"), select = "region") 
