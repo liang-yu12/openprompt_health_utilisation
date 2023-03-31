@@ -9,6 +9,7 @@ match(
     match_variables={
         "age": 1,
         "sex": "category",
+        "region": "category"
     },
     closest_match_variables=["age"],
     index_date_variable="index_date",
@@ -19,7 +20,7 @@ match(
         "end_deregist": "before",
         "long_covid_dx_date": "before",
     },
-    output_suffix="_stp_05",
+    output_suffix="_stp",
     output_path="output",
 )
 
