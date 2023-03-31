@@ -40,6 +40,19 @@ actions:
       highly_sensitive:
         cohort: output/dataset_comparator_unmatched.csv
 
+  test_matching:
+    run:
+      python:latest python analysis/match_test.py
+    needs: [generate_dataset_comparator_exclude_gp_no_long_covid, generate_long_covid_exposure_dataset]
+    outputs: 
+      highly_sensitive:
+        matched_cases: output/matched_cases_stp_05.csv
+        matched_matches: output/matched_matches_stp_05.csv
+        matched_all: output/matched_combined_stp_05.csv
+      moderately_sensitive: 
+        matching_report: output/matching_report_stp_05.txt
+
+
   # split_unmatched_data_by_stp_regions:
   #   needs: [generate_long_covid_exposure_dataset, generate_dataset_comparator_exclude_gp_no_long_covid]
   #   run: r:latest analysis/dm00_split_stp_for_matching.R

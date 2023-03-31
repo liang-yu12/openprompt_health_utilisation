@@ -3,9 +3,9 @@ import pandas as pd
 from osmatching import match
 
 match(
-    case_csv="exp_stp_05",
-    match_csv="com_stp_05",
-    matches_per_case= 3,
+    case_csv="dataset_exp_lc_unmatched",
+    match_csv="dataset_comparator_unmatched",
+    matches_per_case= 5,
     match_variables={
         "age": 1,
         "sex": "category",
@@ -22,3 +22,5 @@ match(
     output_suffix="_stp_05",
     output_path="output",
 )
+
+# direct matching works on local machine
