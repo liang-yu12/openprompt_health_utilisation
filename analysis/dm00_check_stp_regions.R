@@ -3,7 +3,7 @@
 source("analysis/settings_packages.R")
 
 # gp practices using lc codes
-lc_stp_list <- fread(here("output","dataset_exp_lc_unmatched.csv"), select = "region") 
+lc_stp_list <- fread(here("output","dataset_exp_lc_unmatched.csv.gz"), select = "region") 
 
 
 # save the output

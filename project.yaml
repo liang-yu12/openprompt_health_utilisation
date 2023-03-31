@@ -9,36 +9,36 @@ actions:
     run: 
       databuilder:v0 generate-dataset
         analysis/dataset_definition_unmatched_exp_lc.py
-        --output output/dataset_exp_lc_unmatched.csv
+        --output output/dataset_exp_lc_unmatched.csv.gz
     outputs:
       highly_sensitive:
-        cohort: output/dataset_exp_lc_unmatched.csv
+        cohort: output/dataset_exp_lc_unmatched.csv.gz
 
   check_stp_regions:
     needs: [generate_long_covid_exposure_dataset]
     run: r:latest analysis/dm00_check_stp_regions.R
     outputs:
       moderately_sensitive: 
-        stp_region: output/stp_regions_counts.csv
+        stp_region: output/stp_regions_counts.csv.gz
 
   generate_list_gp_use_long_covid_dx:
     run: 
       databuilder:v0 generate-dataset
         analysis/dataset_definition_lc_gp_list.py
-        --output output/dataset_lc_gp_list.csv
+        --output output/dataset_lc_gp_list.csv.gz
     outputs:
       highly_sensitive:
-        cohort: output/dataset_lc_gp_list.csv
+        cohort: output/dataset_lc_gp_list.csv.gz
 
   generate_dataset_comparator_exclude_gp_no_long_covid:
     needs: [generate_list_gp_use_long_covid_dx]
     run: 
       databuilder:v0 generate-dataset
         analysis/dataset_definition_unmatched_comparator.py
-        --output output/dataset_comparator_unmatched.csv
+        --output output/dataset_comparator_unmatched.csv.gz
     outputs:
       highly_sensitive:
-        cohort: output/dataset_comparator_unmatched.csv
+        cohort: output/dataset_comparator_unmatched.csv.gz
 
   test_matching:
     run:
@@ -46,9 +46,9 @@ actions:
     needs: [generate_dataset_comparator_exclude_gp_no_long_covid, generate_long_covid_exposure_dataset]
     outputs: 
       highly_sensitive:
-        matched_cases: output/matched_cases_stp_05.csv
-        matched_matches: output/matched_matches_stp_05.csv
-        matched_all: output/matched_combined_stp_05.csv
+        matched_cases: output/matched_cases_stp_05.csv.gz
+        matched_matches: output/matched_matches_stp_05.csv.gz
+        matched_all: output/matched_combined_stp_05.csv.gz
       moderately_sensitive: 
         matching_report: output/matching_report_stp_05.txt
 
