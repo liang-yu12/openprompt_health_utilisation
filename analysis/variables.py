@@ -16,7 +16,12 @@ import operator
 from functools import reduce
 
 # temp zone for testing: -------
-import covariates
+from covariates import *
+study_start_date = date(2020, 11, 1)
+age = (study_start_date - patients.date_of_birth).years
+lc_dx = clinical_events.where(clinical_events.snomedct_code.is_in(lc_codelists_combined)) \
+    .sort_by(clinical_events.date) \
+    .first_for_patient()# had lc dx and dx dates
 # -----
 
 study_start_date = date(2020, 11, 1)
@@ -104,6 +109,6 @@ def create_sequential_variables(
 
 # Temp: test generate data
 dataset = Dataset()
-dataset.define_population()
+dataset.define_population(age >= 18)
 add_visits(dataset, lc_dx.date, num_months=1)
 add_visits(dataset, lc_dx.date, num_months=2)
