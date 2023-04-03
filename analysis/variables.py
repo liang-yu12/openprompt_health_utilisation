@@ -1,5 +1,5 @@
 from datetime import date
-from databuilder.ehrql import days, case, when
+from databuilder.ehrql import Dataset, days, case, when
 from databuilder.tables.beta.tpp import (
     clinical_events,
     appointments,
@@ -103,7 +103,7 @@ def create_sequential_variables(
 
 
 # Temp: test generate data
-dataset=Dataset()
+dataset = Dataset()
 dataset.define_population()
 add_visits(dataset, lc_dx.date, num_months=1)
 add_visits(dataset, lc_dx.date, num_months=2)
