@@ -50,7 +50,8 @@ dataset.cov_aplastic_anemia = aplastic_anemia.exists_for_patient()
 dataset.cov_permanent_immune_suppress = permanent_immune_suppress.exists_for_patient()
 dataset.cov_temporary_immune_suppress = temporary_immune_suppress.exists_for_patient()
 
-
+# Defining outcomes:
+# GP visits: 
 # add_visits(dataset, lc_dx.date, num_months=1)
 # add_visits(dataset, lc_dx.date, num_months=2)
 # add_visits(dataset, lc_dx.date, num_months=3)
