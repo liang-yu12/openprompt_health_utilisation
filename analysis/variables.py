@@ -15,6 +15,9 @@ from codelists import *
 import operator
 from functools import reduce
 
+# temp zone for testing: -------
+import covariates
+# -----
 
 study_start_date = date(2020, 11, 1)
 
@@ -97,3 +100,10 @@ def create_sequential_variables(
         )
         variable_name = variable_name_template.format(n=index + 1)
         setattr(dataset, variable_name, getattr(next_event, column))
+
+
+# Temp: test generate data
+dataset=Dataset()
+dataset.define_population()
+add_visits(dataset, lc_dx.date, num_months=1)
+add_visits(dataset, lc_dx.date, num_months=2)
