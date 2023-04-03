@@ -22,10 +22,11 @@ dataset.registration_date = registration.start_date
 dataset.long_covid_dx = lc_dx.exists_for_patient()
 dataset.long_covid_dx_date = lc_dx.date
 dataset.index_date = lc_dx.date
-
 dataset.end_death = death_date
 dataset.end_deregist = end_reg_date
 dataset.end_lc_cure = lc_cure.date
+
+# the following codes will be added to matched data.
 dataset.covid_positive = latest_test_before_diagnosis.exists_for_patient()
 dataset.covid_dx_month = latest_test_before_diagnosis.specimen_taken_date.to_first_of_month() # only need dx month
 dataset.ethnicity = ethnicity
