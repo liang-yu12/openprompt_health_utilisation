@@ -32,16 +32,6 @@ def add_visits(dataset, from_date, num_months):
         .count_for_patient()
     setattr(dataset, f"gp_visit_m{num_months}", num_visits)
 
-# # Function codes for A&E visit counts
-# def add_ae_visits(dataset, from_date, num_months):
-#     # Number of A&E visits within `num_months` of `from_date`
-#     num_visits = emergency_care_attendances \
-#         .where((emergency_care_attendances.arrival_date >= from_date) &
-#               (emergency_care_attendances.arrival_date  <= (from_date + days(num_months * 30)))) \
-#         .count_for_patient()
-#     setattr(dataset, f"gp_visit_m{num_months}", num_visits)
-
-
 # # Function codes for hospitalisation visit counts：
 # # # Q: if a person stayed in a hospital for more than one month, should we count it as one admission? 
 def add_hos_visits(dataset, from_date, num_months):
@@ -51,6 +41,16 @@ def add_hos_visits(dataset, from_date, num_months):
               (hospital_admissions.discharge_date  <= (from_date + days(num_months * 30)))) \
         .count_for_patient()
     setattr(dataset, f"hos_visit_m{num_months}", num_visits)
+
+
+# # Function codes for A&E visit counts
+def add_ae_visits(dataset, from_date, num_months):
+    # Number of A&E visits within `num_months` of `from_date`
+    num_visits = emergency_care_attendances \
+        .where((emergency_care_attendances.arrival_date >= from_date) &
+              (emergency_care_attendances.arrival_date  <= (from_date + days(num_months * 30)))) \
+        .count_for_patient()
+    setattr(dataset, f"ae_visit_m{num_months}", num_visits)
 
 
 # Function codes for extracting hospitalisation records
@@ -112,3 +112,5 @@ add_visits(dataset, lc_dx.date, num_months=1)
 add_visits(dataset, lc_dx.date, num_months=2)
 add_hos_visits(dataset, lc_dx.date, num_months=3)
 add_hos_visits(dataset, lc_dx.date, num_months=4)
+add_ae_visits(dataset, lc_dx.date, num_months=5)
+add_ae_visits(dataset, lc_dx.date, num_months=6)
