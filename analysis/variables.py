@@ -23,8 +23,6 @@ lc_dx = clinical_events.where(clinical_events.snomedct_code.is_in(lc_codelists_c
     .first_for_patient()# had lc dx and dx dates
 # -----
 
-study_start_date = date(2020, 11, 1)
-
 # Function codes for extracting monthly GP visit
 def add_visits(dataset, from_date, num_months):
     # Number of GP visits within `num_months` of `from_date`
