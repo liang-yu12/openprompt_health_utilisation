@@ -19,7 +19,7 @@ from variables import (
 )
 
 study_start_date = date(2020, 11, 1)
-
+study_end_date = date(2022, 12, 31)
 
 # age 
 age = (study_start_date - patients.date_of_birth).years
@@ -38,12 +38,12 @@ lc_dx = clinical_events.where(clinical_events.snomedct_code.is_in(lc_codelists_c
 # define end date: lc dx date +12 | death | derigistration | post COVID-19 syndrome resolved
 one_year_after_start = lc_dx.date + days(365) 
 death_date = ons_deaths.sort_by(ons_deaths.date) \
-    .last_for_patient().date
-end_reg_date = registration.end_date.if_null_then(date(2022, 12, 31))
+    .last_for_patient().date.if_null_then(study_end_date)
+end_reg_date = registration.end_date.if_null_then(study_end_date)
 
 lc_cure = clinical_events.where(clinical_events.snomedct_code ==  SNOMEDCTCode("1326351000000108")) \
     .sort_by(clinical_events.date) \
-    .first_for_patient()
+    .first_for_patient().if_null_then(study_end_date)
 # The first recorded lc cure date
 
 # covid tests
