@@ -34,6 +34,7 @@ registration = practice_registrations \
 lc_dx = clinical_events.where(clinical_events.snomedct_code.is_in(lc_codelists_combined)) \
     .sort_by(clinical_events.date) \
     .first_for_patient()# had lc dx and dx dates
+lc_dx_date = lc_dx.if_null_then(study_end_date)
 
 # define end date: lc dx date +12 | death | derigistration | post COVID-19 syndrome resolved
 one_year_after_start = lc_dx.date + days(365) 
