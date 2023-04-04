@@ -13,9 +13,7 @@ from databuilder.tables.beta.tpp import (
 from databuilder.codes import CTV3Code, DMDCode, ICD10Code, SNOMEDCTCode
 import codelists
 from codelists import lc_codelists_combined
-
 from variables import (
-    add_visits, 
     hospitalisation_diagnosis_matches,
     clinical_ctv3_matches, 
 )
@@ -41,7 +39,7 @@ lc_dx = clinical_events.where(clinical_events.snomedct_code.is_in(lc_codelists_c
 one_year_after_start = lc_dx.date + days(365) 
 death_date = ons_deaths.sort_by(ons_deaths.date) \
     .last_for_patient().date
-end_reg_date = registration.end_date
+end_reg_date = registration.end_date.if_null_then(date(2022, 12, 31))
 
 lc_cure = clinical_events.where(clinical_events.snomedct_code ==  SNOMEDCTCode("1326351000000108")) \
     .sort_by(clinical_events.date) \

@@ -16,7 +16,6 @@ import operator
 from functools import reduce
 
 # temp zone for testing: -------
-from covariates import *
 study_start_date = date(2020, 11, 1)
 age = (study_start_date - patients.date_of_birth).years
 lc_dx = clinical_events.where(clinical_events.snomedct_code.is_in(lc_codelists_combined)) \
