@@ -24,7 +24,7 @@ dataset.long_covid_dx_date = lc_dx.date
 dataset.index_date = lc_dx.date
 dataset.end_death = death_date
 dataset.end_deregist = end_reg_date
-dataset.end_lc_cure = lc_cure.date
+dataset.end_lc_cure = lc_cure_date
 
 # # the following codes will be added to matched data.
 # dataset.covid_positive = latest_test_before_diagnosis.exists_for_patient()

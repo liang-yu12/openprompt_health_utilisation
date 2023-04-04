@@ -41,10 +41,12 @@ death_date = ons_deaths.sort_by(ons_deaths.date) \
     .last_for_patient().date.if_null_then(study_end_date)
 end_reg_date = registration.end_date.if_null_then(study_end_date)
 
+# The first recorded lc cure date
 lc_cure = clinical_events.where(clinical_events.snomedct_code ==  SNOMEDCTCode("1326351000000108")) \
     .sort_by(clinical_events.date) \
-    .first_for_patient().if_null_then(study_end_date)
-# The first recorded lc cure date
+    .first_for_patient()
+lc_cure_date = lc_cure.date.if_null_then(study_end_date)
+
 
 # covid tests
 latest_test_before_diagnosis = sgss_covid_all_tests.where(sgss_covid_all_tests.is_positive) \
