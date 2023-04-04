@@ -42,14 +42,15 @@ def add_visits(dataset, from_date, num_months):
 #     setattr(dataset, f"gp_visit_m{num_months}", num_visits)
 
 
-# # Function codes for hospitalisation visit counts need further testing
-# def add_hos_visits(dataset, from_date, num_months):
-#     # Number of Hospitalisation within `num_months` of `from_date`
-#     num_visits = appointments \
-#         .where((hospital_admissions.admission_date >= from_date) &
-#               (hospital_admissions.discharge_date  <= (from_date + days(num_months * 30)))) \
-#         .count_for_patient()
-#     setattr(dataset, f"gp_visit_m{num_months}", num_visits)
+# # Function codes for hospitalisation visit counts：
+# # # Q: if a person stayed in a hospital for more than one month, should we count it as one admission? 
+def add_hos_visits(dataset, from_date, num_months):
+    # Number of Hospitalisation within `num_months` of `from_date`
+    num_visits = hospital_admissions \
+        .where((hospital_admissions.admission_date >= from_date) &
+              (hospital_admissions.discharge_date  <= (from_date + days(num_months * 30)))) \
+        .count_for_patient()
+    setattr(dataset, f"hos_visit_m{num_months}", num_visits)
 
 
 # Function codes for extracting hospitalisation records
@@ -109,3 +110,5 @@ dataset = Dataset()
 dataset.define_population(age >= 18)
 add_visits(dataset, lc_dx.date, num_months=1)
 add_visits(dataset, lc_dx.date, num_months=2)
+add_hos_visits(dataset, lc_dx.date, num_months=3)
+add_hos_visits(dataset, lc_dx.date, num_months=4)
