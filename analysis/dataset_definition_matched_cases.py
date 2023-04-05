@@ -7,9 +7,9 @@ from covariates import *
 import csv 
 
 with open("output/matched_cases_stp.csv") as csv_file:
-    reader = csv.DictReader(csv_file)
-    case_id = [int(row["patient_id"]) for row in reader]
+    matched_cases = csv.DictReader(csv_file)
+
 
 
 dataset = Dataset()
-dataset.define_population((age >= 18) & registration.exists_for_patient() & case_id.exists_for_patient())
+dataset.define_population((age >= 18) & registration.exists_for_patient() & matched_cases.exists_for_patient())
