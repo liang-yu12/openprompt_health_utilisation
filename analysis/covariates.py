@@ -40,12 +40,10 @@ lc_dx_date = lc_dx.date.if_null_then(study_end_date)
 one_year_after_start = lc_dx.date + days(365) 
 death_date = ons_deaths.sort_by(ons_deaths.date) \
     .last_for_patient().date.if_null_then(study_end_date)
-end_reg_date = registration.end_date.case(
-    when(registration.end_date >= "9999-01-01").then(study_end_date),
-    default=registration.end_date
+end_reg_date = case(
+    when(registration.end_date.year == 9999).then(study_end_date),
+    default=registration.end_date,
 )
-
-if_null_then(study_end_date)
 
 # The first recorded lc cure date
 lc_cure = clinical_events.where(clinical_events.snomedct_code ==  SNOMEDCTCode("1326351000000108")) \
