@@ -1,0 +1,50 @@
+---
+title: "Reporting characteristics after matching"
+author: "Liang-Yu Lin"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(include = FALSE)
+
+# Limit significant digits to 2, remove scientific notation
+options(digits = 2, scipen = 999)
+# setting up required packages 
+source(here::here("analysis","settings_packages.R"))
+```
+
+## OS matching explanation
+
+-   Exposure group: people with long COVID diagnostic codes
+
+-   Comparator group: people without long COVID codes
+
+-   Exposure and comparator groups are matched by sex, age, and region (STP regions) using [`osmatching](https://github.com/opensafely-core/matching#readme%5C)`
+
+```{r Read data, echo=FALSE}
+
+matched_csv <- fread(here("output", "matched_combined_stp.csv"))
+
+glimpse(matched_csv)
+# matched_csv$exposure: 0 comparator 1 exposure
+
+
+
+```
+
+## Table
+
+```{r Generate table , echo=FALSE}
+matched <- arsenal::tableby(exposure ~ age + sex + region, 
+                            data = matched_csv)
+
+summary(matched, text = T) %>% 
+      kable(format = "pandoc",
+              caption = "Formatted table",
+              padding = 0,
+              label = "",
+              align = c("l","c"),
+              col_order = order
+        )
+```
