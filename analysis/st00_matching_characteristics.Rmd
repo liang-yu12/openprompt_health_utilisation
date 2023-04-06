@@ -2,7 +2,7 @@
 title: "Reporting characteristics after matching"
 author: "Liang-Yu Lin"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-output: word_document
+output: word_document, html
 ---
 
 ```{r setup, include=FALSE}
@@ -35,7 +35,7 @@ glimpse(matched_csv)
 
 ## Table
 
-```{r Generate table , echo=FALSE}
+```{r Generate table, echo=TRUE}
 matched <- arsenal::tableby(exposure ~ age + sex + region, 
                             data = matched_csv)
 
