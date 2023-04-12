@@ -23,7 +23,7 @@ class matched_cases(PatientFrame):
     end_lc_cure = Series(date)
     set_id = Series(int)
     exposure = Series(int)
-    match_counts = Series(int)
+    match_counts = Series(float)
 
 dataset = Dataset()
 dataset.define_population(
