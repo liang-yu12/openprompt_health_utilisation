@@ -61,3 +61,13 @@ actions:
     outputs: 
       highly_sensitive:
         cohort: output/matched_cases_with_ehr.csv
+
+  import_matched_controls:
+    run: >
+       databuilder:v0
+        generate-dataset analysis/dataset_definition_matched_control.py
+        --output output/matched_control_with_ehr.csv
+    needs: [test_matching]
+    outputs: 
+      highly_sensitive:
+        cohort: output/matched_control_with_ehr.csv
