@@ -1,4 +1,4 @@
-from datetime import date
+import datetime
 from databuilder.ehrql import Dataset, days, years
 from databuilder.tables.beta.tpp import (
     patients, addresses, ons_deaths, sgss_covid_all_tests,
