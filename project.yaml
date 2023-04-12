@@ -56,8 +56,8 @@ actions:
     run: >
        databuilder:v0
         generate-dataset analysis/dataset_definition_matched_cases.py
-        --output output/matched_cases_with_ehr.csv.gz
+        --output output/matched_cases_with_ehr.csv
     needs: [test_matching]
     outputs: 
       highly_sensitive:
-        cohort: output/matched_cases_with_ehr.csv.gz
+        cohort: output/matched_cases_with_ehr.csv
