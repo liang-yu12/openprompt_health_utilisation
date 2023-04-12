@@ -7,10 +7,10 @@ from databuilder.tables.beta.tpp import (
 from databuilder.query_language import table_from_file, PatientFrame, Series
 from covariates import *
 
-# import matched data
+# Import matched data
 
-@table_from_file("output/matched_cases_stp.csv")
-class matched_cases(PatientFrame):
+@table_from_file("output/matched_matches_stp.csv")
+class matched_matches(PatientFrame):
     patient_id = Series(int)
     age = Series(int)
     sex = Series(str)
@@ -25,16 +25,20 @@ class matched_cases(PatientFrame):
     end_lc_cure = Series(date)
     set_id = Series(int)
     exposure = Series(int)
-    match_counts = Series(float)
+    index_date = Series(date)
+
 
 # Define dataset variables
 
 dataset = Dataset()
 dataset.define_population(
     (age >= 18)
-    & matched_cases.exists_for_patient()
+    & matched_matches.exists_for_patient()
 )
-dataset.age = matched_cases.age
+
+dataset.age = age
+
+
 dataset.covid_positive = latest_test_before_diagnosis.exists_for_patient()
 dataset.covid_dx_month = latest_test_before_diagnosis.specimen_taken_date.to_first_of_month() # only need dx month
 dataset.ethnicity = ethnicity
