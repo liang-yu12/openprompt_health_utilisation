@@ -19,7 +19,6 @@ class matched_matches(PatientFrame):
     registration_date = Series(date)
     long_covid_dx = Series(int)
     long_covid_dx_date= Series(date)
-    index_date = Series(date)
     end_death = Series(date)
     end_deregist = Series(date)
     end_lc_cure = Series(date)
