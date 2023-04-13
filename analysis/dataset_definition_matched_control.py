@@ -35,8 +35,19 @@ dataset.define_population(
     & matched_matches.exists_for_patient()
 )
 
-dataset.age = age
-
+dataset.age = matched_matches.age
+dataset.sex = matched_matches.sex
+dataset.region = matched_matches.region
+dataset.gp_practice = matched_matches.gp_practice
+dataset.registration_date = matched_matches.registration_date
+dataset.long_covid_dx = matched_matches.long_covid_dx
+dataset.long_covid_dx_date= matched_matches.long_covid_dx_date
+dataset.index_date = matched_matches.index_date
+dataset.end_death = matched_matches.end_death
+dataset.end_deregist = matched_matches.end_deregist
+dataset.end_lc_cure = matched_matches.end_lc_cure
+dataset.set_id = matched_matches.set_id
+dataset.exposure = matched_matches.exposure
 
 dataset.covid_positive = latest_test_before_diagnosis.exists_for_patient()
 dataset.covid_dx_month = latest_test_before_diagnosis.specimen_taken_date.to_first_of_month() # only need dx month
