@@ -19,7 +19,7 @@ from variables import (
 )
 
 study_start_date = date(2020, 11, 1)
-study_end_date = date(2022, 12, 31)
+study_end_date = date(2023, 3, 31)
 
 # age 
 age = (study_start_date - patients.date_of_birth).years
@@ -32,6 +32,8 @@ registration = practice_registrations \
 
 # long covid diagnoses
 lc_dx = clinical_events.where(clinical_events.snomedct_code.is_in(lc_codelists_combined)) \
+    .where(clinical_events.date >= study_start_date) \
+    .where(clinical_events.date <= study_end_date) \
     .sort_by(clinical_events.date) \
     .first_for_patient()# had lc dx and dx dates
 lc_dx_date = lc_dx.date.if_null_then(study_end_date)
