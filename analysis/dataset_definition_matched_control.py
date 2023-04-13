@@ -11,7 +11,6 @@ from covariates import *
 
 @table_from_file("output/matched_matches_stp.csv")
 class matched_matches(PatientFrame):
-    patient_id = Series(int)
     age = Series(int)
     sex = Series(str)
     region = Series(str)
