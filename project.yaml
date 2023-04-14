@@ -14,13 +14,6 @@ actions:
       highly_sensitive:
         cohort: output/dataset_exp_lc_unmatched.csv
 
-  check_stp_regions:
-    needs: [generate_long_covid_exposure_dataset]
-    run: r:latest analysis/dm00_check_stp_regions.R
-    outputs:
-      moderately_sensitive: 
-        stp_region: output/stp_regions_counts.csv
-
   generate_list_gp_use_long_covid_dx:
     run: 
       databuilder:v0 generate-dataset
@@ -39,6 +32,14 @@ actions:
     outputs:
       highly_sensitive:
         cohort: output/dataset_comparator_unmatched.csv
+
+  report_unmatched_datasets:
+    needs: [generate_long_covid_exposure_dataset, generate_dataset_comparator_exclude_gp_no_long_covid]
+    run: 
+      r:latest analysis/st00_report_unmatched.R
+    outputs: 
+      moderately_sensitive: 
+        unmatched_table: output/unmatched_numbers.doc
 
   test_matching:
     run:
