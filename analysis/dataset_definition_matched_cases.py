@@ -11,7 +11,6 @@ from covariates import *
 
 @table_from_file("output/matched_cases_stp.csv")
 class matched_cases(PatientFrame):
-    patient_id = Series(int)
     age = Series(int)
     sex = Series(str)
     region = Series(str)
@@ -35,6 +34,20 @@ dataset.define_population(
     & matched_cases.exists_for_patient()
 )
 dataset.age = matched_cases.age
+dataset.sex = matched_cases.sex
+dataset.region = matched_cases.region
+dataset.gp_practice = matched_cases.gp_practice
+dataset.registration_date = matched_cases.registration_date
+dataset.long_covid_dx = matched_cases.long_covid_dx
+dataset.long_covid_dx_date= matched_cases.long_covid_dx_date
+dataset.index_date = matched_cases.index_date
+dataset.end_death = matched_cases.end_death
+dataset.end_deregist = matched_cases.end_deregist
+dataset.end_lc_cure = matched_cases.end_lc_cure
+dataset.set_id = matched_cases.set_id
+dataset.exposure = matched_cases.exposure
+dataset.match_counts = matched_cases.match_counts
+
 dataset.covid_positive = latest_test_before_diagnosis.exists_for_patient()
 dataset.covid_dx_month = latest_test_before_diagnosis.specimen_taken_date.to_first_of_month() # only need dx month
 dataset.ethnicity = ethnicity

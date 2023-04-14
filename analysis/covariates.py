@@ -19,19 +19,27 @@ from variables import (
 )
 
 study_start_date = date(2020, 11, 1)
-study_end_date = date(2022, 12, 31)
+study_end_date = date(2023, 3, 31)
 
 # age 
 age = (study_start_date - patients.date_of_birth).years
 
 # current registration
 registration = practice_registrations \
-    .except_where(practice_registrations.start_date > study_start_date - days(90)) \
+    .where(practice_registrations.start_date <= study_start_date - days(90))\
     .except_where(practice_registrations.end_date <= study_start_date) \
     .sort_by(practice_registrations.start_date).last_for_patient()
 
+registrations_number = practice_registrations \
+    .where(practice_registrations.start_date <= study_start_date - days(90))\
+    .except_where(practice_registrations.end_date <= study_start_date) \
+    .sort_by(practice_registrations.start_date) \
+    .count_for_patient()
+
 # long covid diagnoses
 lc_dx = clinical_events.where(clinical_events.snomedct_code.is_in(lc_codelists_combined)) \
+    .where(clinical_events.date >= study_start_date) \
+    .where(clinical_events.date <= study_end_date) \
     .sort_by(clinical_events.date) \
     .first_for_patient()# had lc dx and dx dates
 lc_dx_date = lc_dx.date.if_null_then(study_end_date)
@@ -162,8 +170,9 @@ temporary_immune_suppress = clinical_ctv3_matches(clinical_events, codelists.tem
 
 # The following codes will be removed later when the importing CSV file function is ready. 
 # Use these codes to test this is working. 
+
 dataset = Dataset()
-dataset.define_population(age>= 18)
+dataset.define_population((age>= 18) & (age <=100) & (registrations_number == 1))
 dataset.ethnicity = ethnicity
 dataset.imd = imd
 dataset.bmi = bmi
