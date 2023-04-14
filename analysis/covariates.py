@@ -28,9 +28,13 @@ age = (study_start_date - patients.date_of_birth).years
 registration = practice_registrations \
     .where(practice_registrations.start_date <= study_start_date - days(90))\
     .except_where(practice_registrations.end_date <= study_start_date) \
-    .sort_by(practice_registrations.start_date)
+    .sort_by(practice_registrations.start_date).last_for_patient()
 
-registrations_number = registration.count_for_patient()
+registrations_number = practice_registrations \
+    .where(practice_registrations.start_date <= study_start_date - days(90))\
+    .except_where(practice_registrations.end_date <= study_start_date) \
+    .sort_by(practice_registrations.start_date) \
+    .count_for_patient()
 
 # long covid diagnoses
 lc_dx = clinical_events.where(clinical_events.snomedct_code.is_in(lc_codelists_combined)) \

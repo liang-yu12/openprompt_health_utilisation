@@ -13,7 +13,12 @@ from covariates import *
 # Defining the exposure groups
 
 dataset = Dataset()
-dataset.define_population(((age >= 18) & (age <= 100) ) & registration.exists_for_patient() & lc_dx.exists_for_patient())
+dataset.define_population(
+    (age>= 18) & (age <=100) 
+    & (registrations_number == 1) 
+    & registration.exists_for_patient() 
+    & lc_dx.exists_for_patient()
+)
 dataset.age = age
 dataset.sex = patients.sex
 dataset.region = registration.practice_stp
