@@ -8,9 +8,8 @@ from databuilder.tables.beta.tpp import (
 from databuilder.codes import SNOMEDCTCode
 from codelists import lc_codelists_combined
 from covariates import *
-# from variables import add_visits
 
-# Defining the exposure groups
+# Defining the exposure groups (before matching)
 
 dataset = Dataset()
 dataset.define_population(
