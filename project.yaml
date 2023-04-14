@@ -39,7 +39,7 @@ actions:
       r:latest analysis/st00_report_unmatched.R
     outputs: 
       moderately_sensitive: 
-        unmatched_table: output/unmatched_numbers.doc
+        unmatched_table: output/unmatched_numbers.csv
 
   test_matching:
     run:
