@@ -29,14 +29,16 @@ unmatched_data %>% names
 unmatched_data$exposure <- unmatched_data$exposure %>% 
       factor(label = c("Comparator", "Long COVID exposure"))
 
+# define some events
+unmatched_data <- unmatched_data %>% 
+      mutate(long_covid = ifelse(long_covid_dx == 1, 1, 0)) %>% # long COVID
+      mutate(lc_cure = ifelse(!is.na(end_lc_cure), 1, 0)) %>% #cure lc
+      mutate(death = ifelse(!is.na(end_death), 1, 0)) # who died
+      
 # report numbers: 
-arsenal::tableby(exposure ~ sex + age + long_covid_dx + 
-                       is.na(end_death) + is.na(end_deregist),
-                 data = unmatched_data, 
-                 cat.stats=c("countpct")
-) %>% 
-      summary(text = T, digits = 2, digits.p = 2
-) %>% 
-      write2(here("output", "unmatched_numbers.doc"))
+unmatched_data %>% summary_factorlist(
+      dependent = "exposure",
+      explanatory = c("sex", "age", "long_covid", "lc_cure", "death")
+) %>% write.csv(here("output", "unmatched_numbers.csv"), row.names = F)
 
 
