@@ -41,7 +41,7 @@ matched_data <- matched_data %>%
       mutate(death = ifelse(!is.na(end_death), 1, 0)) # who died
       
 # report numbers: 
-unmatched_data %>% summary_factorlist(
+matched_data %>% summary_factorlist(
       dependent = "exposure",
       explanatory = c("sex", "age", "ethnicity", "bmi", "imd", "previous_covid_hosp",
                       "long_covid", "lc_cure", "death")
