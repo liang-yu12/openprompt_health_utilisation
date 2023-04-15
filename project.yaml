@@ -72,3 +72,11 @@ actions:
     outputs: 
       highly_sensitive:
         cohort: output/matched_control_with_ehr.csv
+
+  report_unmatched_datasets:
+    needs: [import_matched_exposure, import_matched_controls]
+    run: 
+      r:latest analysis/st01_report_matched.R
+    outputs: 
+      moderately_sensitive: 
+        matched_table: output/matched_numbers_table.csv
