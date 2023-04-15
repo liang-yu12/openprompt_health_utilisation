@@ -33,7 +33,7 @@ actions:
       highly_sensitive:
         cohort: output/dataset_comparator_unmatched.csv
 
-  report_unmatched_datasets:
+  report01_unmatched_datasets:
     needs: [generate_long_covid_exposure_dataset, generate_dataset_comparator_exclude_gp_no_long_covid]
     run: 
       r:latest analysis/st00_report_unmatched.R
@@ -73,7 +73,7 @@ actions:
       highly_sensitive:
         cohort: output/matched_control_with_ehr.csv
 
-  report_unmatched_datasets:
+  report02_matched_datasets:
     needs: [import_matched_exposure, import_matched_controls]
     run: 
       r:latest analysis/st01_report_matched.R
