@@ -33,14 +33,6 @@ actions:
       highly_sensitive:
         cohort: output/dataset_comparator_unmatched.csv
 
-  report01_unmatched_datasets:
-    needs: [generate_long_covid_exposure_dataset, generate_dataset_comparator_exclude_gp_no_long_covid]
-    run: 
-      r:latest analysis/st00_report_unmatched.R
-    outputs: 
-      moderately_sensitive: 
-        unmatched_table: output/unmatched_numbers.csv
-
   test_matching:
     run:
       python:latest python analysis/match_test.py
@@ -89,6 +81,29 @@ actions:
     outputs:
       highly_sensitive:
         hx_cohort: output/hx_dataset_comp_unmatched.csv
+
+  historical_matching:
+    run:
+      python:latest python analysis/match_historical.py
+    needs: [generate_historical_exp_data, generate_historical_comp_data_exclude_gp_no_long_covid]
+    outputs: 
+      highly_sensitive:
+        matched_cases: output/matched_cases_historical.csv
+        matched_matches: output/matched_matches_historical.csv
+        matched_all: output/matched_combined_historical.csv
+      moderately_sensitive: 
+        matching_report: output/matching_report_historical.txt
+
+
+# Reporting:
+
+  report01_unmatched_datasets:
+    needs: [generate_long_covid_exposure_dataset, generate_dataset_comparator_exclude_gp_no_long_covid]
+    run: 
+      r:latest analysis/st00_report_unmatched.R
+    outputs: 
+      moderately_sensitive: 
+        unmatched_table: output/unmatched_numbers.csv
 
   report02_matched_datasets:
     needs: [import_matched_exposure, import_matched_controls]
