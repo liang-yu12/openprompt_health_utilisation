@@ -6,7 +6,7 @@ from databuilder.tables.beta.tpp import (
 )
 from databuilder.query_language import table_from_file, PatientFrame, Series
 from covariates import *
-
+from variables import add_visits, add_hos_visits, add_ae_visits
 # Import matched data
 
 @table_from_file("output/matched_matches_stp.csv")
@@ -70,3 +70,46 @@ dataset.cov_hiv = hiv.exists_for_patient()
 dataset.cov_aplastic_anemia = aplastic_anemia.exists_for_patient()
 dataset.cov_permanent_immune_suppress = permanent_immune_suppress.exists_for_patient()
 dataset.cov_temporary_immune_suppress = temporary_immune_suppress.exists_for_patient()
+
+# Add outcomes: healthcare utilisation by months
+# GP visit
+add_visits(dataset, dataset.index_date, num_months=1)
+add_visits(dataset, dataset.index_date, num_months=2)
+add_visits(dataset, dataset.index_date, num_months=3)
+add_visits(dataset, dataset.index_date, num_months=4)
+add_visits(dataset, dataset.index_date, num_months=5)
+add_visits(dataset, dataset.index_date, num_months=6)
+add_visits(dataset, dataset.index_date, num_months=7)
+add_visits(dataset, dataset.index_date, num_months=8)
+add_visits(dataset, dataset.index_date, num_months=9)
+add_visits(dataset, dataset.index_date, num_months=10)
+add_visits(dataset, dataset.index_date, num_months=11)
+add_visits(dataset, dataset.index_date, num_months=12)
+
+# Hospital admission
+add_hos_visits(dataset, dataset.index_date, num_months=1)
+add_hos_visits(dataset, dataset.index_date, num_months=2)
+add_hos_visits(dataset, dataset.index_date, num_months=3)
+add_hos_visits(dataset, dataset.index_date, num_months=4)
+add_hos_visits(dataset, dataset.index_date, num_months=5)
+add_hos_visits(dataset, dataset.index_date, num_months=6)
+add_hos_visits(dataset, dataset.index_date, num_months=7)
+add_hos_visits(dataset, dataset.index_date, num_months=8)
+add_hos_visits(dataset, dataset.index_date, num_months=9)
+add_hos_visits(dataset, dataset.index_date, num_months=10)
+add_hos_visits(dataset, dataset.index_date, num_months=11)
+add_hos_visits(dataset, dataset.index_date, num_months=12)
+
+# A&E
+add_ae_visits(dataset, dataset.index_date, num_months=1)
+add_ae_visits(dataset, dataset.index_date, num_months=2)
+add_ae_visits(dataset, dataset.index_date, num_months=3)
+add_ae_visits(dataset, dataset.index_date, num_months=4)
+add_ae_visits(dataset, dataset.index_date, num_months=5)
+add_ae_visits(dataset, dataset.index_date, num_months=6)
+add_ae_visits(dataset, dataset.index_date, num_months=7)
+add_ae_visits(dataset, dataset.index_date, num_months=8)
+add_ae_visits(dataset, dataset.index_date, num_months=9)
+add_ae_visits(dataset, dataset.index_date, num_months=10)
+add_ae_visits(dataset, dataset.index_date, num_months=11)
+add_ae_visits(dataset, dataset.index_date, num_months=12)
