@@ -171,25 +171,25 @@ temporary_immune_suppress = clinical_ctv3_matches(clinical_events, codelists.tem
 # The following codes will be removed later when the importing CSV file function is ready. 
 # Use these codes to test this is working. 
 
-dataset = Dataset()
-dataset.define_population((age>= 18) & (age <=100) & (registrations_number == 1))
-dataset.ethnicity = ethnicity
-dataset.imd = imd
-dataset.bmi = bmi
-dataset.bmi_date = bmi_date
-dataset.previous_covid_hosp = previous_covid_hos.exists_for_patient()
-dataset.cov_cancer = cancer_all.exists_for_patient()
-dataset.cov_mental_health = mental_health_issues.exists_for_patient()
-dataset.cov_asthma = asthma.exists_for_patient() & ~copd.exists_for_patient()
-dataset.cov_organ_transplant = organ_transplant.exists_for_patient()
-dataset.cov_chronic_cardiac_disease = chronic_cardiac_disease.exists_for_patient()
-dataset.cov_chronic_liver_disease = chronic_liver_disease.exists_for_patient()
-dataset.cov_stroke_dementia = stroke.exists_for_patient() | dementia.exists_for_patient()
-dataset.cov_other_neuro_diseases = other_neuro_diseases.exists_for_patient()
-dataset.cov_ra_sle_psoriasis = ra_sle_psoriasis.exists_for_patient()
-dataset.cov_asplenia = asplenia.exists_for_patient()
-dataset.cov_hiv = hiv.exists_for_patient()
-dataset.cov_aplastic_anemia = aplastic_anemia.exists_for_patient()
-dataset.cov_permanent_immune_suppress = permanent_immune_suppress.exists_for_patient()
-dataset.cov_temporary_immune_suppress = temporary_immune_suppress.exists_for_patient()
-dataset.cov_c19_vaccine_number = c19_vaccine_number
+# dataset = Dataset()
+# dataset.define_population((age>= 18) & (age <=100) & (registrations_number == 1))
+# dataset.ethnicity = ethnicity
+# dataset.imd = imd
+# dataset.bmi = bmi
+# dataset.bmi_date = bmi_date
+# dataset.previous_covid_hosp = previous_covid_hos.exists_for_patient()
+# dataset.cov_cancer = cancer_all.exists_for_patient()
+# dataset.cov_mental_health = mental_health_issues.exists_for_patient()
+# dataset.cov_asthma = asthma.exists_for_patient() & ~copd.exists_for_patient()
+# dataset.cov_organ_transplant = organ_transplant.exists_for_patient()
+# dataset.cov_chronic_cardiac_disease = chronic_cardiac_disease.exists_for_patient()
+# dataset.cov_chronic_liver_disease = chronic_liver_disease.exists_for_patient()
+# dataset.cov_stroke_dementia = stroke.exists_for_patient() | dementia.exists_for_patient()
+# dataset.cov_other_neuro_diseases = other_neuro_diseases.exists_for_patient()
+# dataset.cov_ra_sle_psoriasis = ra_sle_psoriasis.exists_for_patient()
+# dataset.cov_asplenia = asplenia.exists_for_patient()
+# dataset.cov_hiv = hiv.exists_for_patient()
+# dataset.cov_aplastic_anemia = aplastic_anemia.exists_for_patient()
+# dataset.cov_permanent_immune_suppress = permanent_immune_suppress.exists_for_patient()
+# dataset.cov_temporary_immune_suppress = temporary_immune_suppress.exists_for_patient()
+# dataset.cov_c19_vaccine_number = c19_vaccine_number
