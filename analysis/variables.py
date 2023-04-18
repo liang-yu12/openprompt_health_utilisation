@@ -42,10 +42,8 @@ def add_hx_visits(dataset, from_date, num_months):
     setattr(dataset, f"hx_gp_visit_m{num_months}", num_visits)
 
 
-
-
 # # Function codes for hospitalisation visit counts：
-# # # Q: if a person stayed in a hospital for more than one month, should we count it as one admission? 
+# Q: if a person stayed in a hospital for more than one month, is it one adm? 
 def add_hos_visits(dataset, from_date, num_months):
     # Number of Hospitalisation within `num_months` of `from_date`
     num_visits = hospital_admissions \
@@ -53,6 +51,15 @@ def add_hos_visits(dataset, from_date, num_months):
               (hospital_admissions.discharge_date  <= (from_date + days(num_months * 30)))) \
         .count_for_patient()
     setattr(dataset, f"hos_visit_m{num_months}", num_visits)
+
+# Historical hospital visit
+def add_hx_hos_visits(dataset, from_date, num_months):
+    # Number of Hospitalisation within `num_months` of `from_date`
+    num_visits = hospital_admissions \
+        .where((hospital_admissions.admission_date >= from_date) &
+              (hospital_admissions.discharge_date  <= (from_date + days(num_months * 30)))) \
+        .count_for_patient()
+    setattr(dataset, f"hx_hos_visit_m{num_months}", num_visits)
 
 
 # # Function codes for A&E visit counts
@@ -63,6 +70,16 @@ def add_ae_visits(dataset, from_date, num_months):
               (emergency_care_attendances.arrival_date  <= (from_date + days(num_months * 30)))) \
         .count_for_patient()
     setattr(dataset, f"ae_visit_m{num_months}", num_visits)
+
+# Function codes for the historical A&E
+def add_hx_ae_visits(dataset, from_date, num_months):
+    # Number of A&E visits within `num_months` of `from_date`
+    num_visits = emergency_care_attendances \
+        .where((emergency_care_attendances.arrival_date >= from_date) &
+              (emergency_care_attendances.arrival_date  <= (from_date + days(num_months * 30)))) \
+        .count_for_patient()
+    setattr(dataset, f"hx_ae_visit_m{num_months}", num_visits)
+
 
 
 # Function codes for extracting hospitalisation records

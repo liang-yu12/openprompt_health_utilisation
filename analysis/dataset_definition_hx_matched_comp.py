@@ -6,9 +6,16 @@ from databuilder.tables.beta.tpp import (
 )
 from databuilder.query_language import table_from_file, PatientFrame, Series
 from covariates import *
-from variables import add_visits, add_hos_visits, add_ae_visits
+
 from hx_covariates import *
-from variables import add_visits, add_hx_visits, add_hos_visits, add_ae_visits
+from variables import (
+    add_visits, 
+    add_hx_visits,     
+    add_hos_visits,
+    add_hx_hos_visits, 
+    add_ae_visits,
+    add_hx_ae_visits
+)
 
 # import matched data
 
@@ -87,8 +94,60 @@ add_visits(dataset, index_date, num_months=10)
 add_visits(dataset, index_date, num_months=11)
 add_visits(dataset, index_date, num_months=12)
 
-
 # Hospital visits
-# add_hos_visits(dataset, lc_dx.date, num_months=4)
-# add_ae_visits(dataset, lc_dx.date, num_months=5)
-# add_ae_visits(dataset, lc_dx.date, num_months=6)
+# Historical admissions:
+add_hx_hos_visits(dataset, hx_study_start_date, num_months=1)
+add_hx_hos_visits(dataset, hx_study_start_date, num_months=2)
+add_hx_hos_visits(dataset, hx_study_start_date, num_months=3)
+add_hx_hos_visits(dataset, hx_study_start_date, num_months=4)
+add_hx_hos_visits(dataset, hx_study_start_date, num_months=5)
+add_hx_hos_visits(dataset, hx_study_start_date, num_months=6)
+add_hx_hos_visits(dataset, hx_study_start_date, num_months=7)
+add_hx_hos_visits(dataset, hx_study_start_date, num_months=8)
+add_hx_hos_visits(dataset, hx_study_start_date, num_months=9)
+add_hx_hos_visits(dataset, hx_study_start_date, num_months=10)
+add_hx_hos_visits(dataset, hx_study_start_date, num_months=11)
+add_hx_hos_visits(dataset, hx_study_start_date, num_months=12)
+
+# Admission after index date:
+add_hos_visits(dataset, index_date, num_months=1)
+add_hos_visits(dataset, index_date, num_months=2)
+add_hos_visits(dataset, index_date, num_months=3)
+add_hos_visits(dataset, index_date, num_months=4)
+add_hos_visits(dataset, index_date, num_months=5)
+add_hos_visits(dataset, index_date, num_months=6)
+add_hos_visits(dataset, index_date, num_months=7)
+add_hos_visits(dataset, index_date, num_months=8)
+add_hos_visits(dataset, index_date, num_months=9)
+add_hos_visits(dataset, index_date, num_months=10)
+add_hos_visits(dataset, index_date, num_months=11)
+add_hos_visits(dataset, index_date, num_months=12)
+
+# A&E visit
+# Historical A&E visit
+add_hx_ae_visits(dataset, hx_study_start_date, num_months=1)
+add_hx_ae_visits(dataset, hx_study_start_date, num_months=2)
+add_hx_ae_visits(dataset, hx_study_start_date, num_months=3)
+add_hx_ae_visits(dataset, hx_study_start_date, num_months=4)
+add_hx_ae_visits(dataset, hx_study_start_date, num_months=5)
+add_hx_ae_visits(dataset, hx_study_start_date, num_months=6)
+add_hx_ae_visits(dataset, hx_study_start_date, num_months=7)
+add_hx_ae_visits(dataset, hx_study_start_date, num_months=8)
+add_hx_ae_visits(dataset, hx_study_start_date, num_months=9)
+add_hx_ae_visits(dataset, hx_study_start_date, num_months=10)
+add_hx_ae_visits(dataset, hx_study_start_date, num_months=11)
+add_hx_ae_visits(dataset, hx_study_start_date, num_months=12)
+
+# A&E visit after index date:
+add_ae_visits(dataset, index_date, num_months=1)
+add_ae_visits(dataset, index_date, num_months=2)
+add_ae_visits(dataset, index_date, num_months=3)
+add_ae_visits(dataset, index_date, num_months=4)
+add_ae_visits(dataset, index_date, num_months=5)
+add_ae_visits(dataset, index_date, num_months=6)
+add_ae_visits(dataset, index_date, num_months=7)
+add_ae_visits(dataset, index_date, num_months=8)
+add_ae_visits(dataset, index_date, num_months=9)
+add_ae_visits(dataset, index_date, num_months=10)
+add_ae_visits(dataset, index_date, num_months=11)
+add_ae_visits(dataset, index_date, num_months=12)
