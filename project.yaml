@@ -131,3 +131,11 @@ actions:
     outputs: 
       moderately_sensitive: 
         matched_table: output/matched_numbers_table.csv
+
+  report03_hx_matched_datasets:
+    needs: [import_matched_historical_exposure, import_matched_historical_controls]
+    run: 
+      r:latest analysis/st02_report_matched_historical.R
+    outputs: 
+      moderately_sensitive: 
+        matched_table: output/hx_matched_numbers_table.csv
