@@ -94,6 +94,25 @@ actions:
       moderately_sensitive: 
         matching_report: output/matching_report_historical.txt
 
+  import_matched_historical_exposure:
+    run: >
+       databuilder:v0
+        generate-dataset analysis/dataset_definition_hx_matched_exp_lc.py
+        --output output/hx_matched_cases_with_ehr.csv
+    needs: [historical_matching]
+    outputs: 
+      highly_sensitive:
+        cohort: output/hx_matched_cases_with_ehr.csv
+
+  import_matched_historical_controls:
+    run: >
+       databuilder:v0
+        generate-dataset analysis/dataset_definition_hx_matched_comp.py
+        --output output/hx_matched_control_with_ehr.csv
+    needs: [historical_matching]
+    outputs: 
+      highly_sensitive:
+        cohort: output/hx_matched_control_with_ehr.csv
 
 # Reporting:
 
