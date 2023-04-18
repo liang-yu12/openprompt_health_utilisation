@@ -13,47 +13,16 @@ from databuilder.tables.beta.tpp import (
 from databuilder.codes import CTV3Code, DMDCode, ICD10Code, SNOMEDCTCode
 import codelists
 from codelists import lc_codelists_combined
-from variables import (
-    hospitalisation_diagnosis_matches,
-    clinical_ctv3_matches, 
-)
+from variables import hospitalisation_diagnosis_matches
 
-study_start_date = date(2018, 11, 1)
+hx_study_start_date = date(2018, 11, 1)
 
-# age 
-age = (study_start_date - patients.date_of_birth).years
-
-
-# long covid diagnoses
-lc_dx = clinical_events.where(clinical_events.snomedct_code.is_in(lc_codelists_combined)) \
-    .where(clinical_events.date >= study_start_date) \
-    .where(clinical_events.date <= study_end_date) \
-    .sort_by(clinical_events.date) \
-    .first_for_patient()# had lc dx and dx dates
-lc_dx_date = lc_dx.date.if_null_then(study_end_date)
-
-# define end date: lc dx date +12 | death | derigistration | post COVID-19 syndrome resolved
-one_year_after_start = lc_dx.date + days(365) 
-death_date = ons_deaths.sort_by(ons_deaths.date) \
-    .last_for_patient().date.if_null_then(study_end_date)
-end_reg_date = case(
-    when(registration.end_date.year == 9999).then(study_end_date),
-    default=registration.end_date,
-)
-
-# The first recorded lc cure date
-lc_cure = clinical_events.where(clinical_events.snomedct_code ==  SNOMEDCTCode("1326351000000108")) \
-    .sort_by(clinical_events.date) \
-    .first_for_patient()
-lc_cure_date = lc_cure.date.if_null_then(study_end_date)
-
-
-# covid tests
-latest_test_before_diagnosis = sgss_covid_all_tests.where(sgss_covid_all_tests.is_positive) \
-    .except_where(sgss_covid_all_tests.specimen_taken_date >= lc_dx.date - days(90)) \
-    .sort_by(sgss_covid_all_tests.specimen_taken_date) \
-    .last_for_patient()
-# # only need the diagnostic month for sensitivity analysis matching
+# Function for extracting clinical factors
+def clinical_ctv3_matches(gpevent, codelist):
+    gp_dx = (gpevent.where((gpevent.date < hx_study_start_date) & gpevent.ctv3_code.is_in(codelist))
+      .sort_by(gpevent.date).last_for_patient()
+    )
+    return gp_dx
 
 # Demographic: ethnicity
 ## Ethnicity 
@@ -65,7 +34,7 @@ ethnicity = (clinical_events.where(clinical_events.ctv3_code.is_in(codelists.eth
 ## IMD
 # # 1. drop the start date records after index date
 # # 2. sort the date, keep the latest
-imd = (addresses.except_where(addresses.start_date > study_start_date)
+imd = (addresses.except_where(addresses.start_date > hx_study_start_date)
     .sort_by(addresses.start_date)
     .last_for_patient().imd_rounded
 )
@@ -87,14 +56,8 @@ bmi_record = (
 bmi = bmi_record.numeric_value
 bmi_date = bmi_record.date
 
-
 # Clinical factors:
-# 1. Previous hospitalized due to COVID (only look at hospitalisation before the index date)
-previous_covid_hos = (hospitalisation_diagnosis_matches(hospital_admissions, codelists.hosp_covid)
-    .where(hospital_admissions.admission_date < study_start_date)
-    .sort_by(hospital_admissions.admission_date)
-    .first_for_patient()
-)
+
 # Mental issues:
 mental_health_issues = clinical_ctv3_matches(clinical_events, codelists.mental_health_all)
 
@@ -102,20 +65,8 @@ mental_health_issues = clinical_ctv3_matches(clinical_events, codelists.mental_h
 asthma = clinical_ctv3_matches(clinical_events, codelists.asthma)
 copd = clinical_ctv3_matches(clinical_events, codelists.copd)
 
-# the number of Covid-19 vaccinations doses (any vaccine) before the index date
-# vaccine dose: at least one dose/one dose/two dose/three doses or more
-
-c19_vaccine_number = (clinical_events.where(clinical_events.date <= study_start_date)
-    .where(clinical_events.snomedct_code.is_in(codelists.vac_adm_combine_code))
-    .count_for_patient()
-)
-
 # level of multimorbidity ------
 
-# Non-haematological cancer
-# Haematological cancer 1
-
-# * need to saperate the heamatological cancers
 ## Cancer: 
 # ## Cancer diagnosed from GP records
 cancer_all = clinical_ctv3_matches(clinical_events, codelists.cancer_all_combined__codelist) 
