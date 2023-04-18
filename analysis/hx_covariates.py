@@ -15,7 +15,7 @@ import codelists
 from codelists import lc_codelists_combined
 from variables import hospitalisation_diagnosis_matches
 
-hx_study_start_date = date(2018, 11, 1)
+hx_study_start_date = date(2019, 3, 1)
 
 # Function for extracting clinical factors
 def clinical_ctv3_matches(gpevent, codelist):

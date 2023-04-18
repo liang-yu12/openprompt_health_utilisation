@@ -32,6 +32,18 @@ def add_visits(dataset, from_date, num_months):
         .count_for_patient()
     setattr(dataset, f"gp_visit_m{num_months}", num_visits)
 
+# Function codes for historical GP visits
+def add_hx_visits(dataset, from_date, num_months):
+    # Number of GP visits within `num_months` of `from_date`
+    num_visits = appointments \
+        .where((appointments.start_date >= from_date) &
+              (appointments.start_date <= (from_date + days(num_months * 30)))) \
+        .count_for_patient()
+    setattr(dataset, f"hx_gp_visit_m{num_months}", num_visits)
+
+
+
+
 # # Function codes for hospitalisation visit counts：
 # # # Q: if a person stayed in a hospital for more than one month, should we count it as one admission? 
 def add_hos_visits(dataset, from_date, num_months):
@@ -105,12 +117,12 @@ def create_sequential_variables(
         setattr(dataset, variable_name, getattr(next_event, column))
 
 
-# Temp: test generate data
-dataset = Dataset()
-dataset.define_population(age >= 18)
-add_visits(dataset, lc_dx.date, num_months=1)
-add_visits(dataset, lc_dx.date, num_months=2)
-add_hos_visits(dataset, lc_dx.date, num_months=3)
-add_hos_visits(dataset, lc_dx.date, num_months=4)
-add_ae_visits(dataset, lc_dx.date, num_months=5)
-add_ae_visits(dataset, lc_dx.date, num_months=6)
+# # Temp: test generate data
+# dataset = Dataset()
+# dataset.define_population(age >= 18)
+# add_visits(dataset, lc_dx.date, num_months=1)
+# add_visits(dataset, lc_dx.date, num_months=2)
+# add_hos_visits(dataset, lc_dx.date, num_months=3)
+# add_hos_visits(dataset, lc_dx.date, num_months=4)
+# add_ae_visits(dataset, lc_dx.date, num_months=5)
+# add_ae_visits(dataset, lc_dx.date, num_months=6)
