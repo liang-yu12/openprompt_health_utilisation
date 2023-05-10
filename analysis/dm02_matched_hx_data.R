@@ -64,7 +64,7 @@ hx_matched_data$exposure <- hx_matched_data$exposure %>%
 
 
 hx_matched_data <- hx_matched_data %>% mutate(
-      imd_q5 = cut2(imd, g = 5),
+      imd_q5 = cut2(imd, g = 5, lebels = c("least_deprived", "2_deprived","3_deprived","4_deprived","most_deprived")),
       ethnicity_6 = factor(
             ethnicity,
             levels = 1:6, 
