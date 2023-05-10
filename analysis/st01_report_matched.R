@@ -4,7 +4,7 @@ source("analysis/dm01_matched_current_data.R")
 # report numbers: 
 matched_data %>% summary_factorlist(
       dependent = "exposure",
-      explanatory = c("sex", "age", "ethnicity", "bmi", "imd", 
+      explanatory = c("sex", "age","age_cat", "ethnicity_6", "bmi", "imd_q5", 
                       "long_covid_dx", "covid_positive","previous_covid_hosp",
                       "cov_c19_vaccine_number",
                       "cov_cancer",
