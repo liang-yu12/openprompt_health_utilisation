@@ -74,7 +74,15 @@ matched_data$exposure <- matched_data$exposure %>%
       factor(label = c("Comparator", "Long COVID exposure"))
 
 matched_data <- matched_data %>% mutate(
-      imd_q5 = cut2(imd, g = 5),
+      imd_q5 = cut2(
+            imd, 
+            g = 5, 
+            lebels = c(
+                  "least_deprived", 
+                  "2_deprived",
+                  "3_deprived",
+                  "4_deprived",
+                  "most_deprived")),
       ethnicity_6 = factor(
             ethnicity,
             levels = 1:6, 
@@ -84,8 +92,7 @@ matched_data <- matched_data %>% mutate(
                   "South Asian", 
                   "Black",
                   "Other",
-                  "Not stated")
-      ),
+                  "Not stated")),
       age_cat = cut(
             age, 
             breaks = c(0, seq(30, 70, 10), Inf),
@@ -95,6 +102,19 @@ matched_data <- matched_data %>% mutate(
                   "40-49",
                   "50-59",
                   "60-69",
-                  "70+"
-            ))
+                  "70+")),
+      bmi_cat = case_when(
+            ethnicity_6 %in% c("South Asian", "Other") ~ cut(bmi, breaks = c(0,18.5,23,27.5,Inf), 
+                                                             labels = c(
+                                                                  "Underweight", 
+                                                                  "Normal Weight", 
+                                                                  "Overweight", 
+                                                                  "Obese")),
+            !ethnicity_6 %in% c("South Asian", "Other") ~ cut(bmi, breaks = c(0,18.5,25,30,Inf),
+                                                             labels = c(
+                                                                  "Underweight", 
+                                                                  "Normal Weight", 
+                                                                  "Overweight", 
+                                                                  "Obese"))
+      )
 )
