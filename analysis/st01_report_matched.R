@@ -1,7 +1,6 @@
 # Load all packages
 source("analysis/dm01_matched_current_data.R")
 
-      
 # report numbers: 
 matched_data %>% summary_factorlist(
       dependent = "exposure",
