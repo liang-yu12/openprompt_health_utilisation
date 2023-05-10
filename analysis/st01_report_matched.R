@@ -7,7 +7,7 @@ lc_exp_matched <- fread(here("output", "matched_cases_with_ehr.csv"),
                         colClasses = list(
                                     integer = 
                                           c("age", "sex", "long_covid_dx",
-                                            "set_id", "exposure", "covid_positive",
+                                            "set_id", "exposure", "covid_positive", "ethnicity",
                                             "covid_dx_month","imd", "previous_covid_hosp",   "cov_c19_vaccine_number",
                                             "cov_cancer",   "cov_mental_health",   "cov_asthma",
                                             "cov_organ_transplant",   "cov_chronic_cardiac_disease",   "cov_chronic_liver_disease",
@@ -39,7 +39,7 @@ com_matched <- fread(here("output", "matched_control_with_ehr.csv"),
                      colClasses = list(
                            integer = 
                                  c("age", "sex", "long_covid_dx",
-                                   "set_id", "exposure", "covid_positive",
+                                   "set_id", "exposure", "covid_positive", "ethnicity",
                                    "covid_dx_month","imd", "previous_covid_hosp",   "cov_c19_vaccine_number",
                                    "cov_cancer",   "cov_mental_health",   "cov_asthma",
                                    "cov_organ_transplant",   "cov_chronic_cardiac_disease",   "cov_chronic_liver_disease",
