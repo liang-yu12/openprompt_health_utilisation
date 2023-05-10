@@ -74,15 +74,7 @@ matched_data$exposure <- matched_data$exposure %>%
       factor(label = c("Comparator", "Long COVID exposure"))
 
 matched_data <- matched_data %>% mutate(
-      imd_q5 = cut2(
-            imd, 
-            g = 5, 
-            lebels = c(
-                  "least_deprived", 
-                  "2_deprived",
-                  "3_deprived",
-                  "4_deprived",
-                  "most_deprived")),
+      imd_q5 = cut2(imd, g = 5),
       ethnicity_6 = factor(
             ethnicity,
             levels = 1:6, 
@@ -118,3 +110,11 @@ matched_data <- matched_data %>% mutate(
                                                                   "Obese"))
       )
 )
+
+matched_data$imd_q5 <- matched_data$imd_q5 %>% 
+      factor(
+            lebels = c("least_deprived", 
+                        "2_deprived",
+                        "3_deprived",
+                        "4_deprived",
+                        "most_deprived"))
