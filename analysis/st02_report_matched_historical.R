@@ -84,7 +84,8 @@ hx_matched_data %>% summary_factorlist(
                       "cov_permanent_immune_suppress",
                       "cov_temporary_immune_suppress",
                       visit, hx_visit
-      )
+                  ),
+      p = TRUE
 ) %>% write.csv(here("output", "hx_matched_numbers_table.csv"), row.names = F)
 
 

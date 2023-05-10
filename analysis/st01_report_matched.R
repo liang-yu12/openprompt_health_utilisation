@@ -132,7 +132,8 @@ matched_data %>% summary_factorlist(
                       "ae_visit_m10",
                       "ae_visit_m11",
                       "ae_visit_m12"
-                      )
+                      ),
+      p = TRUE
 ) %>% write.csv(here("output", "matched_numbers_table.csv"), row.names = F)
 
 
