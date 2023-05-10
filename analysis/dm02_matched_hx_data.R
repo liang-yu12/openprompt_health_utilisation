@@ -64,7 +64,7 @@ hx_matched_data$exposure <- hx_matched_data$exposure %>%
 
 
 hx_matched_data <- hx_matched_data %>% mutate(
-      imd_q5 = cut2(imd, g = 5, lebels = c("least_deprived", "2_deprived","3_deprived","4_deprived","most_deprived")),
+      imd_q5 = cut2(imd, g = 5),
       ethnicity_6 = factor(
             ethnicity,
             levels = 1:6, 
@@ -94,4 +94,11 @@ hx_matched_data <- hx_matched_data %>% mutate(
                                                              labels = c("Underweight", "Normal Weight", "Overweight", "Obese"))
       )
 )
-      
+
+hx_matched_data$imd_q5 <- hx_matched_data$imd_q5 %>% 
+      factor(
+            lebels = c("least_deprived", 
+                        "2_deprived",
+                        "3_deprived",
+                        "4_deprived",
+                        "most_deprived"))
