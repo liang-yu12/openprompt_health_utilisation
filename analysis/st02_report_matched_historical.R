@@ -59,7 +59,7 @@ com_matched %>% names
 hx_matched_data <- bind_rows(lc_exp_matched, com_matched)
 hx_matched_data %>% names
 
-hx_matched_data$exposure <- matched_data$exposure %>% 
+hx_matched_data$exposure <- hx_matched_data$exposure %>% 
       factor(label = c("Comparator", "Long COVID exposure"))
 
 
