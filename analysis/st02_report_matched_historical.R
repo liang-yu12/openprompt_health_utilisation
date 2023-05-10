@@ -11,7 +11,7 @@ visit <- c("gp_visit_m1",   "gp_visit_m2",   "gp_visit_m3",   "gp_visit_m4",   "
            "ae_visit_m7",   "ae_visit_m8",   "ae_visit_m9",   "ae_visit_m10",  "ae_visit_m11",
            "ae_visit_m12")
 
-hx_visit <- paste("hx_", vec, sep = "")
+hx_visit <- paste("hx_", visit, sep = "")
 
 
 # # Exposure:
