@@ -96,7 +96,7 @@ hx_matched_data <- hx_matched_data %>% mutate(
 )
 
 hx_matched_data$imd_q5 <- factor(hx_matched_data$imd_q5, 
-                                 lebel = c("least_deprived", 
+                                 lebels = c("least_deprived", 
                                            "2_deprived",
                                            "3_deprived",
                                            "4_deprived",
