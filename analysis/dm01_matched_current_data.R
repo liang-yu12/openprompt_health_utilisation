@@ -111,9 +111,9 @@ matched_data <- matched_data %>% mutate(
       )
 )
 
-matched_data$imd_q5 <- factor(matched_data$imd_q5, 
-                              lebels = c("least_deprived",
-                                        "2_deprived",
-                                        "3_deprived",
-                                        "4_deprived",
-                                        "most_deprived"))
+# matched_data$imd_q5 <- factor(matched_data$imd_q5, 
+#                               lebels = c("least_deprived",
+#                                         "2_deprived",
+#                                         "3_deprived",
+#                                         "4_deprived",
+#                                         "most_deprived"))
