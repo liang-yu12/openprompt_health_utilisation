@@ -6,7 +6,7 @@
 from datetime import date
 from databuilder.ehrql import Dataset, days, years,  case, when
 from databuilder.tables.beta.tpp import (
-    patients, addresses, appointments,
+    patients, addresses, appointments, vaccinations,
     practice_registrations, clinical_events,
     sgss_covid_all_tests, ons_deaths, hospital_admissions,
 )
@@ -102,11 +102,11 @@ bmi_date = bmi_record.date
 
 # Clinical factors:
 # 1. Previous hospitalized due to COVID (only look at hospitalisation before the index date)
-previous_covid_hos = (hospitalisation_diagnosis_matches(hospital_admissions, codelists.hosp_covid)
-    .where(hospital_admissions.admission_date < study_start_date)
-    .sort_by(hospital_admissions.admission_date)
-    .first_for_patient()
-)
+# previous_covid_hos = (hospitalisation_diagnosis_matches(hospital_admissions, codelists.hosp_covid)
+#     .where(hospital_admissions.admission_date < index_date)
+#     .sort_by(hospital_admissions.admission_date)
+#     .first_for_patient()
+# )
 # Mental issues:
 mental_health_issues = clinical_ctv3_matches(clinical_events, codelists.mental_health_all)
 
@@ -117,10 +117,12 @@ copd = clinical_ctv3_matches(clinical_events, codelists.copd)
 # the number of Covid-19 vaccinations doses (any vaccine) before the index date
 # vaccine dose: at least one dose/one dose/two dose/three doses or more
 
-c19_vaccine_number = (clinical_events.where(clinical_events.date <= study_start_date)
-    .where(clinical_events.snomedct_code.is_in(codelists.vac_adm_combine_code))
-    .count_for_patient()
-)
+# c19_vaccine_number = (vaccinations
+#     .where(vaccinations.date < index_date)
+#     .where(vaccinations.target_disease == "SARS-2 CORONAVIRUS")
+# 	.count_for_patient()
+# )
+
 
 # level of multimorbidity ------
 
