@@ -61,6 +61,13 @@ previous_covid_hos = (hospitalisation_diagnosis_matches(hospital_admissions, cod
     .first_for_patient()
 )
 
+# Number of vaccines received before the index date and after study start date
+c19_vaccine_number = vaccinations \
+    .where(vaccinations.date < matched_cases.index_date) \
+    .where(vaccinations.date > study_start_date) \
+    .where(vaccinations.target_disease == "SARS-2 CORONAVIRUS") \
+    .sort_by(vaccinations.date) \
+    .count_for_patient()
 
 dataset.covid_positive = latest_test_before_diagnosis.exists_for_patient()
 dataset.covid_dx_month = latest_test_before_diagnosis.specimen_taken_date.to_first_of_month() # only need dx month
@@ -69,7 +76,7 @@ dataset.imd = imd
 dataset.bmi = bmi
 dataset.bmi_date = bmi_date
 dataset.previous_covid_hosp = previous_covid_hos.exists_for_patient()
-# dataset.cov_c19_vaccine_number = c19_vaccine_number
+dataset.cov_c19_vaccine_number = c19_vaccine_number
 dataset.cov_cancer = cancer_all.exists_for_patient()
 dataset.cov_mental_health = mental_health_issues.exists_for_patient()
 dataset.cov_asthma = asthma.exists_for_patient() & ~copd.exists_for_patient()
