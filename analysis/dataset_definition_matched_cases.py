@@ -1,10 +1,14 @@
 import datetime
 from databuilder.ehrql import Dataset, days, years
 from databuilder.tables.beta.tpp import (
-    patients, addresses, ons_deaths, sgss_covid_all_tests,
-    practice_registrations, clinical_events,
+    patients, addresses, 
+    ons_deaths, 
+    sgss_covid_all_tests,
+    practice_registrations, 
+    clinical_events,
+    vaccinations,
 )
-from databuilder.query_language import table_from_file, PatientFrame, Series
+from ehrql.query_language import table_from_file, PatientFrame, Series
 from covariates import *
 from variables import add_visits, add_hos_visits, add_ae_visits
 
@@ -49,6 +53,15 @@ dataset.set_id = matched_cases.set_id
 dataset.exposure = matched_cases.exposure
 dataset.match_counts = matched_cases.match_counts
 
+# Add previous covid hospitalisation
+# 1. Previous hospitalized due to COVID (only look at hospitalisation before the index date)
+previous_covid_hos = (hospitalisation_diagnosis_matches(hospital_admissions, codelists.hosp_covid)
+    .where(hospital_admissions.admission_date < matched_cases.index_date)
+    .sort_by(hospital_admissions.admission_date)
+    .first_for_patient()
+)
+
+
 dataset.covid_positive = latest_test_before_diagnosis.exists_for_patient()
 dataset.covid_dx_month = latest_test_before_diagnosis.specimen_taken_date.to_first_of_month() # only need dx month
 dataset.ethnicity = ethnicity
@@ -56,7 +69,7 @@ dataset.imd = imd
 dataset.bmi = bmi
 dataset.bmi_date = bmi_date
 dataset.previous_covid_hosp = previous_covid_hos.exists_for_patient()
-dataset.cov_c19_vaccine_number = c19_vaccine_number
+# dataset.cov_c19_vaccine_number = c19_vaccine_number
 dataset.cov_cancer = cancer_all.exists_for_patient()
 dataset.cov_mental_health = mental_health_issues.exists_for_patient()
 dataset.cov_asthma = asthma.exists_for_patient() & ~copd.exists_for_patient()
