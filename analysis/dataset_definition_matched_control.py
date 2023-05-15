@@ -65,6 +65,7 @@ c19_vaccine_number = (vaccinations.where(vaccinations.date < matched_matches.ind
     .count_for_patient()
 )
 
+
 dataset.covid_positive = latest_test_before_diagnosis.exists_for_patient()
 dataset.covid_dx_month = latest_test_before_diagnosis.specimen_taken_date.to_first_of_month() # only need dx month
 dataset.ethnicity = ethnicity

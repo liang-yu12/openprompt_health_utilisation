@@ -16,6 +16,7 @@ from codelists import lc_codelists_combined
 from variables import (
     hospitalisation_diagnosis_matches,
     clinical_ctv3_matches, 
+    create_sequential_variables,
 )
 
 study_start_date = date(2020, 11, 1)
