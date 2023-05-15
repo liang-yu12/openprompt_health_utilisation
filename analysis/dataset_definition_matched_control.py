@@ -58,13 +58,21 @@ previous_covid_hos = (hospitalisation_diagnosis_matches(hospital_admissions, cod
 )
 
 # Number of vaccines received before the index date and after study start date
-c19_vaccine_number = (vaccinations.where(vaccinations.date < matched_matches.index_date)
+all_vacc = (vaccinations.where(vaccinations.date < matched_matches.index_date)
     .where(vaccinations.date > study_start_date)
     .where(vaccinations.target_disease == "SARS-2 CORONAVIRUS")
     .sort_by(vaccinations.date)
-    .count_for_patient()
 )
 
+c19_vaccine_number = all_vacc.count_for_patient()
+
+create_sequential_variables(
+    dataset,
+    "covid_vacc_{n}_vacc_tab",
+    num_variables=6,
+    events=all_vacc,
+    column="date"
+)
 
 dataset.covid_positive = latest_test_before_diagnosis.exists_for_patient()
 dataset.covid_dx_month = latest_test_before_diagnosis.specimen_taken_date.to_first_of_month() # only need dx month
