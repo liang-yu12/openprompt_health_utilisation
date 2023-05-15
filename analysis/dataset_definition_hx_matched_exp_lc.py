@@ -4,7 +4,7 @@ from databuilder.tables.beta.tpp import (
     patients, addresses, ons_deaths, sgss_covid_all_tests,
     practice_registrations, clinical_events,
 )
-from databuilder.query_language import table_from_file, PatientFrame, Series
+from ehrql.query_language import table_from_file, PatientFrame, Series
 from covariates import *
 from hx_covariates import *
 from variables import (
