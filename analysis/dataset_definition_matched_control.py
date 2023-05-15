@@ -3,8 +3,9 @@ from databuilder.ehrql import Dataset, days, years
 from databuilder.tables.beta.tpp import (
     patients, addresses, ons_deaths, sgss_covid_all_tests,
     practice_registrations, clinical_events,
+    vaccinations,
 )
-from databuilder.query_language import table_from_file, PatientFrame, Series
+from ehrql.query_language import table_from_file, PatientFrame, Series
 from covariates import *
 from variables import add_visits, add_hos_visits, add_ae_visits
 # Import matched data
@@ -47,6 +48,22 @@ dataset.end_deregist = matched_matches.end_deregist
 dataset.end_lc_cure = matched_matches.end_lc_cure
 dataset.set_id = matched_matches.set_id
 dataset.exposure = matched_matches.exposure
+
+# Add previous covid hospitalisation
+# 1. Previous hospitalized due to COVID (only look at hospitalisation before the index date)
+previous_covid_hos = (hospitalisation_diagnosis_matches(hospital_admissions, codelists.hosp_covid)
+    .where(hospital_admissions.admission_date < matched_matches.index_date)
+    .sort_by(hospital_admissions.admission_date)
+    .first_for_patient()
+)
+
+# Number of vaccines received before the index date and after study start date
+c19_vaccine_number = (vaccinations.where(vaccinations.date < matched_matches.index_date)
+    .where(vaccinations.date > study_start_date)
+    .where(vaccinations.target_disease == "SARS-2 CORONAVIRUS")
+    .sort_by(vaccinations.date)
+    .count_for_patient()
+)
 
 dataset.covid_positive = latest_test_before_diagnosis.exists_for_patient()
 dataset.covid_dx_month = latest_test_before_diagnosis.specimen_taken_date.to_first_of_month() # only need dx month
