@@ -1,6 +1,7 @@
 # Load all packages
 source("analysis/settings_packages.R")
 
+# ============== Read in data and combine ==============
 # Read in data-sets:
 # # Exposure:
 lc_exp_matched <- fread(here("output", "matched_cases_with_ehr.csv"))
@@ -13,6 +14,7 @@ com_matched <- fread(here("output", "matched_control_with_ehr.csv"))
 matched_data <- bind_rows(lc_exp_matched, com_matched)
 matched_data %>% names
 
+# ============== Data management for each variables ==============
 # check the data type
 matched_data %>% glimpse # some types need to be corrected. 
 
@@ -25,6 +27,7 @@ to_be_factors <- c("sex", "region", "gp_practice", "exposure", "covid_positive",
 
 matched_data[, (to_be_factors) := lapply(.SD, as.factor), .SDcols = to_be_factors]
 
+# Added non-NA vaccine dates together. 
 c19_vax_dates <- c("covid_vacc_1_vacc_tab", 
                    "covid_vacc_2_vacc_tab", 
                    "covid_vacc_3_vacc_tab", 
@@ -32,8 +35,8 @@ c19_vax_dates <- c("covid_vacc_1_vacc_tab",
                    "covid_vacc_5_vacc_tab", 
                    "covid_vacc_6_vacc_tab")
 
-# Added non-NA vaccine dates together. 
 matched_data$cov_covid_vaccine_number <- rowSums(!is.na(matched_data[, c19_vax_dates, with = FALSE]), na.rm = T)
+# categorize the vaccine number
 matched_data <- matched_data %>% 
       mutate(cov_covid_vax_n_cat = case_when(
             cov_covid_vaccine_number == 0 ~ 0,
@@ -97,4 +100,28 @@ levels(matched_data$imd_q5) <- c("least_deprived",
                                  "3_deprived",
                                  "4_deprived",
                                  "most_deprived")
+
+table(matched_data$exposure)
+
+# ============== Define the end date ============== 
+# Correct the deregist date 
+matched_data$end_deregist <- as.IDate(matched_data$end_deregist)
+
+matched_data$all_study_end_date <- as.Date("2023-03-31")
+# censored the comparator group if they were diagnosed with long COVID.
+matched_data <- matched_data %>% 
+      mutate(
+      end_date = ifelse(
+            exposure == "Comparator",
+            pmin(end_death, 
+                  end_deregist, 
+                  long_covid_dx_date, 
+                 all_study_end_date, na.rm = T),
+            pmin(end_death, 
+                  end_deregist, 
+                  end_lc_cure, 
+                 all_study_end_date, na.rm = T)
+      )
+)
+matched_data$end_date <- as.Date(matched_data$end_date)
 
