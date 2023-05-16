@@ -125,3 +125,16 @@ matched_data <- matched_data %>%
 )
 matched_data$end_date <- as.Date(matched_data$end_date)
 
+# ============== combine the healthcare visits ============== 
+matched_data$all_month1 <- rowSums(matched_data[, grepl("m1$", names(matched_data)), with = FALSE], na.rm = T)
+matched_data$all_month2 <- rowSums(matched_data[, grepl("m2$", names(matched_data)), with = FALSE], na.rm = T)
+matched_data$all_month3 <- rowSums(matched_data[, grepl("m3$", names(matched_data)), with = FALSE], na.rm = T)
+matched_data$all_month4 <- rowSums(matched_data[, grepl("m4$", names(matched_data)), with = FALSE], na.rm = T)
+matched_data$all_month5 <- rowSums(matched_data[, grepl("m5$", names(matched_data)), with = FALSE], na.rm = T)
+matched_data$all_month6 <- rowSums(matched_data[, grepl("m6$", names(matched_data)), with = FALSE], na.rm = T)
+matched_data$all_month7 <- rowSums(matched_data[, grepl("m7$", names(matched_data)), with = FALSE], na.rm = T)
+matched_data$all_month8 <- rowSums(matched_data[, grepl("m8$", names(matched_data)), with = FALSE], na.rm = T)
+matched_data$all_month9 <- rowSums(matched_data[, grepl("m9$", names(matched_data)), with = FALSE], na.rm = T)
+matched_data$all_month10 <- rowSums(matched_data[, grepl("m10$", names(matched_data)), with = FALSE], na.rm = T)
+matched_data$all_month11 <- rowSums(matched_data[, grepl("m11$", names(matched_data)), with = FALSE], na.rm = T)
+matched_data$all_month12 <- rowSums(matched_data[, grepl("m12$", names(matched_data)), with = FALSE], na.rm = T)
