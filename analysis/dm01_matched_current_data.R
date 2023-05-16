@@ -3,76 +3,56 @@ source("analysis/settings_packages.R")
 
 # Read in data-sets:
 # # Exposure:
-lc_exp_matched <- fread(here("output", "matched_cases_with_ehr.csv"), 
-                        colClasses = list(
-                              integer = 
-                                    c("age", "sex", "long_covid_dx",
-                                      "set_id", "exposure", "covid_positive", "ethnicity",
-                                      "covid_dx_month","imd", "previous_covid_hosp",   "cov_c19_vaccine_number",
-                                      "cov_cancer",   "cov_mental_health",   "cov_asthma",
-                                      "cov_organ_transplant",   "cov_chronic_cardiac_disease",   "cov_chronic_liver_disease",
-                                      "cov_stroke_dementia",   "cov_other_neuro_diseases",   "cov_ra_sle_psoriasis",
-                                      "cov_asplenia",   "cov_hiv",   "cov_aplastic_anemia",   "cov_permanent_immune_suppress",
-                                      "cov_temporary_immune_suppress",   "gp_visit_m1",   "gp_visit_m2",   "gp_visit_m3",   "gp_visit_m4",   "gp_visit_m5",
-                                      "gp_visit_m6",   "gp_visit_m7",   "gp_visit_m8",   "gp_visit_m9",   "gp_visit_m10",
-                                      "gp_visit_m11",   "gp_visit_m12",   "hos_visit_m1",   "hos_visit_m2",   "hos_visit_m3",
-                                      "hos_visit_m4",   "hos_visit_m5",   "hos_visit_m6",   "hos_visit_m7",   "hos_visit_m8",
-                                      "hos_visit_m9",   "hos_visit_m10",   "hos_visit_m11",   "hos_visit_m12",   "ae_visit_m1",
-                                      "ae_visit_m2",   "ae_visit_m3",   "ae_visit_m4",   "ae_visit_m5",   "ae_visit_m6", 
-                                      "ae_visit_m7",   "ae_visit_m8",   "ae_visit_m9",   "ae_visit_m10",   "ae_visit_m11",
-                                      "ae_visit_m12"
-                                    ),
-                              character = c("region", "gp_practice", "patient_id"),
-                              Date = c("long_covid_dx_date", "index_date", "end_death", 
-                                       "end_deregist", "end_lc_cure",
-                                       "bmi_date"),
-                              double = c("bmi")
-                              
-                        )
-                        
-)
-lc_exp_matched %>% names
+lc_exp_matched <- fread(here("output", "matched_cases_with_ehr.csv"))
 lc_exp_matched$match_counts <- NULL
 
 #  # Comparators:
-com_matched <- fread(here("output", "matched_control_with_ehr.csv"),
-                     colClasses = list(
-                           integer = 
-                                 c("age", "sex", "long_covid_dx",
-                                   "set_id", "exposure", "covid_positive", "ethnicity",
-                                   "covid_dx_month","imd", "previous_covid_hosp",   "cov_c19_vaccine_number",
-                                   "cov_cancer",   "cov_mental_health",   "cov_asthma",
-                                   "cov_organ_transplant",   "cov_chronic_cardiac_disease",   "cov_chronic_liver_disease",
-                                   "cov_stroke_dementia",   "cov_other_neuro_diseases",   "cov_ra_sle_psoriasis",
-                                   "cov_asplenia",   "cov_hiv",   "cov_aplastic_anemia",   "cov_permanent_immune_suppress",
-                                   "cov_temporary_immune_suppress",   "gp_visit_m1",   "gp_visit_m2",   "gp_visit_m3",   "gp_visit_m4",   "gp_visit_m5",
-                                   "gp_visit_m6",   "gp_visit_m7",   "gp_visit_m8",   "gp_visit_m9",   "gp_visit_m10",
-                                   "gp_visit_m11",   "gp_visit_m12",   "hos_visit_m1",   "hos_visit_m2",   "hos_visit_m3",
-                                   "hos_visit_m4",   "hos_visit_m5",   "hos_visit_m6",   "hos_visit_m7",   "hos_visit_m8",
-                                   "hos_visit_m9",   "hos_visit_m10",   "hos_visit_m11",   "hos_visit_m12",   "ae_visit_m1",
-                                   "ae_visit_m2",   "ae_visit_m3",   "ae_visit_m4",   "ae_visit_m5",   "ae_visit_m6", 
-                                   "ae_visit_m7",   "ae_visit_m8",   "ae_visit_m9",   "ae_visit_m10",   "ae_visit_m11",
-                                   "ae_visit_m12"
-                                 ),
-                           character = c("region", "gp_practice", "patient_id"),
-                           Date = c("long_covid_dx_date", "index_date", "end_death", 
-                                    "end_deregist", "end_lc_cure",
-                                    "bmi_date"),
-                           double = c("bmi")
-                           
-                     )
-                     
-)
-
-
+com_matched <- fread(here("output", "matched_control_with_ehr.csv"))
 
 #  combine two datasets
 matched_data <- bind_rows(lc_exp_matched, com_matched)
 matched_data %>% names
 
-matched_data$exposure <- matched_data$exposure %>% 
-      factor(label = c("Comparator", "Long COVID exposure"))
+# check the data type
+matched_data %>% glimpse # some types need to be corrected. 
 
+to_be_factors <- c("sex", "region", "gp_practice", "exposure", "covid_positive", "ethnicity",
+  "previous_covid_hosp","cov_cancer",  "cov_mental_health",   "cov_asthma",
+  "cov_organ_transplant",   "cov_chronic_cardiac_disease",   "cov_chronic_liver_disease",
+  "cov_stroke_dementia",   "cov_other_neuro_diseases",   "cov_ra_sle_psoriasis",
+  "cov_asplenia",   "cov_hiv",   "cov_aplastic_anemia",   "cov_permanent_immune_suppress",
+  "cov_temporary_immune_suppress")
+
+matched_data[, (to_be_factors) := lapply(.SD, as.factor), .SDcols = to_be_factors]
+
+c19_vax_dates <- c("covid_vacc_1_vacc_tab", 
+                   "covid_vacc_2_vacc_tab", 
+                   "covid_vacc_3_vacc_tab", 
+                   "covid_vacc_4_vacc_tab", 
+                   "covid_vacc_5_vacc_tab", 
+                   "covid_vacc_6_vacc_tab")
+
+# Added non-NA vaccine dates together. 
+matched_data$cov_covid_vaccine_number <- rowSums(!is.na(matched_data[, c19_vax_dates, with = FALSE]), na.rm = T)
+matched_data <- matched_data %>% 
+      mutate(cov_covid_vax_n_cat = case_when(
+            cov_covid_vaccine_number == 0 ~ 0,
+            cov_covid_vaccine_number == 1 ~ 1,
+            cov_covid_vaccine_number == 2 ~ 2,
+            cov_covid_vaccine_number >= 3 ~ 3)
+)
+# Change covid vax numbers into categorical vars 
+matched_data$cov_covid_vax_n_cat <- matched_data$cov_covid_vax_n_cat %>% 
+      factor(labels = c("0 dose","1 dose","2 doses"," More than 3 doses"))
+
+table(matched_data$cov_covid_vax_n_cat, matched_data$cov_covid_vaccine_number, useNA = "ifany")      
+                                        
+# Label exposure indicator
+matched_data$exposure <- matched_data$exposure %>% 
+      factor(labels = c("Comparator", "Long covid exposure"))
+matched_data$exposure %>% table
+
+# Other data management: IMD quintiles, ethnicity, BMI categories for ethnicity  
 matched_data <- matched_data %>% mutate(
       imd_q5 = cut2(imd, g = 5),
       ethnicity_6 = factor(
@@ -108,12 +88,13 @@ matched_data <- matched_data %>% mutate(
                                                                   "Normal Weight", 
                                                                   "Overweight", 
                                                                   "Obese"))
-      )
+                        )
 )
 
-# matched_data$imd_q5 <- factor(matched_data$imd_q5, 
-#                               lebels = c("least_deprived",
-#                                         "2_deprived",
-#                                         "3_deprived",
-#                                         "4_deprived",
-#                                         "most_deprived"))
+# label the imd cat
+levels(matched_data$imd_q5) <- c("least_deprived",
+                                 "2_deprived",
+                                 "3_deprived",
+                                 "4_deprived",
+                                 "most_deprived")
+
