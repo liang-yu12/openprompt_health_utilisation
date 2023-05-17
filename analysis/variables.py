@@ -120,6 +120,16 @@ def clinical_ctv3_matches(gpevent, codelist):
     )
     return gp_dx
 
+#  Function for defining comorbidities (yes 1/no 0)
+def  has_prior_event_numeric(comorbidities):
+    comorbidities = local_var.exists_for_patient()
+    return (
+        case(
+            when(comorbidities).then(1),
+            when(~comorbidities).then(0)
+            )
+)
+
 # Create sequential variables for COVID-19 vaccine
 def create_sequential_variables(
     dataset, variable_name_template, events, column, num_variables, sort_column=None
