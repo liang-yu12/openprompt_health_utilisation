@@ -3,6 +3,6 @@
 packages <- c("data.table", "lubridate", "markdown", "forcats", "Hmisc",
               "broom", "dplyr", "finalfit", "forcats", "ggplot2", "ggpubr",
               "MASS", "stringr", "here", "gtools", "rmarkdown",
-              "knitr")
+              "knitr", "twopartm")
 
 lapply(packages, require, character.only = TRUE)

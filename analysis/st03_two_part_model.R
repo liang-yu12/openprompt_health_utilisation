@@ -1,8 +1,5 @@
 # Load previous data management
-source("analysis/dm03_matched_current_data_combine_visits_numbers.R")
-
-# two part model package:
-library(twopartm) # will be merge to setting once the package is added
+source("analysis/dm01_matched_current_data.R")
 
 # test running the model 
 month_1 <- tpm(
