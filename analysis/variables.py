@@ -121,7 +121,7 @@ def clinical_ctv3_matches(gpevent, codelist):
     return gp_dx
 
 #  Function for defining comorbidities (yes 1/no 0)
-def  has_prior_event_numeric(comorbidities):
+def has_prior_event_numeric(comorbidities):
     como_dx = comorbidities.exists_for_patient()
     return (
         case(
