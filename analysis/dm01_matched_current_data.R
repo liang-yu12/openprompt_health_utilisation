@@ -14,6 +14,8 @@ com_matched <- fread(here("output", "matched_control_with_ehr.csv"))
 matched_data <- bind_rows(lc_exp_matched, com_matched)
 matched_data %>% names
 
+rm(lc_exp_matched, com_matched) # house keeping
+
 # ============== Data management for each variables ==============
 # check the data type
 matched_data %>% glimpse # some types need to be corrected. 
