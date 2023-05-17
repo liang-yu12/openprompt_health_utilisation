@@ -127,6 +127,32 @@ matched_data <- matched_data %>%
 )
 matched_data$end_date <- as.Date(matched_data$end_date)
 
+
+# calculate follow-up time
+matched_data$follow_up_time <- as.numeric(matched_data$end_date) - as.numeric(matched_data$index_date)
+
+# ============== Caclulate the number of comorbidities 
+
+comorbidities <- c("cov_cancer",  "cov_mental_health",   "cov_asthma",
+"cov_organ_transplant",   "cov_chronic_cardiac_disease",   "cov_chronic_liver_disease",
+"cov_stroke_dementia",   "cov_other_neuro_diseases",   "cov_ra_sle_psoriasis",
+"cov_asplenia",   "cov_hiv",   "cov_aplastic_anemia",   "cov_permanent_immune_suppress",
+"cov_temporary_immune_suppress")
+# change them into logical factors
+matched_data[, (comorbidities) := lapply(.SD, as.logical), .SDcols = comorbidities] 
+
+
+matched_data[, number_comorbidities := rowSums(.SD, na.rm = T), .SDcols = comorbidities] # add them up
+matched_data <- matched_data %>% 
+      mutate(number_comorbidities_cat = case_when(
+            number_comorbidities ==0 ~ 0,
+            number_comorbidities ==1 ~ 1,
+            number_comorbidities ==2 ~ 2,
+            number_comorbidities >=3 ~ 3)) 
+
+matched_data$number_comorbidities_cat <- matched_data$number_comorbidities_cat %>% 
+      as.factor()
+      
 # ============== combine the healthcare visits ============== 
 matched_data$all_month1 <- rowSums(matched_data[, grepl("m1$", names(matched_data)), with = FALSE], na.rm = T)
 matched_data$all_month2 <- rowSums(matched_data[, grepl("m2$", names(matched_data)), with = FALSE], na.rm = T)
