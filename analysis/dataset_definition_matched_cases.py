@@ -100,6 +100,21 @@ dataset.cov_hiv = hiv.exists_for_patient()
 dataset.cov_aplastic_anemia = aplastic_anemia.exists_for_patient()
 dataset.cov_permanent_immune_suppress = permanent_immune_suppress.exists_for_patient()
 dataset.cov_temporary_immune_suppress = temporary_immune_suppress.exists_for_patient()
+# dataset.comorbid_count = dataset.cov_cancer + \
+#     dataset.cov_mental_health +\
+#     dataset.cov_asthma +\
+#     dataset.cov_organ_transplant +\
+#     dataset.cov_chronic_cardiac_disease  +\
+#     dataset.cov_chronic_liver_disease  +\
+#     dataset.cov_stroke_dementia +\
+#     dataset.cov_other_neuro_diseases +\
+#     dataset.cov_ra_sle_psoriasis +\
+#     dataset.cov_asplenia  +\
+#     dataset.cov_hiv +\
+#     dataset.cov_aplastic_anemia  +\
+#     dataset.cov_permanent_immune_suppress +\
+#     dataset.cov_temporary_immune_suppress
+
 # Add outcomes: healthcare utilisation by months
 # GP visit
 add_visits(dataset, dataset.index_date, num_months=1)
