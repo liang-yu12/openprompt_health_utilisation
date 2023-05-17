@@ -1,5 +1,5 @@
 # Load previous data management
-source("analysis/dm03_matched_define_followup_time.R")
+source("analysis/dm03_matched_define_monthly_follow_up_time.R")
 
 # test running the model 
 month_1 <- tpm(
