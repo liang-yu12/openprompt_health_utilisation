@@ -125,7 +125,7 @@ matched_data <- matched_data %>%
                  all_study_end_date, na.rm = T)
       )
 )
-matched_data$end_date <- as.Date(matched_data$end_date)
+matched_data$end_date <- as.Date.numeric(matched_data$end_date, origin = "1970-01-01")
 
 
 # calculate follow-up time
