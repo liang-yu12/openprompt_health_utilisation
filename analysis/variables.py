@@ -128,7 +128,7 @@ def  has_prior_event_numeric(comorbidities):
             when(como_dx).then(1),
             when(~como_dx).then(0)
             )
-)
+    )
 
 # Create sequential variables for COVID-19 vaccine
 def create_sequential_variables(
