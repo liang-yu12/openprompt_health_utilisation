@@ -51,4 +51,7 @@ all_results <- bind_rows(
       crude_month_hurdle_fn(matched_data$all_month2, 10),
       crude_month_hurdle_fn(matched_data$all_month2, 11),
       crude_month_hurdle_fn(matched_data$all_month2, 12),
-)
+) %>% tibble::rownames_to_column(var = "Variables") %>% 
+      filter(grepl("count_", Variables)) %>% 
+      filter(grepl("exposure", Variables)) %>% 
+      relocate(month, .after = "Variables")
