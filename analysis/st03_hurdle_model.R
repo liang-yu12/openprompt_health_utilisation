@@ -14,7 +14,7 @@ options(digits=2)
 crude_month_hurdle_fn <- function(month, n) {
       # Fit a hurdle model to the data.
       model <- hurdle(
-            month ~ exposure | age + sex + region,
+            month ~ exposure + offset(follow_up_m1) | age + sex + region,
             data = matched_data,
             zero.dist = "binomial",
             dist = "poisson"
