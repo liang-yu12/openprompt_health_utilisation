@@ -73,4 +73,4 @@ all_results <- bind_rows(
 )
  
 
-all_results %>% write.csv(here("output", "monthly_visits_crude_hurdle.csv"), row.names = F)
+all_results %>% write.csv(here("output", "monthly_visits_crude_hurdle.csv"), row.names = T)
