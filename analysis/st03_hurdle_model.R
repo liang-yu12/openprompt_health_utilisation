@@ -71,3 +71,6 @@ all_results <- bind_rows(
       month_hurdle_fn(matched_data$all_month2, 11),
       month_hurdle_fn(matched_data$all_month2, 12),
 )
+ 
+
+all_results %>% write.csv(here("output", "monthly_visits_crude_hurdle.csv"), row.names = F)
