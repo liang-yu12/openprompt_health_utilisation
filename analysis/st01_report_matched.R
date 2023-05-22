@@ -9,7 +9,7 @@ explanatory = c("sex", "age","age_cat", "ethnicity_6", "bmi_cat", "imd_q5",
 
 # report numbers: 
 matched_data %>% summary_factorlist(dependent, explanatory, p = TRUE) %>% 
-      write.csv(here("output", "matched_numbers_table.csv"), row.names = F)
+      write.csv(here("output", "st01_matched_numbers_table.csv"), row.names = F)
 
 
 # check missing value distribution:
