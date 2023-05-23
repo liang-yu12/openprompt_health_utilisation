@@ -8,6 +8,7 @@ options(digits=2)
 # The first part: counted data regression (truncated Poisson)
 # The second part: the zero regression (logit)
 
+<<<<<<< HEAD
 # Crude: only look at the association between exposure and outcome
 
 
@@ -15,6 +16,34 @@ crude_month_hurdle_fn <- function(month, n) {
       # Fit a hurdle model to the data.
       model <- hurdle(
             month ~ exposure + offset(follow_up_m1) | age + sex + region,
+=======
+# crude 
+# Testing  codes:
+# # month 1 
+# crude_hc_m1_reg <- hurdle(
+#       matched_data$all_month1 ~ exposure |  
+#             exposure + age + sex,
+#       data = matched_data,
+#       zero.dist = "binomial",
+#       dist = "poisson"
+# )
+# 
+# # extract the output:
+# # coefficients:
+# coef_results <- data.frame(exp(coef((crude_hc_m1_reg))))
+# names(coef_results) <- "Coeffiencts"
+# # 95%CI:
+# results_ci <- data.frame(exp(confint(crude_hc_m1_reg))) %>% 
+#       setnames(old = c("X2.5..", "X97.5.."), new = c("Lower CI", "Upper CI"))
+# # combine the results
+# results_m1 <- cbind(coef_results, results_ci)
+
+
+month_hurdle_fn <- function(month, n) {
+      # Fit a hurdle model to the data.
+      model <- hurdle(
+            month ~ exposure | exposure + age + sex,
+>>>>>>> f8c593c57a299c00f232d7ea6d53214858194d35
             data = matched_data,
             zero.dist = "binomial",
             dist = "poisson"
@@ -39,6 +68,7 @@ crude_month_hurdle_fn <- function(month, n) {
 }
 
 all_results <- bind_rows(
+<<<<<<< HEAD
       crude_month_hurdle_fn(matched_data$all_month1, 1),
       crude_month_hurdle_fn(matched_data$all_month2, 2),
       crude_month_hurdle_fn(matched_data$all_month2, 3),
@@ -55,3 +85,21 @@ all_results <- bind_rows(
       filter(grepl("count_", Variables)) %>% 
       filter(grepl("exposure", Variables)) %>% 
       relocate(month, .after = "Variables")
+=======
+      month_hurdle_fn(matched_data$all_month1, 1),
+      month_hurdle_fn(matched_data$all_month2, 2),
+      month_hurdle_fn(matched_data$all_month2, 3),
+      month_hurdle_fn(matched_data$all_month2, 4),
+      month_hurdle_fn(matched_data$all_month2, 5),
+      month_hurdle_fn(matched_data$all_month2, 6),
+      month_hurdle_fn(matched_data$all_month2, 7),
+      month_hurdle_fn(matched_data$all_month2, 8),
+      month_hurdle_fn(matched_data$all_month2, 9),
+      month_hurdle_fn(matched_data$all_month2, 10),
+      month_hurdle_fn(matched_data$all_month2, 11),
+      month_hurdle_fn(matched_data$all_month2, 12),
+)
+ 
+
+all_results %>% write.csv(here("output", "st03_monthly_visits_crude_hurdle.csv"), row.names = T)
+>>>>>>> f8c593c57a299c00f232d7ea6d53214858194d35

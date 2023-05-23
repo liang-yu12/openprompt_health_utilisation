@@ -122,7 +122,7 @@ actions:
       r:latest analysis/st01_report_matched.R
     outputs: 
       moderately_sensitive: 
-        matched_table: output/matched_numbers_table.csv
+        matched_table: output/st01_matched_numbers_table.csv
 
   report02_hx_matched_datasets:
     needs: [import_matched_historical_exposure, import_matched_historical_controls]
@@ -131,3 +131,11 @@ actions:
     outputs: 
       moderately_sensitive: 
         matched_table: output/hx_matched_numbers_table.csv
+
+  report_03_hurdle_model:
+    needs: [import_matched_exposure, import_matched_controls]
+    run: 
+      r:latest analysis/st03_hurdle_model.R
+    outputs: 
+      moderately_sensitive: 
+        model_table: output/st03_monthly_visits_crude_hurdle.csv
