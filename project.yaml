@@ -123,6 +123,8 @@ actions:
     outputs: 
       moderately_sensitive: 
         matched_table: output/st01_matched_numbers_table.csv
+        missing_table: output/missing_distribution_table.csv
+        missing_pattern: output/missing_pattern_current.png
 
   report02_hx_matched_datasets:
     needs: [import_matched_historical_exposure, import_matched_historical_controls]
