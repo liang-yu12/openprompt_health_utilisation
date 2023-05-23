@@ -16,7 +16,7 @@ matched_data %>% names
 
 rm(lc_exp_matched, com_matched) # house keeping
 
-# ============== Data management for each variables ==============
+# ============== Data management for each variables 
 # check the data type
 matched_data %>% glimpse # some types need to be corrected. 
 
@@ -29,6 +29,7 @@ to_be_factors <- c("sex", "region", "gp_practice", "exposure", "covid_positive",
 
 matched_data[, (to_be_factors) := lapply(.SD, as.factor), .SDcols = to_be_factors]
 
+# Calculate vaccine numbers: -------
 # Added non-NA vaccine dates together. 
 c19_vax_dates <- c("covid_vacc_1_vacc_tab", 
                    "covid_vacc_2_vacc_tab", 
@@ -37,7 +38,7 @@ c19_vax_dates <- c("covid_vacc_1_vacc_tab",
                    "covid_vacc_5_vacc_tab", 
                    "covid_vacc_6_vacc_tab")
 
-matched_data$cov_covid_vaccine_number <- rowSums(!is.na(matched_data[, c19_vax_dates, with = FALSE]), na.rm = T)
+matched_data$cov_covid_vaccine_number <- rowSums(!is.na(matched_data[, c19_vax_dates, with = FALSE]))
 # categorize the vaccine number
 matched_data <- matched_data %>% 
       mutate(cov_covid_vax_n_cat = case_when(
