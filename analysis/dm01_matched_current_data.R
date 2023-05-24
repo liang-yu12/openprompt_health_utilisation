@@ -49,7 +49,7 @@ matched_data <- matched_data %>%
 )
 # Change covid vax numbers into categorical vars 
 matched_data$cov_covid_vax_n_cat <- matched_data$cov_covid_vax_n_cat %>% 
-      factor(labels = c("0 dose","1 dose","2 doses"," More than 3 doses"))
+      factor(labels = c("0 dose","1 dose","2 doses","3 or more doses"))
 
 table(matched_data$cov_covid_vax_n_cat, matched_data$cov_covid_vaccine_number, useNA = "ifany")      
                                         
