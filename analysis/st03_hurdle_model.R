@@ -73,5 +73,6 @@ all_results <- bind_rows(
 )
 
 all_results %>% 
+      filter(rownames(.) %>% startsWith("count_")) %>% 
       write.csv(here("output", "st03_monthly_visits_crude_hurdle.csv"), 
                 row.names = T)
