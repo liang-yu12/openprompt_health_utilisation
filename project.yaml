@@ -123,6 +123,7 @@ actions:
     outputs: 
       moderately_sensitive: 
         matched_table: output/st01_matched_numbers_table.csv
+        explore_vax_fig: output/st1_exporing_vax_index_date.png
         missing_table: output/missing_distribution_table.csv
         missing_pattern: output/missing_pattern_current.png
 
