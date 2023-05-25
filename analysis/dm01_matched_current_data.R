@@ -29,6 +29,12 @@ to_be_factors <- c("sex", "region", "gp_practice", "exposure", "covid_positive",
 
 matched_data[, (to_be_factors) := lapply(.SD, as.factor), .SDcols = to_be_factors]
 
+# Only keep female and male sex
+matched_data$sex %>% table
+matched_data$sex <- na_if(matched_data$sex,"intersex")
+matched_data$sex <- na_if(matched_data$sex,"unknown")
+matched_data$sex <- factor(matched_data$sex, c("female", "male"))
+
 # Calculate vaccine numbers: -------
 # Added non-NA vaccine dates together. 
 c19_vax_dates <- c("covid_vacc_1_vacc_tab", 
