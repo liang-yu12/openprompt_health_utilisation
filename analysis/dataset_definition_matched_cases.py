@@ -78,6 +78,14 @@ create_sequential_variables(
     column="date"
 )
 
+# Calculate how many times does a person admit for more than a month
+hospital_stay_more_30 = hospital_admissions \
+    .where(hospital_admissions.admission_date >= matched_cases.index_date) \
+    .where(hospital_admissions.admission_date <= study_end_date) \
+    .where(hospital_admissions.discharge_date.is_on_or_after(hospital_admissions.discharge_date)) \
+    .where(hospital_admissions.discharge_date.is_after(hospital_admissions.admission_date + days(30))) \
+    .count_for_patient()
+
 dataset.covid_positive = latest_test_before_diagnosis.exists_for_patient()
 dataset.covid_dx_month = latest_test_before_diagnosis.specimen_taken_date.to_first_of_month() # only need dx month
 dataset.ethnicity = ethnicity
@@ -85,6 +93,7 @@ dataset.imd = imd
 dataset.bmi = bmi
 dataset.bmi_date = bmi_date
 dataset.previous_covid_hosp = previous_covid_hos.exists_for_patient()
+dataset.admit_over_1m_count = hospital_stay_more_30
 dataset.cov_c19_vaccine_number = c19_vaccine_number
 dataset.cov_cancer = cancer_all.exists_for_patient()
 dataset.cov_mental_health = mental_health_issues.exists_for_patient()
