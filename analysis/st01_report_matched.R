@@ -6,7 +6,7 @@ dependent = "exposure"
 explanatory = c("sex", "age","age_cat", "ethnicity_6", "bmi_cat", "imd_q5", 
                 "long_covid_dx", "covid_positive","previous_covid_hosp",
                 "cov_c19_vaccine_number", "cov_covid_vaccine_number", 
-                "cov_covid_vax_n_cat", "number_comorbidities_cat")
+                "cov_covid_vax_n_cat", "number_comorbidities_cat","admit_over_1m_count")
 
 # Table 1 reporting numbers:  -----
 matched_data %>% summary_factorlist(dependent, explanatory, p = TRUE) %>% 
