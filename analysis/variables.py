@@ -17,6 +17,7 @@ from functools import reduce
 
 # temp zone for testing: -------
 study_start_date = date(2020, 11, 1)
+study_end_date = date(2023, 1, 31)
 age = (study_start_date - patients.date_of_birth).years
 lc_dx = clinical_events.where(clinical_events.snomedct_code.is_in(lc_codelists_combined)) \
     .sort_by(clinical_events.date) \
@@ -51,6 +52,18 @@ def add_hos_visits(dataset, from_date, num_months):
               (hospital_admissions.discharge_date  <= (from_date + days(num_months * 30)))) \
         .count_for_patient()
     setattr(dataset, f"hos_visit_m{num_months}", num_visits)
+
+hospital_stay_more_30 = hospital_admissions \
+    .where(hospital_admissions.admission_date >= study_start_date) \
+    .where(hospital_admissions.admission_date <= study_end_date) \
+    .where(hospital_admissions.discharge_date.is_on_or_after(hospital_admissions.discharge_date)) \
+    .where(hospital_admissions.discharge_date.is_after(hospital_admissions.admission_date + days(30))) \
+    .count_for_patient()
+
+# currently admission will be NA
+
+
+
 
 # Historical hospital visit
 def add_hx_hos_visits(dataset, from_date, num_months):
@@ -146,9 +159,10 @@ def create_sequential_variables(
         setattr(dataset, variable_name, getattr(next_event, column))
 
 
-# # Temp: test generate data
-# dataset = Dataset()
-# dataset.define_population(age >= 18)
+# Temp: test generate data
+dataset = Dataset()
+dataset.define_population(age >= 18)
+dataset.hospital_stay_30 = hospital_stay_more_30
 # add_visits(dataset, lc_dx.date, num_months=1)
 # add_visits(dataset, lc_dx.date, num_months=2)
 # add_hos_visits(dataset, lc_dx.date, num_months=3)
