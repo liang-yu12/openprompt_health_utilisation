@@ -53,18 +53,6 @@ def add_hos_visits(dataset, from_date, num_months):
         .count_for_patient()
     setattr(dataset, f"hos_visit_m{num_months}", num_visits)
 
-hospital_stay_more_30 = hospital_admissions \
-    .where(hospital_admissions.admission_date >= study_start_date) \
-    .where(hospital_admissions.admission_date <= study_end_date) \
-    .where(hospital_admissions.discharge_date.is_on_or_after(hospital_admissions.discharge_date)) \
-    .where(hospital_admissions.discharge_date.is_after(hospital_admissions.admission_date + days(30))) \
-    .count_for_patient()
-
-# currently admission will be NA
-
-
-
-
 # Historical hospital visit
 def add_hx_hos_visits(dataset, from_date, num_months):
     # Number of Hospitalisation within `num_months` of `from_date`
@@ -160,9 +148,8 @@ def create_sequential_variables(
 
 
 # Temp: test generate data
-dataset = Dataset()
-dataset.define_population(age >= 18)
-dataset.hospital_stay_30 = hospital_stay_more_30
+# dataset = Dataset()
+# dataset.define_population(age >= 18)
 # add_visits(dataset, lc_dx.date, num_months=1)
 # add_visits(dataset, lc_dx.date, num_months=2)
 # add_hos_visits(dataset, lc_dx.date, num_months=3)
