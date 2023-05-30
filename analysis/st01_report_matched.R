@@ -13,7 +13,7 @@ matched_data %>% summary_factorlist(dependent, explanatory,
                                     p = TRUE,
                                     add_row_totals = TRUE,
                                     row_totals_colname = "Total",
-                                    cont_cut = 20
+                                    cont_cut = 7
                                     ) %>% 
       write.csv(here("output", "st01_matched_numbers_table.csv"), row.names = F)
 
