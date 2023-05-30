@@ -9,7 +9,12 @@ explanatory = c("sex", "age","age_cat", "ethnicity_6", "bmi_cat", "imd_q5",
                 "cov_covid_vax_n_cat", "number_comorbidities_cat","admit_over_1m_count")
 
 # Table 1 reporting numbers:  -----
-matched_data %>% summary_factorlist(dependent, explanatory, p = TRUE) %>% 
+matched_data %>% summary_factorlist(dependent, explanatory, 
+                                    p = TRUE,
+                                    add_row_totals = TRUE,
+                                    row_totals_colname = "Total",
+                                    cont_cut = 20
+                                    ) %>% 
       write.csv(here("output", "st01_matched_numbers_table.csv"), row.names = F)
 
 # Exploring the distribution of vaccine number and index dates
