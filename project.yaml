@@ -141,4 +141,12 @@ actions:
       r:latest analysis/st03_hurdle_model.R
     outputs: 
       moderately_sensitive: 
-        model_table: output/st03_monthly_visits_crude_hurdle.csv
+        crude_all: output/st03_monthly_visits_crude_hurdle.csv
+				crude_hospital: output/st03_monthly_visits_crude_hurdle_hospital.csv
+				crude_non_hospital: output/st03_monthly_visits_crude_hurdle_non_hospital.csv
+				partially_adj_all: output/st03_monthly_visits_par_adj_hurdle.csv
+				partially_adj_hospital: output/st03_monthly_visits_par_adj_hurdle_hospital.csv
+				partially_adj_non_hospital: output/st03_monthly_visits_par_adj_hurdle_non_hospital.csv
+				partially_full_all: output/st03_monthly_visits_full_adj_hurdle.csv
+				partially_full_hospital: output/st03_monthly_visits_full_adj_hurdle_hospital.csv
+				partially_full_non_hospital: output/st03_monthly_visits_full_adj_hurdle_non_hospital.csv
