@@ -110,24 +110,33 @@ table(matched_data$exposure)
 # Correct the deregist date 
 matched_data$end_deregist <- as.IDate(matched_data$end_deregist)
 
-matched_data$all_study_end_date <- as.Date("2023-03-31")
+matched_data$all_study_end_date <- as.Date("2023-01-31")
+
+# data management of some unreasonable dates.
+matched_data$index_date %>% summary
+matched_data$end_death %>% summary
+matched_data$end_deregist %>% summary
+matched_data$end_lc_cure %>% summary  # some LC cure dates are wrong. 
+matched_data$end_lc_cure[matched_data$end_lc_cure < matched_data$index_date] <- NA
+# assigned the wrong lc cure date as NA
+
 # censored the comparator group if they were diagnosed with long COVID.
 matched_data <- matched_data %>% 
       mutate(
       end_date = ifelse(
             exposure == "Comparator",
-            pmin(end_death, 
-                  end_deregist, 
-                  long_covid_dx_date, 
-                 all_study_end_date, na.rm = T),
-            pmin(end_death, 
-                  end_deregist, 
-                  end_lc_cure, 
-                 all_study_end_date, na.rm = T)
+            pmin(as.numeric(end_death), 
+                 as.numeric(end_deregist), 
+                 as.numeric(long_covid_dx_date), 
+                 as.numeric(all_study_end_date), na.rm = T),
+            pmin(as.numeric(end_death), 
+                 as.numeric(end_deregist), 
+                 as.numeric(end_lc_cure), 
+                 as.numeric(all_study_end_date), na.rm = T)
       )
 )
 matched_data$end_date <- as.Date.numeric(matched_data$end_date, origin = "1970-01-01")
-
+matched_data$end_date %>% summary
 
 # calculate follow-up time
 matched_data$follow_up_time <- as.numeric(matched_data$end_date) - as.numeric(matched_data$index_date)
