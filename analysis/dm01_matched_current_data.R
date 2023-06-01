@@ -148,6 +148,10 @@ matched_data$index_date %>% summary
 # calculate follow-up time
 matched_data$follow_up_time <- as.numeric(matched_data$end_date) - as.numeric(matched_data$index_date)
 matched_data$follow_up_time %>% summary
+
+matched_data <- matched_data %>% filter(follow_up_time != 0)
+
+
 # ============== Caclulate the number of comorbidities 
 
 comorbidities <- c("cov_cancer",  "cov_mental_health",   "cov_asthma",
