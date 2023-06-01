@@ -114,11 +114,12 @@ matched_data$all_study_end_date <- as.Date("2023-01-31")
 
 # data management of some unreasonable dates.
 matched_data$index_date %>% summary
-matched_data$end_death %>% summary
-matched_data$end_deregist %>% summary
-matched_data$end_lc_cure %>% summary  # some LC cure dates are wrong. 
-matched_data$end_lc_cure[matched_data$end_lc_cure < matched_data$index_date] <- NA
-# assigned the wrong lc cure date as NA
+
+# Only keep people who are 1. alive 2. registered 3 haven't recovered from lc on the index date
+
+matched_data <- matched_data %>% filter(
+      (end_death > index_date) & (end_deregist > index_date) & (end_lc_cure > index_date)
+)
 
 # censored the comparator group if they were diagnosed with long COVID.
 matched_data <- matched_data %>% 
@@ -140,7 +141,7 @@ matched_data$end_date %>% summary
 
 # calculate follow-up time
 matched_data$follow_up_time <- as.numeric(matched_data$end_date) - as.numeric(matched_data$index_date)
-
+matched_data$follow_up_time %>% summary
 # ============== Caclulate the number of comorbidities 
 
 comorbidities <- c("cov_cancer",  "cov_mental_health",   "cov_asthma",
