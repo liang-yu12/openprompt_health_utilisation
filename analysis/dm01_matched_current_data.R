@@ -118,8 +118,11 @@ matched_data$index_date %>% summary
 # Only keep people who are 1. alive 2. registered 3 haven't recovered from lc on the index date
 
 matched_data <- matched_data %>% filter(
-      (end_death > index_date) & (end_deregist > index_date) & (end_lc_cure > index_date)
+      ((end_death > index_date) | is.na(end_death)) & 
+            ((end_deregist > index_date) | is.na(end_deregist) )& 
+            ((end_lc_cure > index_date) | is.na(end_lc_cure))
 )
+
 
 # censored the comparator group if they were diagnosed with long COVID.
 matched_data <- matched_data %>% 
@@ -138,6 +141,9 @@ matched_data <- matched_data %>%
 )
 matched_data$end_date <- as.Date.numeric(matched_data$end_date, origin = "1970-01-01")
 matched_data$end_date %>% summary
+matched_data$index_date %>% summary
+
+
 
 # calculate follow-up time
 matched_data$follow_up_time <- as.numeric(matched_data$end_date) - as.numeric(matched_data$index_date)
