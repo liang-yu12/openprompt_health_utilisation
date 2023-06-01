@@ -142,3 +142,13 @@ matched_data <- matched_data %>%
             (time2 - (time1 + 30*(12-1))) <=0 ~ NA
       )
 )
+
+
+# follow-up periods vector:
+
+follow_up <- c("follow_up_m1","follow_up_m2","follow_up_m3","follow_up_m4",
+               "follow_up_m5","follow_up_m6","follow_up_m7","follow_up_m8",
+               "follow_up_m9","follow_up_m10","follow_up_m11","follow_up_m12")
+
+matched_data %<>% as_tibble()
+lapply(matched_data[follow_up], summary)
