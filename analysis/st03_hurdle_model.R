@@ -13,10 +13,10 @@ non_hospital <- matched_data %>% filter(previous_covid_hosp == "F")
 
 
 # Crude Hurdle model function: 
-month_hurdle_fn <- function(month, n, data) {
+month_hurdle_fn <- function(month, n, data, fu_time) {
       # Fit a hurdle model to the data.
       model <- hurdle(
-            month ~ exposure | exposure + age_cat + sex,
+            month ~ exposure + offset(fu_time) | exposure + age_cat + sex,
             data = data,
             zero.dist = "binomial",
             dist = "poisson"
@@ -39,6 +39,8 @@ month_hurdle_fn <- function(month, n, data) {
       # Return the results.
       return(results)
 }
+
+month_hurdle_fn(matched_data$all_month1, 1, data = matched_data, matched_data$follow_up_m1)
 
 
 # A.
