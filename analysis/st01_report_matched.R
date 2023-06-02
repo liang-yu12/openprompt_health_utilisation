@@ -1,5 +1,5 @@
 # Source data management
-source("analysis/dm03_matched_define_monthly_follow_up_time.R")
+source("analysis/dm01_matched_current_data.R")
 
 
 dependent = "exposure"
