@@ -12,13 +12,11 @@ com_matched <- fread(here("output", "matched_control_with_ehr.csv"))
 
 #  combine two datasets
 matched_data <- bind_rows(lc_exp_matched, com_matched)
-matched_data %>% names
 
 rm(lc_exp_matched, com_matched) # house keeping
 
 # ============== Data management for each variables 
 # check the data type
-matched_data %>% glimpse # some types need to be corrected. 
 
 to_be_factors <- c("sex", "region", "gp_practice", "exposure", "covid_positive", "ethnicity",
   "previous_covid_hosp","cov_cancer",  "cov_mental_health",   "cov_asthma",
@@ -51,12 +49,9 @@ matched_data <- matched_data %>%
 matched_data$cov_covid_vax_n_cat <- matched_data$cov_covid_vax_n_cat %>% 
       factor(labels = c("0 dose","1 dose","2 doses","3 or more doses"))
 
-table(matched_data$cov_covid_vax_n_cat, matched_data$cov_covid_vaccine_number, useNA = "ifany")      
-                                        
 # Label exposure indicator
 matched_data$exposure <- matched_data$exposure %>% 
       factor(labels = c("Comparator", "Long covid exposure"))
-matched_data$exposure %>% table
 
 # Other data management: IMD quintiles, ethnicity, BMI categories for ethnicity  
 matched_data <- matched_data %>% mutate(
@@ -104,7 +99,6 @@ levels(matched_data$imd_q5) <- c("least_deprived",
                                  "4_deprived",
                                  "most_deprived")
 
-table(matched_data$exposure)
 
 # ============== Define the end date ============== 
 # Correct the deregist date 
@@ -143,14 +137,15 @@ matched_data$end_date <- as.Date.numeric(matched_data$end_date, origin = "1970-0
 matched_data$end_date %>% summary
 matched_data$index_date %>% summary
 
-
+nrow(matched_data[matched_data$end_date == matched_data$index_date]) # some follow-up time = 0
 
 # calculate follow-up time
 matched_data$follow_up_time <- as.numeric(matched_data$end_date) - as.numeric(matched_data$index_date)
 matched_data$follow_up_time %>% summary
 
 matched_data <- matched_data %>% filter(follow_up_time != 0)
-
+nrow(matched_data[matched_data$end_date == matched_data$index_date]) 
+# all follow-up time > 0
 
 # ============== Caclulate the number of comorbidities 
 
@@ -160,10 +155,11 @@ comorbidities <- c("cov_cancer",  "cov_mental_health",   "cov_asthma",
 "cov_asplenia",   "cov_hiv",   "cov_aplastic_anemia",   "cov_permanent_immune_suppress",
 "cov_temporary_immune_suppress")
 # change them into logical factors
-matched_data[, (comorbidities) := lapply(.SD, as.logical), .SDcols = comorbidities] 
+matched_data <- matched_data %>% as_tibble()
+matched_data[comorbidities] <- lapply(matched_data[comorbidities], as.logical)
 
+matched_data$number_comorbidities <- rowSums(matched_data[comorbidities], na.rm = T) # add them up
 
-matched_data[, number_comorbidities := rowSums(.SD, na.rm = T), .SDcols = comorbidities] # add them up
 matched_data <- matched_data %>% 
       mutate(number_comorbidities_cat = case_when(
             number_comorbidities ==0 ~ 0,

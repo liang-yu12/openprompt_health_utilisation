@@ -228,7 +228,14 @@ month_full_hurdle_fn <- function(month, n, data, fu_time) {
       # Return the results.
       return(results)
 }
-# matched_data <- na.omit(matched_data) # manually remove NA
+
+independent <- c("exposure", "age_cat", "sex", "region", "ethnicity_6", "imd_q5",
+                 "cov_covid_vax_n_cat", "bmi_cat", "number_comorbidities_cat")
+
+lapply(matched_data[independent], summary)
+
+temp <- as.data.frame(!is.na(matched_data[independent]))
+matched_data <- matched_data %>% filter(rowSums(temp[independent]) == 9 )
 
 # C-1 Fully adjusted model: all
 all_full_adj_results <- bind_rows(
