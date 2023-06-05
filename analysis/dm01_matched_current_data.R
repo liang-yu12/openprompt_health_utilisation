@@ -27,6 +27,10 @@ to_be_factors <- c("sex", "region", "gp_practice", "exposure", "covid_positive",
 
 matched_data[, (to_be_factors) := lapply(.SD, as.factor), .SDcols = to_be_factors]
 
+# drop unused levels
+matched_data[, (to_be_factors) := lapply(.SD, droplevels), .SDcols = to_be_factors]
+
+
 # Calculate vaccine numbers: -------
 # Added non-NA vaccine dates together. 
 c19_vax_dates <- c("covid_vacc_1_vacc_tab", 
@@ -58,14 +62,13 @@ matched_data <- matched_data %>% mutate(
       imd_q5 = cut2(imd, g = 5),
       ethnicity_6 = factor(
             ethnicity,
-            levels = 1:6, 
+            levels = 1:5, 
             labels = c(
                   "White",
                   "Mixed", 
                   "South Asian", 
                   "Black",
-                  "Other",
-                  "Not stated")),
+                  "Other")),
       age_cat = cut(
             age, 
             breaks = c(0, seq(30, 70, 10), Inf),
