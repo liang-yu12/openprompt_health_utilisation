@@ -4,14 +4,6 @@ source("analysis/dm03_matched_define_monthly_follow_up_time.R")
 # For organising the outputs
 options(digits=2)
 
-
-# Saperate data for subgroup analysis:
-# previous hospitalisation due to covid
-hospital <- matched_data %>% filter(previous_covid_hosp == "T") 
-# Not hospitalised due to COVID
-non_hospital <- matched_data %>% filter(previous_covid_hosp == "F")
-
-
 # Crude Hurdle model function: 
 month_hurdle_fn <- function(month, n, data, fu_time) {
       # Fit a hurdle model to the data.
