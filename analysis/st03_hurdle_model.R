@@ -114,7 +114,7 @@ par_adj <- all_par_adj_results %>%
 month_full_hurdle_fn <- function(month, n, data, fu_time) {
       # Fit a hurdle model to the data.
       model <- hurdle(
-            month ~ exposure + age_cat + sex  + cov_covid_vax_n_cat + bmi_cat + imd_q5 + ethnicity_6 + #region + 
+            month ~ exposure + age_cat + sex  + cov_covid_vax_n_cat + bmi_cat + imd_q5 + ethnicity_6 + region + 
                   number_comorbidities_cat + offset(fu_time) | age_cat + sex+ region,
             data = data,
             zero.dist = "binomial",
