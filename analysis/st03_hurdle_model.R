@@ -115,7 +115,7 @@ month_full_hurdle_fn <- function(month, n, data, fu_time) {
       # Fit a hurdle model to the data.
       model <- hurdle(
             month ~ exposure + age_cat + sex  + cov_covid_vax_n_cat + 
-                  imd_q5 + bmi_cat + ethnicity_6 + region +
+                  imd_q5 + # bmi_cat + ethnicity_6 + region +
                   number_comorbidities_cat + offset(fu_time) | age_cat + sex+ region,
             data = data,
             zero.dist = "binomial",
