@@ -36,7 +36,7 @@ matched_data <- matched_data %>%
             time1 + 30*1 < time2 ~ 30,
             (time2 < (time1 + 30*1)) & (time2 - (time1 + 30*(1-1)))>0 ~ 
                   (time2 - (time1 + 30*(1-1))),
-            (time2 - (time1 + 30*(1-1))) <=0 ~ NA
+            (time2 - (time1 + 30*(1-1))) <=0 ~ NA_integer_
             ))
 )
 
@@ -46,7 +46,7 @@ matched_data <- matched_data %>%
       mutate(follow_up_m2 = as.double(case_when(
             time1 + 30*2 < time2 ~ 30,
             (time2 < (time1 + 30*2)) & (time2 - (time1 + 30*(2-1)))>0 ~ (time2 - (time1 + 30*(2-1))),
-            (time2 - (time1 + 30*(2-1))) <=0 ~ NA
+            (time2 - (time1 + 30*(2-1))) <=0 ~ NA_integer_
             ))
 )
 
@@ -55,7 +55,7 @@ matched_data <- matched_data %>%
       mutate(follow_up_m3 = as.double(case_when(
             time1 + 30*3 < time2 ~ 30,
             (time2 < (time1 + 30*3)) & (time2 - (time1 + 30*(3-1)))>0 ~ (time2 - (time1 + 30*(3-1))),
-            (time2 - (time1 + 30*(3-1))) <=0 ~ NA
+            (time2 - (time1 + 30*(3-1))) <=0 ~ NA_integer_
             ))
 )
 
@@ -65,7 +65,7 @@ matched_data <- matched_data %>%
       mutate(follow_up_m4 = as.double(case_when(
             time1 + 30*4 < time2 ~ 30,
             (time2 < (time1 + 30*4)) & (time2 - (time1 + 30*(4-1)))>0 ~ (time2 - (time1 + 30*(4-1))),
-            (time2 - (time1 + 30*(4-1))) <=0 ~ NA
+            (time2 - (time1 + 30*(4-1))) <=0 ~ NA_integer_
       ))
 )
 
@@ -75,7 +75,7 @@ matched_data <- matched_data %>%
       mutate(follow_up_m5 = as.double(case_when(
             time1 + 30*5 < time2 ~ 30,
             (time2 < (time1 + 30*5)) & (time2 - (time1 + 30*(5-1)))>0 ~ (time2 - (time1 + 30*(5-1))),
-            (time2 - (time1 + 30*(5-1))) <=0 ~ NA
+            (time2 - (time1 + 30*(5-1))) <=0 ~ NA_integer_
       ))
 )
 
@@ -84,7 +84,7 @@ matched_data <- matched_data %>%
       mutate(follow_up_m6 = as.double(case_when(
             time1 + 30*6 < time2 ~ 30,
             (time2 < (time1 + 30*6)) & (time2 - (time1 + 30*(6-1)))>0 ~ (time2 - (time1 + 30*(6-1))),
-            (time2 - (time1 + 30*(6-1))) <=0 ~ NA
+            (time2 - (time1 + 30*(6-1))) <=0 ~ NA_integer_
       ))
 )
 
@@ -93,7 +93,7 @@ matched_data <- matched_data %>%
       mutate(follow_up_m7 = as.double(case_when(
             time1 + 30*7 < time2 ~ 30,
             (time2 < (time1 + 30*7)) & (time2 - (time1 + 30*(7-1)))>0 ~ (time2 - (time1 + 30*(7-1))),
-            (time2 - (time1 + 30*(7-1))) <=0 ~ NA
+            (time2 - (time1 + 30*(7-1))) <=0 ~ NA_integer_
       ))
 )
 
@@ -102,7 +102,7 @@ matched_data <- matched_data %>%
       mutate(follow_up_m8 = as.double(case_when(
             time1 + 30*8 < time2 ~ 30,
             (time2 < (time1 + 30*8)) & (time2 - (time1 + 30*(8-1)))>0 ~ (time2 - (time1 + 30*(8-1))),
-            (time2 - (time1 + 30*(8-1))) <=0 ~ NA
+            (time2 - (time1 + 30*(8-1))) <=0 ~ NA_integer_
       ))
 )
 
@@ -111,7 +111,7 @@ matched_data <- matched_data %>%
       mutate(follow_up_m9 = as.double(case_when(
             time1 + 30*9 < time2 ~ 30,
             (time2 < (time1 + 30*9)) & (time2 - (time1 + 30*(9-1)))>0 ~ (time2 - (time1 + 30*(9-1))),
-            (time2 - (time1 + 30*(9-1))) <=0 ~ NA
+            (time2 - (time1 + 30*(9-1))) <=0 ~ NA_integer_
       ))
 )
 
@@ -120,7 +120,7 @@ matched_data <- matched_data %>%
       mutate(follow_up_m10 = as.double(case_when(
             time1 + 30*10 < time2 ~ 30,
             (time2 < (time1 + 30*10)) & (time2 - (time1 + 30*(10-1)))>0 ~ (time2 - (time1 + 30*(10-1))),
-            (time2 - (time1 + 30*(10-1))) <=0 ~ NA
+            (time2 - (time1 + 30*(10-1))) <=0 ~ NA_integer_
       ))
 )
 
@@ -130,7 +130,7 @@ matched_data <- matched_data %>%
       mutate(follow_up_m11 = as.double(case_when(
             time1 + 30*11 < time2 ~ 30,
             (time2 < (time1 + 30*11)) & (time2 - (time1 + 30*(11-1)))>0 ~ (time2 - (time1 + 30*(11-1))),
-            (time2 - (time1 + 30*(11-1))) <=0 ~ NA
+            (time2 - (time1 + 30*(11-1))) <=0 ~ NA_integer_
       ))
 )
 
@@ -139,7 +139,7 @@ matched_data <- matched_data %>%
       mutate(follow_up_m12 = as.double(case_when(
             time1 + 30*12 < time2 ~ 30,
             (time2 < (time1 + 30*12)) & (time2 - (time1 + 30*(12-1)))>0 ~ (time2 - (time1 + 30*(12-1))),
-            (time2 - (time1 + 30*(12-1))) <=0 ~ NA
+            (time2 - (time1 + 30*(12-1))) <=0 ~ NA_integer_
       ))
 )
 
