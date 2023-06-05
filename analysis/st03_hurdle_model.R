@@ -16,7 +16,7 @@ non_hospital <- matched_data %>% filter(previous_covid_hosp == "F")
 month_hurdle_fn <- function(month, n, data, fu_time) {
       # Fit a hurdle model to the data.
       model <- hurdle(
-            month ~ exposure + offset(fu_time) | exposure + age_cat + sex,
+            month ~ exposure + offset(fu_time) | age_cat + sex+ region,
             data = data,
             zero.dist = "binomial",
             dist = "poisson"
@@ -58,10 +58,13 @@ all_results <- bind_rows(
       month_hurdle_fn(matched_data$all_month12, 12, data = matched_data, matched_data$follow_up_m12),
 )
 
-all_results %>% 
-      filter(rownames(.) %>% startsWith("count_")) %>% 
-      write.csv(here("output", "st03_monthly_visits_crude_hurdle.csv"), 
-                row.names = T)
+# organise the output: keep only the exposure, and label the model.
+
+crude <- all_results %>% 
+      filter(rownames(.) %>% startsWith("count_exposure")) %>% 
+      mutate(model = "Crude") %>% 
+      relocate(model) %>% relocate(month, .after = model) %>% tibble::remove_rownames()
+      
 
 # # A-2. Crude results: stratified by previous hospitalisation -----
 # # COVID hospitalised people:
@@ -110,7 +113,7 @@ all_results %>%
 month_adj_hurdle_fn <- function(month, n, data, fu_time) {
       # Fit a hurdle model to the data.
       model <- hurdle(
-            month ~ exposure + age_cat + sex + offset(fu_time)| exposure + age_cat + sex,
+            month ~ exposure + age_cat + sex + offset(fu_time)| age_cat + sex+ region,
             data = data,
             zero.dist = "binomial",
             dist = "poisson"
@@ -151,10 +154,10 @@ all_par_adj_results <- bind_rows(
 )
 
 
-all_par_adj_results %>% 
-      filter(rownames(.) %>% startsWith("count_")) %>% 
-      write.csv(here("output", "st03_monthly_visits_par_adj_hurdle.csv"), 
-                row.names = T)
+par_adj <- all_par_adj_results %>% 
+      filter(rownames(.) %>% startsWith("count_exposure")) %>% 
+      mutate(model = "Partially adjusted") %>% 
+      relocate(model) %>% relocate(month, .after = model) %>% tibble::remove_rownames()
 # # B-2 Hospitalisation: -----
 # # COVID hospitalised people:
 # hospital_par_adj_results <- bind_rows(
@@ -205,7 +208,7 @@ month_full_hurdle_fn <- function(month, n, data, fu_time) {
       model <- hurdle(
             month ~ exposure + age_cat + sex + region + ethnicity_6 + 
                   imd_q5 + cov_covid_vax_n_cat + bmi_cat + 
-                  number_comorbidities_cat + offset(fu_time) | exposure + age_cat + sex,
+                  number_comorbidities_cat + offset(fu_time) | age_cat + sex+ region,
             data = data,
             zero.dist = "binomial",
             dist = "poisson"
@@ -232,14 +235,13 @@ month_full_hurdle_fn <- function(month, n, data, fu_time) {
 independent <- c("exposure", "age_cat", "sex", "region", "ethnicity_6", "imd_q5",
                  "cov_covid_vax_n_cat", "bmi_cat", "number_comorbidities_cat")
 
-lapply(matched_data[independent], summary)
-
-temp <- as.data.frame(!is.na(matched_data[independent]))
-matched_data <- matched_data %>% filter(rowSums(temp[independent]) == 9 )
-
+lapply(matched_data[independent], function(x){table(is.na(x))})
+lapply(matched_data[independent], function(x){table(x, useNA = "ifany")})
+matched_data_no_na <- na.omit(matched_data, cols = independent)
+matched_data_no_na$number_comorbidities_cat%>% table
 # C-1 Fully adjusted model: all
 all_full_adj_results <- bind_rows(
-      month_full_hurdle_fn(matched_data$all_month1, 1, data = matched_data, matched_data$follow_up_m1),
+      month_full_hurdle_fn(matched_data_no_na$all_month1, 1, data = matched_data_no_na, matched_data_no_na$follow_up_m1),
       month_full_hurdle_fn(matched_data$all_month2, 2, data = matched_data, matched_data$follow_up_m2),
       month_full_hurdle_fn(matched_data$all_month3, 3, data = matched_data, matched_data$follow_up_m3),
       month_full_hurdle_fn(matched_data$all_month4, 4, data = matched_data, matched_data$follow_up_m4),
