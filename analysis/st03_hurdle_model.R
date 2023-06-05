@@ -168,3 +168,8 @@ full_adj <- all_full_adj_results %>%
       filter(rownames(.) %>% startsWith("count_exposure")) %>% 
       mutate(model = "Fully adjusted") %>% 
       relocate(model) %>% relocate(month, .after = model) %>% tibble::remove_rownames()
+
+
+# Final output: ------
+results_hurdle <- bind_rows(crude, par_adj, full_adj)
+results_hurdle %>% write.csv(here("output", "st_03_result_monthly_visit_hurdle.csv"), row.names = F)
