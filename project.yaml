@@ -142,3 +142,11 @@ actions:
     outputs: 
       moderately_sensitive: 
         hurdle_all: output/st_03_result_monthly_visit_hurdle.csv
+        
+  report_03_1_hurdle_model_predict:
+    needs: [import_matched_exposure, import_matched_controls]
+    run: 
+      r:latest analysis/st03_hurdle_model_predict.R
+    outputs: 
+      moderately_sensitive: 
+        hurdle_all: output/st_03_result_cumulative_visit_hurdle.csv
