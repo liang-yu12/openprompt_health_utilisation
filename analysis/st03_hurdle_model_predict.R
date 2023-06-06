@@ -192,12 +192,59 @@ cumulative_visit_fully_adj_fn <- function(visit, fu_time, data, month) {
       return(results)
 }
 
-
-
-
-
+results_fully_adjusted <- bind_rows(
+      cumulative_visit_fully_adj_fn(visit = matched_data$all_month1,
+                                        fu_time = matched_data$follow_up_m1,
+                                        data = matched_data,
+                                        month = 1),
+      cumulative_visit_fully_adj_fn(visit = matched_data$all_month2,
+                                        fu_time = matched_data$follow_up_m2,
+                                        data = matched_data,
+                                        month = 2),
+      cumulative_visit_fully_adj_fn(visit = matched_data$all_month3,
+                                        fu_time = matched_data$follow_up_m3,
+                                        data = matched_data,
+                                        month = 3),
+      cumulative_visit_fully_adj_fn(visit = matched_data$all_month4,
+                                        fu_time = matched_data$follow_up_m4,
+                                        data = matched_data,
+                                        month = 4),
+      cumulative_visit_fully_adj_fn(visit = matched_data$all_month5,
+                                        fu_time = matched_data$follow_up_m5,
+                                        data = matched_data,
+                                        month = 5),
+      cumulative_visit_fully_adj_fn(visit = matched_data$all_month6,
+                                        fu_time = matched_data$follow_up_m6,
+                                        data = matched_data,
+                                        month = 6),
+      cumulative_visit_fully_adj_fn(visit = matched_data$all_month7,
+                                        fu_time = matched_data$follow_up_m7,
+                                        data = matched_data,
+                                        month = 7),
+      cumulative_visit_fully_adj_fn(visit = matched_data$all_month8,
+                                        fu_time = matched_data$follow_up_m8,
+                                        data = matched_data,
+                                        month = 8),
+      cumulative_visit_fully_adj_fn(visit = matched_data$all_month9,
+                                        fu_time = matched_data$follow_up_m9,
+                                        data = matched_data,
+                                        month = 9),
+      cumulative_visit_fully_adj_fn(visit = matched_data$all_month10,
+                                        fu_time = matched_data$follow_up_m10,
+                                        data = matched_data,
+                                        month = 10),
+      cumulative_visit_fully_adj_fn(visit = matched_data$all_month11,
+                                        fu_time = matched_data$follow_up_m11,
+                                        data = matched_data,
+                                        month = 11),
+      cumulative_visit_fully_adj_fn(visit = matched_data$all_month12,
+                                        fu_time = matched_data$follow_up_m12,
+                                        data = matched_data,
+                                        month = 12)) %>% 
+      mutate(model = "Fully adjusted") %>% 
+      relocate(model)
 
 
 # Final output: ------
-results_hurdle <- bind_rows(crude, par_adj, full_adj)
-results_hurdle %>% write.csv(here("output", "st_03_result_monthly_visit_hurdle.csv"), row.names = F)
+results_hurdle <- bind_rows(results_crude, results_part_adjusted, results_fully_adjusted)
+results_hurdle %>% write.csv(here("output", "st_03_result_cumulative_visit_hurdle.csv"), row.names = F)
