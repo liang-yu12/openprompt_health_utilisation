@@ -173,6 +173,12 @@ matched_data %<>% as_tibble()
 lapply(matched_data[follow_up], summary)
 
 # Change healthcare visit to accumulateve visits:
+
+visit <- c("all_month1", "all_month2", "all_month3", "all_month4", "all_month5",
+           "all_month6", "all_month7", "all_month8", "all_month9", "all_month10",
+           "all_month11", "all_month12")
+matched_data[visit] <- lapply(matched_data[visit], as.numeric) # make it consistent
+
 matched_data$all_month2 <- matched_data$all_month1 + matched_data$all_month2
 matched_data$all_month3 <- matched_data$all_month2 + matched_data$all_month3
 matched_data$all_month4 <- matched_data$all_month3 + matched_data$all_month4
@@ -185,10 +191,6 @@ matched_data$all_month10 <- matched_data$all_month9 + matched_data$all_month10
 matched_data$all_month11 <- matched_data$all_month10 + matched_data$all_month11
 matched_data$all_month12 <- matched_data$all_month11 + matched_data$all_month12
 
-
-visit <- c("all_month1", "all_month2", "all_month3", "all_month4", "all_month5",
-           "all_month6", "all_month7", "all_month8", "all_month9", "all_month10",
-           "all_month11", "all_month12")
 lapply(matched_data[visit], summary)
 
-matched_data[visit] <- lapply(matched_data[visit], as.numeric) # make it consistent
+
