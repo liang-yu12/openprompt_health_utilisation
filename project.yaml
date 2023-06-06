@@ -150,3 +150,14 @@ actions:
     outputs: 
       moderately_sensitive: 
         hurdle_all: output/st_03_result_cumulative_visit_hurdle.csv
+        
+  report_04_hurdle_model_plot:
+    needs: report_03_1_hurdle_model_predict
+    run: 
+      r:latest analysis/st04_plot_hurdle_visit.R
+    outputs: 
+      moderately_sensitive: 
+        crude: output/st_04_crude_healthcare_visit.png
+        partial: output/st_04_partial_adj_healthcare_visit.png
+        full: output/st_04_full_adj_healthcare_visit.png
+        
