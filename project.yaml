@@ -160,4 +160,12 @@ actions:
         crude: output/st_04_crude_healthcare_visit.png
         partial: output/st_04_partial_adj_healthcare_visit.png
         full: output/st_04_full_adj_healthcare_visit.png
-        
+  
+  report_03_2_hurdle_model_sugroup_predict:
+    needs: [import_matched_exposure, import_matched_controls]
+    run: 
+      r:latest analysis/st03_sub_hurdle_model_predict.R
+    outputs: 
+      moderately_sensitive: 
+        covid_hos_visit: "output/st_03_result_hos_cumulative_visit_hurdle.csv"
+        no_covid_hos_visit: "output/st_03_result_no_hos_cumulative_visit_hurdle.csv"  
