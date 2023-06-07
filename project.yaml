@@ -169,3 +169,12 @@ actions:
       moderately_sensitive: 
         covid_hos_visit: "output/st_03_result_hos_cumulative_visit_hurdle.csv"
         no_covid_hos_visit: "output/st_03_result_no_hos_cumulative_visit_hurdle.csv"  
+        
+  report_03_3_twopart_model_predict:
+    needs: [import_matched_exposure, import_matched_controls]
+    run: 
+      r:latest analysis/st03_two_part_model.R
+    outputs: 
+      moderately_sensitive: 
+        gp_costs: "output/st_04_result_cumulative_cost_full_2pm.csv"
+        
