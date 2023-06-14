@@ -18,6 +18,9 @@ cumulative_visit_crude_fn <- function(visit, fu_time, data, month) {
       # because original dataset has NA, need to first exclude them first
       # then add the predicted value back to the table. 
       no_na <- filter(matched_data, !is.na(fu_time))
+      cov <- c("exposure","sex","age_cat", "region")
+      no_na <- no_na[complete.cases(no_na[, cov]), ]
+      
       no_na$predict <- predict(model, na.action = na.exclude)
       results <- no_na %>% # summarise the mean visit and sd.
             group_by(exposure) %>% 
@@ -94,7 +97,7 @@ cumulative_visit_partially_adj_fn <- function(visit, fu_time, data, month) {
       # because original dataset has NA, need to first exclude them first
       # then add the predicted value back to the table. 
       no_na <- filter(matched_data, !is.na(fu_time))
-      cov <- c("exposure","sex","age_cat")
+      cov <- c("exposure","sex","age_cat", "region")
       no_na <- no_na[complete.cases(no_na[, cov]), ]
       
       no_na$predict <- predict(model, na.action = na.exclude)
