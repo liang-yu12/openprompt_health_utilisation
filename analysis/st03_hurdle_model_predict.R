@@ -20,9 +20,7 @@ cumulative_visit_crude_fn <- function(visit, fu_time, data, month) {
       no_na <- filter(matched_data, !is.na(fu_time))
       cov <- c("exposure","sex","age_cat", "region")
       no_na <- no_na[complete.cases(no_na[, cov]), ]
-      
-      no_na$predict <- predict(model, no_na)
-
+      no_na$predict <- predict(model, na.action = na.exclude)
       results <- no_na %>% # summarise the mean visit and sd.
             group_by(exposure) %>% 
             summarise(mean = mean(predict),
@@ -100,8 +98,8 @@ cumulative_visit_partially_adj_fn <- function(visit, fu_time, data, month) {
       no_na <- filter(matched_data, !is.na(fu_time))
       cov <- c("exposure","sex","age_cat", "region")
       no_na <- no_na[complete.cases(no_na[, cov]), ]
-      
-      no_na$predict <- predict(model, no_na)
+
+      no_na$predict <- predict(model, na.action = na.exclude)
       results <- no_na %>% # summarise the mean visit and sd.
             group_by(exposure) %>% 
             summarise(mean = mean(predict),
@@ -186,7 +184,7 @@ cumulative_visit_fully_adj_fn <- function(visit, fu_time, data, month) {
             "number_comorbidities_cat")
       no_na <- no_na[complete.cases(no_na[, cov]), ]
       
-      no_na$predict <- predict(model, no_na)
+      no_na$predict <- predict(model, na.action = na.exclude)
       results <- no_na %>% # summarise the mean visit and sd.
             group_by(exposure) %>% 
             summarise(mean = mean(predict),
