@@ -22,6 +22,7 @@ cumulative_visit_crude_fn <- function(visit, fu_time, data, month) {
       no_na <- no_na[complete.cases(no_na[, cov]), ]
       
       no_na$predict <- predict(model, no_na)
+
       results <- no_na %>% # summarise the mean visit and sd.
             group_by(exposure) %>% 
             summarise(mean = mean(predict),
