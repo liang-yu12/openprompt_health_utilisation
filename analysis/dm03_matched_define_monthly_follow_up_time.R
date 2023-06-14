@@ -9,7 +9,7 @@ source("analysis/dm01_matched_current_data.R")
 
 # *Calculate the cumulative follow-up time
 
-# Concept: ---------------------------
+# Concept: 
 # if index_date + days(month_number) <= end_date, 
 # which means we can follow them for full months; 
 #     codes:      time1 + 30*n < time2 ~ 30*n,
@@ -25,7 +25,7 @@ source("analysis/dm01_matched_current_data.R")
 # codes: time2-time1 <=0 ~ NA
 
 # key dates:index_date, end_date, and the monthly date 
-# ------------------------------------
+
 
 # First we need to change them into Date format:
 matched_data$time1 <- as.numeric(matched_data$index_date)
@@ -172,7 +172,7 @@ follow_up <- c("follow_up_m1","follow_up_m2","follow_up_m3","follow_up_m4",
 matched_data %<>% as_tibble()
 lapply(matched_data[follow_up], summary)
 
-# Change healthcare visit to accumulateve visits:
+# Change healthcare visit to accumulateve visits:------
 
 visit <- c("all_month1", "all_month2", "all_month3", "all_month4", "all_month5",
            "all_month6", "all_month7", "all_month8", "all_month9", "all_month10",
@@ -194,3 +194,92 @@ matched_data$all_month12 <- matched_data$all_month11 + matched_data$all_month12
 lapply(matched_data[visit], summary)
 
 
+# Calculate accumulative GP visits: -----
+matched_data <- matched_data %>% mutate(
+      gp_ac_visit_m1 = gp_visit_m1,
+      gp_ac_visit_m2 = gp_ac_visit_m1 + gp_visit_m2,
+      gp_ac_visit_m3 = gp_ac_visit_m2 + gp_visit_m3,
+      gp_ac_visit_m4 = gp_ac_visit_m3 + gp_visit_m4,
+      gp_ac_visit_m5 = gp_ac_visit_m4 + gp_visit_m5,
+      gp_ac_visit_m6 = gp_ac_visit_m5 + gp_visit_m6,
+      gp_ac_visit_m7 = gp_ac_visit_m6 + gp_visit_m7,
+      gp_ac_visit_m8 = gp_ac_visit_m7 + gp_visit_m8,
+      gp_ac_visit_m9 = gp_ac_visit_m8 + gp_visit_m9,
+      gp_ac_visit_m10 = gp_ac_visit_m9 + gp_visit_m10,
+      gp_ac_visit_m11 = gp_ac_visit_m10 + gp_visit_m11,
+      gp_ac_visit_m12 = gp_ac_visit_m11 + gp_visit_m12
+)
+gp <- c("gp_ac_visit_m1",
+        "gp_ac_visit_m2",
+        "gp_ac_visit_m3",
+        "gp_ac_visit_m4",
+        "gp_ac_visit_m5",
+        "gp_ac_visit_m6",
+        "gp_ac_visit_m7",
+        "gp_ac_visit_m8",
+        "gp_ac_visit_m9",
+        "gp_ac_visit_m10",
+        "gp_ac_visit_m11",
+        "gp_ac_visit_m12")
+lapply(matched_data[gp], summary)
+
+
+# Calculate accumulative hospital admissions:  ----
+matched_data <- matched_data %>% mutate(
+      hos_ac_visit_m1 = hos_visit_m1,
+      hos_ac_visit_m2 = hos_ac_visit_m1 +  hos_visit_m2,
+      hos_ac_visit_m3 = hos_ac_visit_m2 +  hos_visit_m3,
+      hos_ac_visit_m4 = hos_ac_visit_m3 + hos_visit_m4,
+      hos_ac_visit_m5 = hos_ac_visit_m4 + hos_visit_m5,
+      hos_ac_visit_m6 = hos_ac_visit_m5 + hos_visit_m6,
+      hos_ac_visit_m7 = hos_ac_visit_m6 + hos_visit_m7,
+      hos_ac_visit_m8 = hos_ac_visit_m7 + hos_visit_m8,
+      hos_ac_visit_m9 = hos_ac_visit_m8 + hos_visit_m9,
+      hos_ac_visit_m10 = hos_ac_visit_m9 + hos_visit_m10,
+      hos_ac_visit_m11 = hos_ac_visit_m10 + hos_visit_m11,
+      hos_ac_visit_m12 = hos_ac_visit_m11 + hos_visit_m12,
+)
+hos <- c("hos_ac_visit_m1",
+         "hos_ac_visit_m2",
+         "hos_ac_visit_m3",
+         "hos_ac_visit_m4",
+         "hos_ac_visit_m5",
+         "hos_ac_visit_m6",
+         "hos_ac_visit_m7",
+         "hos_ac_visit_m8",
+         "hos_ac_visit_m9",
+         "hos_ac_visit_m10",
+         "hos_ac_visit_m11",
+         "hos_ac_visit_m12")
+lapply(matched_data[hos], summary)
+
+# Calculate accumilative A&E visits: -----
+matched_data <- matched_data %>% mutate(
+      ae_ac_visit_m1 = ae_visit_m1,
+      ae_ac_visit_m2 = ae_ac_visit_m1 + ae_visit_m2,
+      ae_ac_visit_m3 = ae_ac_visit_m2 + ae_visit_m3,
+      ae_ac_visit_m4 = ae_ac_visit_m3 + ae_visit_m4,
+      ae_ac_visit_m5 = ae_ac_visit_m4 + ae_visit_m5,
+      ae_ac_visit_m6 = ae_ac_visit_m5 + ae_visit_m6,
+      ae_ac_visit_m7 = ae_ac_visit_m6 + ae_visit_m7,
+      ae_ac_visit_m8 = ae_ac_visit_m7 + ae_visit_m8,
+      ae_ac_visit_m9 = ae_ac_visit_m8 + ae_visit_m9,
+      ae_ac_visit_m10 = ae_ac_visit_m9 + ae_visit_m10,
+      ae_ac_visit_m11 = ae_ac_visit_m10 + ae_visit_m11,
+      ae_ac_visit_m12 = ae_ac_visit_m11 + ae_visit_m12
+)
+
+
+ae <- c("ae_ac_visit_m1",
+            "ae_ac_visit_m2",
+            "ae_ac_visit_m3",
+            "ae_ac_visit_m4",
+            "ae_ac_visit_m5",
+            "ae_ac_visit_m6",
+            "ae_ac_visit_m7",
+            "ae_ac_visit_m8",
+            "ae_ac_visit_m9",
+            "ae_ac_visit_m10",
+            "ae_ac_visit_m11",
+            "ae_ac_visit_m12")
+lapply(matched_data[ae], summary)
