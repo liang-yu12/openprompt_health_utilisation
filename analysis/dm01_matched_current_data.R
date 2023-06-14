@@ -4,11 +4,40 @@ source("analysis/settings_packages.R")
 # ============== Read in data and combine ==============
 # Read in data-sets:
 # # Exposure:
-lc_exp_matched <- fread(here("output", "matched_cases_with_ehr.csv"))
+
+lc_exp_matched <- read_csv("output/matched_cases_with_ehr.csv", 
+                           col_types = cols(registration_date = col_date(format = "%Y-%m-%d"), 
+                                          long_covid_dx_date = col_date(format = "%Y-%m-%d"), 
+                                          index_date = col_date(format = "%Y-%m-%d"), 
+                                          end_death = col_date(format = "%Y-%m-%d"), 
+                                          end_deregist = col_date(format = "%Y-%m-%d"), 
+                                          end_lc_cure = col_date(format = "%Y-%m-%d"), 
+                                          covid_vacc_1_vacc_tab = col_date(format = "%Y-%m-%d"), 
+                                          covid_vacc_2_vacc_tab = col_date(format = "%Y-%m-%d"), 
+                                          covid_vacc_3_vacc_tab = col_date(format = "%Y-%m-%d"), 
+                                          covid_vacc_4_vacc_tab = col_date(format = "%Y-%m-%d"), 
+                                          covid_vacc_5_vacc_tab = col_date(format = "%Y-%m-%d"), 
+                                          covid_vacc_6_vacc_tab = col_date(format = "%Y-%m-%d"), 
+                                          covid_dx_month = col_date(format = "%Y-%m-%d"), 
+                                          bmi_date = col_date(format = "%Y-%m-%d")))
 lc_exp_matched$match_counts <- NULL
 
 #  # Comparators:
-com_matched <- fread(here("output", "matched_control_with_ehr.csv"))
+com_matched <- read_csv("output/matched_control_with_ehr.csv", 
+                        col_types = cols(registration_date = col_date(format = "%Y-%m-%d"), 
+                                         long_covid_dx_date = col_date(format = "%Y-%m-%d"), 
+                                         index_date = col_date(format = "%Y-%m-%d"), 
+                                         end_death = col_date(format = "%Y-%m-%d"), 
+                                         end_deregist = col_date(format = "%Y-%m-%d"), 
+                                         end_lc_cure = col_date(format = "%Y-%m-%d"), 
+                                         covid_vacc_1_vacc_tab = col_date(format = "%Y-%m-%d"), 
+                                         covid_vacc_2_vacc_tab = col_date(format = "%Y-%m-%d"), 
+                                         covid_vacc_3_vacc_tab = col_date(format = "%Y-%m-%d"), 
+                                         covid_vacc_4_vacc_tab = col_date(format = "%Y-%m-%d"), 
+                                         covid_vacc_5_vacc_tab = col_date(format = "%Y-%m-%d"), 
+                                         covid_vacc_6_vacc_tab = col_date(format = "%Y-%m-%d"), 
+                                         covid_dx_month = col_date(format = "%Y-%m-%d"), 
+                                         bmi_date = col_date(format = "%Y-%m-%d")))
 
 #  combine two datasets
 matched_data <- bind_rows(lc_exp_matched, com_matched)
