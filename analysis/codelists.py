@@ -7,7 +7,7 @@ long_covid_assessment_codes = codelist_from_csv(
     column="code"
 )     
     
-long_covid_dx_codes =  codelist_from_csv(
+long_covid_dx_codes = codelist_from_csv(
     "codelists/opensafely-nice-managing-the-long-term-effects-of-covid-19.csv",
     column="code"
 ) 
