@@ -1,12 +1,13 @@
 # Load previous data management
 source("analysis/dm04_matched_estimale_costs.R")
 
-cumulative_cost_adj_fn <- function(cost, data, n){
-      
-      # first manually exclude observations with missing variables
-      complete_vars <- c("exposure", "sex", "age_cat", "cov_covid_vax_n_cat", 
-                         "bmi_cat", "imd_q5", "ethnicity_6", "region", "number_comorbidities_cat")
-      no_na <- matched_data[complete.cases(matched_data[,complete_vars]),]
+# first manually exclude observations with missing variables
+complete_vars <- c("exposure", "sex", "age_cat", "cov_covid_vax_n_cat", 
+                   "bmi_cat", "imd_q5", "ethnicity_6", "region", "number_comorbidities_cat")
+no_na <- no_na[complete.cases(matched_data[,complete_vars]),]
+
+cumulative_cost_adj_fn <- function(cost, n){
+
       
       # Run two-part model
       twopm.model <- tpm(
@@ -34,38 +35,27 @@ cumulative_cost_adj_fn <- function(cost, data, n){
 }
 
 results_costs_full <- bind_rows(
-      cumulative_cost_adj_fn(cost = matched_data$gp_cost_m1, 
-                             data = matched_data,
+      cumulative_cost_adj_fn(cost = no_na$gp_cost_m1, 
                              n = 1),
-      cumulative_cost_adj_fn(cost = matched_data$gp_cost_m2, 
-                             data = matched_data,
+      cumulative_cost_adj_fn(cost = no_na$gp_cost_m2, 
                              n = 2),
-      cumulative_cost_adj_fn(cost = matched_data$gp_cost_m3, 
-                             data = matched_data,
+      cumulative_cost_adj_fn(cost = no_na$gp_cost_m3, 
                              n = 3),
-      cumulative_cost_adj_fn(cost = matched_data$gp_cost_m4, 
-                             data = matched_data,
+      cumulative_cost_adj_fn(cost = no_na$gp_cost_m4, 
                              n = 4),
-      cumulative_cost_adj_fn(cost = matched_data$gp_cost_m5, 
-                             data = matched_data,
+      cumulative_cost_adj_fn(cost = no_na$gp_cost_m5, 
                              n = 5),
-      cumulative_cost_adj_fn(cost = matched_data$gp_cost_m6, 
-                             data = matched_data,
+      cumulative_cost_adj_fn(cost = no_na$gp_cost_m6, 
                              n = 6),
-      cumulative_cost_adj_fn(cost = matched_data$gp_cost_m7, 
-                             data = matched_data,
+      cumulative_cost_adj_fn(cost = no_na$gp_cost_m7, 
                              n = 7),
-      cumulative_cost_adj_fn(cost = matched_data$gp_cost_m8, 
-                             data = matched_data,
+      cumulative_cost_adj_fn(cost = no_na$gp_cost_m8, 
                              n = 8),
-      cumulative_cost_adj_fn(cost = matched_data$gp_cost_m10, 
-                             data = matched_data,
+      cumulative_cost_adj_fn(cost = no_na$gp_cost_m10, 
                              n = 9),
-      cumulative_cost_adj_fn(cost = matched_data$gp_cost_m11, 
-                             data = matched_data,
+      cumulative_cost_adj_fn(cost = no_na$gp_cost_m11, 
                              n = 11),
-      cumulative_cost_adj_fn(cost = matched_data$gp_cost_m12, 
-                             data = matched_data,
+      cumulative_cost_adj_fn(cost = no_na$gp_cost_m12, 
                              n = 12)
       ) %>% 
       mutate(model = "Fully adjusted") %>% 
