@@ -1,51 +1,30 @@
 # Load previous data management
 source("analysis/dm04_matched_estimale_costs.R")
 
- 
-
-
-month_1 <- tpm(
-      gp_cost_m1 ~ sex ,
-      data = matched_data,
-      link_part1 = "probit", family_part2 = Gamma(link = "log")
-)
-
-estimated_cost <- predict(month_1, se.fit = TRUE) %>% 
-      as.data.frame() %>% 
-      dplyr::select(fit, se.fit) %>% 
-      mutate(ll = fit - 1.96*se.fit) %>% 
-      mutate(ul = fit + 1.96*se.fit) %>% 
-      dplyr::select(fit, ll, ul)
-
-complete_vars <- c("sex")
-no_na <- matched_data[complete.cases(matched_data[,complete_vars]),]
-
-no_na <- cbind(no_na, estimated_cost)
-results <- no_na %>% 
-      group_by(exposure) %>% 
-      summarise(mean = mean(fit),
-                sd = sd(fit)) %>% 
-      mutate(month = 1) %>% relocate(month)
-
 cumulative_cost_adj_fn <- function(cost, data, n){
+      
+      # first manually exclude observations with missing variables
+      complete_vars <- c("exposure", "sex", "age_cat", "cov_covid_vax_n_cat", 
+                         "bmi_cat", "imd_q5", "ethnicity_6", "region", "number_comorbidities_cat")
+      no_na <- matched_data[complete.cases(matched_data[,complete_vars]),]
+      
+      # Run two-part model
       twopm.model <- tpm(
             cost ~ exposure + sex + age_cat + cov_covid_vax_n_cat + bmi_cat + imd_q5 + ethnicity_6 + region +
                   number_comorbidities_cat,
-            data = matched_data,
+            data = no_na,
             link_part1 = "probit", family_part2 = Gamma(link = "log")
       )
       
+      # Estimate the costs
       cost <- predict(twopm.model, se.fit = TRUE) %>% 
             as.data.frame() %>% 
             dplyr::select(fit, se.fit) %>% 
             mutate(ll = fit - 1.96*se.fit) %>% 
             mutate(ul = fit + 1.96*se.fit) %>% 
             dplyr::select(fit, ll, ul)
-      
-      complete_vars <- c("exposure", "sex", "age_cat", "cov_covid_vax_n_cat", 
-                         "bmi_cat", "imd_q5", "ethnicity_6", "region", "number_comorbidities_cat")
-      no_na <- matched_data[complete.cases(matched_data[,complete_vars]),]
-      
+
+      # Add the predicted cost data bact to the original dataset
       no_na <- cbind(no_na, cost)
       results <- no_na %>% 
             group_by(exposure) %>% 
