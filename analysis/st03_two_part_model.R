@@ -2,8 +2,7 @@
 source("analysis/dm04_matched_estimale_costs.R")
 
  
-# exposure + sex + age_cat + cov_covid_vax_n_cat + bmi_cat + imd_q5 + ethnicity_6 + region + 
-#       number_comorbidities_cat
+
 
 month_1 <- tpm(
       gp_cost_m1 ~ sex ,
@@ -30,7 +29,8 @@ results <- no_na %>%
 
 cumulative_cost_adj_fn <- function(cost, data, n){
       twopm.model <- tpm(
-            cost ~ sex ,
+            cost ~ exposure + sex + age_cat + cov_covid_vax_n_cat + bmi_cat + imd_q5 + ethnicity_6 + region +
+                  number_comorbidities_cat,
             data = matched_data,
             link_part1 = "probit", family_part2 = Gamma(link = "log")
       )
@@ -42,7 +42,8 @@ cumulative_cost_adj_fn <- function(cost, data, n){
             mutate(ul = fit + 1.96*se.fit) %>% 
             dplyr::select(fit, ll, ul)
       
-      complete_vars <- c("sex")
+      complete_vars <- c("exposure", "sex", "age_cat", "cov_covid_vax_n_cat", 
+                         "bmi_cat", "imd_q5", "ethnicity_6", "region", "number_comorbidities_cat")
       no_na <- matched_data[complete.cases(matched_data[,complete_vars]),]
       
       no_na <- cbind(no_na, cost)
