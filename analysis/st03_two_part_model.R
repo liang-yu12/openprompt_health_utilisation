@@ -2,12 +2,13 @@
 source("analysis/dm04_matched_estimale_costs.R")
 
 # first manually exclude observations with missing variables
-complete_vars <- c("exposure", "sex", "age_cat", "cov_covid_vax_n_cat", 
-                   "bmi_cat", "imd_q5", "ethnicity_6", "region", "number_comorbidities_cat")
-no_na <- no_na[complete.cases(matched_data[,complete_vars]),]
+
+no_na <- matched_data %>% filter(
+      !is.na(exposure) & !is.na(sex) &! is.na(age_cat) & !is.na(cov_covid_vax_n_cat) &
+      !is.na(bmi_cat) & !is.na(imd_q5) & !is.na(ethnicity_6) & !is.na(region) &
+            !is.na(number_comorbidities_cat))
 
 cumulative_cost_adj_fn <- function(cost, n){
-
       
       # Run two-part model
       twopm.model <- tpm(
