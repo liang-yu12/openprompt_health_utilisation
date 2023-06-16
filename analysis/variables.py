@@ -257,10 +257,10 @@ def drug_13skin_number(dataset, from_date, num_months):
 
 
 # Temp: test generate data
-dataset = Dataset()
-dataset.define_population(age >= 18)
+# dataset = Dataset()
+# dataset.define_population(age >= 18)
 
-drug_12ent_number(dataset, lc_dx.date, num_months=2)
+# drug_12ent_number(dataset, lc_dx.date, num_months=2)
 # add_visits(dataset, lc_dx.date, num_months=1)
 # add_visits(dataset, lc_dx.date, num_months=2)
 # add_hos_visits(dataset, lc_dx.date, num_months=3)
