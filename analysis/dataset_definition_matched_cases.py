@@ -88,11 +88,7 @@ hospital_stay_more_30 = hospital_admissions \
 
 dataset.covid_positive = latest_test_before_diagnosis.exists_for_patient()
 dataset.covid_dx_month = latest_test_before_diagnosis.specimen_taken_date.to_first_of_month() # only need dx month
-dataset.ethnicity = (clinical_events.where(clinical_events.ctv3_code.is_in(codelists.ethnicity))
-    .sort_by(clinical_events.date)
-    .last_for_patient()
-    .ctv3_code.to_category(codelists.ethnicity)
-)
+dataset.ethnicity = ethnicity
 dataset.imd = imd
 dataset.bmi = bmi
 dataset.bmi_date = bmi_date
