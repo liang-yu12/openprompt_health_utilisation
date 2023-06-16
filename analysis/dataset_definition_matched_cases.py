@@ -157,6 +157,7 @@ add_ae_visits(dataset, dataset.index_date, num_months=10)
 add_ae_visits(dataset, dataset.index_date, num_months=11)
 add_ae_visits(dataset, dataset.index_date, num_months=12)
 
+# Add drug prescription frequencies by BNF chapters 
 # drugs: bnf ch1 : gi drugs
 drug_1gi_number(dataset, dataset.index_date, num_months=1)
 drug_1gi_number(dataset, dataset.index_date, num_months=2)
