@@ -83,7 +83,11 @@ hospital_stay_more_30 = hospital_admissions \
 
 dataset.covid_positive = latest_test_before_diagnosis.exists_for_patient()
 dataset.covid_dx_month = latest_test_before_diagnosis.specimen_taken_date.to_first_of_month() # only need dx month
-dataset.ethnicity = ethnicity
+dataset.ethnicity = (clinical_events.where(clinical_events.ctv3_code.is_in(codelists.ethnicity))
+    .sort_by(clinical_events.date)
+    .last_for_patient()
+    .ctv3_code.to_category(codelists.ethnicity)
+)
 dataset.imd = imd
 dataset.bmi = bmi
 dataset.bmi_date = bmi_date
@@ -92,7 +96,7 @@ dataset.admit_over_1m_count = hospital_stay_more_30
 dataset.cov_c19_vaccine_number = c19_vaccine_number
 dataset.cov_cancer = cancer_all.exists_for_patient()
 dataset.cov_mental_health = mental_health_issues.exists_for_patient()
-dataset.cov_asthma = asthma.exists_for_patient() & ~copd.exists_for_patient()
+dataset.cov_asthma = clinical_ctv3_matches(clinical_events, codelists.asthma).exists_for_patient() & ~clinical_ctv3_matches(clinical_events, codelists.copd).exists_for_patient()
 dataset.cov_organ_transplant = organ_transplant.exists_for_patient()
 dataset.cov_chronic_cardiac_disease = chronic_cardiac_disease.exists_for_patient()
 dataset.cov_chronic_liver_disease = chronic_liver_disease.exists_for_patient()
