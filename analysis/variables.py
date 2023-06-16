@@ -235,7 +235,7 @@ def drug_11eye_number(dataset, from_date, num_months):
         .where((medications.date >= from_date) &
               (medications.date  <= (from_date + days(num_months * 30)))) \
         .where(medications.dmd_code.is_in(drug_bnf_ch11_eye_dmd)).count_for_patient()
-    setattr(dataset, f"gi_drug_{num_months}", num_pres)
+    setattr(dataset, f"eye_drug_{num_months}", num_pres)
 
 
 def drug_12ent_number(dataset, from_date, num_months):
