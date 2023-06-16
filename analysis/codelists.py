@@ -185,12 +185,12 @@ drug_bnf_ch2_cv_dmd = codelist_from_csv(
 )
 
 drug_bnf_ch3_chest_dmd = codelist_from_csv(
-    "codelists/codelists/user-kate-mansfield-bnf-3-respiratory-system-dmd.csv",
+    "codelists/user-kate-mansfield-bnf-3-respiratory-system-dmd.csv",
     column="dmd_id"
 )
 
 drug_bnf_ch4_cns_dmd = codelist_from_csv(
-    "codelists/codelists/user-kate-mansfield-bnf-4-central-nervous-system-dmd.csv",
+    "codelists/user-kate-mansfield-bnf-4-central-nervous-system-dmd.csv",
     column="dmd_id"
 )
 
