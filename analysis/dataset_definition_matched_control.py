@@ -7,7 +7,7 @@ from databuilder.tables.beta.tpp import (
 )
 from ehrql.query_language import table_from_file, PatientFrame, Series
 from covariates import *
-from variables import add_visits, add_hos_visits, add_ae_visits
+from variables import *
 # Import matched data
 
 @table_from_file("output/matched_matches_stp.csv")
