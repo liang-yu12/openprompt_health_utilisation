@@ -10,7 +10,7 @@ from databuilder.tables.beta.tpp import (
 )
 from ehrql.query_language import table_from_file, PatientFrame, Series
 from covariates import *
-from variables import add_visits, add_hos_visits, add_ae_visits, create_sequential_variables
+from variables import *
 
 # import matched data
 
@@ -88,7 +88,11 @@ hospital_stay_more_30 = hospital_admissions \
 
 dataset.covid_positive = latest_test_before_diagnosis.exists_for_patient()
 dataset.covid_dx_month = latest_test_before_diagnosis.specimen_taken_date.to_first_of_month() # only need dx month
-dataset.ethnicity = ethnicity
+dataset.ethnicity = (clinical_events.where(clinical_events.ctv3_code.is_in(codelists.ethnicity))
+    .sort_by(clinical_events.date)
+    .last_for_patient()
+    .ctv3_code.to_category(codelists.ethnicity)
+)
 dataset.imd = imd
 dataset.bmi = bmi
 dataset.bmi_date = bmi_date
@@ -152,3 +156,17 @@ add_ae_visits(dataset, dataset.index_date, num_months=9)
 add_ae_visits(dataset, dataset.index_date, num_months=10)
 add_ae_visits(dataset, dataset.index_date, num_months=11)
 add_ae_visits(dataset, dataset.index_date, num_months=12)
+
+# drugs: bnf ch1 : gi drugs
+drug_1gi_number(dataset, dataset.index_date, num_months=1)
+drug_1gi_number(dataset, dataset.index_date, num_months=2)
+drug_1gi_number(dataset, dataset.index_date, num_months=3)
+drug_1gi_number(dataset, dataset.index_date, num_months=4)
+drug_1gi_number(dataset, dataset.index_date, num_months=5)
+drug_1gi_number(dataset, dataset.index_date, num_months=6)
+drug_1gi_number(dataset, dataset.index_date, num_months=7)
+drug_1gi_number(dataset, dataset.index_date, num_months=8)
+drug_1gi_number(dataset, dataset.index_date, num_months=9)
+drug_1gi_number(dataset, dataset.index_date, num_months=10)
+drug_1gi_number(dataset, dataset.index_date, num_months=11)
+drug_1gi_number(dataset, dataset.index_date, num_months=12)
