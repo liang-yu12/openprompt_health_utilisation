@@ -5,18 +5,18 @@ source("analysis/dm03_matched_define_monthly_follow_up_time.R")
 # ref: https://doi.org/10.22024/UniKent%2F01.02.100519
 # £42 per consultation
 matched_data <- matched_data %>%
-      mutate(gp_cost_m1 = gp_visit_m1 * 42,
-             gp_cost_m2 = gp_visit_m2 * 42,
-             gp_cost_m3 = gp_visit_m3 * 42,
-             gp_cost_m4 = gp_visit_m4 * 42,
-             gp_cost_m5 = gp_visit_m5 * 42,
-             gp_cost_m6 = gp_visit_m6 * 42,
-             gp_cost_m7 = gp_visit_m7 * 42,
-             gp_cost_m8 = gp_visit_m8 * 42,
-             gp_cost_m9 = gp_visit_m9 * 42,
-             gp_cost_m10 = gp_visit_m10 * 42,
-             gp_cost_m11 = gp_visit_m11 * 42,
-             gp_cost_m12 = gp_visit_m12 * 42)
+      mutate(gp_cost_1 = gp_visit_m1 * 42,
+             gp_cost_2 = gp_visit_m2 * 42,
+             gp_cost_3 = gp_visit_m3 * 42,
+             gp_cost_4 = gp_visit_m4 * 42,
+             gp_cost_5 = gp_visit_m5 * 42,
+             gp_cost_6 = gp_visit_m6 * 42,
+             gp_cost_7 = gp_visit_m7 * 42,
+             gp_cost_8 = gp_visit_m8 * 42,
+             gp_cost_9 = gp_visit_m9 * 42,
+             gp_cost_10 = gp_visit_m10 * 42,
+             gp_cost_11 = gp_visit_m11 * 42,
+             gp_cost_12 = gp_visit_m12 * 42)
 
 matched_data <- matched_data %>% mutate(
   gi_cost_1 = gi_drug_1 * 5.71,
@@ -176,3 +176,19 @@ matched_data <- matched_data %>% mutate(
   skin_cost_11 = skin_drug_11 * 9.7,
   skin_cost_12 = skin_drug_12 * 9.7
 )
+
+
+# calculate total costs: 
+matched_data$all_cost_m1 <- rowSums(matched_data[, grepl("cost_1$", names(matched_data)), with = FALSE], na.rm = TRUE)
+matched_data$all_cost_m2 <- rowSums(matched_data[, grepl("cost_2$", names(matched_data)), with = FALSE], na.rm = TRUE)
+matched_data$all_cost_m3 <- rowSums(matched_data[, grepl("cost_3$", names(matched_data)), with = FALSE], na.rm = TRUE)
+matched_data$all_cost_m4 <- rowSums(matched_data[, grepl("cost_4$", names(matched_data)), with = FALSE], na.rm = TRUE)
+matched_data$all_cost_m5 <- rowSums(matched_data[, grepl("cost_5$", names(matched_data)), with = FALSE], na.rm = TRUE)
+matched_data$all_cost_m6 <- rowSums(matched_data[, grepl("cost_6$", names(matched_data)), with = FALSE], na.rm = TRUE)
+matched_data$all_cost_m7 <- rowSums(matched_data[, grepl("cost_7$", names(matched_data)), with = FALSE], na.rm = TRUE)
+matched_data$all_cost_m8 <- rowSums(matched_data[, grepl("cost_8$", names(matched_data)), with = FALSE], na.rm = TRUE)
+matched_data$all_cost_m9 <- rowSums(matched_data[, grepl("cost_9$", names(matched_data)), with = FALSE], na.rm = TRUE)
+matched_data$all_cost_m10 <- rowSums(matched_data[, grepl("cost_10$", names(matched_data)), with = FALSE], na.rm = TRUE)
+matched_data$all_cost_m11 <- rowSums(matched_data[, grepl("cost_11$", names(matched_data)), with = FALSE], na.rm = TRUE)
+matched_data$all_cost_m12 <- rowSums(matched_data[, grepl("cost_12$", names(matched_data)), with = FALSE], na.rm = TRUE)
+
