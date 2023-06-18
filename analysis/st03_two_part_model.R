@@ -36,27 +36,27 @@ cumulative_cost_adj_fn <- function(cost, n){
 }
 
 results_costs_full <- bind_rows(
-      cumulative_cost_adj_fn(cost = no_na$gp_cost_m1, 
+      cumulative_cost_adj_fn(cost = no_na$all_cost_m1, 
                              n = 1),
-      cumulative_cost_adj_fn(cost = no_na$gp_cost_m2, 
+      cumulative_cost_adj_fn(cost = no_na$all_cost_m2, 
                              n = 2),
-      cumulative_cost_adj_fn(cost = no_na$gp_cost_m3, 
+      cumulative_cost_adj_fn(cost = no_na$all_cost_m3, 
                              n = 3),
-      cumulative_cost_adj_fn(cost = no_na$gp_cost_m4, 
+      cumulative_cost_adj_fn(cost = no_na$all_cost_m4, 
                              n = 4),
-      cumulative_cost_adj_fn(cost = no_na$gp_cost_m5, 
+      cumulative_cost_adj_fn(cost = no_na$all_cost_m5, 
                              n = 5),
-      cumulative_cost_adj_fn(cost = no_na$gp_cost_m6, 
+      cumulative_cost_adj_fn(cost = no_na$all_cost_m6, 
                              n = 6),
-      cumulative_cost_adj_fn(cost = no_na$gp_cost_m7, 
+      cumulative_cost_adj_fn(cost = no_na$all_cost_m7, 
                              n = 7),
-      cumulative_cost_adj_fn(cost = no_na$gp_cost_m8, 
+      cumulative_cost_adj_fn(cost = no_na$all_cost_m8, 
                              n = 8),
-      cumulative_cost_adj_fn(cost = no_na$gp_cost_m10, 
+      cumulative_cost_adj_fn(cost = no_na$all_cost_m10, 
                              n = 9),
-      cumulative_cost_adj_fn(cost = no_na$gp_cost_m11, 
+      cumulative_cost_adj_fn(cost = no_na$all_cost_m11, 
                              n = 11),
-      cumulative_cost_adj_fn(cost = no_na$gp_cost_m12, 
+      cumulative_cost_adj_fn(cost = no_na$all_cost_m12, 
                              n = 12)
       ) %>% 
       mutate(model = "Fully adjusted") %>% 
