@@ -7,7 +7,7 @@ all_cost$month <- as.integer(all_cost$month)
 # Full adjusted 
 full <- all_cost %>% 
       ggplot(aes(x = month, y = mean, group = exposure)) +
-      ggtitle("Cumulative costs") + theme(legend.title = element_blank()) +
+      ggtitle("Cumulative costs") + theme(legend.title = element_blank()) + theme_bw() +
       geom_line(aes(color=exposure)) +
       geom_point(aes(color=exposure)) +
       scale_x_continuous("Months after long COVID diagnosis", breaks = 1:12) +
