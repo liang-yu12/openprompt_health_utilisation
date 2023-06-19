@@ -180,6 +180,14 @@ actions:
     outputs: 
       moderately_sensitive: 
         total_costs: "output/st_04_result_cumulative_cost_full_2pm.csv"
+        
+  report_03_4_twopart_model_subgroup_predict:
+    needs: [import_matched_exposure, import_matched_controls]
+    run: 
+      r:latest analysis/st03_twopart_sub_model.R
+    outputs: 
+      moderately_sensitive: 
+        sub_costs: "output/st_04_result_sub_cumulative_cost_2pm.csv"        
 
   report_04_plot_twopart_costs:
     needs: [report_03_3_twopart_model_predict]
