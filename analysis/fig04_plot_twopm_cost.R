@@ -1,0 +1,18 @@
+# Visulise the healthcare utilisation:
+source("analysis/settings_packages.R")
+# read in data
+all_cost <- read.csv(here("output", "st_04_result_cumulative_cost_full_2pm.csv"))
+all_cost$month <- as.integer(all_visit$month)
+      
+# Full adjusted 
+full <- all_cost %>% 
+      ggplot(aes(x = month, y = mean, group = exposure)) +
+      ggtitle("Cumulative costs") + theme(legend.title = element_blank()) +
+      geom_line(aes(color=exposure))+
+      geom_point(aes(color=exposure))
+
+ggsave(full, 
+       filename = "st_fig_04_cumulative_costs.png",
+       path = here("output"),
+       dpi = 400)
+
