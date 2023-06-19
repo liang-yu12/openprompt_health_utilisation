@@ -179,5 +179,12 @@ actions:
       r:latest analysis/st03_two_part_model.R
     outputs: 
       moderately_sensitive: 
-        gp_costs: "output/st_04_result_cumulative_cost_full_2pm.csv"
-        
+        total_costs: "output/st_04_result_cumulative_cost_full_2pm.csv"
+
+  report_04_plot_twopart_costs:
+    needs: [report_03_3_twopart_model_predict]
+    run: 
+      r:latest analysis/st04_fig_plot_twopm_cost.R
+    outputs: 
+      moderately_sensitive: 
+        plot_total_costs: "output/st_fig_04_cumulative_costs.png"
