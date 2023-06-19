@@ -2,7 +2,7 @@
 source("analysis/settings_packages.R")
 # read in data
 all_cost <- read.csv(here("output", "st_04_result_cumulative_cost_full_2pm.csv"))
-all_cost$month <- as.integer(all_visit$month)
+all_cost$month <- as.integer(all_cost$month)
       
 # Full adjusted 
 full <- all_cost %>% 
