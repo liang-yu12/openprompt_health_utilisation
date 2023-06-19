@@ -29,8 +29,7 @@ dataset.define_population(
 )
 dataset.age = age
 dataset.sex = patients.sex
-dataset.region = registration.practice_stp
-dataset.gp_practice = registration.practice_pseudo_id
+dataset.region = registration.practice_nuts1_region_name
 dataset.registration_date = registration.start_date
 dataset.long_covid_dx = lc_dx.exists_for_patient().map_values({True: 1, False: 0})
 dataset.long_covid_dx_date = lc_dx_date
