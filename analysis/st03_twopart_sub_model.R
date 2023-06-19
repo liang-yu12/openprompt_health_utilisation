@@ -13,12 +13,21 @@ hospitalised <- no_na %>% subset(previous_covid_hosp == "T")
 no_hostpitalised <- no_na %>% subset(previous_covid_hosp == "F")
 
 # check distribution
-vars <- c("exposure", "sex", "age_cat", "cov_covid_vax_n_cat", "bmi_cat", 
+vars <- c("sex", "age_cat", "cov_covid_vax_n_cat", "bmi_cat", 
   "imd_q5","ethnicity_6", "region", "number_comorbidities_cat")
 
-no_na %>% summary_factorlist(dependent = "previous_covid_hosp",
-                   explanatory = vars) %>% 
+# no_na %>% summary_factorlist(dependent = "previous_covid_hosp",
+#                    explanatory = vars) %>% 
+#       write.csv(here("output", "st_04_result_sub_cumulative_cost_2pm.csv"), row.names = F)      
+
+no_na %>% group_by(previous_covid_hosp) %>% 
+      summary_factorlist(dependent = "exposure",
+                             explanatory = vars) %>% 
       write.csv(here("output", "st_04_result_sub_cumulative_cost_2pm.csv"), row.names = F)      
+
+
+
+
       
 # # Hospitalised people ------
 # # function:
