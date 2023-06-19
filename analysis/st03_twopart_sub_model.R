@@ -13,18 +13,13 @@ hospitalised <- no_na %>% subset(previous_covid_hosp == "T")
 no_hostpitalised <- no_na %>% subset(previous_covid_hosp == "F")
 
 # check distribution
-vars <- c("sex", "age_cat", "cov_covid_vax_n_cat", "bmi_cat", 
+vars <- c("exposure", "sex", "age_cat", "cov_covid_vax_n_cat", "bmi_cat", 
   "imd_q5","ethnicity_6", "region", "number_comorbidities_cat")
 
-results_hos_costs_full <- hospitalised %>% summary_factorlist(dependent = "exposure",
+no_na %>% summary_factorlist(dependent = "previous_covid_hosp",
                    explanatory = vars) %>% 
-      as.data.frame() %>% 
-      mutate(subgroup = "hospitalsed")
-
-results_no_hos_costs_full <- no_hostpitalised %>% 
-      summary_factorlist(dependent = "exposure", explanatory = vars) %>% 
-      as.data.frame() %>% mutate(subgroup = "non-hospitalsed")
-
+      write.csv(here("output", "st_04_result_sub_cumulative_cost_2pm.csv"), row.names = F)      
+      
 # # Hospitalised people ------
 # # function:
 # cumulative_cost_hos_adj_fn <- function(cost, n){
@@ -136,7 +131,7 @@ results_no_hos_costs_full <- no_hostpitalised %>%
 # ) %>% mutate(group = "Non-hospitalised") %>% 
 #       relocate(group)
 # 
-
-# save
-bind_rows(results_hos_costs_full, results_no_hos_costs_full) %>% 
-      write.csv(here("output", "st_04_result_sub_cumulative_cost_2pm.csv"), row.names = F)
+# 
+# # save
+# bind_rows(results_hos_costs_full, results_no_hos_costs_full) %>% 
+#       write.csv(here("output", "st_04_result_sub_cumulative_cost_2pm.csv"), row.names = F)
