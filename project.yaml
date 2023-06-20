@@ -65,6 +65,7 @@ actions:
       highly_sensitive:
         cohort: output/matched_control_with_ehr.csv
 
+# Historical comparison:
   generate_historical_exp_data:
     run: 
       databuilder:v0 generate-dataset analysis/dataset_definition_hx_unmatched_exp_lc.py
