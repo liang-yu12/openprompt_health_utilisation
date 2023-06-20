@@ -19,7 +19,7 @@ from functools import reduce
 # temp zone for testing: -------
 study_start_date = date(2020, 11, 1)
 study_end_date = date(2023, 1, 31)
-hx_study_end_date = date(2020, 1, 31)
+hx_study_end_date = date(2020, 3, 1)
 
 age = (study_start_date - patients.date_of_birth).years
 lc_dx = clinical_events.where(clinical_events.snomedct_code.is_in(lc_codelists_combined)) \
