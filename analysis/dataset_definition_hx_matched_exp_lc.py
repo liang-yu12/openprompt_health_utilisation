@@ -7,14 +7,7 @@ from databuilder.tables.beta.tpp import (
 from ehrql.query_language import table_from_file, PatientFrame, Series
 from covariates import *
 from hx_covariates import *
-from variables import (
-    add_visits, 
-    add_hx_visits,     
-    add_hos_visits,
-    add_hx_hos_visits, 
-    add_ae_visits,
-    add_hx_ae_visits
-)
+from variables import *
 
 # import matched data
 
