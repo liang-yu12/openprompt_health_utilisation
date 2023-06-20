@@ -37,9 +37,13 @@ age = (study_start_date - patients.date_of_birth).years
 dataset = Dataset()
 dataset.define_population(
     had_hx_registration.exists_for_patient()
+    & registration.exists_for_patient()
+    & (registrations_number == 1) 
     & lc_dx.exists_for_patient()
     & (age>= 18) 
     & (age <=100)
+    & (patients.sex.contains("male"))
+    & ((death_date > lc_dx_date) | (death_date is None))
 )
 dataset.age = age
 dataset.sex = patients.sex
