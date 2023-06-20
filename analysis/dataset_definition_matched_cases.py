@@ -19,7 +19,6 @@ class matched_cases(PatientFrame):
     age = Series(int)
     sex = Series(str)
     region = Series(str)
-    gp_practice =  Series(int)
     registration_date = Series(date)
     long_covid_dx = Series(int)
     long_covid_dx_date= Series(date)
@@ -41,7 +40,6 @@ dataset.define_population(
 dataset.age = matched_cases.age
 dataset.sex = matched_cases.sex
 dataset.region = matched_cases.region
-dataset.gp_practice = matched_cases.gp_practice
 dataset.registration_date = matched_cases.registration_date
 dataset.long_covid_dx = matched_cases.long_covid_dx
 dataset.long_covid_dx_date= matched_cases.long_covid_dx_date
