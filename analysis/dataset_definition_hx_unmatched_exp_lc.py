@@ -7,7 +7,7 @@ from databuilder.tables.beta.tpp import (
 )
 from databuilder.codes import SNOMEDCTCode
 from codelists import lc_codelists_combined
-
+from covariates import *
 
 # Defining the historical exposure groups (before matching) 
 study_start_date = date(2020, 11, 1)
