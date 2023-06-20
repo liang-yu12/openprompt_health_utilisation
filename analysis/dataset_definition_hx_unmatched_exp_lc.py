@@ -45,4 +45,4 @@ dataset.age = age
 dataset.sex = patients.sex
 dataset.lc_exp = lc_dx.exists_for_patient().map_values({True: 1, False: 0})
 dataset.index_date = index_date
-dataset.region = had_hx_registration.practice_stp
+dataset.region = registration.practice_nuts1_region_name
