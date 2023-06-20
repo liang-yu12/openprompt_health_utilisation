@@ -65,6 +65,7 @@ dataset.cov_temporary_immune_suppress = temporary_immune_suppress.exists_for_pat
 # Historical GP visits: 2019-3-1 to 2020-3-1
 add_hx_gp_visits(dataset, num_months=1)
 add_hx_gp_visits(dataset, num_months=2)
+add_hx_gp_visits(dataset, num_months=3)
 add_hx_gp_visits(dataset, num_months=4)
 add_hx_gp_visits(dataset, num_months=5)
 add_hx_gp_visits(dataset, num_months=6)
