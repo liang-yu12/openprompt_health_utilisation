@@ -14,7 +14,7 @@ import csv
 # Defining the historical exposure groups (before matching) 
 study_start_date = date(2020, 11, 1)
 study_end_date = date(2023, 1, 31)
-hx_study_start_date = date(2018, 11, 1)
+hx_study_start_date = date(2019, 3, 1)
 hx_study_end_date = date(2020, 3, 1)
 
 # Import the filtered GP list to exclude GP that was not using the long COVID codes
