@@ -47,7 +47,7 @@ rm(lc_exp_matched, com_matched) # house keeping
 # ============== Data management for each variables 
 # check the data type
 
-to_be_factors <- c("sex", "region", "gp_practice", "exposure", "covid_positive", "ethnicity",
+to_be_factors <- c("sex", "region", "exposure", "covid_positive", "ethnicity",
   "previous_covid_hosp","cov_cancer",  "cov_mental_health",   "cov_asthma",
   "cov_organ_transplant",   "cov_chronic_cardiac_disease",   "cov_chronic_liver_disease",
   "cov_stroke_dementia",   "cov_other_neuro_diseases",   "cov_ra_sle_psoriasis",
