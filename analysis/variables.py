@@ -47,7 +47,6 @@ def add_hx_gp_visits(dataset, num_months):
 
 
 # # Function codes for hospitalisation visit counts：
-# Q: if a person stayed in a hospital for more than one month, is it one adm? 
 def add_hos_visits(dataset, from_date, num_months):
     # Number of Hospitalisation within `num_months` of `from_date`
     num_visits = hospital_admissions \
