@@ -35,7 +35,10 @@ now_visits <- c("gp_visit_m1", "gp_visit_m2", "gp_visit_m3", "gp_visit_m4", "gp_
 # # 1. Exposure/cases:
 hx_cases <- read_csv(here("output", "hx_matched_cases_with_ehr.csv"), 
                                       col_types = cols(index_date = col_date(format = "%Y-%m-%d"), 
-                                                       bmi_date = col_skip()))
+                                                       bmi_date = col_skip(),
+                                                       end_death = col_date(format = "%Y-%m-%d"), 
+                                                       end_deregist = col_date(format = "%Y-%m-%d"), 
+                                                       end_lc_cure = col_date(format = "%Y-%m-%d")))
 # subset the historical cases: 
 hx_exp <- hx_cases %>% dplyr::select(all_of(vars), all_of(hx_visits)) %>% mutate(time = 0)
 hx_exp <- setnames(hx_exp, old = hx_visits, new = now_visits) # Rename variables for later combinations
@@ -46,8 +49,11 @@ now_exp <- hx_cases %>% dplyr::select(all_of(vars), all_of(now_visits)) %>% muta
 
 # # 2. Comparators:
 hx_control <- read_csv(here("output", "hx_matched_control_with_ehr.csv"), 
-                                        col_types = cols(index_date = col_date(format = "%Y-%m-%d"), 
-                                                         bmi_date = col_skip()))
+                       col_types = cols(index_date = col_date(format = "%Y-%m-%d"), 
+                                        bmi_date = col_skip(),
+                                        end_death = col_date(format = "%Y-%m-%d"), 
+                                        end_deregist = col_date(format = "%Y-%m-%d"), 
+                                        end_lc_cure = col_date(format = "%Y-%m-%d")))
 # subset the historical cases: 
 hx_com <- hx_control %>% dplyr::select(all_of(vars), all_of(hx_visits)) %>% mutate(time = 0) 
 hx_com <- setnames(hx_com, old = hx_visits, new = now_visits) # Rename variables for later combinations
