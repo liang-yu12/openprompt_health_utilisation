@@ -204,4 +204,5 @@ actions:
       r:latest analysis/st05_did_model.R
     outputs: 
       moderately_sensitive: 
-        plot_total_costs: "output/model_compare_aic.csv"
+        model_comparison: "output/model_comparison.csv"
+        model_results: "output/results_models.csv"
