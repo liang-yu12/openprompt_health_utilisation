@@ -59,7 +59,9 @@ dataset.cov_hiv = hiv.exists_for_patient()
 dataset.cov_aplastic_anemia = aplastic_anemia.exists_for_patient()
 dataset.cov_permanent_immune_suppress = permanent_immune_suppress.exists_for_patient()
 dataset.cov_temporary_immune_suppress = temporary_immune_suppress.exists_for_patient()
-
+dataset.end_death = death_date
+dataset.end_deregist = end_reg_date
+dataset.end_lc_cure = lc_cure_date
 
 # Outcome visit
 # Historical GP visits: 2019-3-1 to 2020-3-1
