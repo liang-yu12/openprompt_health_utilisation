@@ -1,63 +1,64 @@
 # Load all packages
 source("analysis/settings_packages.R")
 
-# Read in data-sets:
-visit <- c("gp_visit_m1",   "gp_visit_m2",   "gp_visit_m3",   "gp_visit_m4",   "gp_visit_m5",
-           "gp_visit_m6",   "gp_visit_m7",   "gp_visit_m8",   "gp_visit_m9",   "gp_visit_m10",
-           "gp_visit_m11",  "gp_visit_m12",  "hos_visit_m1",  "hos_visit_m2",  "hos_visit_m3",
-           "hos_visit_m4",  "hos_visit_m5",  "hos_visit_m6",  "hos_visit_m7",  "hos_visit_m8",
-           "hos_visit_m9",  "hos_visit_m10", "hos_visit_m11", "hos_visit_m12", "ae_visit_m1",
-           "ae_visit_m2",   "ae_visit_m3",   "ae_visit_m4",   "ae_visit_m5",   "ae_visit_m6", 
-           "ae_visit_m7",   "ae_visit_m8",   "ae_visit_m9",   "ae_visit_m10",  "ae_visit_m11",
-           "ae_visit_m12")
-
-hx_visit <- paste("hx_", visit, sep = "")
+# First define common variables to select:
+vars <- c("patient_id","age","sex","region","lc_dx","index_date","exposure",
+          "ethnicity" ,"imd", "bmi" ,"cov_cancer" ,"cov_mental_health" ,
+          "cov_asthma", "cov_organ_transplant" ,"cov_chronic_cardiac_disease", 
+          "cov_chronic_liver_disease", "cov_stroke_dementia" ,"cov_other_neuro_diseases",     
+          "cov_ra_sle_psoriasis", "cov_asplenia" ,"cov_hiv" ,"cov_aplastic_anemia",          
+          "cov_permanent_immune_suppress", "cov_temporary_immune_suppress")
 
 
-# # Exposure:
-lc_exp_matched <- fread(here("output", "hx_matched_cases_with_ehr.csv"), 
-                        colClasses = list(
-                              integer = 
-                                    c("age", "sex", "lc_dx",
-                                      "imd", "exposure", "ethnicity",
-                                      "cov_cancer",   "cov_mental_health",   "cov_asthma",
-                                      "cov_organ_transplant",   "cov_chronic_cardiac_disease",   "cov_chronic_liver_disease",
-                                      "cov_stroke_dementia",   "cov_other_neuro_diseases",   "cov_ra_sle_psoriasis",
-                                      "cov_asplenia",   "cov_hiv",   "cov_aplastic_anemia",   "cov_permanent_immune_suppress",
-                                      "cov_temporary_immune_suppress",  visit, hx_visit),
-                              character = c("region", "ethnicity"),
-                              Date = c( "index_date", "bmi_date"),
-                              double = c("bmi")
-                              
-                        )
-                        
-)
-lc_exp_matched %>% names
-
-#  # Comparators:
-com_matched <- fread(here("output", "hx_matched_control_with_ehr.csv"),
-                     colClasses = list(
-                           integer = 
-                                 c("age", "sex", "lc_dx",
-                                   "imd", "exposure", "ethnicity",
-                                   "cov_cancer",   "cov_mental_health",   "cov_asthma",
-                                   "cov_organ_transplant",   "cov_chronic_cardiac_disease",   "cov_chronic_liver_disease",
-                                   "cov_stroke_dementia",   "cov_other_neuro_diseases",   "cov_ra_sle_psoriasis",
-                                   "cov_asplenia",   "cov_hiv",   "cov_aplastic_anemia",   "cov_permanent_immune_suppress",
-                                   "cov_temporary_immune_suppress",  visit, hx_visit),
-                           character = c("region", "ethnicity"),
-                           Date = c( "index_date", "bmi_date"),
-                           double = c("bmi")
-                           
-                     )
-                     
-)
-com_matched %>% names
+hx_visits <- c("hx_gp_visit_m1", "hx_gp_visit_m2", "hx_gp_visit_m3", "hx_gp_visit_m4", "hx_gp_visit_m5",
+        "hx_gp_visit_m6", "hx_gp_visit_m7", "hx_gp_visit_m8", "hx_gp_visit_m9", "hx_gp_visit_m10",
+        "hx_gp_visit_m11", "hx_gp_visit_m12", "hx_hos_visit_m1", "hx_hos_visit_m2", "hx_hos_visit_m3",
+        "hx_hos_visit_m4", "hx_hos_visit_m5", "hx_hos_visit_m6", "hx_hos_visit_m7", "hx_hos_visit_m8",
+        "hx_hos_visit_m9", "hx_hos_visit_m10", "hx_hos_visit_m11", "hx_hos_visit_m12", "hx_ae_visit_m1",
+        "hx_ae_visit_m2", "hx_ae_visit_m3", "hx_ae_visit_m4", "hx_ae_visit_m5", "hx_ae_visit_m6",
+        "hx_ae_visit_m7", "hx_ae_visit_m8", "hx_ae_visit_m9", "hx_ae_visit_m10", "hx_ae_visit_m11",
+        "hx_ae_visit_m12")
 
 
-#  combine two datasets
-hx_matched_data <- bind_rows(lc_exp_matched, com_matched)
-hx_matched_data %>% names
+now_visits <- c("gp_visit_m1", "gp_visit_m2", "gp_visit_m3", "gp_visit_m4", "gp_visit_m5", "gp_visit_m6",
+             "gp_visit_m7", "gp_visit_m8", "gp_visit_m9", "gp_visit_m10", "gp_visit_m11", "gp_visit_m12",
+             "hos_visit_m1", "hos_visit_m2", "hos_visit_m3", "hos_visit_m4", "hos_visit_m5", "hos_visit_m6",
+             "hos_visit_m7", "hos_visit_m8", "hos_visit_m9", "hos_visit_m10", "hos_visit_m11", "hos_visit_m12",
+             "ae_visit_m1", "ae_visit_m2", "ae_visit_m3", "ae_visit_m4", "ae_visit_m5", "ae_visit_m6",
+             "ae_visit_m7", "ae_visit_m8", "ae_visit_m9", "ae_visit_m10", "ae_visit_m11", "ae_visit_m12")
+
+
+# # 1. Exposure/cases:
+hx_cases <- read_csv(here("output", "hx_matched_cases_with_ehr.csv"), 
+                                      col_types = cols(index_date = col_date(format = "%Y-%m-%d"), 
+                                                       bmi_date = col_skip()))
+# subset the historical cases: 
+hx_exp <- hx_cases %>% dplyr::select(all_of(vars), all_of(hx_visits)) %>% mutate(time = 0)
+hx_exp <- setnames(hx_exp, old = hx_visits, new = now_visits) # Rename variables for later combinations
+
+# subset the current cases: 
+now_exp <- hx_cases %>% dplyr::select(all_of(vars), all_of(now_visits)) %>% mutate(time = 1)
+
+
+# # 2. Comparators:
+hx_control <- read_csv(here("output", "hx_matched_control_with_ehr.csv"), 
+                                        col_types = cols(index_date = col_date(format = "%Y-%m-%d"), 
+                                                         bmi_date = col_skip()))
+# subset the historical cases: 
+hx_com <- hx_control %>% dplyr::select(all_of(vars), all_of(hx_visits)) %>% mutate(time = 0) 
+hx_com <- setnames(hx_com, old = hx_visits, new = now_visits) # Rename variables for later combinations
+
+# subset the current cases: 
+now_com <- hx_control %>% dplyr::select(all_of(vars), all_of(now_visits)) %>% mutate(time = 1)
+
+
+
+#  combine four datasets
+hx_matched_data <- bind_rows(hx_exp, now_exp, hx_com, now_com)
+
+
+
+
 
 hx_matched_data$exposure <- hx_matched_data$exposure %>% 
       factor(label = c("Comparator", "Long COVID exposure"))
