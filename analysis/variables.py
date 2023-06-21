@@ -41,8 +41,8 @@ def add_visits(dataset, from_date, num_months):
 def add_hx_gp_visits(dataset, num_months):
     # Number of GP visits within `num_months` of `from_date`
     num_visits = appointments \
-        .where((appointments.start_date >= (hx_study_start_date) &
-              (appointments.start_date <= (hx_study_start_date + days(num_months * 30))))) \
+        .where((appointments.start_date >= hx_study_start_date) &
+              (appointments.start_date <= (hx_study_start_date + days(num_months * 30)))) \
         .count_for_patient()
     setattr(dataset, f"hx_gp_visit_m{num_months}", num_visits)
 
@@ -60,7 +60,7 @@ def add_hos_visits(dataset, from_date, num_months):
 def add_hx_hos_visits(dataset, num_months):
     # Number of Hospitalisation within `num_months` of `from_date`
     num_visits = hospital_admissions \
-        .where((hospital_admissions.admission_date >= (hx_study_start_date)) &
+        .where((hospital_admissions.admission_date >= hx_study_start_date) &
               (hospital_admissions.discharge_date  <= (hx_study_start_date + days(num_months * 30)))) \
         .count_for_patient()
     setattr(dataset, f"hx_hos_visit_m{num_months}", num_visits)
@@ -79,7 +79,7 @@ def add_ae_visits(dataset, from_date, num_months):
 def add_hx_ae_visits(dataset, num_months):
     # Number of A&E visits within `num_months` of `from_date`
     num_visits = emergency_care_attendances \
-        .where((emergency_care_attendances.arrival_date >= (hx_study_start_date)) &
+        .where((emergency_care_attendances.arrival_date >= hx_study_start_date) &
               (emergency_care_attendances.arrival_date  <= (hx_study_start_date + days(num_months * 30)))) \
         .count_for_patient()
     setattr(dataset, f"hx_ae_visit_m{num_months}", num_visits)
