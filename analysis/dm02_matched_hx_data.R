@@ -1,7 +1,7 @@
 # Load all packages
 source("analysis/settings_packages.R")
 
-# Initial data management for DID structure:
+# Data management for DID structure:----
 # Explanation: Need to create a long table specifying the time period and the exposure group, 
 # So that in the following analysis we can add the interaction term in the DID model 
 
@@ -32,7 +32,6 @@ now_visits <- c("gp_visit_m1", "gp_visit_m2", "gp_visit_m3", "gp_visit_m4", "gp_
              "ae_visit_m1", "ae_visit_m2", "ae_visit_m3", "ae_visit_m4", "ae_visit_m5", "ae_visit_m6",
              "ae_visit_m7", "ae_visit_m8", "ae_visit_m9", "ae_visit_m10", "ae_visit_m11", "ae_visit_m12")
 
-
 # # 1. Exposure/cases:
 hx_cases <- read_csv(here("output", "hx_matched_cases_with_ehr.csv"), 
                                       col_types = cols(index_date = col_date(format = "%Y-%m-%d"), 
@@ -57,17 +56,11 @@ hx_com <- setnames(hx_com, old = hx_visits, new = now_visits) # Rename variables
 now_com <- hx_control %>% dplyr::select(all_of(vars), all_of(now_visits)) %>% mutate(time = 1)
 
 
-
-#  combine four datasets
+# # 3. combine four datasets
 hx_matched_data <- bind_rows(hx_exp, now_exp, hx_com, now_com)
 
 
-
-
-
-hx_matched_data$exposure <- hx_matched_data$exposure %>% 
-      factor(label = c("Comparator", "Long COVID exposure"))
-
+# Managing other variables: ------
 
 hx_matched_data <- hx_matched_data %>% mutate(
       imd_q5 = cut2(imd, g = 5),
@@ -101,9 +94,25 @@ hx_matched_data <- hx_matched_data %>% mutate(
       )
 )
 
-# hx_matched_data$imd_q5 <- factor(hx_matched_data$imd_q5, 
-#                                  lebels = c("least_deprived", 
-#                                            "2_deprived",
-#                                            "3_deprived",
-#                                            "4_deprived",
-#                                            "most_deprived"))
+
+# set as factors:
+hx_matched_data$exposure <- hx_matched_data$exposure %>% 
+      factor(label = c("Comparator", "Long COVID exposure"))
+
+to_be_factors <- c("sex", "region", "ethnicity", "cov_cancer",  "cov_mental_health",   
+                   "cov_asthma", "cov_organ_transplant",   "cov_chronic_cardiac_disease",   
+                   "cov_chronic_liver_disease", "cov_stroke_dementia", "cov_other_neuro_diseases",   
+                   "cov_ra_sle_psoriasis", "cov_asplenia", "cov_hiv", "cov_aplastic_anemia",   
+                   "cov_permanent_immune_suppress", "cov_temporary_immune_suppress")
+hx_matched_data[to_be_factors] <- lapply(hx_matched_data[to_be_factors], as.factor)
+
+# drop unused levels
+hx_matched_data[to_be_factors] <- lapply(hx_matched_data[to_be_factors], droplevels)
+
+
+# label the imd cat
+levels(hx_matched_data$imd_q5) <- c("least_deprived",
+                                 "2_deprived",
+                                 "3_deprived",
+                                 "4_deprived",
+                                 "most_deprived")
