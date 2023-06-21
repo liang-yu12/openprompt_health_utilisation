@@ -197,3 +197,11 @@ actions:
     outputs: 
       moderately_sensitive: 
         plot_total_costs: "output/st_fig_04_cumulative_costs.png"
+        
+  report_05_historical_did_model:
+    needs: [import_matched_historical_exposure, import_matched_historical_controls]
+    run: 
+      r:latest analysis/st05_did_model.R
+    outputs: 
+      moderately_sensitive: 
+        plot_total_costs: "output/model_compare_aic.csv"
