@@ -1,7 +1,7 @@
 # Load all packages
 source("analysis/settings_packages.R")
 
-# Data management for DID structure:----
+# 1. Data management for DID structure:----
 # Explanation: Need to create a long table specifying the time period and the exposure group, 
 # So that in the following analysis we can add the interaction term in the DID model 
 
@@ -15,6 +15,11 @@ vars <- c("patient_id","age","sex","region","lc_dx","index_date","exposure",
           "cov_asplenia" ,"cov_hiv" ,"cov_aplastic_anemia",          
           "cov_permanent_immune_suppress", "cov_temporary_immune_suppress")
 
+comorbidities <- c("cov_cancer",  "cov_mental_health",   "cov_asthma",
+                   "cov_organ_transplant",   "cov_chronic_cardiac_disease",   "cov_chronic_liver_disease",
+                   "cov_stroke_dementia",   "cov_other_neuro_diseases",   "cov_ra_sle_psoriasis",
+                   "cov_asplenia",   "cov_hiv",   "cov_aplastic_anemia",   "cov_permanent_immune_suppress",
+                   "cov_temporary_immune_suppress")
 
 hx_visits <- c("hx_gp_visit_m1", "hx_gp_visit_m2", "hx_gp_visit_m3", "hx_gp_visit_m4", "hx_gp_visit_m5",
         "hx_gp_visit_m6", "hx_gp_visit_m7", "hx_gp_visit_m8", "hx_gp_visit_m9", "hx_gp_visit_m10",
@@ -34,7 +39,7 @@ now_visits <- c("gp_visit_m1", "gp_visit_m2", "gp_visit_m3", "gp_visit_m4", "gp_
              "ae_visit_m7", "ae_visit_m8", "ae_visit_m9", "ae_visit_m10", "ae_visit_m11", "ae_visit_m12")
 
 
-# # 1. Exposure/cases:-----
+## Exposure/cases:-----
 hx_cases <- read_csv(here("output", "hx_matched_cases_with_ehr.csv"), 
                                       col_types = cols(index_date = col_date(format = "%Y-%m-%d"), 
                                                        bmi_date = col_skip(),
@@ -149,14 +154,14 @@ now_exp <- now_exp %>%
 
 now_exp$end_date <- NULL # remove for combine
 
-# # 2. Comparators:
+## Comparators: -----
 hx_control <- read_csv(here("output", "hx_matched_control_with_ehr.csv"), 
                        col_types = cols(index_date = col_date(format = "%Y-%m-%d"), 
                                         bmi_date = col_skip(),
                                         end_death = col_date(format = "%Y-%m-%d"), 
                                         end_deregist = col_date(format = "%Y-%m-%d"), 
                                         end_lc_cure = col_date(format = "%Y-%m-%d")))
-# subset the historical cases: 
+### subset the historical cases: 
 hx_com <- hx_control %>% dplyr::select(all_of(vars), all_of(hx_visits)) %>% mutate(time = 0) 
 hx_com <- setnames(hx_com, old = hx_visits, new = now_visits) # Rename variables for later combinations
 hx_com <- hx_com %>% mutate(
@@ -263,12 +268,10 @@ now_com <- now_com %>%
 
 now_com$end_date <- NULL
 
-# # 3. combine four datasets
+### Combine four datasets
 hx_matched_data <- bind_rows(hx_exp, now_exp, hx_com, now_com)
 
-
-# Managing other variables: ------
-
+# 2. Managing other variables: ------
 hx_matched_data <- hx_matched_data %>% mutate(
       imd_q5 = cut2(imd, g = 5),
       ethnicity_6 = factor(
@@ -302,24 +305,50 @@ hx_matched_data <- hx_matched_data %>% mutate(
 )
 
 
-# set as factors:
+### set as factors:
 hx_matched_data$exposure <- hx_matched_data$exposure %>% 
       factor(label = c("Comparator", "Long COVID exposure"))
 
-to_be_factors <- c("sex", "region", "ethnicity", "cov_cancer",  "cov_mental_health",   
-                   "cov_asthma", "cov_organ_transplant",   "cov_chronic_cardiac_disease",   
-                   "cov_chronic_liver_disease", "cov_stroke_dementia", "cov_other_neuro_diseases",   
-                   "cov_ra_sle_psoriasis", "cov_asplenia", "cov_hiv", "cov_aplastic_anemia",   
-                   "cov_permanent_immune_suppress", "cov_temporary_immune_suppress")
+to_be_factors <- c("sex", "region", "ethnicity")
 hx_matched_data[to_be_factors] <- lapply(hx_matched_data[to_be_factors], as.factor)
 
-# drop unused levels
+### drop unused levels
 hx_matched_data[to_be_factors] <- lapply(hx_matched_data[to_be_factors], droplevels)
 
 
-# label the imd cat
+### label the imd cat
 levels(hx_matched_data$imd_q5) <- c("least_deprived",
                                  "2_deprived",
                                  "3_deprived",
                                  "4_deprived",
                                  "most_deprived")
+
+### number of comorbidities:
+hx_matched_data[comorbidities] <- lapply(hx_matched_data[comorbidities], as.logical)
+hx_matched_data$number_comorbidities <- rowSums(hx_matched_data[comorbidities], na.rm = T) # add them up
+
+hx_matched_data <- hx_matched_data %>% 
+      mutate(number_comorbidities_cat = case_when(
+            number_comorbidities ==0 ~ 0,
+            number_comorbidities ==1 ~ 1,
+            number_comorbidities ==2 ~ 2,
+            number_comorbidities >=3 ~ 3)) 
+
+hx_matched_data$number_comorbidities_cat <- hx_matched_data$number_comorbidities_cat %>% as.factor()
+
+hx_matched_data %>% names
+
+# 3. Combine the healthcare visits-------
+hx_matched_data$all_month1 <- rowSums(hx_matched_data[, grepl("m1$", names(hx_matched_data)), with = FALSE], na.rm = T)
+hx_matched_data$all_month2 <- rowSums(hx_matched_data[, grepl("m2$", names(hx_matched_data)), with = FALSE], na.rm = T)
+hx_matched_data$all_month3 <- rowSums(hx_matched_data[, grepl("m3$", names(hx_matched_data)), with = FALSE], na.rm = T)
+hx_matched_data$all_month4 <- rowSums(hx_matched_data[, grepl("m4$", names(hx_matched_data)), with = FALSE], na.rm = T)
+hx_matched_data$all_month5 <- rowSums(hx_matched_data[, grepl("m5$", names(hx_matched_data)), with = FALSE], na.rm = T)
+hx_matched_data$all_month6 <- rowSums(hx_matched_data[, grepl("m6$", names(hx_matched_data)), with = FALSE], na.rm = T)
+hx_matched_data$all_month7 <- rowSums(hx_matched_data[, grepl("m7$", names(hx_matched_data)), with = FALSE], na.rm = T)
+hx_matched_data$all_month8 <- rowSums(hx_matched_data[, grepl("m8$", names(hx_matched_data)), with = FALSE], na.rm = T)
+hx_matched_data$all_month9 <- rowSums(hx_matched_data[, grepl("m9$", names(hx_matched_data)), with = FALSE], na.rm = T)
+hx_matched_data$all_month10 <- rowSums(hx_matched_data[, grepl("m10$", names(hx_matched_data)), with = FALSE], na.rm = T)
+hx_matched_data$all_month11 <- rowSums(hx_matched_data[, grepl("m11$", names(hx_matched_data)), with = FALSE], na.rm = T)
+hx_matched_data$all_month12 <- rowSums(hx_matched_data[, grepl("m12$", names(hx_matched_data)), with = FALSE], na.rm = T)
+
