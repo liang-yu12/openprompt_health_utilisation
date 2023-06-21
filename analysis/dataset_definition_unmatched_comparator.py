@@ -26,6 +26,7 @@ dataset.define_population(
     & registration.exists_for_patient() 
     & target_practices.exists_for_patient()
     & patients.sex.contains("male")
+    & ((lc_cure_date > lc_dx_date) | (lc_cure_date is None))
 )
 dataset.age = age
 dataset.sex = patients.sex
