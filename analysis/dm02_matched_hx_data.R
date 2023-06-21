@@ -1,6 +1,11 @@
 # Load all packages
 source("analysis/settings_packages.R")
 
+# Initial data management for DID structure:
+# Explanation: Need to create a long table specifying the time period and the exposure group, 
+# So that in the following analysis we can add the interaction term in the DID model 
+
+
 # First define common variables to select:
 vars <- c("patient_id","age","sex","region","lc_dx","index_date","exposure",
           "ethnicity" ,"imd", "bmi" ,"cov_cancer" ,"cov_mental_health" ,
