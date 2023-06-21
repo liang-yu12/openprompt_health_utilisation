@@ -50,6 +50,7 @@ dataset.define_population(
     & (age <=100)
     & (patients.sex.contains("male"))
     & ((death_date > study_start_date) | (death_date is None))
+    & ((lc_cure_date > lc_dx_date) | (lc_cure_date is None))
 )
 dataset.age = age
 dataset.sex = patients.sex
