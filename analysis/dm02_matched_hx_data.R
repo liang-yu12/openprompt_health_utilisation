@@ -8,10 +8,11 @@ source("analysis/settings_packages.R")
 
 # First define common variables to select:
 vars <- c("patient_id","age","sex","region","lc_dx","index_date","exposure",
-          "ethnicity" ,"imd", "bmi" ,"cov_cancer" ,"cov_mental_health" ,
-          "cov_asthma", "cov_organ_transplant" ,"cov_chronic_cardiac_disease", 
-          "cov_chronic_liver_disease", "cov_stroke_dementia" ,"cov_other_neuro_diseases",     
-          "cov_ra_sle_psoriasis", "cov_asplenia" ,"cov_hiv" ,"cov_aplastic_anemia",          
+          "ethnicity" ,"imd", "bmi", "end_death", "end_deregist", "end_lc_cure",
+          "cov_cancer" ,"cov_mental_health", "cov_asthma", "cov_organ_transplant",
+          "cov_chronic_cardiac_disease", "cov_chronic_liver_disease", 
+          "cov_stroke_dementia" ,"cov_other_neuro_diseases", "cov_ra_sle_psoriasis", 
+          "cov_asplenia" ,"cov_hiv" ,"cov_aplastic_anemia",          
           "cov_permanent_immune_suppress", "cov_temporary_immune_suppress")
 
 
@@ -32,20 +33,121 @@ now_visits <- c("gp_visit_m1", "gp_visit_m2", "gp_visit_m3", "gp_visit_m4", "gp_
              "ae_visit_m1", "ae_visit_m2", "ae_visit_m3", "ae_visit_m4", "ae_visit_m5", "ae_visit_m6",
              "ae_visit_m7", "ae_visit_m8", "ae_visit_m9", "ae_visit_m10", "ae_visit_m11", "ae_visit_m12")
 
-# # 1. Exposure/cases:
+
+# # 1. Exposure/cases:-----
 hx_cases <- read_csv(here("output", "hx_matched_cases_with_ehr.csv"), 
                                       col_types = cols(index_date = col_date(format = "%Y-%m-%d"), 
                                                        bmi_date = col_skip(),
                                                        end_death = col_date(format = "%Y-%m-%d"), 
                                                        end_deregist = col_date(format = "%Y-%m-%d"), 
                                                        end_lc_cure = col_date(format = "%Y-%m-%d")))
-# subset the historical cases: 
+### subset the historical cases: 
 hx_exp <- hx_cases %>% dplyr::select(all_of(vars), all_of(hx_visits)) %>% mutate(time = 0)
 hx_exp <- setnames(hx_exp, old = hx_visits, new = now_visits) # Rename variables for later combinations
 
-# subset the current cases: 
+### Define the follow-up time:
+hx_exp <- hx_exp %>% mutate(
+      fu_time_m1 = 30,
+      fu_time_m2 = 60,
+      fu_time_m3 = 90,
+      fu_time_m4 = 120,
+      fu_time_m5 = 150,
+      fu_time_m6 = 180,
+      fu_time_m7 = 210,
+      fu_time_m8 = 240,
+      fu_time_m9 = 270,
+      fu_time_m10 = 300,
+      fu_time_m11 = 330,
+      fu_time_m12 = 360)
+
+### subset the current cases: 
 now_exp <- hx_cases %>% dplyr::select(all_of(vars), all_of(now_visits)) %>% mutate(time = 1)
 
+### Define the end date of current exposure group:
+now_exp <- now_exp %>% mutate(
+            end_date = pmin(as.numeric(end_death), 
+                            as.numeric(end_deregist), 
+                            as.numeric(end_lc_cure), 
+                            as.numeric(as.Date(2023-01-31)), na.rm = T)
+            )
+### calculate the follow-up time for each month:
+now_exp <- now_exp %>% 
+      mutate(
+      fu_time_m1 = as.double(case_when(
+            as.numeric(index_date) + 30*1 < as.numeric(end_date) ~ 30*1,    #t2 censor later
+            (as.numeric(end_date) <= (as.numeric(index_date) + 30*1)) & ((as.numeric(end_date) - as.numeric(index_date)) > 30*(1-1)) ~ 
+                  (as.numeric(end_date) - as.numeric(index_date)), # t2 censor before follow 
+            (as.numeric(end_date) - as.numeric(index_date)) <= 30*(1-1) ~ NA_real_ # already censored 
+      )),
+      fu_time_m2 = as.double(case_when(
+            as.numeric(index_date) + 30*2 < as.numeric(end_date) ~ 30*2,    #t2 censor later
+            (as.numeric(end_date) <= (as.numeric(index_date) + 30*2)) & ((as.numeric(end_date) - as.numeric(index_date)) > 30*(2-1)) ~ 
+                  (as.numeric(end_date) - as.numeric(index_date)), # t2 censor before follow 
+            (as.numeric(end_date) - as.numeric(index_date)) <= 30*(2-1) ~ NA_real_ # already censored 
+      )),
+      fu_time_m3 = as.double(case_when(
+            as.numeric(index_date) + 30*3 < as.numeric(end_date) ~ 30*3,    #t2 censor later
+            (as.numeric(end_date) <= (as.numeric(index_date) + 30*3)) & ((as.numeric(end_date) - as.numeric(index_date)) > 30*(3-1)) ~ 
+                  (as.numeric(end_date) - as.numeric(index_date)), # t2 censor before follow 
+            (as.numeric(end_date) - as.numeric(index_date)) <= 30*(3-1) ~ NA_real_ # already censored 
+      )),
+      fu_time_m4 = as.double(case_when(
+            as.numeric(index_date) + 30*4 < as.numeric(end_date) ~ 30*4,    #t2 censor later
+            (as.numeric(end_date) <= (as.numeric(index_date) + 30*4)) & ((as.numeric(end_date) - as.numeric(index_date)) > 30*(4-1)) ~ 
+                  (as.numeric(end_date) - as.numeric(index_date)), # t2 censor before follow 
+            (as.numeric(end_date) - as.numeric(index_date)) <= 30*(4-1) ~ NA_real_ # already censored 
+      )),
+      fu_time_m5 = as.double(case_when(
+            as.numeric(index_date) + 30*5 < as.numeric(end_date) ~ 30*5,    #t2 censor later
+            (as.numeric(end_date) <= (as.numeric(index_date) + 30*5)) & ((as.numeric(end_date) - as.numeric(index_date)) > 30*(5-1)) ~ 
+                  (as.numeric(end_date) - as.numeric(index_date)), # t2 censor before follow 
+            (as.numeric(end_date) - as.numeric(index_date)) <= 30*(5-1) ~ NA_real_ # already censored 
+      )),
+      fu_time_m6 = as.double(case_when(
+            as.numeric(index_date) + 30*6 < as.numeric(end_date) ~ 30*6,    #t2 censor later
+            (as.numeric(end_date) <= (as.numeric(index_date) + 30*6)) & ((as.numeric(end_date) - as.numeric(index_date)) > 30*(6-1)) ~ 
+                  (as.numeric(end_date) - as.numeric(index_date)), # t2 censor before follow 
+            (as.numeric(end_date) - as.numeric(index_date)) <= 30*(6-1) ~ NA_real_ # already censored 
+      )),
+      fu_time_m7 = as.double(case_when(
+            as.numeric(index_date) + 30*7 < as.numeric(end_date) ~ 30*7,    #t2 censor later
+            (as.numeric(end_date) <= (as.numeric(index_date) + 30*7)) & ((as.numeric(end_date) - as.numeric(index_date)) > 30*(7-1)) ~ 
+                  (as.numeric(end_date) - as.numeric(index_date)), # t2 censor before follow 
+            (as.numeric(end_date) - as.numeric(index_date)) <= 30*(7-1) ~ NA_real_ # already censored 
+      )),
+      fu_time_m8 = as.double(case_when(
+            as.numeric(index_date) + 30*8 < as.numeric(end_date) ~ 30*8,    #t2 censor later
+            (as.numeric(end_date) <= (as.numeric(index_date) + 30*8)) & ((as.numeric(end_date) - as.numeric(index_date)) > 30*(8-1)) ~ 
+                  (as.numeric(end_date) - as.numeric(index_date)), # t2 censor before follow 
+            (as.numeric(end_date) - as.numeric(index_date)) <= 30*(8-1) ~ NA_real_ # already censored 
+      )),
+      fu_time_m9 = as.double(case_when(
+            as.numeric(index_date) + 30*9 < as.numeric(end_date) ~ 30*9,    #t2 censor later
+            (as.numeric(end_date) <= (as.numeric(index_date) + 30*9)) & ((as.numeric(end_date) - as.numeric(index_date)) > 30*(9-1)) ~ 
+                  (as.numeric(end_date) - as.numeric(index_date)), # t2 censor before follow 
+            (as.numeric(end_date) - as.numeric(index_date)) <= 30*(9-1) ~ NA_real_ # already censored 
+      )),
+      fu_time_m10 = as.double(case_when(
+            as.numeric(index_date) + 30*10 < as.numeric(end_date) ~ 30*10,    #t2 censor later
+            (as.numeric(end_date) <= (as.numeric(index_date) + 30*10)) & ((as.numeric(end_date) - as.numeric(index_date)) > 30*(10-1)) ~ 
+                  (as.numeric(end_date) - as.numeric(index_date)), # t2 censor before follow 
+            (as.numeric(end_date) - as.numeric(index_date)) <= 30*(10-1) ~ NA_real_ # already censored 
+      )),
+      fu_time_m11 = as.double(case_when(
+            as.numeric(index_date) + 30*11 < as.numeric(end_date) ~ 30*11,    #t2 censor later
+            (as.numeric(end_date) <= (as.numeric(index_date) + 30*11)) & ((as.numeric(end_date) - as.numeric(index_date)) > 30*(11-1)) ~ 
+                  (as.numeric(end_date) - as.numeric(index_date)), # t2 censor before follow 
+            (as.numeric(end_date) - as.numeric(index_date)) <= 30*(11-1) ~ NA_real_ # already censored 
+      )),
+      fu_time_m12 = as.double(case_when(
+            as.numeric(index_date) + 30*12 < as.numeric(end_date) ~ 30*12,    #t2 censor later
+            (as.numeric(end_date) <= (as.numeric(index_date) + 30*12)) & ((as.numeric(end_date) - as.numeric(index_date)) > 30*(12-1)) ~ 
+                  (as.numeric(end_date) - as.numeric(index_date)), # t2 censor before follow 
+            (as.numeric(end_date) - as.numeric(index_date)) <= 30*(12-1) ~ NA_real_ # already censored 
+      ))
+      )
+
+now_exp$end_date <- NULL # remove for combine
 
 # # 2. Comparators:
 hx_control <- read_csv(here("output", "hx_matched_control_with_ehr.csv"), 
@@ -57,10 +159,109 @@ hx_control <- read_csv(here("output", "hx_matched_control_with_ehr.csv"),
 # subset the historical cases: 
 hx_com <- hx_control %>% dplyr::select(all_of(vars), all_of(hx_visits)) %>% mutate(time = 0) 
 hx_com <- setnames(hx_com, old = hx_visits, new = now_visits) # Rename variables for later combinations
+hx_com <- hx_com %>% mutate(
+      fu_time_m1 = 30,
+      fu_time_m2 = 60,
+      fu_time_m3 = 90,
+      fu_time_m4 = 120,
+      fu_time_m5 = 150,
+      fu_time_m6 = 180,
+      fu_time_m7 = 210,
+      fu_time_m8 = 240,
+      fu_time_m9 = 270,
+      fu_time_m10 = 300,
+      fu_time_m11 = 330,
+      fu_time_m12 = 360)
 
-# subset the current cases: 
+### subset the current cases: 
 now_com <- hx_control %>% dplyr::select(all_of(vars), all_of(now_visits)) %>% mutate(time = 1)
 
+### Define the end date of current exposure group:
+now_com <- now_com %>% mutate(
+      end_date = pmin(as.numeric(end_death), 
+                      as.numeric(end_deregist), 
+                      as.numeric(end_lc_cure), 
+                      as.numeric(as.Date(2023-01-31)), na.rm = T)
+)
+
+
+now_com <- now_com %>%
+      mutate(
+            fu_time_m1 = as.double(case_when(
+                  as.numeric(index_date) + 30*1 < as.numeric(end_date) ~ 30*1,    #t2 censor later
+                  (as.numeric(end_date) <= (as.numeric(index_date) + 30*1)) & ((as.numeric(end_date) - as.numeric(index_date)) > 30*(1-1)) ~ 
+                        (as.numeric(end_date) - as.numeric(index_date)), # t2 censor before follow 
+                  (as.numeric(end_date) - as.numeric(index_date)) <= 30*(1-1) ~ NA_real_ # already censored 
+            )),
+            fu_time_m2 = as.double(case_when(
+                  as.numeric(index_date) + 30*2 < as.numeric(end_date) ~ 30*2,    #t2 censor later
+                  (as.numeric(end_date) <= (as.numeric(index_date) + 30*2)) & ((as.numeric(end_date) - as.numeric(index_date)) > 30*(2-1)) ~ 
+                        (as.numeric(end_date) - as.numeric(index_date)), # t2 censor before follow 
+                  (as.numeric(end_date) - as.numeric(index_date)) <= 30*(2-1) ~ NA_real_ # already censored 
+            )),
+            fu_time_m3 = as.double(case_when(
+                  as.numeric(index_date) + 30*3 < as.numeric(end_date) ~ 30*3,    #t2 censor later
+                  (as.numeric(end_date) <= (as.numeric(index_date) + 30*3)) & ((as.numeric(end_date) - as.numeric(index_date)) > 30*(3-1)) ~ 
+                        (as.numeric(end_date) - as.numeric(index_date)), # t2 censor before follow 
+                  (as.numeric(end_date) - as.numeric(index_date)) <= 30*(3-1) ~ NA_real_ # already censored 
+            )),
+            fu_time_m4 = as.double(case_when(
+                  as.numeric(index_date) + 30*4 < as.numeric(end_date) ~ 30*4,    #t2 censor later
+                  (as.numeric(end_date) <= (as.numeric(index_date) + 30*4)) & ((as.numeric(end_date) - as.numeric(index_date)) > 30*(4-1)) ~ 
+                        (as.numeric(end_date) - as.numeric(index_date)), # t2 censor before follow 
+                  (as.numeric(end_date) - as.numeric(index_date)) <= 30*(4-1) ~ NA_real_ # already censored 
+            )),
+            fu_time_m5 = as.double(case_when(
+                  as.numeric(index_date) + 30*5 < as.numeric(end_date) ~ 30*5,    #t2 censor later
+                  (as.numeric(end_date) <= (as.numeric(index_date) + 30*5)) & ((as.numeric(end_date) - as.numeric(index_date)) > 30*(5-1)) ~ 
+                        (as.numeric(end_date) - as.numeric(index_date)), # t2 censor before follow 
+                  (as.numeric(end_date) - as.numeric(index_date)) <= 30*(5-1) ~ NA_real_ # already censored 
+            )),
+            fu_time_m6 = as.double(case_when(
+                  as.numeric(index_date) + 30*6 < as.numeric(end_date) ~ 30*6,    #t2 censor later
+                  (as.numeric(end_date) <= (as.numeric(index_date) + 30*6)) & ((as.numeric(end_date) - as.numeric(index_date)) > 30*(6-1)) ~ 
+                        (as.numeric(end_date) - as.numeric(index_date)), # t2 censor before follow 
+                  (as.numeric(end_date) - as.numeric(index_date)) <= 30*(6-1) ~ NA_real_ # already censored 
+            )),
+            fu_time_m7 = as.double(case_when(
+                  as.numeric(index_date) + 30*7 < as.numeric(end_date) ~ 30*7,    #t2 censor later
+                  (as.numeric(end_date) <= (as.numeric(index_date) + 30*7)) & ((as.numeric(end_date) - as.numeric(index_date)) > 30*(7-1)) ~ 
+                        (as.numeric(end_date) - as.numeric(index_date)), # t2 censor before follow 
+                  (as.numeric(end_date) - as.numeric(index_date)) <= 30*(7-1) ~ NA_real_ # already censored 
+            )),
+            fu_time_m8 = as.double(case_when(
+                  as.numeric(index_date) + 30*8 < as.numeric(end_date) ~ 30*8,    #t2 censor later
+                  (as.numeric(end_date) <= (as.numeric(index_date) + 30*8)) & ((as.numeric(end_date) - as.numeric(index_date)) > 30*(8-1)) ~ 
+                        (as.numeric(end_date) - as.numeric(index_date)), # t2 censor before follow 
+                  (as.numeric(end_date) - as.numeric(index_date)) <= 30*(8-1) ~ NA_real_ # already censored 
+            )),
+            fu_time_m9 = as.double(case_when(
+                  as.numeric(index_date) + 30*9 < as.numeric(end_date) ~ 30*9,    #t2 censor later
+                  (as.numeric(end_date) <= (as.numeric(index_date) + 30*9)) & ((as.numeric(end_date) - as.numeric(index_date)) > 30*(9-1)) ~ 
+                        (as.numeric(end_date) - as.numeric(index_date)), # t2 censor before follow 
+                  (as.numeric(end_date) - as.numeric(index_date)) <= 30*(9-1) ~ NA_real_ # already censored 
+            )),
+            fu_time_m10 = as.double(case_when(
+                  as.numeric(index_date) + 30*10 < as.numeric(end_date) ~ 30*10,    #t2 censor later
+                  (as.numeric(end_date) <= (as.numeric(index_date) + 30*10)) & ((as.numeric(end_date) - as.numeric(index_date)) > 30*(10-1)) ~ 
+                        (as.numeric(end_date) - as.numeric(index_date)), # t2 censor before follow 
+                  (as.numeric(end_date) - as.numeric(index_date)) <= 30*(10-1) ~ NA_real_ # already censored 
+            )),
+            fu_time_m11 = as.double(case_when(
+                  as.numeric(index_date) + 30*11 < as.numeric(end_date) ~ 30*11,    #t2 censor later
+                  (as.numeric(end_date) <= (as.numeric(index_date) + 30*11)) & ((as.numeric(end_date) - as.numeric(index_date)) > 30*(11-1)) ~ 
+                        (as.numeric(end_date) - as.numeric(index_date)), # t2 censor before follow 
+                  (as.numeric(end_date) - as.numeric(index_date)) <= 30*(11-1) ~ NA_real_ # already censored 
+            )),
+            fu_time_m12 = as.double(case_when(
+                  as.numeric(index_date) + 30*12 < as.numeric(end_date) ~ 30*12,    #t2 censor later
+                  (as.numeric(end_date) <= (as.numeric(index_date) + 30*12)) & ((as.numeric(end_date) - as.numeric(index_date)) > 30*(12-1)) ~ 
+                        (as.numeric(end_date) - as.numeric(index_date)), # t2 censor before follow 
+                  (as.numeric(end_date) - as.numeric(index_date)) <= 30*(12-1) ~ NA_real_ # already censored 
+            ))
+      )
+
+now_com$end_date <- NULL
 
 # # 3. combine four datasets
 hx_matched_data <- bind_rows(hx_exp, now_exp, hx_com, now_com)
