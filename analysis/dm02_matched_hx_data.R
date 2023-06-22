@@ -270,7 +270,7 @@ now_com$end_date <- NULL
 
 ### Combine four datasets
 hx_matched_data <- bind_rows(hx_exp, now_exp, hx_com, now_com)
-
+rm(hx_exp, now_exp, hx_com, now_com, hx_cases, hx_control)
 # 2. Managing other variables: ------
 hx_matched_data <- hx_matched_data %>% mutate(
       imd_q5 = cut2(imd, g = 5),
