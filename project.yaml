@@ -204,5 +204,5 @@ actions:
       r:latest analysis/st05_did_model.R
     outputs: 
       moderately_sensitive: 
-        model_comparison: "output/model_comparison.csv"
+        model_dispersion: "output/sup_st01_check_dispersion_poisson.csv"
         # model_results: "output/results_models.csv"
