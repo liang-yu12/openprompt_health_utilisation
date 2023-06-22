@@ -73,7 +73,7 @@ now_exp <- now_exp %>% mutate(
             end_date = pmin(as.numeric(end_death), 
                             as.numeric(end_deregist), 
                             as.numeric(end_lc_cure), 
-                            as.Date.numeric("2023-01-31", origin = "1970-01-01"), na.rm = T)
+                            as.numeric(as.Date("2023-01-31", origin = "1970-01-01")), na.rm = T)
             )
 ### calculate the follow-up time for each month:
 now_exp <- now_exp %>% 
@@ -186,7 +186,7 @@ now_com <- now_com %>% mutate(
       end_date = pmin(as.numeric(end_death), 
                       as.numeric(end_deregist), 
                       as.numeric(end_lc_cure), 
-                      as.Date.numeric("2023-01-31", origin = "1970-01-01"), na.rm = T)
+                      as.numeric(as.Date("2023-01-31", origin = "1970-01-01")), na.rm = T)
 )
 
 
