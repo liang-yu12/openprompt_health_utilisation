@@ -30,9 +30,14 @@ check_dispersion$dispersion <- summary(model_poisson)$deviance / df.residual(mod
 
 check_dispersion %>% write.csv(here("output", "sup_st01_check_dispersion_poisson.csv"), row.names = F)
 
+# Use negative binomial model: 
+glm.nb(all_month6 ~ exposure*time + offset(fu_time_m6),
+       data = hx_matched_data) %>% tidy() %>% 
+      write.csv(here("output", "results_models.csv"), row.names = F)
 
 
 
+hx_matched_data %>% names
 # # compare models:
 # bind_rows(
 #       model_nb %>% glance() %>% mutate(model = "Negative binomial - crude"),
