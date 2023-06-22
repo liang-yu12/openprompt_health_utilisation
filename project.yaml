@@ -205,4 +205,4 @@ actions:
     outputs: 
       moderately_sensitive: 
         model_dispersion: "output/sup_st01_check_dispersion_poisson.csv"
-        # model_results: "output/results_models.csv"
+        model_results: "output/results_models.csv"
