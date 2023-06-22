@@ -35,9 +35,6 @@ glm.nb(all_month6 ~ exposure*time + offset(fu_time_m6),
        data = hx_matched_data) %>% tidy() %>% 
       write.csv(here("output", "results_models.csv"), row.names = F)
 
-
-
-hx_matched_data %>% names
 # # compare models:
 # bind_rows(
 #       model_nb %>% glance() %>% mutate(model = "Negative binomial - crude"),
