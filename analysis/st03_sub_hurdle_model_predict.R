@@ -3,10 +3,20 @@ source("analysis/dm03_matched_define_monthly_follow_up_time.R")
 
 # For organising the outputs
 options(digits=2)
+class(matched_data$previous_covid_hosp)
+# Check the data type of previous_covid_hosp
+class(matched_data$previous_covid_hosp)
 
+# If it's not logical, convert it to logical
+matched_data$previous_covid_hosp <- as.logical(matched_data$previous_covid_hosp)
 
-hospitalised <- matched_data %>% subset(previous_covid_hosp == "T")
+hospitalised <- matched_data %>% filter(previous_covid_hosp == "TRUE")
 no_hostpitalised <- matched_data %>% subset(previous_covid_hosp == "F")
+
+
+vars <- c("age_cat", "sex", "region", "exposure", "all_month1", "follow_up_m1")
+lapply(no_hostpitalised[vars], summary)
+
 
 # A. Crude hurdle model ------------
 cumulative_visit_crude_fn <- function(visit, fu_time, data, month) {
