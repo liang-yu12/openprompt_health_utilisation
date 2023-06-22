@@ -13,7 +13,7 @@ cumulative_visit_crude_fn <- function(visit, fu_time, data, month) {
       
       # Create a hurdle model
       model <- hurdle(
-            visit ~ exposure + offset(fu_time) | age_cat + sex+ region,
+            visit ~ exposure + offset(log(fu_time)) | age_cat + sex+ region,
             data = data,
             zero.dist = "binomial",
             dist = "poisson"
@@ -143,7 +143,7 @@ cumulative_visit_partially_adj_fn <- function(visit, fu_time, data, month) {
       
       # Create a hurdle model
       model <- hurdle(
-            visit ~ exposure + sex + age_cat + offset(fu_time) | age_cat + sex+ region,
+            visit ~ exposure + sex + age_cat + offset(log(fu_time)) | age_cat + sex+ region,
             data = data,
             zero.dist = "binomial",
             dist = "poisson"
@@ -280,7 +280,7 @@ cumulative_visit_fully_adj_fn <- function(visit, fu_time, data, month) {
       # Create a hurdle model
       model <- hurdle(
             visit ~ exposure + sex + age_cat + cov_covid_vax_n_cat + bmi_cat + imd_q5 + ethnicity_6 + region + 
-                  number_comorbidities_cat + offset(fu_time) | age_cat + sex+ region,
+                  number_comorbidities_cat + offset(log(fu_time)) | age_cat + sex+ region,
             data = data,
             zero.dist = "binomial",
             dist = "poisson"
