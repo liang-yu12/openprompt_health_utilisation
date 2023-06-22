@@ -186,7 +186,7 @@ now_com <- now_com %>% mutate(
       end_date = pmin(as.numeric(end_death), 
                       as.numeric(end_deregist), 
                       as.numeric(end_lc_cure), 
-                      as.numeric(as.Date(2023-01-31)), na.rm = T)
+                      as.numeric(as.Date("2023-01-31")), na.rm = T)
 )
 
 
