@@ -201,7 +201,9 @@ actions:
     needs: [import_matched_historical_exposure, import_matched_historical_controls]
     run: 
       r:latest analysis/st05_did_model.R
-    outputs: 
+    outputs:
+      highly_sensitive: 
+        fitted_did: "output/predicted_did_counts.csv.gz"
       moderately_sensitive: 
         model_dispersion: "output/sup_st01_model_compare.csv"
-        # model_results: "output/results_models.csv"
+        summarised_did_predicted: "output/summarised_did_results.csv"
