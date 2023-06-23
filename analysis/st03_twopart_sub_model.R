@@ -9,8 +9,8 @@ no_na <- matched_data %>% filter(
 
 # subgroup analysis by previous hospitalisation:
 
-hospitalised <- no_na %>% subset(previous_covid_hosp == "T")
-no_hostpitalised <- no_na %>% subset(previous_covid_hosp == "F")
+hospitalised <- no_na %>% filter(previous_covid_hosp == "TRUE")
+no_hostpitalised <- no_na %>% filter(previous_covid_hosp == "FALSE")
 
 # Hospitalised people ------
 # function:
