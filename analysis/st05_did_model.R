@@ -43,6 +43,33 @@ crude_month_10 <- did_poisson_crude_fn(hx_matched_data$all_month10, hx_matched_d
 crude_month_11 <- did_poisson_crude_fn(hx_matched_data$all_month11, hx_matched_data$fu_time_m11)
 crude_month_12 <- did_poisson_crude_fn(hx_matched_data$all_month12, hx_matched_data$fu_time_m12)
 
+# Stats output
+stats_output <- bind_rows(
+      crude_month_1 %>% tidy(conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE) %>% 
+            mutate(model = "crude_month_1"),
+      crude_month_2 %>% tidy(conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE) %>% 
+            mutate(model = "crude_month_2"),
+      crude_month_3 %>% tidy(conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE) %>% 
+            mutate(model = "crude_month_3"),
+      crude_month_4 %>% tidy(conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE) %>% 
+            mutate(model = "crude_month_4"),
+      crude_month_5 %>% tidy(conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE) %>% 
+            mutate(model = "crude_month_5"),
+      crude_month_6 %>% tidy(conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE) %>% 
+            mutate(model = "crude_month_6"),
+      crude_month_7 %>% tidy(conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE) %>% 
+            mutate(model = "crude_month_7"),
+      crude_month_8 %>% tidy(conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE) %>% 
+            mutate(model = "crude_month_8"),
+      crude_month_9 %>% tidy(conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE) %>% 
+            mutate(model = "crude_month_9"),
+      crude_month_10 %>% tidy(conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE) %>% 
+            mutate(model = "crude_month_10"),
+      crude_month_11 %>% tidy(conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE) %>% 
+            mutate(model = "crude_month_11"),
+      crude_month_12 %>% tidy(conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE) %>% 
+            mutate(model = "crude_month_12")
+)
 
 # Obtain the fitted value: 
 # write a function for extracting fitted value
@@ -118,6 +145,39 @@ adjusted_month_9 <- did_poisson_adjusted_fn(hx_matched_data$all_month9, hx_match
 adjusted_month_10 <- did_poisson_adjusted_fn(hx_matched_data$all_month10, hx_matched_data$fu_time_m10)
 adjusted_month_11 <- did_poisson_adjusted_fn(hx_matched_data$all_month11, hx_matched_data$fu_time_m11)
 adjusted_month_12 <- did_poisson_adjusted_fn(hx_matched_data$all_month12, hx_matched_data$fu_time_m12)
+
+
+# save the stats output:
+
+stats_output <- bind_rows(stats_output,
+                          adjusted_month_1 %>% tidy(conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE) %>% 
+                                mutate(model = "adjusted_month_1"),
+                          adjusted_month_2 %>% tidy(conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE) %>% 
+                                mutate(model = "adjusted_month_2"),
+                          adjusted_month_3 %>% tidy(conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE) %>% 
+                                mutate(model = "adjusted_month_3"),
+                          adjusted_month_4 %>% tidy(conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE) %>% 
+                                mutate(model = "adjusted_month_4"),
+                          adjusted_month_5 %>% tidy(conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE) %>% 
+                                mutate(model = "adjusted_month_5"),
+                          adjusted_month_6 %>% tidy(conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE) %>% 
+                                mutate(model = "adjusted_month_6"),
+                          adjusted_month_7 %>% tidy(conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE) %>% 
+                                mutate(model = "adjusted_month_7"),
+                          adjusted_month_8 %>% tidy(conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE) %>% 
+                                mutate(model = "adjusted_month_8"),
+                          adjusted_month_9 %>% tidy(conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE) %>% 
+                                mutate(model = "adjusted_month_9"),
+                          adjusted_month_10 %>% tidy(conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE) %>% 
+                                mutate(model = "adjusted_month_10"),
+                          adjusted_month_11 %>% tidy(conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE) %>% 
+                                mutate(model = "adjusted_month_11"),
+                          adjusted_month_12 %>% tidy(conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE) %>% 
+                                mutate(model = "adjusted_month_12")
+)
+
+# save the results:
+stats_output %>% write_csv(here("output", "st05_did_stats.csv"))
 
 # Obtain the fitted value: 
 # write a function for extracting fitted value
@@ -203,4 +263,4 @@ summarised_results <-
             adjusted_visit_m11 = mean(adjusted_predicted_m11, na.rm = TRUE),
             adjusted_visit_m12 = mean(adjusted_predicted_m12, na.rm = TRUE)
       )
-summarised_results %>% write_csv(here("output", "summarised_did_results.csv"))
+summarised_results %>% write_csv(here("output", "st05_summarised_did_predicted_results"))
