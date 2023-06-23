@@ -3,7 +3,7 @@ source("analysis/dm03_matched_define_monthly_follow_up_time.R")
 
 # For organising the outputs
 options(digits=2)
-class(matched_data$previous_covid_hosp)
+
 # Check the data type of previous_covid_hosp
 class(matched_data$previous_covid_hosp)
 
@@ -11,11 +11,10 @@ class(matched_data$previous_covid_hosp)
 matched_data$previous_covid_hosp <- as.logical(matched_data$previous_covid_hosp)
 
 hospitalised <- matched_data %>% filter(previous_covid_hosp == "TRUE")
-no_hostpitalised <- matched_data %>% subset(previous_covid_hosp == "F")
-
+no_hostpitalised <- matched_data %>% filter(previous_covid_hosp == "FALSE")
 
 vars <- c("age_cat", "sex", "region", "exposure", "all_month1", "follow_up_m1")
-lapply(no_hostpitalised[vars], summary)
+
 
 
 # A. Crude hurdle model ------------
@@ -420,8 +419,9 @@ results_full_no_hos <- bind_rows(
       relocate(model)
 
 # Final output: ------
-hos_results_hurdle <- bind_rows(results_crude_hos, results_partial_hos, results_full_hos)
-no_hos_results_hurdle <- bind_rows(results_crude_no_hos, results_partial_no_hos, results_full_no_hos)
-
-hos_results_hurdle %>% write.csv(here("output", "st_03_result_hos_cumulative_visit_hurdle.csv"), row.names = F)
-no_hos_results_hurdle %>% write.csv(here("output", "st_03_result_no_hos_cumulative_visit_hurdle.csv"), row.names = F)
+bind_rows(
+      (bind_rows(results_crude_hos, results_partial_hos, results_full_hos) %>% 
+            mutate(subgroup = "Previously hospitalised") %>% relocate(subgroup)),
+      (bind_rows(results_crude_no_hos, results_partial_no_hos, results_full_no_hos) %>% 
+             mutate(subgroup = "Not previously hospitalised") %>% relocate(subgroup))
+) %>% write.csv(here("output", "st_03_subgroup_result_hos_cumulative_visit_hurdle.csv"), row.names = F)
