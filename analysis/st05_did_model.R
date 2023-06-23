@@ -29,18 +29,18 @@ did_poisson_crude_fn <- function(all_vist, fu_time){
 }
 
 # Apply the function
-month_1 <- did_poisson_fn(hx_matched_data$all_month1, hx_matched_data$fu_time_m1)
-month_2 <- did_poisson_fn(hx_matched_data$all_month2, hx_matched_data$fu_time_m2)
-month_3 <- did_poisson_fn(hx_matched_data$all_month3, hx_matched_data$fu_time_m3)
-month_4 <- did_poisson_fn(hx_matched_data$all_month4, hx_matched_data$fu_time_m4)
-month_5 <- did_poisson_fn(hx_matched_data$all_month5, hx_matched_data$fu_time_m5)
-month_6 <- did_poisson_fn(hx_matched_data$all_month6, hx_matched_data$fu_time_m6)
-month_7 <- did_poisson_fn(hx_matched_data$all_month7, hx_matched_data$fu_time_m7)
-month_8 <- did_poisson_fn(hx_matched_data$all_month8, hx_matched_data$fu_time_m8)
-month_9 <- did_poisson_fn(hx_matched_data$all_month9, hx_matched_data$fu_time_m9)
-month_10 <- did_poisson_fn(hx_matched_data$all_month10, hx_matched_data$fu_time_m10)
-month_11 <- did_poisson_fn(hx_matched_data$all_month11, hx_matched_data$fu_time_m11)
-month_12 <- did_poisson_fn(hx_matched_data$all_month12, hx_matched_data$fu_time_m12)
+month_1 <- did_poisson_crude_fn(hx_matched_data$all_month1, hx_matched_data$fu_time_m1)
+month_2 <- did_poisson_crude_fn(hx_matched_data$all_month2, hx_matched_data$fu_time_m2)
+month_3 <- did_poisson_crude_fn(hx_matched_data$all_month3, hx_matched_data$fu_time_m3)
+month_4 <- did_poisson_crude_fn(hx_matched_data$all_month4, hx_matched_data$fu_time_m4)
+month_5 <- did_poisson_crude_fn(hx_matched_data$all_month5, hx_matched_data$fu_time_m5)
+month_6 <- did_poisson_crude_fn(hx_matched_data$all_month6, hx_matched_data$fu_time_m6)
+month_7 <- did_poisson_crude_fn(hx_matched_data$all_month7, hx_matched_data$fu_time_m7)
+month_8 <- did_poisson_crude_fn(hx_matched_data$all_month8, hx_matched_data$fu_time_m8)
+month_9 <- did_poisson_crude_fn(hx_matched_data$all_month9, hx_matched_data$fu_time_m9)
+month_10 <- did_poisson_crude_fn(hx_matched_data$all_month10, hx_matched_data$fu_time_m10)
+month_11 <- did_poisson_crude_fn(hx_matched_data$all_month11, hx_matched_data$fu_time_m11)
+month_12 <- did_poisson_crude_fn(hx_matched_data$all_month12, hx_matched_data$fu_time_m12)
 
 
 # Obtain the fitted value:
