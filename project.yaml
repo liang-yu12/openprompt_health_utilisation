@@ -206,4 +206,5 @@ actions:
         fitted_did: "output/predicted_did_counts.csv.gz"
       moderately_sensitive: 
         model_dispersion: "output/sup_st01_model_compare.csv"
-        summarised_did_predicted: "output/summarised_did_results.csv"
+        stats_output: "output/st05_did_stats.csv"
+        summarised_did_predicted: "output/st05_summarised_did_predicted_results.csv"
