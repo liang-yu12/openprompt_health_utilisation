@@ -10,6 +10,7 @@ full <- all_cost %>%
       ggtitle("Cumulative costs") + theme(legend.title = element_blank()) + theme_bw() +
       geom_line(aes(color=exposure)) +
       geom_point(aes(color=exposure)) +
+      geom_errorbar(aes(ymin = (mean-sd), ymax = (mean+sd)), width=0.2) +
       scale_x_continuous("Months after long COVID diagnosis", breaks = 1:12) +
       scale_y_continuous("Average healthcare cost (£)")
 
