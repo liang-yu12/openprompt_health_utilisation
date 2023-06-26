@@ -139,7 +139,7 @@ actions:
   report_03_hurdle_model:
     needs: [import_matched_exposure, import_matched_controls]
     run: 
-      r:latest analysis/st03_hurdle_model.R
+      r:latest analysis/st03_hurdle_model_rate_ratio.R
     outputs: 
       moderately_sensitive: 
         hurdle_all: output/st_03_result_monthly_visit_hurdle.csv
