@@ -33,7 +33,7 @@ month_hurdle_fn <- function(month, n, data, fu_time) {
             month ~ exposure + offset(log(fu_time)) | age_cat + sex+ region,
             data = data,
             zero.dist = "binomial",
-            dist = "poisson"
+            dist = "negbin"
       )
 
       # Extract the coefficients and 95% confidence intervals from the model.
@@ -88,7 +88,7 @@ month_adj_hurdle_fn <- function(month, n, data, fu_time) {
             month ~ exposure + age_cat + sex + offset(log(fu_time))| age_cat + sex+ region,
             data = data,
             zero.dist = "binomial",
-            dist = "poisson"
+            dist = "negbin"
       )
 
       # Extract the coefficients and 95% confidence intervals from the model.
@@ -140,7 +140,7 @@ month_full_hurdle_fn <- function(month, n, data, fu_time) {
                   number_comorbidities_cat + offset(log(fu_time)) | age_cat + sex+ region,
             data = data,
             zero.dist = "binomial",
-            dist = "poisson"
+            dist = "negbin"
       )
 
       # Extract the coefficients and 95% confidence intervals from the model.
