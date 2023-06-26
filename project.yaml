@@ -142,6 +142,7 @@ actions:
       r:latest analysis/st03_hurdle_model_rate_ratio.R
     outputs: 
       moderately_sensitive: 
+        model_selection: output/st03_0_model_comparison,csv
         hurdle_all: output/st_03_result_monthly_visit_hurdle.csv
         
   report_03_1_hurdle_model_predict:
