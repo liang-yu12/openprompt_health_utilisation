@@ -20,7 +20,7 @@ neg_bionimal_hurdle <- hurdle(
 )
 
 lmtest::lrtest(poisson_hurdle, neg_bionimal_hurdle) %>% 
-      write_tsv(here("output", "st03_0_model_comparison.txt"))
+      write_tsv(here("output", "sup_st03_0_model_comparison.txt"))
 # 
 # 
 # # Crude Hurdle model function: 
