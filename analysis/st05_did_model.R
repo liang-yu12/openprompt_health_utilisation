@@ -263,4 +263,4 @@ summarised_results <-
             adjusted_visit_m11 = mean(adjusted_predicted_m11, na.rm = TRUE),
             adjusted_visit_m12 = mean(adjusted_predicted_m12, na.rm = TRUE)
       )
-summarised_results %>% write_csv(here("output", "st05_summarised_did_predicted_results"))
+summarised_results %>% write_csv(here("output", "st05_summarised_did_predicted_results.csv"))
