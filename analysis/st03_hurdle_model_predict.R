@@ -4,25 +4,6 @@ source("analysis/dm03_matched_define_monthly_follow_up_time.R")
 # For organising the outputs
 options(digits=2)
 
-# 0. Model comparison:
-poisson_hurdle <- hurdle(
-      all_month1 ~ exposure + offset(log(follow_up_m1)) | age_cat + sex+ region,
-      data = matched_data,
-      zero.dist = "binomial",
-      dist = "poisson"
-)
-
-neg_bionimal_hurdle <- hurdle(
-      all_month1 ~ exposure + offset(log(follow_up_m1)) | age_cat + sex+ region,
-      data = matched_data,
-      zero.dist = "binomial",
-      dist = "negbin"
-)
-
-lmtest::lrtest(poisson_hurdle, neg_bionimal_hurdle) %>% 
-      tidy() %>% write.csv(here("output", "st03_0_model_comparison,csv"))
-
-
 # A. Crude hurdle model----
 cumulative_visit_crude_fn <- function(visit, fu_time, data, month) {
       
