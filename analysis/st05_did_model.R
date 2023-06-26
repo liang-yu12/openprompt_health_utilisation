@@ -43,7 +43,7 @@ crude_month_10 <- did_poisson_crude_fn(hx_matched_data$all_month10, hx_matched_d
 crude_month_11 <- did_poisson_crude_fn(hx_matched_data$all_month11, hx_matched_data$fu_time_m11)
 crude_month_12 <- did_poisson_crude_fn(hx_matched_data$all_month12, hx_matched_data$fu_time_m12)
 
-# Stats output
+## save stats output ----
 stats_output <- bind_rows(
       crude_month_1 %>% tidy(conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE) %>% 
             mutate(model = "crude_month_1"),
@@ -71,7 +71,7 @@ stats_output <- bind_rows(
             mutate(model = "crude_month_12")
 )
 
-# Obtain the fitted value: 
+## Obtain the fitted value: ----
 # write a function for extracting fitted value
 crude_fitted_fn<- function(visit, follow_up, reg_object){
       hx_matched_data %>% 
@@ -125,7 +125,7 @@ combined_predicted_value <-
 # Adjusted Poisson model: 
 
 
-# 1. Crude poisson: -----
+# 2. adjusted poisson: -----
 did_poisson_adjusted_fn <- function(all_vist, fu_time){
       glm(all_vist ~ exposure*time + sex + age_cat + ethnicity_6+ bmi_cat + 
                 number_comorbidities_cat + offset(log(fu_time)),
@@ -147,7 +147,7 @@ adjusted_month_11 <- did_poisson_adjusted_fn(hx_matched_data$all_month11, hx_mat
 adjusted_month_12 <- did_poisson_adjusted_fn(hx_matched_data$all_month12, hx_matched_data$fu_time_m12)
 
 
-# save the stats output:
+## save the stats output: ----
 
 stats_output <- bind_rows(stats_output,
                           adjusted_month_1 %>% tidy(conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE) %>% 
@@ -179,7 +179,7 @@ stats_output <- bind_rows(stats_output,
 # save the results:
 stats_output %>% write_csv(here("output", "st05_did_stats.csv"))
 
-# Obtain the fitted value: 
+## Obtain the fitted value: ----
 # write a function for extracting fitted value
 adjusted_fitted_fn<- function(visit, follow_up, reg_object){
       hx_matched_data %>% 
