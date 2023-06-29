@@ -19,7 +19,7 @@ cumulative_cost_adj_fn <- function(cost, n){
       )
       
       # Estimate the costs
-      cost <- predict(twopm.model, se.fit = TRUE) %>% 
+      cost <- predict(twopm.model, se.fit = TRUE, type = "response") %>% 
             as.data.frame() %>% 
             dplyr::select(fit, se.fit) %>% 
             mutate(ll = fit - 1.96*se.fit) %>% 
