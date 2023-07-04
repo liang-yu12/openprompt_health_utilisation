@@ -12,6 +12,21 @@ from ehrql.query_language import table_from_file, PatientFrame, Series
 from covariates import *
 from variables import *
 
+
+def earliest2(d1, d2):
+    return case(
+        when(d1.is_null()).then(d2),
+        when(d2.is_null()).then(d1),
+        when(d1 < d2).then(d1),
+        default=d2,
+    )
+def earliest3(d1, d2, d3):
+    return earliest2(d1, earliest2(d2, d3))
+   
+def earliest4(d1, d2, d3, d4):
+    return earliest2(d4, earliest3(d1, d2, d3))
+study_end_date = date(2023, 1, 31)
+
 # import matched data
 
 @table_from_file("output/matched_cases_stp.csv")
@@ -47,6 +62,8 @@ dataset.index_date = matched_cases.index_date
 dataset.end_death = matched_cases.end_death
 dataset.end_deregist = matched_cases.end_deregist
 dataset.end_lc_cure = matched_cases.end_lc_cure
+dataset.end_date = earliest3(dataset.end_death, dataset.end_deregist, dataset.end_lc_cure)
+dataset.end_date_4 = earliest4(dataset.end_death, dataset.end_deregist, dataset.end_lc_cure, study_end_date)
 dataset.set_id = matched_cases.set_id
 dataset.exposure = matched_cases.exposure
 dataset.match_counts = matched_cases.match_counts
