@@ -75,7 +75,7 @@ def add_hos_visits(dataset, from_date, num_months, end_date):
     setattr(dataset, f"hos_visit_m{num_months}", num_visits)
 
 # Historical hospital visit
-def add_hx_hos_visits(dataset, num_months, end_date):
+def add_hx_hos_visits(dataset, num_months):
     # Number of Hospitalisation within `num_months` of `from_date`
     num_visits = hospital_admissions \
         .where((hospital_admissions.admission_date >= hx_study_start_date + days((num_months-1)*30)) &
@@ -95,7 +95,7 @@ def add_ae_visits(dataset, from_date, num_months, end_date):
     setattr(dataset, f"ae_visit_m{num_months}", num_visits)
 
 # Function codes for the historical A&E
-def add_hx_ae_visits(dataset, num_months, end_date):
+def add_hx_ae_visits(dataset, num_months):
     # Number of A&E visits within `num_months` of `from_date`
     num_visits = emergency_care_attendances \
         .where((emergency_care_attendances.arrival_date >= hx_study_start_date + days((num_months-1)*30)) &
