@@ -13,20 +13,6 @@ from covariates import *
 from variables import *
 
 
-def earliest2(d1, d2):
-    return case(
-        when(d1 <= d2).then(d1),
-        when(d1 > d2).then(d2),
-        when(d1.is_null() if hasattr(d1, "is_null") else False).then(d2),
-        default=d1,
-    )
-def earliest3(d1, d2, d3):
-    return earliest2(d1, earliest2(d2, d3))
-   
-def earliest4(d1, d2, d3, d4):
-    return earliest2(d4, earliest3(d1, d2, d3))
-study_end_date = date(2023, 1, 31)
-
 # import matched data
 
 @table_from_file("output/matched_cases_stp.csv")

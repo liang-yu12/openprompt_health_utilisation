@@ -44,6 +44,7 @@ dataset.index_date = matched_matches.index_date
 dataset.end_death = matched_matches.end_death
 dataset.end_deregist = matched_matches.end_deregist
 dataset.end_lc_cure = matched_matches.end_lc_cure
+dataset.end_date = earliest4(dataset.end_death, dataset.end_deregist, dataset.end_lc_cure, study_end_date)
 dataset.set_id = matched_matches.set_id
 dataset.exposure = matched_matches.exposure
 
