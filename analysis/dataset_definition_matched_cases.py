@@ -116,18 +116,18 @@ dataset.cov_temporary_immune_suppress = temporary_immune_suppress.exists_for_pat
 
 # Add outcomes: healthcare utilisation by months
 # GP visit
-add_visits(dataset, dataset.index_date, num_months=1)
-add_visits(dataset, dataset.index_date, num_months=2)
-add_visits(dataset, dataset.index_date, num_months=3)
-add_visits(dataset, dataset.index_date, num_months=4)
-add_visits(dataset, dataset.index_date, num_months=5)
-add_visits(dataset, dataset.index_date, num_months=6)
-add_visits(dataset, dataset.index_date, num_months=7)
-add_visits(dataset, dataset.index_date, num_months=8)
-add_visits(dataset, dataset.index_date, num_months=9)
-add_visits(dataset, dataset.index_date, num_months=10)
-add_visits(dataset, dataset.index_date, num_months=11)
-add_visits(dataset, dataset.index_date, num_months=12)
+add_visits(dataset, dataset.index_date, num_months=1, end_date= dataset.end_date)
+add_visits(dataset, dataset.index_date, num_months=2, end_date= dataset.end_date)
+add_visits(dataset, dataset.index_date, num_months=3, end_date= dataset.end_date)
+add_visits(dataset, dataset.index_date, num_months=4, end_date= dataset.end_date)
+add_visits(dataset, dataset.index_date, num_months=5, end_date= dataset.end_date)
+add_visits(dataset, dataset.index_date, num_months=6, end_date= dataset.end_date)
+add_visits(dataset, dataset.index_date, num_months=7, end_date= dataset.end_date)
+add_visits(dataset, dataset.index_date, num_months=8, end_date= dataset.end_date)
+add_visits(dataset, dataset.index_date, num_months=9, end_date= dataset.end_date)
+add_visits(dataset, dataset.index_date, num_months=10, end_date= dataset.end_date)
+add_visits(dataset, dataset.index_date, num_months=11, end_date= dataset.end_date)
+add_visits(dataset, dataset.index_date, num_months=12, end_date= dataset.end_date)
 
 # Hospital admission
 add_hos_visits(dataset, dataset.index_date, num_months=1)

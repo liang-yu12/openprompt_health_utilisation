@@ -45,11 +45,12 @@ def earliest4(d1, d2, d3, d4):
 
 
 # Function codes for extracting monthly GP visit
-def add_visits(dataset, from_date, num_months):
+def add_visits(dataset, from_date, num_months, end_date):
     # Number of GP visits within `num_months` of `from_date`
     num_visits = appointments \
         .where((appointments.start_date >= from_date + days((num_months-1)*30)) &
-              (appointments.start_date <=  from_date + days(num_months*30))) \
+              (appointments.start_date <=  from_date + days(num_months*30)) &
+              (appointments.start_date <=  end_date)) \
         .count_for_patient()
     setattr(dataset, f"gp_visit_m{num_months}", num_visits)
 
@@ -275,26 +276,26 @@ def drug_13skin_number(dataset, from_date, num_months):
 
 
 # Temp: test generate data
-dataset = Dataset()
-dataset.define_population(age >= 18)
+# dataset = Dataset()
+# dataset.define_population(age >= 18)
 
-month1 = lc_dx.date + days(0*30)
-month2 = lc_dx.date + days(1*30)
-month3 = lc_dx.date + days(2*30)
-month4 = lc_dx.date + days(3*30)
-month5 = lc_dx.date + days(4*30)
-month6 = lc_dx.date + days(5*30)
-month7 = lc_dx.date + days(6*30)
-month8 = lc_dx.date + days(7*30)
-month9 = lc_dx.date + days(8*30)
-month10 = lc_dx.date + days(9*30)
-month11 = lc_dx.date + days(10*30)
-month12 = lc_dx.date + days(11*30)
+# month1 = lc_dx.date + days(0*30)
+# month2 = lc_dx.date + days(1*30)
+# month3 = lc_dx.date + days(2*30)
+# month4 = lc_dx.date + days(3*30)
+# month5 = lc_dx.date + days(4*30)
+# month6 = lc_dx.date + days(5*30)
+# month7 = lc_dx.date + days(6*30)
+# month8 = lc_dx.date + days(7*30)
+# month9 = lc_dx.date + days(8*30)
+# month10 = lc_dx.date + days(9*30)
+# month11 = lc_dx.date + days(10*30)
+# month12 = lc_dx.date + days(11*30)
 
-drug_12ent_number(dataset, lc_dx.date, num_months=2)
-add_visits(dataset, lc_dx.date, num_months=1)
-add_visits(dataset, lc_dx.date, num_months=2)
-add_hos_visits(dataset, lc_dx.date, num_months=3)
-add_hos_visits(dataset, lc_dx.date, num_months=4)
-add_ae_visits(dataset, lc_dx.date, num_months=5)
-add_ae_visits(dataset, lc_dx.date, num_months=6)
+# drug_12ent_number(dataset, lc_dx.date, num_months=2)
+# add_visits(dataset, lc_dx.date, num_months=1)
+# add_visits(dataset, lc_dx.date, num_months=2)
+# add_hos_visits(dataset, lc_dx.date, num_months=3)
+# add_hos_visits(dataset, lc_dx.date, num_months=4)
+# add_ae_visits(dataset, lc_dx.date, num_months=5)
+# add_ae_visits(dataset, lc_dx.date, num_months=6)
