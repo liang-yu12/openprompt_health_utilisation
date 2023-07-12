@@ -1,20 +1,21 @@
 # Load previous data management
-source("analysis/dm03_matched_define_monthly_follow_up_time.R")
+source("analysis/dm03_5_matched_pivot_long.R")
+matched_data_ts %>% names
 
 # For organising the outputs
 options(digits=2)
 
 # 0. Model comparison:
 poisson_hurdle <- hurdle(
-      all_month1 ~ exposure + offset(log(follow_up_m1)) | age_cat + sex+ region,
-      data = matched_data,
+      monthly_visits ~ exposure + offset(log(follow_up_time)) | age_cat + sex+ region,
+      data = matched_data_ts,
       zero.dist = "binomial",
       dist = "poisson"
 )
 
 neg_bionimal_hurdle <- hurdle(
-      all_month1 ~ exposure + offset(log(follow_up_m1)) | age_cat + sex+ region,
-      data = matched_data,
+      monthly_visits ~ exposure + offset(log(follow_up_time)) | age_cat + sex+ region,
+      data = matched_data_ts,
       zero.dist = "binomial",
       dist = "negbin"
 )
@@ -24,6 +25,9 @@ data.frame(
       aic_poisson = AIC(poisson_hurdle),
       aic_negbin = AIC(neg_bionimal_hurdle)
 ) %>% write.csv(here("output", "sup_st03_0_model_comparison.csv"))
+
+
+
 
 
 # Crude Hurdle model function:
