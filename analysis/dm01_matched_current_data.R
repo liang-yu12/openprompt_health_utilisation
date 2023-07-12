@@ -199,7 +199,8 @@ matched_data <- matched_data %>%
 
 matched_data$number_comorbidities_cat <- matched_data$number_comorbidities_cat %>% 
       as.factor()
-      
+
+
 # ============== combine the healthcare visits ============== 
 matched_data$all_month1 <- rowSums(matched_data[, grepl("m1$", names(matched_data)), with = FALSE], na.rm = T)
 matched_data$all_month2 <- rowSums(matched_data[, grepl("m2$", names(matched_data)), with = FALSE], na.rm = T)
