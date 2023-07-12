@@ -1,12 +1,19 @@
 # Source data management
 source("analysis/dm03_matched_define_monthly_follow_up_time.R")
 
+visit_cols <- matched_data[grep("all_month_", names(matched_data))] %>% 
+      names() %>% as.vector() # summarise the healthcare visit counts
+fu_cols <- matched_data[grep("follow_up_m", names(matched_data))] %>% 
+      names %>% as.vector()  # summarise follow-up time
+
+
 
 dependent = "exposure"
 explanatory = c("sex", "age","age_cat", "ethnicity_6", "bmi_cat", "imd_q5", "region",
                 "long_covid_dx", "covid_positive","previous_covid_hosp",
                 "cov_c19_vaccine_number", "cov_covid_vaccine_number", 
-                "cov_covid_vax_n_cat", "number_comorbidities_cat","admit_over_1m_count")
+                "cov_covid_vax_n_cat", "number_comorbidities_cat","admit_over_1m_count",
+                visit_cols, fu_cols)
 
 # Table 1 reporting numbers:  -----
 matched_data %>% summary_factorlist(dependent, explanatory, 
