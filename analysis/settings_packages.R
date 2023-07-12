@@ -1,8 +1,17 @@
 # loading r packages
 
-packages <- c("data.table", "lubridate", "markdown", "forcats", "Hmisc",
-              "broom", "dplyr", "finalfit", "forcats", "ggplot2", "ggpubr",
-              "MASS", "stringr", "here", "gtools", "rmarkdown",
-              "knitr", "pscl","twopartm", "tidyr", "readr", "Epi")
+packages <- c( "broom", 
+               "dplyr", "data.table",
+               "Epi",
+               "forcats", "finalfit", "forcats", 
+               "ggplot2", "ggpubr", "gtools", 
+               "here", "Hmisc", 
+               "knitr", 
+               "lubridate", 
+               "markdown", "MASS", 
+               "pscl",
+               "rmarkdown","readr", 
+               "stringr",
+               "twopartm", "tidyr", "tibble")
 
 lapply(packages, require, character.only = TRUE)
