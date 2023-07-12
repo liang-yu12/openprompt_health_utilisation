@@ -5,165 +5,73 @@ source("analysis/dm01_matched_current_data.R")
 # Explanation: people were followed from the index date, and we will estimate 
 # the healthcare utilisation by month. However, we need to consider 
 # end_date may fall within the monthly follow-up time. 
-# Need to define monthly
-
-# *Calculate the cumulative follow-up time
-
-# Concept: 
-# if index_date + days(month_number) <= end_date, 
-# which means we can follow them for full months; 
-#     codes:      time1 + 30*n < time2 ~ 30*n,
-
-# if index_date + days(month_number) > end_date, 
-# people were censored earlier then the end of the month,
-# so that we can only follow them until the end_date (time2)  
-# codes:   
-# (time2 < (time1 + 30*(n)) & (time2 - (time1+ 30*(n-1)))>0 ~ (time2 - (time1))
+#
+# Concept: use month 4 as example:
 
 
-# Also, if the follow-up period is 0, then it should be coded as NA.
-# codes: time2-time1 <=0 ~ NA
-
-# key dates:index_date, end_date, and the monthly date 
-
+# mutate(follow_up_m4=case_when(
+#       fu_total%/%30>=4 ~ 30,
+# If the total follow_up time can be exactly devided by 30, then the follow_up 
+# is 30; 
+#       fu_total%/%30==3 ~ fu_total%%30,
+# If the follow up ended this month, then the remain of the dates will be the 
+# follow-up days;
+#       fu_total%/%30< 3 ~ NA_real_))
+# If the follow-up ended in the previous month, then censored it with NA
 
 # First we need to change them into Date format:
 matched_data$time1 <- as.numeric(matched_data$index_date)
 matched_data$time2 <- as.numeric(matched_data$end_date)
+matched_data$fu_total <- matched_data$time2 - matched_data$time1
 
-# Month 1:
+# define follow-up by months
 matched_data <- matched_data %>% 
-      mutate(follow_up_m1 = as.double(case_when(
-            time1 + 30*1 < time2 ~ 30*1,    #t2 censor later
-            (time2 <= (time1 + 30*1)) & ((time2 - time1) > 30*(1-1)) ~ 
-                  (time2 - time1), # t2 censor before follow 
-            (time2 - time1) <= 30*(1-1) ~ NA_real_ # already censored 
-            ))
-)
+      mutate(follow_up_m1=ifelse(fu_total%/%30>=1,30, fu_total%%30)) %>% 
+      mutate(follow_up_m2=case_when(
+            fu_total%/%30>=2 ~ 30,
+            fu_total%/%30==1 ~ fu_total%%30,
+            fu_total%/%30< 1 ~ NA_real_)) %>% 
+      mutate(follow_up_m3=case_when(
+            fu_total%/%30>=3 ~ 30,
+            fu_total%/%30==2 ~ fu_total%%30,
+            fu_total%/%30< 2 ~ NA_real_)) %>%
+      mutate(follow_up_m4=case_when(
+            fu_total%/%30>=4 ~ 30,
+            fu_total%/%30==3 ~ fu_total%%30,
+            fu_total%/%30< 3 ~ NA_real_)) %>%
+      mutate(follow_up_m5=case_when(
+            fu_total%/%30>=5 ~ 30,
+            fu_total%/%30==4 ~ fu_total%%30,
+            fu_total%/%30< 4 ~ NA_real_)) %>%
+      mutate(follow_up_m6=case_when(
+            fu_total%/%30>=6 ~ 30,
+            fu_total%/%30==5 ~ fu_total%%30,
+            fu_total%/%30< 5 ~ NA_real_)) %>%
+      mutate(follow_up_m7=case_when(
+            fu_total%/%30>=7 ~ 30,
+            fu_total%/%30==6 ~ fu_total%%30,
+            fu_total%/%30< 6 ~ NA_real_)) %>%
+      mutate(follow_up_m8=case_when(
+            fu_total%/%30>=8 ~ 30,
+            fu_total%/%30==7 ~ fu_total%%30,
+            fu_total%/%30< 7 ~ NA_real_)) %>%
+      mutate(follow_up_m9=case_when(
+            fu_total%/%30>=9 ~ 30,
+            fu_total%/%30==8 ~ fu_total%%30,
+            fu_total%/%30< 8 ~ NA_real_)) %>%
+      mutate(follow_up_m10=case_when(
+            fu_total%/%30>=10~ 30,
+            fu_total%/%30==9~fu_total%%30,
+            fu_total%/%30<9~NA_real_)) %>%
+      mutate(follow_up_m11=case_when(
+            fu_total%/%30>=11~ 30,
+            fu_total%/%30==10~fu_total%%30,
+            fu_total%/%30<10~NA_real_)) %>%
+      mutate(follow_up_m12=case_when(
+            fu_total%/%30>=12~ 30,
+            fu_total%/%30==11~fu_total%%30,
+            fu_total%/%30<11~NA_real_))
 
-
-# Month 2:
-matched_data <- matched_data %>% 
-      mutate(follow_up_m2 = as.double(case_when(
-            time1 + 30*2 < time2 ~ 30*2,    #t2 censor later
-            (time2 <= (time1 + 30*2)) & ((time2 - time1) > 30*(2-1)) ~ 
-                  (time2 - time1), # t2 censor before follow 
-            (time2 - time1) <= 30*(2-1) ~ NA_real_ # already censored 
-      ))
-)
-
-
-# Month 3:
-matched_data <- matched_data %>% 
-      mutate(follow_up_m3 = as.double(case_when(
-            time1 + 30*3 < time2 ~ 30*3,    #t2 censor later
-            (time2 <= (time1 + 30*3)) & ((time2 - time1) > 30*(3-1)) ~ 
-                  (time2 - time1), # t2 censor before follow 
-            (time2 - time1) <= 30*(3-1) ~ NA_real_ # already censored 
-      ))
-      )
-
-
-
-# Month 4:
-matched_data <- matched_data %>% 
-      mutate(follow_up_m4 = as.double(case_when(
-            time1 + 30*4 < time2 ~ 30*4,    #t2 censor later
-            (time2 <= (time1 + 30*4)) & ((time2 - time1) > 30*(4-1)) ~ 
-                  (time2 - time1), # t2 censor before follow 
-            (time2 - time1) <= 30*(4-1) ~ NA_real_ # already censored 
-      ))
-      )
-
-
-
-# Month 5:
-matched_data <- matched_data %>% 
-      mutate(follow_up_m5 = as.double(case_when(
-            time1 + 30*5 < time2 ~ 30*5,    #t2 censor later
-            (time2 <= (time1 + 30*5)) & ((time2 - time1) > 30*(5-1)) ~ 
-                  (time2 - time1), # t2 censor before follow 
-            (time2 - time1) <= 30*(5-1) ~ NA_real_ # already censored 
-      ))
-      )
-
-
-
-# Month 6:
-matched_data <- matched_data %>% 
-      mutate(follow_up_m6 = as.double(case_when(
-            time1 + 30*6 < time2 ~ 30*6,    #t2 censor later
-            (time2 <= (time1 + 30*6)) & ((time2 - time1) > 30*(6-1)) ~ 
-                  (time2 - time1), # t2 censor before follow 
-            (time2 - time1) <= 30*(6-1) ~ NA_real_ # already censored 
-      ))
-      )
-
-
-# Month 7:
-matched_data <- matched_data %>% 
-      mutate(follow_up_m7 = as.double(case_when(
-            time1 + 30*7 < time2 ~ 30*7,    #t2 censor later
-            (time2 <= (time1 + 30*7)) & ((time2 - time1) > 30*(7-1)) ~ 
-                  (time2 - time1), # t2 censor before follow 
-            (time2 - time1) <= 30*(7-1) ~ NA_real_ # already censored 
-      ))
-      )
-
-# Month 8:
-matched_data <- matched_data %>% 
-      mutate(follow_up_m8 = as.double(case_when(
-            time1 + 30*8 < time2 ~ 30*8,    #t2 censor later
-            (time2 <= (time1 + 30*8)) & ((time2 - time1) > 30*(8-1)) ~ 
-                  (time2 - time1), # t2 censor before follow 
-            (time2 - time1) <= 30*(8-1) ~ NA_real_ # already censored 
-      ))
-      )
-
-# Month 9:
-matched_data <- matched_data %>% 
-      mutate(follow_up_m9 = as.double(case_when(
-            time1 + 30*9 < time2 ~ 30*9,    #t2 censor later
-            (time2 <= (time1 + 30*9)) & ((time2 - time1) > 30*(9-1)) ~ 
-                  (time2 - time1), # t2 censor before follow 
-            (time2 - time1) <= 30*(9-1) ~ NA_real_ # already censored 
-      ))
-      )
-
-# Month 10:
-matched_data <- matched_data %>% 
-      mutate(follow_up_m10 = as.double(case_when(
-            time1 + 30*10 < time2 ~ 30*10,    #t2 censor later
-            (time2 <= (time1 + 30*10)) & ((time2 - time1) > 30*(10-1)) ~ 
-                  (time2 - time1), # t2 censor before follow 
-            (time2 - time1) <= 30*(10-1) ~ NA_real_ # already censored 
-      ))
-      )
-
-
-
-# Month 11:
-matched_data <- matched_data %>% 
-      mutate(follow_up_m11 = as.double(case_when(
-            time1 + 30*11 < time2 ~ 30*11,    #t2 censor later
-            (time2 <= (time1 + 30*11)) & ((time2 - time1) > 30*(11-1)) ~ 
-                  (time2 - time1), # t2 censor before follow 
-            (time2 - time1) <= 30*(11-1) ~ NA_real_ # already censored 
-      ))
-      )
-
-
-# Month 12:
-matched_data <- matched_data %>% 
-      mutate(follow_up_m12 = as.double(case_when(
-            time1 + 30*12 < time2 ~ 30*12,    #t2 censor later
-            (time2 <= (time1 + 30*12)) & ((time2 - time1) > 30*(12-1)) ~ 
-                  (time2 - time1), # t2 censor before follow 
-            (time2 - time1) <= 30*(12-1) ~ NA_real_ # already censored 
-      ))
-      )
-
-# follow-up periods vector:
 
 follow_up <- c("follow_up_m1","follow_up_m2","follow_up_m3","follow_up_m4",
                "follow_up_m5","follow_up_m6","follow_up_m7","follow_up_m8",
