@@ -1,8 +1,26 @@
 # Load previous data management
-source("analysis/dm03_matched_define_monthly_follow_up_time.R")
+source("analysis/dm03_5_matched_pivot_long.R")
 
 # For organising the outputs
-options(digits=2)
+options(digits=2, scipen = 999)
+
+
+neg_bionimal_hurdle <- hurdle(
+      monthly_visits ~ exposure + offset(log(follow_up_time)) | age_cat + sex+ region,
+      data = matched_data_ts,
+      zero.dist = "binomial",
+      dist = "negbin"
+)
+
+# to do: 
+
+
+
+
+
+
+
+
 
 # A. Crude hurdle model----
 cumulative_visit_crude_fn <- function(visit, fu_time, data, month) {
