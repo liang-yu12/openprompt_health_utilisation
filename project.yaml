@@ -128,6 +128,16 @@ actions:
         missing_table: output/missing_distribution_table.csv
         missing_pattern: output/missing_pattern_current.png
 
+  report01_5_explore_outcomes:
+    needs: [import_matched_exposure, import_matched_controls]
+    run: 
+      r:latest analysis/st01_5_report_data_exploration.R
+    outputs: 
+      moderately_sensitive: 
+        zero_percent_fig: output/st1_5_explore_zero_percentage.png
+        monthly_oucome_tb: output/st1_5_monthly_outcome_distribution.csv
+        crude_rate_tb: output/st1_5_crude_monthly_rate.csv
+
   report02_hx_matched_datasets:
     needs: [import_matched_historical_exposure, import_matched_historical_controls]
     run: 
