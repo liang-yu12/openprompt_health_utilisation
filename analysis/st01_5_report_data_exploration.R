@@ -8,7 +8,7 @@ source("analysis/dm03_5_matched_pivot_long.R")
 
 # Showing the percentage of zero ----
 
-png(file=here("output", "st1.5_explore_zero_percentage.png"),
+png(file=here("output", "st1_5_explore_zero_percentage.png"),
     width=1200, height=600)
 # plots
 matched_data_ts %>% 
@@ -32,7 +32,7 @@ matched_data_ts[matched_data_ts$monthly_visits!=0,] %>%
                 mean_visit= mean(monthly_visits),
                 max_visit= max(monthly_visits),
                 min_visit= min(monthly_visits)) %>% 
-      write_csv(here("output", "st1.5_monthly_outcome_distribution.csv"))
+      write_csv(here("output", "st1_5_monthly_outcome_distribution.csv"))
 
 # Crude rate -----
 # Overall healthcare utilisation rate by month: 
@@ -58,4 +58,4 @@ monthly_crude_rates <- bind_rows(
       crude_rate_fn(matched_data_ts[matched_data_ts$month == 12,], 12)
 )
 
-monthly_crude_rates %>% write_csv(here("output", "st1.5_crude_monthly_rate.csv"))
+monthly_crude_rates %>% write_csv(here("output", "st1_5_crude_monthly_rate.csv"))
