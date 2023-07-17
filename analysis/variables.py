@@ -312,9 +312,7 @@ def outpatient_lc_dx_visit(dataset, from_date, num_months, end_date):
               (opa_diag.appointment_date <  from_date + days(num_months*30)) &
               (opa_diag.appointment_date <=  end_date)) \
         .where((opa_diag.primary_diagnosis_code.is_in(hosp_covid) | 
-               opa_diag.secondary_diagnosis_code_1.is_in(hosp_covid) |
-               opa_diag.primary_diagnosis_code_read.is_in(lc_codelists_combined) |
-               opa_diag.secondary_diagnosis_code_1.is_in(lc_codelists_combined))).count_for_patient()
+               opa_diag.secondary_diagnosis_code_1.is_in(hosp_covid))).count_for_patient()
     setattr(dataset, f"opa_lc_visit_m{num_months}", num_visits)
 
 # Need to figure out opa_proc: where is `with_these_treatment_function_codes`?
@@ -346,4 +344,4 @@ dataset.define_population(age >= 18)
 # add_ae_visits(dataset, lc_dx.date, num_months=6)
 
 # outpatient_visit(dataset, from_date=lc_dx.date, num_months=1, end_date=study_end_date)
-outpatient_lc_dx_visit(dataset, from_date=lc_dx.date, num_months=4, end_date=study_end_date)
+# outpatient_lc_dx_visit(dataset, from_date=lc_dx.date, num_months=4, end_date=study_end_date)
