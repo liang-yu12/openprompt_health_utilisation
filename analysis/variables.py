@@ -10,6 +10,11 @@ from databuilder.tables.beta.tpp import (
     sgss_covid_all_tests,
     ons_deaths,
 )
+
+from ehrql.tables.beta.tpp import (
+	opa_diag, opa_proc, opa_cost, ec_cost, apcs_cost,
+)
+
 from ehrql.tables.beta.core import medications
 from databuilder.codes import ICD10Code
 from codelists import *

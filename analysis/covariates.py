@@ -10,9 +10,7 @@ from databuilder.tables.beta.tpp import (
     practice_registrations, clinical_events,
     sgss_covid_all_tests, ons_deaths, hospital_admissions,
 )
-from ehrql.tables.beta.tpp import (
-	opa_diag, opa_proc, opa_cost, ec_cost, apcs_cost,
-)
+
 from databuilder.codes import CTV3Code, DMDCode, ICD10Code, SNOMEDCTCode
 import codelists
 from codelists import lc_codelists_combined
