@@ -307,9 +307,8 @@ def outpatient_visit(dataset, from_date, num_months, end_date):
 
 
 # Temp: test generate data
-# dataset = Dataset()
-# dataset.define_population(age >= 18)
-
+dataset = Dataset()
+dataset.define_population(age >= 18)
 # month1 = lc_dx.date + days(0*30)
 # month2 = lc_dx.date + days(1*30)
 # month3 = lc_dx.date + days(2*30)
@@ -330,3 +329,5 @@ def outpatient_visit(dataset, from_date, num_months, end_date):
 # add_hos_visits(dataset, lc_dx.date, num_months=4)
 # add_ae_visits(dataset, lc_dx.date, num_months=5)
 # add_ae_visits(dataset, lc_dx.date, num_months=6)
+
+# outpatient_visit(dataset, from_date=lc_dx.date, num_months=1, end_date=study_end_date)
