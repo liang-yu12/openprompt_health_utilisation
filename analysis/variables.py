@@ -317,6 +317,18 @@ def outpatient_lc_dx_visit(dataset, from_date, num_months, end_date):
 
 # Need to figure out opa_proc: where is `with_these_treatment_function_codes`?
 
+# Cost function
+
+def cost_apc_fn(dataset, from_date, num_months, end_date):
+    mon_cost = apcs_cost \
+        .where((apcs_cost.admission_date >= from_date + days((num_months-1)*30)) &
+              (apcs_cost.admission_date <  from_date + days(num_months*30)) &
+              (apcs_cost.admission_date <=  end_date)).grand_total_payment_mff.sum_for_patient() 
+    setattr(dataset, f"apc_cost_m{num_months}", mon_cost)    
+
+
+
+
 
 
 # Temp: test generate data
@@ -345,3 +357,4 @@ dataset.define_population(age >= 18)
 
 # outpatient_visit(dataset, from_date=lc_dx.date, num_months=1, end_date=study_end_date)
 # outpatient_lc_dx_visit(dataset, from_date=lc_dx.date, num_months=4, end_date=study_end_date)
+# cost_apc_fn(dataset, from_date=lc_dx.date, num_months=4, end_date=study_end_date)
