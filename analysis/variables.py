@@ -334,8 +334,8 @@ def cost_er_fn(dataset, from_date, num_months, end_date):
               (ec_cost.ec_decision_to_admit_date <=  end_date)).grand_total_payment_mff.sum_for_patient() 
     setattr(dataset, f"er_cost_m{num_months}", mon_cost)    
 
-# inpatient hospital costs
-def cost_apc_fn(dataset, from_date, num_months, end_date):
+# outpatient hospital costs
+def cost_opa_fn(dataset, from_date, num_months, end_date):
     mon_cost = opa_cost \
         .where((opa_cost.appointment_date >= from_date + days((num_months-1)*30)) &
               (opa_cost.appointment_date  <  from_date + days(num_months*30)) &
