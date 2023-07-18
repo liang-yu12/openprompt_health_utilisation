@@ -318,7 +318,7 @@ def outpatient_lc_dx_visit(dataset, from_date, num_months, end_date):
 # Need to figure out opa_proc: where is `with_these_treatment_function_codes`?
 
 # Cost function
-
+# inpatient hospital costs
 def cost_apc_fn(dataset, from_date, num_months, end_date):
     mon_cost = apcs_cost \
         .where((apcs_cost.admission_date >= from_date + days((num_months-1)*30)) &
@@ -326,8 +326,21 @@ def cost_apc_fn(dataset, from_date, num_months, end_date):
               (apcs_cost.admission_date <=  end_date)).grand_total_payment_mff.sum_for_patient() 
     setattr(dataset, f"apc_cost_m{num_months}", mon_cost)    
 
+# A&E monthly costs
+def cost_er_fn(dataset, from_date, num_months, end_date):
+    mon_cost = ec_cost \
+        .where((ec_cost.ec_decision_to_admit_date >= from_date + days((num_months-1)*30)) &
+              (ec_cost.ec_decision_to_admit_date <  from_date + days(num_months*30)) &
+              (ec_cost.ec_decision_to_admit_date <=  end_date)).grand_total_payment_mff.sum_for_patient() 
+    setattr(dataset, f"er_cost_m{num_months}", mon_cost)    
 
-
+# inpatient hospital costs
+def cost_apc_fn(dataset, from_date, num_months, end_date):
+    mon_cost = opa_cost \
+        .where((opa_cost.appointment_date >= from_date + days((num_months-1)*30)) &
+              (opa_cost.appointment_date  <  from_date + days(num_months*30)) &
+              (opa_cost.appointment_date  <=  end_date)).grand_total_payment_mff.sum_for_patient() 
+    setattr(dataset, f"opd_cost_m{num_months}", mon_cost)    
 
 
 
@@ -357,4 +370,6 @@ dataset.define_population(age >= 18)
 
 # outpatient_visit(dataset, from_date=lc_dx.date, num_months=1, end_date=study_end_date)
 # outpatient_lc_dx_visit(dataset, from_date=lc_dx.date, num_months=4, end_date=study_end_date)
+# cost_apc_fn(dataset, from_date=lc_dx.date, num_months=4, end_date=study_end_date)
+# cost_er_fn(dataset, from_date=lc_dx.date, num_months=4, end_date=study_end_date)
 # cost_apc_fn(dataset, from_date=lc_dx.date, num_months=4, end_date=study_end_date)
