@@ -55,6 +55,16 @@ actions:
       highly_sensitive:
         cohort: output/matched_cases_with_ehr.csv
 
+  import_matched_exposure_drug_cost:
+    run: >
+       databuilder:v0
+        generate-dataset analysis/dataset_definition_matched_cases_drug_costs.py
+        --output output/matched_cases_with_drug_costs.csv
+    needs: [test_matching]
+    outputs: 
+      highly_sensitive:
+        cohort: output/matched_cases_with_drug_costs.csv
+
   import_matched_controls:
     run: >
        databuilder:v0
@@ -64,6 +74,17 @@ actions:
     outputs: 
       highly_sensitive:
         cohort: output/matched_control_with_ehr.csv
+
+  import_matched_controls_drug_costs:
+    run: >
+       databuilder:v0
+        generate-dataset analysis/dataset_definition_matched_control_drug_costs.py
+        --output output/matched_control_with_drug_costs.csv
+    needs: [test_matching]
+    outputs: 
+      highly_sensitive:
+        cohort: output/matched_control_with_drug_costs.csv
+
 
 # Historical comparison:
   generate_historical_exp_data:
