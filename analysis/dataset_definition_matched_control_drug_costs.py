@@ -33,14 +33,14 @@ dataset.define_population(
     (age >= 18)
     & matched_matches.exists_for_patient()
 )
-dataset.age = matched_cases.age
-dataset.sex = matched_cases.sex
-dataset.index_date = matched_cases.index_date
-dataset.end_death = matched_cases.end_death
-dataset.end_deregist = matched_cases.end_deregist
-dataset.end_lc_cure = matched_cases.end_lc_cure
+dataset.age = matched_matches.age
+dataset.sex = matched_matches.sex
+dataset.index_date = matched_matches.index_date
+dataset.end_death = matched_matches.end_death
+dataset.end_deregist = matched_matches.end_deregist
+dataset.end_lc_cure = matched_matches.end_lc_cure
 dataset.end_date = earliest4(dataset.end_death, dataset.end_deregist, dataset.end_lc_cure, study_end_date)
-dataset.exposure = matched_cases.exposure
+dataset.exposure = matched_matches.exposure
 
 
 # Add drug prescription frequencies by BNF chapters 
