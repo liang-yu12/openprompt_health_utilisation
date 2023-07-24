@@ -1,6 +1,9 @@
 # Source data management
 source("analysis/dm03_matched_define_monthly_follow_up_time.R")
 
+matched_data <- bind_rows(lc_exp_matched, com_matched)
+
+
 visit_cols <- matched_data[grep("all_month_", names(matched_data))] %>% 
       names() %>% as.vector() # summarise the healthcare visit counts
 fu_cols <- matched_data[grep("follow_up_m", names(matched_data))] %>% 
