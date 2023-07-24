@@ -114,44 +114,11 @@ levels(lc_exp_matched$imd_q5) <- c("least_deprived",
 
 
 # ============== Define the end date ============== 
-# Correct the deregist date 
-lc_exp_matched$end_deregist <- as.IDate(lc_exp_matched$end_deregist)
 
-lc_exp_matched$all_study_end_date <- as.Date("2023-01-31")
-
-# data management of some unreasonable dates.
-lc_exp_matched$index_date %>% summary
-
-# Only keep people who are 1. alive 2. registered 3 haven't recovered from lc on the index date
-
-lc_exp_matched <- lc_exp_matched %>% filter(
-      ((end_death > index_date) | is.na(end_death)) & 
-            ((end_deregist > index_date) | is.na(end_deregist) )& 
-            ((end_lc_cure > index_date) | is.na(end_lc_cure))
-)
-
-
-# censored the comparator group if they were diagnosed with long COVID.
-lc_exp_matched <- lc_exp_matched %>% 
-      mutate(
-      end_date = ifelse(
-            exposure == "Comparator",
-            pmin(as.numeric(end_death), 
-                 as.numeric(end_deregist), 
-                 as.numeric(long_covid_dx_date), 
-                 as.numeric(all_study_end_date), na.rm = T),
-            pmin(as.numeric(end_death), 
-                 as.numeric(end_deregist), 
-                 as.numeric(end_lc_cure), 
-                 as.numeric(all_study_end_date), na.rm = T)
-      )
-)
-lc_exp_matched$end_date <- as.Date.numeric(lc_exp_matched$end_date, origin = "1970-01-01")
 lc_exp_matched$end_date %>% summary
 lc_exp_matched$index_date %>% summary
 
 # calculate follow-up time
-filter(lc_exp_matched, end_date == index_date) %>% nrow() # some follow-up time = 0
 
 lc_exp_matched$follow_up_time <- as.numeric(lc_exp_matched$end_date) - as.numeric(lc_exp_matched$index_date)
 lc_exp_matched$follow_up_time %>% summary
