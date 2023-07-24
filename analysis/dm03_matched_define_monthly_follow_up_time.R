@@ -19,7 +19,7 @@ source("analysis/dm01_matched_current_data.R")
 #       fu_total%/%30< 3 ~ NA_real_))
 # If the follow-up ended in the previous month, then censored it with NA
 
-# total follow-up time: follow_up_time
+# total follow-up time: fu_total
 
 # define follow-up by months
 matched_data <- matched_data %>% 
