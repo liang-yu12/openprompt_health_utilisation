@@ -19,10 +19,7 @@ source("analysis/dm01_matched_current_data.R")
 #       fu_total%/%30< 3 ~ NA_real_))
 # If the follow-up ended in the previous month, then censored it with NA
 
-# First we need to change them into Date format:
-matched_data$time1 <- as.numeric(matched_data$index_date)
-matched_data$time2 <- as.numeric(matched_data$end_date)
-matched_data$fu_total <- matched_data$time2 - matched_data$time1
+# total follow-up time: follow_up_time
 
 # define follow-up by months
 matched_data <- matched_data %>% 
