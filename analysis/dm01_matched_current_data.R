@@ -65,7 +65,9 @@ lc_exp_matched$cov_covid_vax_n_cat <- lc_exp_matched$cov_covid_vax_n_cat %>%
       factor(labels = c("0 dose","1 dose","2 doses","3 or more doses"))
 
 # Label exposure indicator
-levels(lc_exp_matched$exposure) <- c("Comparator", "Long covid exposure")
+lc_exp_matched$exposure %>% table
+lc_exp_matched$exposure %>% levels
+levels(lc_exp_matched$exposure) <- c("Long covid exposure","Comparator")
 
 # Other data management: IMD quintiles, ethnicity, BMI categories for ethnicity  
 lc_exp_matched <- lc_exp_matched %>% mutate(
@@ -205,6 +207,7 @@ com_matched$cov_covid_vax_n_cat <- com_matched$cov_covid_vax_n_cat %>%
       factor(labels = c("0 dose","1 dose","2 doses","3 or more doses"))
 
 # Label exposure indicator
+com_matched$exposure %>% table
 levels(com_matched$exposure) <- c("Comparator", "Long covid exposure")
 
 # Other data management: IMD quintiles, ethnicity, BMI categories for ethnicity  
@@ -293,3 +296,4 @@ com_matched$all_month_m9 <- rowSums(com_matched[, grepl("m9$", names(com_matched
 com_matched$all_month_m10 <- rowSums(com_matched[, grepl("m10$", names(com_matched)), with = FALSE], na.rm = T)
 com_matched$all_month_m11 <- rowSums(com_matched[, grepl("m11$", names(com_matched)), with = FALSE], na.rm = T)
 com_matched$all_month_m12 <- rowSums(com_matched[, grepl("m12$", names(com_matched)), with = FALSE], na.rm = T)
+
