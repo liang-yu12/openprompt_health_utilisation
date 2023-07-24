@@ -7,41 +7,76 @@ source("analysis/dm03_matched_define_monthly_follow_up_time.R")
 # 2. Transpose the follow-up time, save it to another object;
 # 3. Make sure they have the same row counts, and then cbind them
 
+# Pivot the exposure group: lc_exp_matched
 
 # Pivot the healthcare utilisation: ==============
-visit_cols <- matched_data[grep("all_month_", names(matched_data))] %>% 
+visit_cols <- lc_exp_matched[grep("all_month_", names(lc_exp_matched))] %>% 
       names() %>% as.vector()
 
-visit_ts <- matched_data %>% 
+exp_visit_ts <- lc_exp_matched %>% 
       pivot_longer(
             cols = all_of(visit_cols),
             names_to = c("month"),
             values_to = "monthly_visits"
 )
-visit_ts$month <- str_sub(visit_ts$month, 12) # remove all_month_m
-visit_ts$month <- as.numeric(visit_ts$month)
+exp_visit_ts$month <- str_sub(exp_visit_ts$month, 12) # remove all_month_m
+exp_visit_ts$month <- as.numeric(exp_visit_ts$month)
 
 
 # Pivot the follow_up time: ========================
-fu_cols <- matched_data[grep("follow_up_m", names(matched_data))] %>% 
+fu_cols <- lc_exp_matched[grep("follow_up_m", names(lc_exp_matched))] %>% 
       names %>% as.vector()
 
-fu_ts <- matched_data %>% dplyr::select(patient_id, all_of(fu_cols)) %>% 
+exp_fu_ts <- lc_exp_matched %>% dplyr::select(patient_id, all_of(fu_cols)) %>% 
       pivot_longer(
             cols = all_of(fu_cols),
             names_to = c("month_fu"),
             values_to = "follow_up_time"
       )
 
-fu_ts$month_fu <- str_sub(fu_ts$month_fu, 12)  # remove "follow_up_m"
-fu_ts$month_fu <- as.numeric(fu_ts$month_fu)
-fu_ts$patient_id <- NULL
-
+exp_fu_ts$month_fu <- str_sub(exp_fu_ts$month_fu, 12)  # remove "follow_up_m"
+exp_fu_ts$month_fu <- as.numeric(exp_fu_ts$month_fu)
 
 # Combine the data: =============
-matched_data_ts <- cbind(visit_ts, fu_ts)
-matched_data_ts %>% names
+exp_long <- left_join(exp_visit_ts, exp_fu_ts,
+                      by = c("patient_id" = "patient_id", "month" = "month_fu")
+                      )
+exp_long %>% names # looks good
 
-table(matched_data_ts$month ==matched_data_ts$month_fu) # looks good
+
+# Pivot the comparator dataset: ------------
+com_visit_ts <- com_matched %>% 
+      pivot_longer(
+            cols = all_of(visit_cols),
+            names_to = c("month"),
+            values_to = "monthly_visits"
+      )
+com_visit_ts$month <- str_sub(com_visit_ts$month, 12) # remove all_month_m
+com_visit_ts$month <- as.numeric(com_visit_ts$month)
 
 
+# Pivot the follow_up time: ========================
+
+com_fu_ts <- com_matched %>% dplyr::select(patient_id, all_of(fu_cols)) %>% 
+      pivot_longer(
+            cols = all_of(fu_cols),
+            names_to = c("month_fu"),
+            values_to = "follow_up_time"
+      )
+
+com_fu_ts$month_fu <- str_sub(com_fu_ts$month_fu, 12)  # remove "follow_up_m"
+com_fu_ts$month_fu <- as.numeric(com_fu_ts$month_fu)
+
+# Combine the data: =============
+com_long <- left_join(com_visit_ts, com_fu_ts,
+                      by = c("patient_id" = "patient_id", "month" = "month_fu")
+)
+com_long %>% names
+
+
+
+# Combine two datasets: ----
+matched_data_ts <- bind_rows(exp_long, com_long)
+
+# housekeeping
+rm(list = ls(pattern = "_ts"))
