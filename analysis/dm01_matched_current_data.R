@@ -125,14 +125,14 @@ lc_exp_matched$follow_up_time %>% summary
 
 filter(lc_exp_matched, end_date == index_date) %>% nrow() # all follow-up time > 0
 
-# ============== Caclulate the number of comorbidities 
+## ============== Caclulate the number of comorbidities 
 
 comorbidities <- c("cov_cancer",  "cov_mental_health",   "cov_asthma",
 "cov_organ_transplant",   "cov_chronic_cardiac_disease",   "cov_chronic_liver_disease",
 "cov_stroke_dementia",   "cov_other_neuro_diseases",   "cov_ra_sle_psoriasis",
 "cov_asplenia",   "cov_hiv",   "cov_aplastic_anemia",   "cov_permanent_immune_suppress",
 "cov_temporary_immune_suppress")
-# change them into logical factors
+## change them into logical factors
 lc_exp_matched <- lc_exp_matched %>% as_tibble()
 lc_exp_matched[comorbidities] <- lapply(lc_exp_matched[comorbidities], as.logical)
 
@@ -254,58 +254,15 @@ levels(com_matched$imd_q5) <- c("least_deprived",
 
 
 # ============== Define the end date ============== 
-# Correct the deregist date 
-com_matched$end_deregist <- as.IDate(com_matched$end_deregist)
-
-com_matched$all_study_end_date <- as.Date("2023-01-31")
-
 # data management of some unreasonable dates.
-com_matched$index_date %>% summary
-
-# Only keep people who are 1. alive 2. registered 3 haven't recovered from lc on the index date
-
-com_matched <- com_matched %>% filter(
-      ((end_death > index_date) | is.na(end_death)) & 
-            ((end_deregist > index_date) | is.na(end_deregist) )& 
-            ((end_lc_cure > index_date) | is.na(end_lc_cure))
-)
-
-
-# censored the comparator group if they were diagnosed with long COVID.
-com_matched <- com_matched %>% 
-      mutate(
-            end_date = ifelse(
-                  exposure == "Comparator",
-                  pmin(as.numeric(end_death), 
-                       as.numeric(end_deregist), 
-                       as.numeric(long_covid_dx_date), 
-                       as.numeric(all_study_end_date), na.rm = T),
-                  pmin(as.numeric(end_death), 
-                       as.numeric(end_deregist), 
-                       as.numeric(end_lc_cure), 
-                       as.numeric(all_study_end_date), na.rm = T)
-            )
-      )
-com_matched$end_date <- as.Date.numeric(com_matched$end_date, origin = "1970-01-01")
 com_matched$end_date %>% summary
 com_matched$index_date %>% summary
 
 # calculate follow-up time
-filter(com_matched, end_date == index_date) %>% nrow() # some follow-up time = 0
-
 com_matched$follow_up_time <- as.numeric(com_matched$end_date) - as.numeric(com_matched$index_date)
 com_matched$follow_up_time %>% summary
 
-com_matched <- com_matched %>% filter(follow_up_time != 0)
-filter(com_matched, end_date == index_date) %>% nrow() # all follow-up time > 0
-
 # ============== Caclulate the number of comorbidities 
-
-comorbidities <- c("cov_cancer",  "cov_mental_health",   "cov_asthma",
-                   "cov_organ_transplant",   "cov_chronic_cardiac_disease",   "cov_chronic_liver_disease",
-                   "cov_stroke_dementia",   "cov_other_neuro_diseases",   "cov_ra_sle_psoriasis",
-                   "cov_asplenia",   "cov_hiv",   "cov_aplastic_anemia",   "cov_permanent_immune_suppress",
-                   "cov_temporary_immune_suppress")
 # change them into logical factors
 com_matched <- com_matched %>% as_tibble()
 com_matched[comorbidities] <- lapply(com_matched[comorbidities], as.logical)
