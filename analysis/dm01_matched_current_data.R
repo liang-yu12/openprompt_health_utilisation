@@ -120,8 +120,8 @@ lc_exp_matched$index_date %>% summary
 
 # calculate follow-up time
 
-lc_exp_matched$follow_up_time <- as.numeric(lc_exp_matched$end_date) - as.numeric(lc_exp_matched$index_date)
-lc_exp_matched$follow_up_time %>% summary
+lc_exp_matched$fu_total <- as.numeric(lc_exp_matched$end_date) - as.numeric(lc_exp_matched$index_date)
+lc_exp_matched$fu_total %>% summary
 
 filter(lc_exp_matched, end_date == index_date) %>% nrow() # all follow-up time > 0
 
@@ -259,8 +259,8 @@ com_matched$end_date %>% summary
 com_matched$index_date %>% summary
 
 # calculate follow-up time
-com_matched$follow_up_time <- as.numeric(com_matched$end_date) - as.numeric(com_matched$index_date)
-com_matched$follow_up_time %>% summary
+com_matched$fu_total <- as.numeric(com_matched$end_date) - as.numeric(com_matched$index_date)
+com_matched$fu_total %>% summary
 
 # ============== Caclulate the number of comorbidities 
 # change them into logical factors
