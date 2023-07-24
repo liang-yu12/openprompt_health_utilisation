@@ -79,4 +79,6 @@ com_long %>% names
 matched_data_ts <- bind_rows(exp_long, com_long)
 
 # housekeeping
-rm(list = ls(pattern = "_ts"))
+rm(list = ls(pattern ="_long"))
+rm(list = ls(pattern ="_fu"))
+rm(list = ls(pattern ="_visit"))
