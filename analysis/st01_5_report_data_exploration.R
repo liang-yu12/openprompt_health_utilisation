@@ -34,28 +34,3 @@ matched_data_ts[matched_data_ts$monthly_visits!=0,] %>%
                 min_visit= min(monthly_visits)) %>% 
       write_csv(here("output", "st1_5_monthly_outcome_distribution.csv"))
 
-# Crude rate -----
-# Overall healthcare utilisation rate by month: 
-crude_rate_fn <- function(data,m){
-glm(monthly_visits ~ exposure + offset(log(follow_up_time)), 
-    data = data,
-    family = "poisson") %>%
-      tidy(conf.int = T, conf.level = 0.95, exponentiate = T) %>% 
-            mutate(month = m) %>% relocate(month)
-}
-monthly_crude_rates <- bind_rows(
-      crude_rate_fn(matched_data_ts[matched_data_ts$month == 1,], 1),
-      crude_rate_fn(matched_data_ts[matched_data_ts$month == 2,], 2),
-      crude_rate_fn(matched_data_ts[matched_data_ts$month == 3,], 3),
-      crude_rate_fn(matched_data_ts[matched_data_ts$month == 4,], 4),
-      crude_rate_fn(matched_data_ts[matched_data_ts$month == 5,], 5),
-      crude_rate_fn(matched_data_ts[matched_data_ts$month == 6,], 6),
-      crude_rate_fn(matched_data_ts[matched_data_ts$month == 7,], 7),
-      crude_rate_fn(matched_data_ts[matched_data_ts$month == 8,], 8),
-      crude_rate_fn(matched_data_ts[matched_data_ts$month == 9,], 9),
-      crude_rate_fn(matched_data_ts[matched_data_ts$month == 10,], 10),
-      crude_rate_fn(matched_data_ts[matched_data_ts$month == 11,], 11),
-      crude_rate_fn(matched_data_ts[matched_data_ts$month == 12,], 12)
-)
-
-monthly_crude_rates %>% write_csv(here("output", "st1_5_crude_monthly_rate.csv"))
