@@ -42,24 +42,30 @@ poisson_crude <- glm(visits ~ exposure + offset(log(follow_up)),
                      family = "poisson") %>% summary()
 
 # organised output:
-result_poisson_crude <- as.data.frame(exp(poisson_crude$coefficients)) 
+result_poisson_crude <- as.data.frame(poisson_crude$coefficients) 
+result_poisson_crude$lci <- exp(result_poisson_crude$Estimate - 1.96*result_poisson_crude$`Std. Error`)
+result_poisson_crude$uci <- exp(result_poisson_crude$Estimate + 1.96*result_poisson_crude$`Std. Error`)
+result_poisson_crude$Estimate <- exp(result_poisson_crude$Estimate)
 result_poisson_crude$terms <- rownames(result_poisson_crude)
 result_poisson_crude <- result_poisson_crude %>% 
       filter(terms == "exposureLong covid exposure") %>% 
       mutate(aic = poisson_crude$aic) %>% 
-      mutate(model = "Poisson crude") %>% relocate(model, terms)
+      mutate(model = "Poisson crude") %>% relocate(model, terms, Estimate,lci,uci)
 
 # Model: crude negative binomial model: -----
 nb_crude <- glm.nb(visits ~ exposure + offset(log(follow_up)), 
                    data = matched_data_year,
                    link = log) %>% summary()
 
-result_nb_crude <- as.data.frame(exp(nb_crude$coefficients))
+result_nb_crude <- as.data.frame(nb_crude$coefficients)
+result_nb_crude$lci <- exp(result_nb_crude$Estimate - 1.96*result_nb_crude$`Std. Error`)
+result_nb_crude$uci <- exp(result_nb_crude$Estimate + 1.96*result_nb_crude$`Std. Error`)
+result_nb_crude$Estimate <- exp(result_nb_crude$Estimate)
 result_nb_crude$terms <- rownames(result_nb_crude)
 result_nb_crude <- result_nb_crude %>% 
       filter(terms == "exposureLong covid exposure") %>% 
       mutate(aic = nb_crude$aic) %>% 
-      mutate(model = "Negative binomial crude") %>% relocate(model, terms)
+      mutate(model = "Negative binomial crude") %>% relocate(model, terms, Estimate,lci,uci)
 
 
 # Model: adjusted Poisson: ------
@@ -69,29 +75,35 @@ poisson_adjusted <- glm(visits ~ exposure + offset(log(follow_up)) +
                         data = matched_data_year, 
                         family = "poisson")  %>% summary()
 # output organised 
-result_poisson_adjusted <- as.data.frame(exp(poisson_adjusted$coefficients)) 
+result_poisson_adjusted <- as.data.frame(poisson_adjusted$coefficients) 
+result_poisson_adjusted$lci <- exp(result_poisson_adjusted$Estimate - 1.96*result_poisson_adjusted$`Std. Error`)
+result_poisson_adjusted$uci <- exp(result_poisson_adjusted$Estimate + 1.96*result_poisson_adjusted$`Std. Error`)
+result_poisson_adjusted$Estimate <- exp(result_poisson_adjusted$Estimate)
 result_poisson_adjusted$terms <- rownames(result_poisson_adjusted)
 result_poisson_adjusted <- result_poisson_adjusted %>% 
       filter(terms == "exposureLong covid exposure") %>% 
       mutate(aic = poisson_adjusted$aic) %>% 
-      mutate(model = "Poisson adjusted") %>% relocate(model, terms)
+      mutate(model = "Poisson adjusted") %>% relocate(model, terms, Estimate,lci,uci)
 
 
 
 # Model: adjusted Negative binomial: ------
-
 nb_adj <- glm.nb(visits ~ exposure + offset(log(follow_up)) + 
                        sex + region + age_cat + imd_q5 + ethnicity_6 + bmi_cat +
                        number_comorbidities_cat + previous_covid_hosp + cov_covid_vax_n_cat, 
                    data = matched_data_year,
                    link = log) %>% summary()
 
-result_nb_adj <- as.data.frame(exp(nb_adj$coefficients))
+# output organised 
+result_nb_adj <- as.data.frame(nb_adj$coefficients)
+result_nb_adj$lci <- exp(result_nb_adj$Estimate - 1.96*result_nb_adj$`Std. Error`)
+result_nb_adj$uci <- exp(result_nb_adj$Estimate + 1.96*result_nb_adj$`Std. Error`)
+result_nb_adj$Estimate <- exp(result_nb_adj$Estimate)
 result_nb_adj$terms <- rownames(result_nb_adj)
 result_nb_adj <- result_nb_adj %>% 
       filter(terms == "exposureLong covid exposure") %>% 
       mutate(aic = nb_adj$aic) %>% 
-      mutate(model = "Negative binomial adjusted") %>% relocate(model, terms)
+      mutate(model = "Negative binomial adjusted") %>% relocate(model, terms, Estimate,lci,uci)
 
 
 # save outputs: ------
