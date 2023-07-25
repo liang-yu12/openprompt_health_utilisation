@@ -74,9 +74,10 @@ com_long <- left_join(com_visit_ts, com_fu_ts,
 com_long %>% names
 
 
-
 # Combine two datasets: ----
 matched_data_ts <- bind_rows(exp_long, com_long)
+matched_data_ts$exposure %>% levels()
+matched_data_ts$exposure <- relevel(matched_data_ts$exposure, "Comparator")
 
 # housekeeping
 rm(list = ls(pattern ="_long"))
