@@ -11,8 +11,8 @@ source("analysis/dm03_5_matched_pivot_long.R")
 matched_data_year <- matched_data_ts %>% 
       group_by(patient_id, exposure) %>% 
       summarise(
-            visits = sum(monthly_visits),
-            follow_up = sum(follow_up_time)) %>% 
+            visits = sum(monthly_visits, na.rm = T),
+            follow_up = sum(follow_up_time, na.rm = T)) %>% 
       ungroup()
 
 
