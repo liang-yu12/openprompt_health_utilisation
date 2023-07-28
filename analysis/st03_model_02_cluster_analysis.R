@@ -19,16 +19,16 @@ output_org_fn <- function(reg, m){
 }
 
 
-# Crude random intercept
+# Crude random intercept ------
 crude_glmer <- glmer(
       formula = monthly_visits ~ 1 + exposure + offset(log(follow_up_time)) + (1|patient_id),
       data = matched_data_ts,
       family = poisson(link = "log") 
 )
 
-ri_poisson_crude <- output_org_fn(crude_glmer, "Random intercept Poisson")
+ri_poisson_crude <- output_org_fn(crude_glmer, "Random intercept Poisson crude")
 
-# adjusted random intercept
+# Adjusted random intercept ------
 adj_glmer <- glmer(
       formula = monthly_visits ~ 1 + exposure + offset(log(follow_up_time)) + (1|patient_id) +
             sex + region + age_cat + imd_q5 + ethnicity_6 + bmi_cat +
@@ -37,5 +37,5 @@ adj_glmer <- glmer(
       family = poisson(link = "log") 
 )
 
-ri_poisson_adj <- output_org_fn(adj_glmer)
+ri_poisson_adj <- output_org_fn(adj_glmer, "Random intercept Poisson adjusted")
 
