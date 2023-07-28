@@ -84,7 +84,7 @@ gee_output_org_fn <- function(reg, m){
       return(output)
 }
 
-# Crude
+# Crude GEE poisson
 gee_crude <- geeglm(monthly_visits ~ exposure + offset(log(follow_up_time)),
                     data = drop_na(matched_data_ts, any_of(c("monthly_visits", "exposure", "follow_up_time"))),
                     id = patient_id,
@@ -95,7 +95,7 @@ gee_crude <- geeglm(monthly_visits ~ exposure + offset(log(follow_up_time)),
 results_gee_crude <- gee_crude %>% gee_output_org_fn("GEE Crude")
 
 
-# Adjusted 
+# Adjusted GEE poisson
 all_var <- c("monthly_visits","exposure", "follow_up_time", "sex", "region",
              "age_cat", "imd_q5", "ethnicity_6", "bmi_cat", "number_comorbidities_cat",
              "previous_covid_hosp", "cov_covid_vax_n_cat") # variables for non-missing
