@@ -14,7 +14,16 @@ output_org_fn <- function(reg, m){
             mutate(lci=exp((Estimate-1.96*`Std. Error`))) %>% 
             mutate(hci=exp((Estimate+1.96*`Std. Error`))) %>% 
             mutate(model=m) %>% 
-            dplyr::select(model, term, or, lci, hci,`Pr(>|z|)`)
+            dplyr::select(model, term, or, lci, hci,`Pr(>|z|)`) %>% 
+            filter(term == "(Intercept)" | term == "exposureLong covid exposure")
+      
+      aic <- reg %>% summary %>% .$AICtab %>% as.data.frame()
+      aic <- aic %>% mutate(model_compare = rownames(aic)) %>% 
+            rename("value" = ".") %>% relocate(model_compare) %>% 
+            filter(model_compare == "AIC" | model_compare == "BIC") # compare AIC BIC
+      
+      output <- cbind(output, aic)
+      
       return(output)
 }
 
@@ -36,8 +45,7 @@ adj_glmer <- glmer(
       family = poisson(link = "log") 
 )
 
-ri_poisson_adj <- output_org_fn(adj_glmer, "Random intercept Poisson adjusted") %>% 
-      filter(term == "(Intercept)" | term == "exposureLong covid exposure")
+ri_poisson_adj <- output_org_fn(adj_glmer, "Random intercept Poisson adjusted")
 
 ## Crude random slope -------
 
@@ -58,11 +66,17 @@ adj_glmer_slope <- glmer(
       family = poisson(link = "log") 
 )
 
-rs_poisson_adj <- output_org_fn(adj_glmer_slope, "Random slope Poisson adjusted") %>% 
-      filter(term == "(Intercept)" | term == "exposureLong covid exposure")
+rs_poisson_adj <- output_org_fn(adj_glmer_slope, "Random slope Poisson adjusted")
+
+# GEE -----
 
 
 
 
+# organised and save output
+bind_rows(ri_poisson_crude, 
+          ri_poisson_adj, 
+          rs_poisson_crude, 
+          rs_poisson_adj) %>% write_csv(here("output", "st03_model_02_cluster_models.csv"))
 
 
