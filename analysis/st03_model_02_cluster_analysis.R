@@ -114,6 +114,10 @@ results_gee_adj <- gee_adj %>% gee_output_org_fn("GEE Adjusted")
 bind_rows(ri_poisson_crude, 
           ri_poisson_adj, 
           rs_poisson_crude, 
-          rs_poisson_adj) %>% write_csv(here("output", "st03_model_02_cluster_models.csv"))
+          rs_poisson_adj) %>% write_csv(here("output", "st03_model_02_rm_models.csv"))
+
+
+bind_rows(results_gee_crude, results_gee_adj) %>% write_csv(here("output", "st03_model_02_gee_models.csv"))
+
 
 
