@@ -175,6 +175,16 @@ actions:
       moderately_sensitive: 
         model_01_poisson: output/st03_model_01_poisson_and_nb.csv
         
+  report_03_model_02_clustered_analysis:
+    needs: [import_matched_exposure, import_matched_controls]
+    run: 
+      r:latest analysis/st03_model_02_cluster_analysis.R
+    outputs: 
+      moderately_sensitive: 
+        model_compares_poisson: output/st03_model_02_rm_models.csv
+        gee_outputs: output/st03_model_02_gee_models.csv
+        
+        
   report_03_hurdle_model:
     needs: [import_matched_exposure, import_matched_controls]
     run: 
