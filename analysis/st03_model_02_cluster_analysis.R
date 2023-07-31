@@ -7,34 +7,34 @@ source("analysis/dm03_5_matched_pivot_long.R")
 # Random intercept model: cluster: by individual:  "patient_id"      
 
 # define a function  to organise the regression output
-output_org_fn <- function(reg, m){
-      output <- reg %>% summary() %>% coef() %>% as.data.frame() 
-      output <- output %>% mutate(term = rownames(output)) %>% 
-            mutate(or=exp(Estimate)) %>% 
-            mutate(lci=exp((Estimate-1.96*`Std. Error`))) %>% 
-            mutate(hci=exp((Estimate+1.96*`Std. Error`))) %>% 
-            mutate(model=m) %>% 
-            dplyr::select(model, term, or, lci, hci,`Pr(>|z|)`) %>% 
-            filter(term == "(Intercept)" | term == "exposureLong covid exposure")
-      
-      aic <- reg %>% summary %>% .$AICtab %>% as.data.frame()
-      aic <- aic %>% mutate(model_compare = rownames(aic)) %>% 
-            rename("value" = ".") %>% relocate(model_compare) %>% 
-            filter(model_compare == "AIC" | model_compare == "BIC") # compare AIC BIC
-      
-      output <- cbind(output, aic)
-      
-      return(output)
-}
-
-## Crude random intercept ------
-crude_glmer <- glmer(
-      formula = monthly_visits ~ 1 + exposure + offset(log(follow_up_time)) + (1|patient_id),
-      data = matched_data_ts,
-      family = poisson(link = "log")
-)
-
-ri_poisson_crude <- output_org_fn(crude_glmer, "Random intercept Poisson crude")
+# output_org_fn <- function(reg, m){
+#       output <- reg %>% summary() %>% coef() %>% as.data.frame() 
+#       output <- output %>% mutate(term = rownames(output)) %>% 
+#             mutate(or=exp(Estimate)) %>% 
+#             mutate(lci=exp((Estimate-1.96*`Std. Error`))) %>% 
+#             mutate(hci=exp((Estimate+1.96*`Std. Error`))) %>% 
+#             mutate(model=m) %>% 
+#             dplyr::select(model, term, or, lci, hci,`Pr(>|z|)`) %>% 
+#             filter(term == "(Intercept)" | term == "exposureLong covid exposure")
+#       
+#       aic <- reg %>% summary %>% .$AICtab %>% as.data.frame()
+#       aic <- aic %>% mutate(model_compare = rownames(aic)) %>% 
+#             rename("value" = ".") %>% relocate(model_compare) %>% 
+#             filter(model_compare == "AIC" | model_compare == "BIC") # compare AIC BIC
+#       
+#       output <- cbind(output, aic)
+#       
+#       return(output)
+# }
+# 
+# ## Crude random intercept ------
+# crude_glmer <- glmer(
+#       formula = monthly_visits ~ 1 + exposure + offset(log(follow_up_time)) + (1|patient_id),
+#       data = matched_data_ts,
+#       family = poisson(link = "log")
+# )
+# 
+# ri_poisson_crude <- output_org_fn(crude_glmer, "Random intercept Poisson crude")
 
 # ## Adjusted random intercept ------
 # adj_glmer <- glmer(
@@ -113,11 +113,11 @@ results_gee_crude <- gee_crude %>% gee_output_org_fn("GEE Crude")
 # results_gee_adj <- gee_adj %>% gee_output_org_fn("GEE Adjusted")
 
 
-# organised and save output
-bind_rows(ri_poisson_crude,
-          # ri_poisson_adj, rs_poisson_adj,
-          # rs_poisson_crude
-          ) %>% write_csv(here("output", "st03_model_02_rm_models.csv"))
+# # organised and save output
+# bind_rows(ri_poisson_crude,
+#           # ri_poisson_adj, rs_poisson_adj,
+#           # rs_poisson_crude
+#           ) %>% write_csv(here("output", "st03_model_02_rm_models.csv"))
 
 
 # bind_rows(results_gee_crude, results_gee_adj) %>% 
