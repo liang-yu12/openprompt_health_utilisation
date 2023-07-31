@@ -34,3 +34,32 @@ matched_data_ts[matched_data_ts$monthly_visits!=0,] %>%
                 min_visit= min(monthly_visits)) %>% 
       write_csv(here("output", "st1_5_monthly_outcome_distribution.csv"))
 
+rm(list = ls())
+# check the outcomes extreme values by months:
+
+source("analysis/dm03_matched_define_monthly_follow_up_time.R")
+
+matched_data <- bind_rows(lc_exp_matched, com_matched)
+matched_data %>% names()
+visit_cols <- matched_data[grep("all_month_", names(matched_data))] %>% 
+      names() %>% as.vector() 
+
+cut(matched_data$all_month_m1,breaks = c(0,5,10,20, 9999999), 
+    labels = c("Less than 5", "5-10", "10-20", "more than 20"),
+    right = T)
+matched_data[visit_cols] <- lapply(matched_data[visit_cols], function(x){
+      cut(x,
+          breaks = c(0,5,10,20, 9999999), 
+          labels = c("Less than 5", "5-10", "10-20", "more than 20"),
+          right = T)
+})
+
+dependent = "exposure"
+explanatory = c(visit_cols)
+test <- matched_data %>% summary_factorlist(dependent, explanatory, 
+                                    p = F,
+                                    add_row_totals = TRUE,
+                                    row_totals_colname = "Total",
+) 
+test %>% write.csv(here("output", "st1_5_cat_visits_summary.csv"), row.names = F)
+
