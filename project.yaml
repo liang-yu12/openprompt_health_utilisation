@@ -181,7 +181,7 @@ actions:
       r:latest analysis/st03_model_02_cluster_analysis.R
     outputs: 
       moderately_sensitive: 
-        # model_compares_poisson: output/st03_model_02_rm_models.csv
+        model_compares_poisson: output/st03_model_02_rm_models.csv
         gee_outputs: output/st03_model_02_gee_models.csv
         
         
