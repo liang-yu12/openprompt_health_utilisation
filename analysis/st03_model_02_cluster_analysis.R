@@ -26,46 +26,46 @@ output_org_fn <- function(reg, m){
       
       return(output)
 }
-# 
-# ## Crude random intercept ------
-# crude_glmer <- glmer(
-#       formula = monthly_visits ~ 1 + exposure + offset(log(follow_up_time)) + (1|patient_id),
-#       data = matched_data_ts,
-#       family = poisson(link = "log") 
-# )
-# 
-# ri_poisson_crude <- output_org_fn(crude_glmer, "Random intercept Poisson crude")
-# 
+
+## Crude random intercept ------
+crude_glmer <- glmer(
+      formula = monthly_visits ~ 1 + exposure + offset(log(follow_up_time)) + (1|patient_id),
+      data = matched_data_ts,
+      family = poisson(link = "log")
+)
+
+ri_poisson_crude <- output_org_fn(crude_glmer, "Random intercept Poisson crude")
+
 # ## Adjusted random intercept ------
 # adj_glmer <- glmer(
 #       formula = monthly_visits ~ 1 + exposure + offset(log(follow_up_time)) + (1|patient_id) +
 #             sex + region + age_cat + imd_q5 + ethnicity_6 + bmi_cat +
 #             number_comorbidities_cat + previous_covid_hosp + cov_covid_vax_n_cat,
 #       data = matched_data_ts,
-#       family = poisson(link = "log") 
+#       family = poisson(link = "log")
 # )
 # 
 # ri_poisson_adj <- output_org_fn(adj_glmer, "Random intercept Poisson adjusted")
-# 
-# ## Crude random slope -------
-# 
-# crude_glmer_slope <- glmer(
-#       formula = monthly_visits ~ 1 + exposure + offset(log(follow_up_time)) + (1 + exposure |patient_id),
-#       data = matched_data_ts,
-#       family = poisson(link = "log") 
-# )
-# 
-# rs_poisson_crude <- output_org_fn(crude_glmer_slope, "Random slope Poisson crude")
-# 
+
+## Crude random slope -------
+
+crude_glmer_slope <- glmer(
+      formula = monthly_visits ~ 1 + exposure + offset(log(follow_up_time)) + (1 + exposure |patient_id),
+      data = matched_data_ts,
+      family = poisson(link = "log")
+)
+
+rs_poisson_crude <- output_org_fn(crude_glmer_slope, "Random slope Poisson crude")
+
 # ## Adjusted random slope ------
 # adj_glmer_slope <- glmer(
 #       formula = monthly_visits ~ 1 + exposure + offset(log(follow_up_time)) + (1+ exposure|patient_id) +
 #             sex + region + age_cat + imd_q5 + ethnicity_6 + bmi_cat +
 #             number_comorbidities_cat + previous_covid_hosp + cov_covid_vax_n_cat,
 #       data = matched_data_ts,
-#       family = poisson(link = "log") 
+#       family = poisson(link = "log")
 # )
-# 
+
 # rs_poisson_adj <- output_org_fn(adj_glmer_slope, "Random slope Poisson adjusted")
 
 # GEE -----
@@ -95,29 +95,29 @@ gee_crude <- geeglm(monthly_visits ~ exposure + offset(log(follow_up_time)),
 results_gee_crude <- gee_crude %>% gee_output_org_fn("GEE Crude")
 
 
-# Adjusted GEE poisson
-all_var <- c("monthly_visits","exposure", "follow_up_time", "sex", "region",
-             "age_cat", "imd_q5", "ethnicity_6", "bmi_cat", "number_comorbidities_cat",
-             "previous_covid_hosp", "cov_covid_vax_n_cat") # variables for non-missing
-
-gee_adj <- geeglm(monthly_visits ~ exposure + offset(log(follow_up_time)),
-                  data = drop_na(matched_data_ts, any_of(all_var)),
-                  id = patient_id,
-                  family = poisson(link = "log") ,
-                  corstr = "ar1"
-)
-
-results_gee_adj <- gee_adj %>% gee_output_org_fn("GEE Adjusted")
+# # Adjusted GEE poisson
+# all_var <- c("monthly_visits","exposure", "follow_up_time", "sex", "region",
+#              "age_cat", "imd_q5", "ethnicity_6", "bmi_cat", "number_comorbidities_cat",
+#              "previous_covid_hosp", "cov_covid_vax_n_cat") # variables for non-missing
+# 
+# gee_adj <- geeglm(monthly_visits ~ exposure + offset(log(follow_up_time)),
+#                   data = drop_na(matched_data_ts, any_of(all_var)),
+#                   id = patient_id,
+#                   family = poisson(link = "log") ,
+#                   corstr = "ar1"
+# )
+# 
+# results_gee_adj <- gee_adj %>% gee_output_org_fn("GEE Adjusted")
 
 
 # organised and save output
-# bind_rows(ri_poisson_crude, 
-#           ri_poisson_adj, 
-#           rs_poisson_crude, 
-#           rs_poisson_adj) %>% write_csv(here("output", "st03_model_02_rm_models.csv"))
+bind_rows(ri_poisson_crude,
+          # ri_poisson_adj, rs_poisson_adj,
+          rs_poisson_crude) %>% write_csv(here("output", "st03_model_02_rm_models.csv"))
 
 
-bind_rows(results_gee_crude, results_gee_adj) %>% write_csv(here("output", "st03_model_02_gee_models.csv"))
+# bind_rows(results_gee_crude, results_gee_adj) %>% 
+results_gee_crude %>% write_csv(here("output", "st03_model_02_gee_models.csv"))
 
 
 
