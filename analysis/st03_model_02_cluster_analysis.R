@@ -83,11 +83,14 @@ gee_output_org_fn <- function(reg, m){
       
       return(output)
 }
-
+matched_data_ts[c("monthly_visits", "exposure", "follow_up_time")] %>% summary
 # Crude GEE poisson
 gee_crude <- geeglm(monthly_visits ~ exposure + offset(log(follow_up_time)),
-                    data = drop_na(matched_data_ts, any_of(c("monthly_visits", "exposure", "follow_up_time"))),
+                    data = drop_na(matched_data_ts, any_of(
+                          c("monthly_visits","follow_up_time"))
+                                    ),
                     id = patient_id,
+                    waves = month,
                     family = poisson(link = "log") ,
                     corstr = "ar1"
 )
