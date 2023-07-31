@@ -158,6 +158,7 @@ actions:
         zero_percent_fig: output/st1_5_explore_zero_percentage.png
         monthly_oucome_tb: output/st1_5_monthly_outcome_distribution.csv
         crude_rate_tb: output/st1_5_crude_monthly_rate.csv
+        visit_explore: output/st1_5_cat_visits_summary.csv
 
   report02_hx_matched_datasets:
     needs: [import_matched_historical_exposure, import_matched_historical_controls]
