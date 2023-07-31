@@ -48,14 +48,14 @@ ri_poisson_crude <- output_org_fn(crude_glmer, "Random intercept Poisson crude")
 # ri_poisson_adj <- output_org_fn(adj_glmer, "Random intercept Poisson adjusted")
 
 ## Crude random slope -------
-
-crude_glmer_slope <- glmer(
-      formula = monthly_visits ~ 1 + exposure + offset(log(follow_up_time)) + (1 + exposure |patient_id),
-      data = matched_data_ts,
-      family = poisson(link = "log")
-)
-
-rs_poisson_crude <- output_org_fn(crude_glmer_slope, "Random slope Poisson crude")
+# 
+# crude_glmer_slope <- glmer(
+#       formula = monthly_visits ~ 1 + exposure + offset(log(follow_up_time)) + (1 + exposure |patient_id),
+#       data = matched_data_ts,
+#       family = poisson(link = "log")
+# )
+# 
+# rs_poisson_crude <- output_org_fn(crude_glmer_slope, "Random slope Poisson crude")
 
 # ## Adjusted random slope ------
 # adj_glmer_slope <- glmer(
@@ -113,7 +113,8 @@ results_gee_crude <- gee_crude %>% gee_output_org_fn("GEE Crude")
 # organised and save output
 bind_rows(ri_poisson_crude,
           # ri_poisson_adj, rs_poisson_adj,
-          rs_poisson_crude) %>% write_csv(here("output", "st03_model_02_rm_models.csv"))
+          # rs_poisson_crude
+          ) %>% write_csv(here("output", "st03_model_02_rm_models.csv"))
 
 
 # bind_rows(results_gee_crude, results_gee_adj) %>% 
