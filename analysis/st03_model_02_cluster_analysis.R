@@ -11,8 +11,8 @@ complete_fu_id <- gee_crude_data %>% group_by(exposure, patient_id) %>%
       summarise(n=n()) %>% 
       as_tibble() %>% 
       filter(n == 12) %>% dplyr::select(patient_id, exposure) #Try keeping obs with full 12 records 
-gee_crude_data <- gee_crude_data %>% 
-      right_join(complete_fu_id, by = c("patient_id" = "patient_id", "exposure" = "exposure"))
+# gee_crude_data <- gee_crude_data %>% 
+#       right_join(complete_fu_id, by = c("patient_id" = "patient_id", "exposure" = "exposure"))
 
 
 
