@@ -1,74 +1,20 @@
 # Load previous data management
 source("analysis/dm03_5_matched_pivot_long.R")
 
-# Fitting random-effects Poisson regression ----
-# - Allowing clustering (by individual)
+# Data exploration: what are the percentage of NA in 
+complete_vars <- c("patient_id", "exposure", "monthly_visits", "month", "follow_up_time")
+gee_crude_data <- matched_data_ts %>% dplyr::select(all_of(complete_vars)) %>% 
+      filter(!is.na(patient_id) & !is.na(monthly_visits) & 
+                   !is.na(exposure) & !is.na(follow_up_time) & !is.na(month))
 
-# Random intercept model: cluster: by individual:  "patient_id"      
+complete_fu_id <- gee_crude_data %>% group_by(exposure, patient_id) %>% 
+      summarise(n=n()) %>% 
+      as_tibble() %>% 
+      filter(n == 12) %>% dplyr::select(patient_id, exposure) #Try keeping obs with full 12 records 
+gee_crude_data <- gee_crude_data %>% 
+      right_join(complete_fu_id, by = c("patient_id" = "patient_id", "exposure" = "exposure"))
 
-# define a function  to organise the regression output
-# output_org_fn <- function(reg, m){
-#       output <- reg %>% summary() %>% coef() %>% as.data.frame() 
-#       output <- output %>% mutate(term = rownames(output)) %>% 
-#             mutate(or=exp(Estimate)) %>% 
-#             mutate(lci=exp((Estimate-1.96*`Std. Error`))) %>% 
-#             mutate(hci=exp((Estimate+1.96*`Std. Error`))) %>% 
-#             mutate(model=m) %>% 
-#             dplyr::select(model, term, or, lci, hci,`Pr(>|z|)`) %>% 
-#             filter(term == "(Intercept)" | term == "exposureLong covid exposure")
-#       
-#       aic <- reg %>% summary %>% .$AICtab %>% as.data.frame()
-#       aic <- aic %>% mutate(model_compare = rownames(aic)) %>% 
-#             rename("value" = ".") %>% relocate(model_compare) %>% 
-#             filter(model_compare == "AIC" | model_compare == "BIC") # compare AIC BIC
-#       
-#       output <- cbind(output, aic)
-#       
-#       return(output)
-# }
-# 
-# ## Crude random intercept ------
-# crude_glmer <- glmer(
-#       formula = monthly_visits ~ 1 + exposure + offset(log(follow_up_time)) + (1|patient_id),
-#       data = matched_data_ts,
-#       family = poisson(link = "log")
-# )
-# 
-# ri_poisson_crude <- output_org_fn(crude_glmer, "Random intercept Poisson crude")
 
-# ## Adjusted random intercept ------
-# adj_glmer <- glmer(
-#       formula = monthly_visits ~ 1 + exposure + offset(log(follow_up_time)) + (1|patient_id) +
-#             sex + region + age_cat + imd_q5 + ethnicity_6 + bmi_cat +
-#             number_comorbidities_cat + previous_covid_hosp + cov_covid_vax_n_cat,
-#       data = matched_data_ts,
-#       family = poisson(link = "log")
-# )
-# 
-# ri_poisson_adj <- output_org_fn(adj_glmer, "Random intercept Poisson adjusted")
-
-## Crude random slope -------
-# 
-# crude_glmer_slope <- glmer(
-#       formula = monthly_visits ~ 1 + exposure + offset(log(follow_up_time)) + (1 + exposure |patient_id),
-#       data = matched_data_ts,
-#       family = poisson(link = "log")
-# )
-# 
-# rs_poisson_crude <- output_org_fn(crude_glmer_slope, "Random slope Poisson crude")
-
-# ## Adjusted random slope ------
-# adj_glmer_slope <- glmer(
-#       formula = monthly_visits ~ 1 + exposure + offset(log(follow_up_time)) + (1+ exposure|patient_id) +
-#             sex + region + age_cat + imd_q5 + ethnicity_6 + bmi_cat +
-#             number_comorbidities_cat + previous_covid_hosp + cov_covid_vax_n_cat,
-#       data = matched_data_ts,
-#       family = poisson(link = "log")
-# )
-
-# rs_poisson_adj <- output_org_fn(adj_glmer_slope, "Random slope Poisson adjusted")
-
-# GEE -----
 
 # function for organising outputs
 gee_output_org_fn <- function(reg, m){
@@ -83,10 +29,7 @@ gee_output_org_fn <- function(reg, m){
       
       return(output)
 }
-gee_crude_data <- matched_data_ts %>% filter(!is.na(patient_id) & !is.na(monthly_visits) & 
-                                                   !is.na(exposure) & !is.na(follow_up_time) &
-                                                   !is.na(month))
-
+# GEE -----
 # lapply(gee_crude_data[,c("patient_id", "month", "monthly_visits", "exposure", "follow_up_time")], function(x){table(is.na(x))})
 
 # Crude GEE poisson
@@ -97,7 +40,7 @@ gee_crude <- geeglm(monthly_visits ~ exposure + offset(log(follow_up_time)),
                     family = poisson(link = "log") ,
                     corstr = "ar1"
 )
-
+summary(gee_crude)
 results_gee_crude <- gee_crude %>% gee_output_org_fn("GEE Crude")
 
 
