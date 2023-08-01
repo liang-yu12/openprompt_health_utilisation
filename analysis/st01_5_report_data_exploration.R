@@ -44,13 +44,10 @@ matched_data %>% names()
 visit_cols <- matched_data[grep("all_month_", names(matched_data))] %>% 
       names() %>% as.vector() 
 
-cut(matched_data$all_month_m1,breaks = c(0,5,10,20, 9999999), 
-    labels = c("Less than 5", "5-10", "10-20", "more than 20"),
-    right = T)
 matched_data[visit_cols] <- lapply(matched_data[visit_cols], function(x){
       cut(x,
           breaks = c(0,5,10,20, 9999999), 
-          labels = c("Less than 5", "5-10", "10-20", "more than 20"),
+          labels = c("Less than 5", "More than 5 but less than 10", "More than 10 but less than 20", "more than 20"),
           right = T)
 })
 
