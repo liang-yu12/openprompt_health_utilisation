@@ -11,12 +11,12 @@ source("analysis/dm03_5_matched_pivot_long.R")
 png(file=here("output", "st1_5_explore_zero_percentage.png"),
     width=1200, height=600)
 # plots
-matched_data_ts %>% 
+matched_data_ts %>% mutate(month=as.numeric(month)) %>% 
       dplyr::select("exposure", "month", "monthly_visits") %>% 
       group_by(exposure, month) %>% 
       summarise(zero_percentage = mean(monthly_visits==0)*100) %>% 
       as_tibble() %>% 
-ggplot(aes(x = month, fill = exposure, y = zero_percentage)) +
+ggplot(aes(x = month, fill = exposure, y = zero_percentage, color = exposure)) +
       geom_bar(stat = "identity", alpha = 0.5, position = "dodge") +
       labs(x = "Month", y = "Zero Percentage") + 
       ylim(0, 100) + scale_x_continuous(breaks = 1:12)
@@ -26,7 +26,8 @@ dev.off()
 
 # Outcome distribution by time -----
 matched_data_ts[matched_data_ts$monthly_visits!=0,] %>% 
-      dplyr::select("exposure", "month", "monthly_visits") %>% 
+      mutate(month=as.numeric(month)) %>% 
+      dplyr::select("exposure", "month", "monthly_visits", "fu_total") %>% 
       group_by(exposure, month) %>% 
       summarise(median_visit= median(monthly_visits),
                 mean_visit= mean(monthly_visits),
