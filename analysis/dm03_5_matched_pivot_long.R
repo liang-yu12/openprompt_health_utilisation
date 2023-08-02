@@ -20,7 +20,7 @@ exp_visit_ts <- lc_exp_matched %>%
             values_to = "monthly_visits"
 )
 exp_visit_ts$month <- str_sub(exp_visit_ts$month, 12) # remove all_month_m
-# exp_visit_ts$month <- as.numeric(exp_visit_ts$month)
+exp_visit_ts$month <- as.numeric(exp_visit_ts$month)
 
 
 # Pivot the follow_up time: ========================
@@ -35,7 +35,7 @@ exp_fu_ts <- lc_exp_matched %>% dplyr::select(patient_id, all_of(fu_cols)) %>%
       )
 
 exp_fu_ts$month_fu <- str_sub(exp_fu_ts$month_fu, 12)  # remove "follow_up_m"
-# exp_fu_ts$month_fu <- as.numeric(exp_fu_ts$month_fu)
+exp_fu_ts$month_fu <- as.numeric(exp_fu_ts$month_fu)
 
 # Combine the data: =============
 exp_long <- left_join(exp_visit_ts, exp_fu_ts,
@@ -52,7 +52,7 @@ com_visit_ts <- com_matched %>%
             values_to = "monthly_visits"
       )
 com_visit_ts$month <- str_sub(com_visit_ts$month, 12) # remove all_month_m
-# com_visit_ts$month <- as.numeric(com_visit_ts$month)
+com_visit_ts$month <- as.numeric(com_visit_ts$month)
 
 
 # Pivot the follow_up time: ========================
@@ -65,7 +65,7 @@ com_fu_ts <- com_matched %>% dplyr::select(patient_id, all_of(fu_cols)) %>%
       )
 
 com_fu_ts$month_fu <- str_sub(com_fu_ts$month_fu, 12)  # remove "follow_up_m"
-# com_fu_ts$month_fu <- as.numeric(com_fu_ts$month_fu)
+com_fu_ts$month_fu <- as.numeric(com_fu_ts$month_fu)
 
 # Combine the data: =============
 com_long <- left_join(com_visit_ts, com_fu_ts,
