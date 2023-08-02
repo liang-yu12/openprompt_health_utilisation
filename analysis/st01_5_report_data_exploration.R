@@ -31,7 +31,9 @@ matched_data_ts[matched_data_ts$monthly_visits!=0,] %>%
       summarise(median_visit= median(monthly_visits),
                 mean_visit= mean(monthly_visits),
                 max_visit= max(monthly_visits),
-                min_visit= min(monthly_visits)) %>% 
+                min_visit= min(monthly_visits),
+                max_fu_total = max(fu_total),
+                min_fu_total = min(fu_total)) %>% 
       write_csv(here("output", "st1_5_monthly_outcome_distribution.csv"))
 
 rm(list = ls())
