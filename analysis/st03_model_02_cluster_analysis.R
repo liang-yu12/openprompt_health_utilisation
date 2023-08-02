@@ -9,7 +9,9 @@ summary(matched_data_ts$follow_up_time)
 complete_vars <- c("patient_id", "exposure", "monthly_visits", "month", "follow_up_time") # only keep necessary variables
 gee_crude_data <- matched_data_ts %>% dplyr::select(all_of(complete_vars)) %>% 
       filter(!is.na(patient_id) & !is.na(monthly_visits) & 
-                   !is.na(exposure) & !is.na(follow_up_time) & !is.na(month))
+                   !is.na(exposure) & !is.na(follow_up_time) & 
+                   !is.na(month) & (monthly_visits >=0) &
+                   (follow_up_time > 0) )
 
 summary(gee_crude_data$follow_up_time)
 table(gee_crude_data$month, useNA = "ifany")
@@ -43,6 +45,7 @@ gee_output_org_fn <- function(reg, m){
 }
 # GEE -----
 # Crude GEE poisson
+ 
 gee_crude <- geeglm(monthly_visits ~ exposure + offset(log(follow_up_time)),
                     data = gee_crude_data,
                     id = patient_id,
@@ -52,6 +55,8 @@ gee_crude <- geeglm(monthly_visits ~ exposure + offset(log(follow_up_time)),
 )
 
 summary(gee_crude)
+
+
 
 results_gee_crude <- gee_crude %>% gee_output_org_fn("GEE Crude") # organise output
 results_gee_crude %>% write_csv(here("output", "st03_model_02_gee_models.csv"))
