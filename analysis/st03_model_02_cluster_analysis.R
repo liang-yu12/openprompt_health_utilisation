@@ -1,14 +1,21 @@
 # Load previous data management
 source("analysis/dm03_5_matched_pivot_long.R")
 
+summary(matched_data_ts$follow_up_time)
+
+
+
 # Data management: GEE only runs using complete data
 complete_vars <- c("patient_id", "exposure", "monthly_visits", "month", "follow_up_time") # only keep necessary variables
 gee_crude_data <- matched_data_ts %>% dplyr::select(all_of(complete_vars)) %>% 
       filter(!is.na(patient_id) & !is.na(monthly_visits) & 
                    !is.na(exposure) & !is.na(follow_up_time) & !is.na(month))
 
-# Ordering data by cluster and time
-gee_crude_data <- arrange(gee_crude_data, patient_id, month)
+summary(gee_crude_data$follow_up_time)
+table(gee_crude_data$month, useNA = "ifany")
+table(gee_crude_data$exposure, useNA = "ifany")
+gee_crude_data$monthly_visits %>% summary
+
 
 # # Testing: running model if the data is balanced:
 # complete_fu_id <- gee_crude_data %>% group_by(exposure, patient_id) %>% 
@@ -18,6 +25,8 @@ gee_crude_data <- arrange(gee_crude_data, patient_id, month)
 # gee_crude_data <- gee_crude_data %>%
 #       right_join(complete_fu_id, by = c("patient_id" = "patient_id", "exposure" = "exposure")) # make the data balanced
 
+# Ordering data by cluster and time
+gee_crude_data <- arrange(gee_crude_data, patient_id, month)
 
 # function for organising outputs
 gee_output_org_fn <- function(reg, m){
