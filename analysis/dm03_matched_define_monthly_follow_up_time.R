@@ -25,7 +25,10 @@ source("analysis/dm01_matched_current_data.R")
 
 # define follow-up by months
 lc_exp_matched <- lc_exp_matched %>% 
-      mutate(follow_up_m1=ifelse(fu_total%/%30>=1,30, fu_total%%30)) %>% 
+      mutate(follow_up_m1=case_when(
+            fu_total%/%30>=1 ~ 30,
+            fu_total%/%30 <1 ~ fu_total,
+            fu_total == 0 ~ NA_real_)) %>% 
       mutate(follow_up_m2=case_when(
             fu_total%/%30>=2 ~ 30,
             fu_total%/%30==1 & fu_total%%30!=0 ~ fu_total%%30,
@@ -92,7 +95,10 @@ lapply(lc_exp_matched[follow_up], summary)
 
 # Define monthly follow-up in the comparator group:-----
 com_matched<- com_matched%>% 
-      mutate(follow_up_m1=ifelse(fu_total%/%30>=1,30, fu_total%%30)) %>% 
+      mutate(follow_up_m1=case_when(
+            fu_total%/%30>=1 ~ 30,
+            fu_total%/%30 <1 ~ fu_total,
+            fu_total == 0 ~ NA_real_)) %>% 
       mutate(follow_up_m2=case_when(
             fu_total%/%30>=2 ~ 30,
             fu_total%/%30==1 & fu_total%%30!=0 ~ fu_total%%30,
