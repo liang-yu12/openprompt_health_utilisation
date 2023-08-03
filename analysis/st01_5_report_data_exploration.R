@@ -39,10 +39,10 @@ matched_data_ts %>%
                 min_fu_time = min(follow_up_time, na.rm = T),
                 wrong_time = sum(follow_up_time <= 0),
                 min_index = min(index_date, na.rm = T),
-                min_death_date = min(end_death, na.rm = T), # investigating the end dates 
-                min_deregister = min(end_deregist, na.rm = T),
-                min_lc_cure = min(end_lc_cure, na.rm = T),
-                min_enddate = min(end_date, na.rm = T)) %>% 
+                wrong_death_date = sum(end_death <= index_date, na.rm = T), # investigating the end dates 
+                wrong_deregister = sum(end_deregist <= index_date, na.rm = T),
+                wrong_lc_cure = sum(end_lc_cure <= index_date, na.rm = T),
+                min_enddate = sum(end_date <= index_date, na.rm = T)) %>% 
       write_csv(here("output", "st1_5_monthly_outcome_distribution.csv"))
 
 rm(list = ls())
