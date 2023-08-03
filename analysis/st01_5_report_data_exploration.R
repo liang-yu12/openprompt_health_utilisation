@@ -28,7 +28,7 @@ dev.off()
 matched_data_ts %>% 
       mutate(month=as.numeric(month)) %>% 
       dplyr::select("exposure", "month", "monthly_visits", 
-                    "fu_total", "end_death", "end_deregist",
+                    "fu_total", "index_date","end_death", "end_deregist",
                     "end_lc_cure", "end_date", "follow_up_time") %>% 
       group_by(exposure, month) %>% 
       summarise(median_visit= median(monthly_visits, na.rm = T),
@@ -37,6 +37,8 @@ matched_data_ts %>%
                 max_fu_total = max(fu_total, na.rm = T),
                 min_fu_total = min(fu_total, na.rm = T),
                 min_fu_time = min(follow_up_time, na.rm = T),
+                wrong_time = sum(follow_up_time <= 0),
+                min_index = min(index_date, na.rm = T),
                 min_death_date = min(end_death, na.rm = T), # investigating the end dates 
                 min_deregister = min(end_deregist, na.rm = T),
                 min_lc_cure = min(end_lc_cure, na.rm = T),
