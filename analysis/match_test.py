@@ -19,6 +19,7 @@ match(
         "end_death": "before",
         "end_deregist": "before",
         "long_covid_dx_date": "before",
+        "lc_cure_date": "before"
     },
     output_suffix="_stp",
     output_path="output",
