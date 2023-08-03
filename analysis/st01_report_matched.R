@@ -5,30 +5,54 @@ source("analysis/dm03_matched_define_monthly_follow_up_time.R")
 matched_data <- bind_rows(lc_exp_matched, com_matched)
 
 # define LC outpatient visits variables
-opa_visit <- matched_data[92:103] %>% names() %>% as.vector()
+opa_lc_visit <- matched_data[92:103] %>% names() %>% as.vector()
 # define total visits variables
 visit_cols <- matched_data[grep("all_month_", names(matched_data))] %>% 
       names() %>% as.vector() # summarise the healthcare visit counts
-# define follow-up period
+# define gp visits vectors
+gp_visits <- matched_data[grep("gp_visit_m", names(matched_data))] %>% 
+      names %>% as.vector()
+# hostpital visits
+hos_visits <- matched_data[grep("hos_visit_m", names(matched_data))] %>% 
+      names %>% as.vector()
+# A&E visits
+a_e_visits <- matched_data[grep("ae_visit_m", names(matched_data))] %>% 
+      names %>% as.vector()
+# OPD visits
+opd_visits <- matched_data[grep("opa_visit_m", names(matched_data))] %>% 
+      names %>% as.vector()
+
+# summarise follow-up period
 fu_cols <- matched_data[grep("follow_up_m", names(matched_data))] %>% 
       names %>% as.vector()  # summarise follow-up time
 
-
 # define variables for table 1
 dependent = "exposure"
-explanatory = c("sex", "age","age_cat", "ethnicity_6", "bmi_cat", "imd_q5", "region",
+explanatory = c("sex", "age", "age_cat", "ethnicity_6", "bmi_cat", "imd_q5", "region",
                 "long_covid_dx", "covid_positive","previous_covid_hosp",
                 "cov_c19_vaccine_number", "cov_covid_vaccine_number", 
-                "cov_covid_vax_n_cat", "number_comorbidities_cat","admit_over_1m_count",
-                visit_cols, opa_visit, fu_cols)
+                "cov_covid_vax_n_cat", "number_comorbidities_cat","admit_over_1m_count")
 
 # Table 1 reporting numbers:  -----
-matched_data %>% summary_factorlist(dependent, explanatory, 
+# basic demographic data
+basic_demographic <- matched_data %>% summary_factorlist(dependent, explanatory, 
                                     p = TRUE,
                                     add_row_totals = TRUE,
                                     row_totals_colname = "Total",
-                                    cont_cut = 7
-                                    ) %>% 
+                                    cont_cut = 7) 
+
+
+# Summarising the outcomes by types:
+outcomes <- c(visit_cols, gp_visits, hos_visits, a_e_visits, opd_visits, opa_lc_visit, fu_cols)
+
+outcome_summary <- matched_data %>% summary_factorlist(dependent, outcomes,
+                                                       p = TRUE,
+                                                       add_row_totals = TRUE,
+                                                       row_totals_colname = "Total",
+                                                       cont_cut = 0,
+                                                       cont = "median")
+
+bind_rows(basic_demographic, outcome_summary) %>% 
       write.csv(here("output", "st01_matched_numbers_table.csv"), row.names = F)
 
 # Exploring the distribution of vaccine number and index dates
