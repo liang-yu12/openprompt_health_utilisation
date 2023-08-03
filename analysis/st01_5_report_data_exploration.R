@@ -25,16 +25,21 @@ dev.off()
 
 
 # Outcome distribution by time -----
-matched_data_ts[matched_data_ts$monthly_visits!=0,] %>% 
+matched_data_ts %>% 
       mutate(month=as.numeric(month)) %>% 
-      dplyr::select("exposure", "month", "monthly_visits", "fu_total") %>% 
+      dplyr::select("exposure", "month", "monthly_visits", 
+                    "fu_total", "end_death", "end_deregist",
+                    "end_lc_cure", "end_date") %>% 
       group_by(exposure, month) %>% 
-      summarise(median_visit= median(monthly_visits),
-                mean_visit= mean(monthly_visits),
-                max_visit= max(monthly_visits),
-                min_visit= min(monthly_visits),
-                max_fu_total = max(fu_total),
-                min_fu_total = min(fu_total)) %>% 
+      summarise(median_visit= median(monthly_visits, na.rm = T),
+                mean_visit= mean(monthly_visits, na.rm = T),
+                max_visit= max(monthly_visits, na.rm = T),
+                max_fu_total = max(fu_total, na.rm = T),
+                min_fu_total = min(fu_total, na.rm = T),
+                min_death_date = min(end_death, na.rm = T), # investigating the end dates 
+                min_deregister = min(end_deregist, na.rm = T),
+                min_lc_cure = min(end_lc_cure, na.rm = T),
+                min_enddate = min(end_date, na.rm = T)) %>% 
       write_csv(here("output", "st1_5_monthly_outcome_distribution.csv"))
 
 rm(list = ls())
