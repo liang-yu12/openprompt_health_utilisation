@@ -9,29 +9,29 @@ actions:
     run: 
       databuilder:v0 generate-dataset
         analysis/dataset_definition_unmatched_exp_lc.py
-        --output output/dataset_exp_lc_unmatched.csv.gz.gz
+        --output output/dataset_exp_lc_unmatched.csv.gz
     outputs:
       highly_sensitive:
-        cohort: output/dataset_exp_lc_unmatched.csv.gz.gz
+        cohort: output/dataset_exp_lc_unmatched.csv.gz
 
   generate_list_gp_use_long_covid_dx:
     run: 
       databuilder:v0 generate-dataset
         analysis/dataset_definition_lc_gp_list.py
-        --output output/dataset_lc_gp_list.csv.gz.gz
+        --output output/dataset_lc_gp_list.csv.gz
     outputs:
       highly_sensitive:
-        cohort: output/dataset_lc_gp_list.csv.gz.gz
+        cohort: output/dataset_lc_gp_list.csv.gz
 
   generate_dataset_comparator_exclude_gp_no_long_covid:
     needs: [generate_list_gp_use_long_covid_dx]
     run: 
       databuilder:v0 generate-dataset
         analysis/dataset_definition_unmatched_comparator.py
-        --output output/dataset_comparator_unmatched.csv.gz.gz
+        --output output/dataset_comparator_unmatched.csv.gz
     outputs:
       highly_sensitive:
-        cohort: output/dataset_comparator_unmatched.csv.gz.gz
+        cohort: output/dataset_comparator_unmatched.csv.gz
 
   test_matching:
     run:
@@ -39,9 +39,9 @@ actions:
     needs: [generate_dataset_comparator_exclude_gp_no_long_covid, generate_long_covid_exposure_dataset]
     outputs: 
       highly_sensitive:
-        matched_cases: output/matched_cases_stp.csv.gz.gz
-        matched_matches: output/matched_matches_stp.csv.gz.gz
-        matched_all: output/matched_combined_stp.csv.gz.gz
+        matched_cases: output/matched_cases_stp.csv.gz
+        matched_matches: output/matched_matches_stp.csv.gz
+        matched_all: output/matched_combined_stp.csv.gz
       moderately_sensitive: 
         matching_report: output/matching_report_stp.txt
 
@@ -49,41 +49,41 @@ actions:
     run: >
        databuilder:v0
         generate-dataset analysis/dataset_definition_matched_cases.py
-        --output output/matched_cases_with_ehr.csv.gz.gz
+        --output output/matched_cases_with_ehr.csv.gz
     needs: [test_matching]
     outputs: 
       highly_sensitive:
-        cohort: output/matched_cases_with_ehr.csv.gz.gz
+        cohort: output/matched_cases_with_ehr.csv.gz
 
   import_matched_exposure_drug_cost:
     run: >
        databuilder:v0
         generate-dataset analysis/dataset_definition_matched_cases_drug_costs.py
-        --output output/matched_cases_with_drug_costs.csv.gz.gz
+        --output output/matched_cases_with_drug_costs.csv.gz
     needs: [test_matching]
     outputs: 
       highly_sensitive:
-        cohort: output/matched_cases_with_drug_costs.csv.gz.gz
+        cohort: output/matched_cases_with_drug_costs.csv.gz
 
   import_matched_controls:
     run: >
        databuilder:v0
         generate-dataset analysis/dataset_definition_matched_control.py
-        --output output/matched_control_with_ehr.csv.gz.gz
+        --output output/matched_control_with_ehr.csv.gz
     needs: [test_matching]
     outputs: 
       highly_sensitive:
-        cohort: output/matched_control_with_ehr.csv.gz.gz
+        cohort: output/matched_control_with_ehr.csv.gz
 
   import_matched_controls_drug_costs:
     run: >
        databuilder:v0
         generate-dataset analysis/dataset_definition_matched_control_drug_costs.py
-        --output output/matched_control_with_drug_costs.csv.gz.gz
+        --output output/matched_control_with_drug_costs.csv.gz
     needs: [test_matching]
     outputs: 
       highly_sensitive:
-        cohort: output/matched_control_with_drug_costs.csv.gz.gz
+        cohort: output/matched_control_with_drug_costs.csv.gz
 
 
 # Historical comparison:
@@ -253,7 +253,7 @@ actions:
       r:latest analysis/st05_did_model.R
     outputs:
       highly_sensitive: 
-        fitted_did: "output/predicted_did_counts.csv.gz.gz"
+        fitted_did: "output/predicted_did_counts.csv.gz"
       moderately_sensitive: 
         model_dispersion: "output/sup_st01_model_compare.csv.gz"
         stats_output: "output/st05_did_stats.csv.gz"
