@@ -15,7 +15,7 @@ from variables import *
 
 # import matched data
 
-@table_from_file("output/matched_cases_stp.csv.gz")
+@table_from_file("output/matched_cases_stp.csv")
 class matched_cases(PatientFrame):
     age = Series(int)
     sex = Series(str)

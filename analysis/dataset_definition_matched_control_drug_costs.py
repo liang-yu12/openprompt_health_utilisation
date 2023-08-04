@@ -10,7 +10,7 @@ from covariates import *
 from variables import *
 # Import matched data
 
-@table_from_file("output/matched_matches_stp.csv.gz")
+@table_from_file("output/matched_matches_stp.csv")
 class matched_matches(PatientFrame):
     age = Series(int)
     sex = Series(str)
