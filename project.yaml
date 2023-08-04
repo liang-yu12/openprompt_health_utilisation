@@ -4,7 +4,8 @@ expectations:
   population_size: 5000
 
 actions:
-
+# Contemporary comparison data management:
+# # Before matching data management:
   generate_long_covid_exposure_dataset:
     run: 
       databuilder:v0 generate-dataset
@@ -32,7 +33,7 @@ actions:
     outputs:
       highly_sensitive:
         cohort: output/dataset_comparator_unmatched.csv.gz
-
+# # OS matching
   test_matching:
     run:
       python:latest python analysis/match_test.py
@@ -44,7 +45,7 @@ actions:
         matched_all: output/matched_combined_stp.csv
       moderately_sensitive: 
         matching_report: output/matching_report_stp.txt
-
+# # After matching data management
   import_matched_exposure:
     run: >
        databuilder:v0
@@ -87,7 +88,8 @@ actions:
   #       cohort: output/matched_control_with_drug_costs.csv.gz
 
 
-# Historical comparison:
+# Historical comparison data management:
+# # Before matching data management:
   generate_historical_exp_data:
     run: 
       databuilder:v0 generate-dataset analysis/dataset_definition_hx_unmatched_exp_lc.py
@@ -104,7 +106,7 @@ actions:
     outputs:
       highly_sensitive:
         hx_cohort: output/hx_dataset_comp_unmatched.csv.gz
-
+# # OS matching
   historical_matching:
     run:
       python:latest python analysis/match_historical.py
@@ -117,6 +119,7 @@ actions:
       moderately_sensitive: 
         matching_report: output/matching_report_historical.txt
 
+# # After matching data management
   import_matched_historical_exposure:
     run: >
        databuilder:v0
@@ -137,20 +140,21 @@ actions:
       highly_sensitive:
         cohort: output/hx_matched_control_with_ehr.csv.gz
 
-# Reporting:
+# Reporting: demographic distribution 
 
+# Contemporary comparison: 
   report01_matched_datasets:
     needs: [import_matched_exposure, import_matched_controls]
     run: 
       r:latest analysis/st01_report_matched.R
     outputs: 
       moderately_sensitive: 
-        matched_table: output/st01_matched_numbers_table.csv
-        explore_vax_fig: output/st1_exporing_vax_index_date.png
-        missing_table: output/missing_distribution_table.csv
-        missing_pattern: output/missing_pattern_current.png
+        matched_table: output/st01_matched_numbers_table.csv  # Table 1
+        explore_vax_fig: output/st1_exporing_vax_index_date.png # Check vax date
+        missing_table: output/missing_distribution_table.csv # Missing pattern tab
+        missing_pattern: output/missing_pattern_current.png # Missing patter plot
 
-
+# Historical comparison
   report02_hx_matched_datasets:
     needs: [import_matched_historical_exposure, import_matched_historical_controls]
     run: 
@@ -159,7 +163,13 @@ actions:
       moderately_sensitive: 
         matched_table: output/st02_hx_matched_numbers_table.csv
 
-        
+# Contemporary comparison
+# # Basic: two-part (non-cluster) analysis
+
+
+
+
+# # Advanced: cluster analysis
   report_03_model_02_clustered_analysis:
     needs: [import_matched_exposure, import_matched_controls]
     run: 
