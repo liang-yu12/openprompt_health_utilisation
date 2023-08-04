@@ -109,7 +109,7 @@ result_nb_adj <- result_nb_adj %>%
 # save outputs: ------
 bind_rows(result_poisson_crude, result_poisson_adjusted,
           result_nb_crude, result_nb_adj) %>% 
-      write_csv(here("output", "st03_model_01_poisson_and_nb.csv"))
+      write_csv(here("output", "st_sup_model_selection.csv"))
 
 
 
