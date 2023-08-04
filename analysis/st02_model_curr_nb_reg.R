@@ -62,7 +62,7 @@ matched_data_6m$exposure <- relevel(matched_data_6m$exposure, ref = "Comparator"
 matched_data_12m$exposure <- relevel(matched_data_12m$exposure, ref = "Comparator")
 
 # Stats: one part model -----
-# # Model: crude negative binomial model: -----
+# # Model 1: crude negative binomial model: -----
 # 3m 
 nb_crude_3m <- glm.nb(visits ~ exposure + offset(log(follow_up)), 
                    data = matched_data_3m,
@@ -105,7 +105,7 @@ crude_reg_results <- bind_rows(
       org_reg_results_fn(nb_crude_12m, "12 months")
 ) %>% mutate(model = "Crude") %>% relocate(model)
 
-# # Model: adjusted Negative binomial: ------
+# # Model 2: adjusted Negative binomial: ------
 # 3 months
 nb_adj_3m <- glm.nb(visits ~ exposure + offset(log(follow_up)) + 
                        sex + region + age_cat + imd_q5 + ethnicity_6 + bmi_cat +
@@ -139,8 +139,38 @@ bind_rows(crude_reg_results, adj_reg_results) %>%
       write_csv(here("output", "st_02_non_cluster_model.csv"))
 
 
+# Model 3: crude two-part(hurdle) model:
+# # Define non-zero healthcare visits
+matched_data_twopm_crude <- matched_data_12m %>% 
+      mutate(visit_binary= ifelse(visits > 0, 1, 0)) %>% 
+      filter(!is.na(visit_binary) & !is.na(exposure) & 
+                   !is.na(follow_up))
+
+# # Part 1: binomial component
+crude_hurdle_binomial <-  glm(visit_binary ~ exposure + offset(log(follow_up)), 
+                        data = matched_data_twopm_crude,
+                        family = binomial)
+
+matched_data_twopm_crude$visit_prob <- predict(crude_hurdle_binomial, type = "response") # probability of non-zero
 
 
+# # truncated negative bionomial component:regress among non-zero part
+crude_hurdle_nb_reg <- glm.nb(visits ~ exposure + offset(log(follow_up)), 
+                            data = subset(matched_data_twopm_crude, visits > 0),
+                            link = log)
 
+nb_predict <- predict(crude_hurdle_nb_reg, newdata = matched_data_twopm_crude, se.fit = T, type = "response",)
 
+matched_data_twopm_crude$visit_nb_model <- nb_predict$fit
+matched_data_twopm_crude$visit_nb_se <- nb_predict$se.fit
 
+# # multiple the non-zero and the second part:
+matched_data_twopm_crude$visit_twopm <- matched_data_twopm_crude$visit_prob*matched_data_twopm_crude$visit_nb_model
+matched_data_twopm_crude$visit_twopm_se <- matched_data_twopm_crude$visit_prob*matched_data_twopm_crude$visit_nb_se
+
+matched_data_twopm_crude %>% group_by(exposure) %>% summarise(mean = mean(visit_twopm),
+                                                            min = min(visit_twopm),
+                                                            max = max(visit_twopm),
+                                                            median = median(visit_twopm),
+                                                            sd = sd(visit_twopm))
+# Need check the references of doing so
