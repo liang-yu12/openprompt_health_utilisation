@@ -110,9 +110,9 @@ actions:
     needs: [generate_historical_exp_data, generate_historical_comp_data_exclude_gp_no_long_covid]
     outputs: 
       highly_sensitive:
-        matched_cases: output/matched_cases_historical.csv.gz
-        matched_matches: output/matched_matches_historical.csv.gz
-        matched_all: output/matched_combined_historical.csv.gz
+        matched_cases: output/matched_cases_historical.csv
+        matched_matches: output/matched_matches_historical.csv
+        matched_all: output/matched_combined_historical.csv
       moderately_sensitive: 
         matching_report: output/matching_report_historical.txt
 
