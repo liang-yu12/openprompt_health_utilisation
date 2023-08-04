@@ -150,15 +150,6 @@ actions:
         missing_table: output/missing_distribution_table.csv
         missing_pattern: output/missing_pattern_current.png
 
-  report01_5_explore_outcomes:
-    needs: [import_matched_exposure, import_matched_controls]
-    run: 
-      r:latest analysis/st01_5_report_data_exploration.R
-    outputs: 
-      moderately_sensitive: 
-        zero_percent_fig: output/st1_5_explore_zero_percentage.png
-        monthly_oucome_tb: output/st1_5_monthly_outcome_distribution.csv
-        visit_explore: output/st1_5_cat_visits_summary.csv
 
   report02_hx_matched_datasets:
     needs: [import_matched_historical_exposure, import_matched_historical_controls]
@@ -167,14 +158,7 @@ actions:
     outputs: 
       moderately_sensitive: 
         matched_table: output/st02_hx_matched_numbers_table.csv
-        
-  report_03_model_01_poisson:
-    needs: [import_matched_exposure, import_matched_controls]
-    run: 
-      r:latest analysis/st03_model_01_poisson.R
-    outputs: 
-      moderately_sensitive: 
-        model_01_poisson: output/st03_model_01_poisson_and_nb.csv
+
         
   report_03_model_02_clustered_analysis:
     needs: [import_matched_exposure, import_matched_controls]
@@ -259,3 +243,23 @@ actions:
         model_dispersion: output/sup_st01_model_compare.csv
         stats_output: output/st05_did_stats.csv
         summarised_did_predicted: output/st05_summarised_did_predicted_results.csv
+        
+# Supplementary materials
+
+  report_sup_exploring_outcome_dist:
+    needs: [import_matched_exposure, import_matched_controls]
+    run: 
+      r:latest analysis/st_sup_01_data_exploration.R
+    outputs: 
+      moderately_sensitive: 
+        zero_percent_fig: output/st_sup_1_5_explore_zero_percentage.png
+        monthly_oucome_tb: output/st_sup_1_5_monthly_outcome_distribution.csv
+        visit_explore: output/st_sup_1_5_cat_visits_summary.csv
+        
+  report_sup_model_selection:
+    needs: [import_matched_exposure, import_matched_controls]
+    run: 
+      r:latest analysis/st_sup_01_model_selection.R
+    outputs: 
+      moderately_sensitive: 
+        model_01_poisson: output/st_sup_model_selection.csv
