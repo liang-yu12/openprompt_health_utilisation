@@ -39,9 +39,9 @@ actions:
     needs: [generate_dataset_comparator_exclude_gp_no_long_covid, generate_long_covid_exposure_dataset]
     outputs: 
       highly_sensitive:
-        matched_cases: output/matched_cases_stp.csv.gz
-        matched_matches: output/matched_matches_stp.csv.gz
-        matched_all: output/matched_combined_stp.csv.gz
+        matched_cases: output/matched_cases_stp.csv
+        matched_matches: output/matched_matches_stp.csv
+        matched_all: output/matched_combined_stp.csv
       moderately_sensitive: 
         matching_report: output/matching_report_stp.txt
 
