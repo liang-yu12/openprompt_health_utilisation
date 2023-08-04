@@ -5,7 +5,7 @@ source("analysis/settings_packages.R")
 # Read in data-sets:
 # # Exposure:
 
-lc_exp_matched <- read_csv.gz("output/matched_cases_with_ehr.csv.gz", 
+lc_exp_matched <- read_csv("output/matched_cases_with_ehr.csv.gz", 
                            col_types = cols(registration_date = col_date(format = "%Y-%m-%d"), 
                                           long_covid_dx_date = col_date(format = "%Y-%m-%d"), 
                                           index_date = col_date(format = "%Y-%m-%d"), 
@@ -196,7 +196,7 @@ lc_exp_matched$all_month_m12 <- rowSums(lc_exp_matched[, m12, with = FALSE], na.
 # Data management of the comparator dataset --------------
 
 #  # Comparators:
-com_matched <- read_csv.gz("output/matched_control_with_ehr.csv.gz", 
+com_matched <- read_csv("output/matched_control_with_ehr.csv.gz", 
                         col_types = cols(registration_date = col_date(format = "%Y-%m-%d"), 
                                          long_covid_dx_date = col_date(format = "%Y-%m-%d"), 
                                          index_date = col_date(format = "%Y-%m-%d"), 
