@@ -8,7 +8,7 @@ source("analysis/dm03_5_matched_pivot_long.R")
 
 # Showing the percentage of zero ----
 
-png(file=here("output", "st1_5_explore_zero_percentage.png"),
+png(file=here("output", "st_sup_1_5_explore_zero_percentage.png"),
     width=1200, height=600)
 # plots
 matched_data_ts %>% mutate(month=as.numeric(month)) %>% 
@@ -43,7 +43,7 @@ matched_data_ts %>%
                 wrong_deregister = sum(end_deregist <= index_date, na.rm = T),
                 wrong_lc_cure = sum(end_lc_cure <= index_date, na.rm = T),
                 min_enddate = sum(end_date <= index_date, na.rm = T)) %>% 
-      write_csv(here("output", "st1_5_monthly_outcome_distribution.csv"))
+      write_csv(here("output", "st_sup_1_5_monthly_outcome_distribution.csv"))
 
 rm(list = ls())
 # check the outcomes extreme values by months:
@@ -69,5 +69,5 @@ test <- matched_data %>% summary_factorlist(dependent, explanatory,
                                     add_row_totals = TRUE,
                                     row_totals_colname = "Total",
 ) 
-test %>% write.csv(here("output", "st1_5_cat_visits_summary.csv"), row.names = F)
+test %>% write.csv(here("output", "st_sup_1_5_cat_visits_summary.csv"), row.names = F)
 
