@@ -9,29 +9,29 @@ actions:
     run: 
       databuilder:v0 generate-dataset
         analysis/dataset_definition_unmatched_exp_lc.py
-        --output output/dataset_exp_lc_unmatched.csv
+        --output output/dataset_exp_lc_unmatched.csv.gz.gz
     outputs:
       highly_sensitive:
-        cohort: output/dataset_exp_lc_unmatched.csv
+        cohort: output/dataset_exp_lc_unmatched.csv.gz.gz
 
   generate_list_gp_use_long_covid_dx:
     run: 
       databuilder:v0 generate-dataset
         analysis/dataset_definition_lc_gp_list.py
-        --output output/dataset_lc_gp_list.csv
+        --output output/dataset_lc_gp_list.csv.gz.gz
     outputs:
       highly_sensitive:
-        cohort: output/dataset_lc_gp_list.csv
+        cohort: output/dataset_lc_gp_list.csv.gz.gz
 
   generate_dataset_comparator_exclude_gp_no_long_covid:
     needs: [generate_list_gp_use_long_covid_dx]
     run: 
       databuilder:v0 generate-dataset
         analysis/dataset_definition_unmatched_comparator.py
-        --output output/dataset_comparator_unmatched.csv
+        --output output/dataset_comparator_unmatched.csv.gz.gz
     outputs:
       highly_sensitive:
-        cohort: output/dataset_comparator_unmatched.csv
+        cohort: output/dataset_comparator_unmatched.csv.gz.gz
 
   test_matching:
     run:
@@ -39,9 +39,9 @@ actions:
     needs: [generate_dataset_comparator_exclude_gp_no_long_covid, generate_long_covid_exposure_dataset]
     outputs: 
       highly_sensitive:
-        matched_cases: output/matched_cases_stp.csv
-        matched_matches: output/matched_matches_stp.csv
-        matched_all: output/matched_combined_stp.csv
+        matched_cases: output/matched_cases_stp.csv.gz.gz
+        matched_matches: output/matched_matches_stp.csv.gz.gz
+        matched_all: output/matched_combined_stp.csv.gz.gz
       moderately_sensitive: 
         matching_report: output/matching_report_stp.txt
 
@@ -49,60 +49,60 @@ actions:
     run: >
        databuilder:v0
         generate-dataset analysis/dataset_definition_matched_cases.py
-        --output output/matched_cases_with_ehr.csv
+        --output output/matched_cases_with_ehr.csv.gz.gz
     needs: [test_matching]
     outputs: 
       highly_sensitive:
-        cohort: output/matched_cases_with_ehr.csv
+        cohort: output/matched_cases_with_ehr.csv.gz.gz
 
   import_matched_exposure_drug_cost:
     run: >
        databuilder:v0
         generate-dataset analysis/dataset_definition_matched_cases_drug_costs.py
-        --output output/matched_cases_with_drug_costs.csv
+        --output output/matched_cases_with_drug_costs.csv.gz.gz
     needs: [test_matching]
     outputs: 
       highly_sensitive:
-        cohort: output/matched_cases_with_drug_costs.csv
+        cohort: output/matched_cases_with_drug_costs.csv.gz.gz
 
   import_matched_controls:
     run: >
        databuilder:v0
         generate-dataset analysis/dataset_definition_matched_control.py
-        --output output/matched_control_with_ehr.csv
+        --output output/matched_control_with_ehr.csv.gz.gz
     needs: [test_matching]
     outputs: 
       highly_sensitive:
-        cohort: output/matched_control_with_ehr.csv
+        cohort: output/matched_control_with_ehr.csv.gz.gz
 
   import_matched_controls_drug_costs:
     run: >
        databuilder:v0
         generate-dataset analysis/dataset_definition_matched_control_drug_costs.py
-        --output output/matched_control_with_drug_costs.csv
+        --output output/matched_control_with_drug_costs.csv.gz.gz
     needs: [test_matching]
     outputs: 
       highly_sensitive:
-        cohort: output/matched_control_with_drug_costs.csv
+        cohort: output/matched_control_with_drug_costs.csv.gz.gz
 
 
 # Historical comparison:
   generate_historical_exp_data:
     run: 
       databuilder:v0 generate-dataset analysis/dataset_definition_hx_unmatched_exp_lc.py
-        --output output/hx_unmatched_exp.csv
+        --output output/hx_unmatched_exp.csv.gz
     outputs:
       highly_sensitive:
-        hx_cohort: output/hx_unmatched_exp.csv
+        hx_cohort: output/hx_unmatched_exp.csv.gz
   
   generate_historical_comp_data_exclude_gp_no_long_covid:
     needs: [generate_list_gp_use_long_covid_dx]
     run: 
       databuilder:v0 generate-dataset analysis/dataset_definition_hx_unmatched_com_no_lc.py
-        --output output/hx_dataset_comp_unmatched.csv
+        --output output/hx_dataset_comp_unmatched.csv.gz
     outputs:
       highly_sensitive:
-        hx_cohort: output/hx_dataset_comp_unmatched.csv
+        hx_cohort: output/hx_dataset_comp_unmatched.csv.gz
 
   historical_matching:
     run:
@@ -110,9 +110,9 @@ actions:
     needs: [generate_historical_exp_data, generate_historical_comp_data_exclude_gp_no_long_covid]
     outputs: 
       highly_sensitive:
-        matched_cases: output/matched_cases_historical.csv
-        matched_matches: output/matched_matches_historical.csv
-        matched_all: output/matched_combined_historical.csv
+        matched_cases: output/matched_cases_historical.csv.gz
+        matched_matches: output/matched_matches_historical.csv.gz
+        matched_all: output/matched_combined_historical.csv.gz
       moderately_sensitive: 
         matching_report: output/matching_report_historical.txt
 
@@ -120,21 +120,21 @@ actions:
     run: >
        databuilder:v0
         generate-dataset analysis/dataset_definition_hx_matched_exp_lc.py
-        --output output/hx_matched_cases_with_ehr.csv
+        --output output/hx_matched_cases_with_ehr.csv.gz
     needs: [historical_matching]
     outputs: 
       highly_sensitive:
-        cohort: output/hx_matched_cases_with_ehr.csv
+        cohort: output/hx_matched_cases_with_ehr.csv.gz
 
   import_matched_historical_controls:
     run: >
        databuilder:v0
         generate-dataset analysis/dataset_definition_hx_matched_comp.py
-        --output output/hx_matched_control_with_ehr.csv
+        --output output/hx_matched_control_with_ehr.csv.gz
     needs: [historical_matching]
     outputs: 
       highly_sensitive:
-        cohort: output/hx_matched_control_with_ehr.csv
+        cohort: output/hx_matched_control_with_ehr.csv.gz
 
 # Reporting:
 
@@ -144,9 +144,9 @@ actions:
       r:latest analysis/st01_report_matched.R
     outputs: 
       moderately_sensitive: 
-        matched_table: output/st01_matched_numbers_table.csv
+        matched_table: output/st01_matched_numbers_table.csv.gz
         explore_vax_fig: output/st1_exporing_vax_index_date.png
-        missing_table: output/missing_distribution_table.csv
+        missing_table: output/missing_distribution_table.csv.gz
         missing_pattern: output/missing_pattern_current.png
 
   report01_5_explore_outcomes:
@@ -156,8 +156,8 @@ actions:
     outputs: 
       moderately_sensitive: 
         zero_percent_fig: output/st1_5_explore_zero_percentage.png
-        monthly_oucome_tb: output/st1_5_monthly_outcome_distribution.csv
-        visit_explore: output/st1_5_cat_visits_summary.csv
+        monthly_oucome_tb: output/st1_5_monthly_outcome_distribution.csv.gz
+        visit_explore: output/st1_5_cat_visits_summary.csv.gz
 
   report02_hx_matched_datasets:
     needs: [import_matched_historical_exposure, import_matched_historical_controls]
@@ -165,7 +165,7 @@ actions:
       r:latest analysis/st02_report_matched_historical.R
     outputs: 
       moderately_sensitive: 
-        matched_table: output/st02_hx_matched_numbers_table.csv
+        matched_table: output/st02_hx_matched_numbers_table.csv.gz
         
   report_03_model_01_poisson:
     needs: [import_matched_exposure, import_matched_controls]
@@ -173,7 +173,7 @@ actions:
       r:latest analysis/st03_model_01_poisson.R
     outputs: 
       moderately_sensitive: 
-        model_01_poisson: output/st03_model_01_poisson_and_nb.csv
+        model_01_poisson: output/st03_model_01_poisson_and_nb.csv.gz
         
   report_03_model_02_clustered_analysis:
     needs: [import_matched_exposure, import_matched_controls]
@@ -181,8 +181,8 @@ actions:
       r:latest analysis/st03_model_02_cluster_analysis.R
     outputs: 
       moderately_sensitive: 
-        # model_compares_poisson: output/st03_model_02_rm_models.csv
-        gee_outputs: output/st03_model_02_gee_models.csv
+        # model_compares_poisson: output/st03_model_02_rm_models.csv.gz
+        gee_outputs: output/st03_model_02_gee_models.csv.gz
         
         
   report_03_hurdle_model:
@@ -191,8 +191,8 @@ actions:
       r:latest analysis/st03_hurdle_model_rate_ratio.R
     outputs: 
       moderately_sensitive: 
-        model_selection: output/sup_st03_0_model_comparison.csv
-        hurdle_all: output/st_03_result_monthly_visit_hurdle.csv
+        model_selection: output/sup_st03_0_model_comparison.csv.gz
+        hurdle_all: output/st_03_result_monthly_visit_hurdle.csv.gz
         
   report_03_1_hurdle_model_predict:
     needs: [import_matched_exposure, import_matched_controls]
@@ -200,10 +200,10 @@ actions:
       r:latest analysis/st03_hurdle_model_predict.R
     outputs: 
       moderately_sensitive: 
-        hurdle_all: output/st_03_result_cumulative_visit_hurdle.csv
-        hurdle_gp: output/st_03_gp_result_cumulative_visit_hurdle.csv
-        hurdle_hos: output/st_03_hos_result_cumulative_visit_hurdle.csv
-        hurdle_ae: output/st_03_ae_result_cumulative_visit_hurdle.csv
+        hurdle_all: output/st_03_result_cumulative_visit_hurdle.csv.gz
+        hurdle_gp: output/st_03_gp_result_cumulative_visit_hurdle.csv.gz
+        hurdle_hos: output/st_03_hos_result_cumulative_visit_hurdle.csv.gz
+        hurdle_ae: output/st_03_ae_result_cumulative_visit_hurdle.csv.gz
         
   report_04_hurdle_model_plot:
     needs: [report_03_1_hurdle_model_predict]
@@ -221,7 +221,7 @@ actions:
       r:latest analysis/st03_sub_hurdle_model_predict.R
     outputs: 
       moderately_sensitive: 
-        subgroup_hos_visit: "output/st_03_subgroup_result_hos_cumulative_visit_hurdle.csv"
+        subgroup_hos_visit: "output/st_03_subgroup_result_hos_cumulative_visit_hurdle.csv.gz"
         
   report_03_3_twopart_model_predict:
     needs: [import_matched_exposure, import_matched_controls]
@@ -229,7 +229,7 @@ actions:
       r:latest analysis/st03_two_part_model.R
     outputs: 
       moderately_sensitive: 
-        total_costs: "output/st_04_result_cumulative_cost_full_2pm.csv"
+        total_costs: "output/st_04_result_cumulative_cost_full_2pm.csv.gz"
         
   report_03_4_twopart_model_subgroup_predict:
     needs: [import_matched_exposure, import_matched_controls]
@@ -237,7 +237,7 @@ actions:
       r:latest analysis/st03_twopart_sub_model.R
     outputs: 
       moderately_sensitive: 
-        sub_costs: "output/st_04_result_sub_cumulative_cost_2pm.csv"        
+        sub_costs: "output/st_04_result_sub_cumulative_cost_2pm.csv.gz"        
 
   report_04_plot_twopart_costs:
     needs: [report_03_3_twopart_model_predict]
@@ -253,8 +253,8 @@ actions:
       r:latest analysis/st05_did_model.R
     outputs:
       highly_sensitive: 
-        fitted_did: "output/predicted_did_counts.csv.gz"
+        fitted_did: "output/predicted_did_counts.csv.gz.gz"
       moderately_sensitive: 
-        model_dispersion: "output/sup_st01_model_compare.csv"
-        stats_output: "output/st05_did_stats.csv"
-        summarised_did_predicted: "output/st05_summarised_did_predicted_results.csv"
+        model_dispersion: "output/sup_st01_model_compare.csv.gz"
+        stats_output: "output/st05_did_stats.csv.gz"
+        summarised_did_predicted: "output/st05_summarised_did_predicted_results.csv.gz"
