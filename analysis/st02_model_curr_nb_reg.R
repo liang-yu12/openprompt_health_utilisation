@@ -61,8 +61,8 @@ matched_data_3m$exposure <- relevel(matched_data_3m$exposure, ref = "Comparator"
 matched_data_6m$exposure <- relevel(matched_data_6m$exposure, ref = "Comparator")
 matched_data_12m$exposure <- relevel(matched_data_12m$exposure, ref = "Comparator")
 
-# Stats: one part model
-# Model: crude negative binomial model: -----
+# Stats: one part model -----
+# # Model: crude negative binomial model: -----
 # 3m 
 nb_crude_3m <- glm.nb(visits ~ exposure + offset(log(follow_up)), 
                    data = matched_data_3m,
@@ -105,7 +105,7 @@ crude_reg_results <- bind_rows(
       org_reg_results_fn(nb_crude_12m, "12 months")
 ) %>% mutate(model = "Crude") %>% relocate(model)
 
-# Model: adjusted Negative binomial: ------
+# # Model: adjusted Negative binomial: ------
 # 3 months
 nb_adj_3m <- glm.nb(visits ~ exposure + offset(log(follow_up)) + 
                        sex + region + age_cat + imd_q5 + ethnicity_6 + bmi_cat +
