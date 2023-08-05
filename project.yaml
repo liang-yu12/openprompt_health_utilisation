@@ -19,10 +19,10 @@ actions:
     run: 
       databuilder:v0 generate-dataset
         analysis/dataset_definition_lc_gp_list.py
-        --output output/dataset_lc_gp_list.csv.gz
+        --output output/dataset_lc_gp_list.csv
     outputs:
       highly_sensitive:
-        cohort: output/dataset_lc_gp_list.csv.gz
+        cohort: output/dataset_lc_gp_list.csv
 
   generate_dataset_comparator_exclude_gp_no_long_covid:
     needs: [generate_list_gp_use_long_covid_dx]
