@@ -10,10 +10,10 @@ actions:
     run: 
       databuilder:v0 generate-dataset
         analysis/dataset_definition_unmatched_exp_lc.py
-        --output output/dataset_exp_lc_unmatched.csv.gz
+        --output output/dataset_exp_lc_unmatched.csv
     outputs:
       highly_sensitive:
-        cohort: output/dataset_exp_lc_unmatched.csv.gz
+        cohort: output/dataset_exp_lc_unmatched.csv
 
   generate_list_gp_use_long_covid_dx:
     run: 
@@ -29,10 +29,10 @@ actions:
     run: 
       databuilder:v0 generate-dataset
         analysis/dataset_definition_unmatched_comparator.py
-        --output output/dataset_comparator_unmatched.csv.gz
+        --output output/dataset_comparator_unmatched.csv
     outputs:
       highly_sensitive:
-        cohort: output/dataset_comparator_unmatched.csv.gz
+        cohort: output/dataset_comparator_unmatched.csv
 # # OS matching
   test_matching:
     run:
@@ -93,19 +93,19 @@ actions:
   generate_historical_exp_data:
     run: 
       databuilder:v0 generate-dataset analysis/dataset_definition_hx_unmatched_exp_lc.py
-        --output output/hx_unmatched_exp.csv.gz
+        --output output/hx_unmatched_exp.csv
     outputs:
       highly_sensitive:
-        hx_cohort: output/hx_unmatched_exp.csv.gz
+        hx_cohort: output/hx_unmatched_exp.csv
   
   generate_historical_comp_data_exclude_gp_no_long_covid:
     needs: [generate_list_gp_use_long_covid_dx]
     run: 
       databuilder:v0 generate-dataset analysis/dataset_definition_hx_unmatched_com_no_lc.py
-        --output output/hx_dataset_comp_unmatched.csv.gz
+        --output output/hx_dataset_comp_unmatched.csv
     outputs:
       highly_sensitive:
-        hx_cohort: output/hx_dataset_comp_unmatched.csv.gz
+        hx_cohort: output/hx_dataset_comp_unmatched.csv
 # # OS matching
   historical_matching:
     run:
