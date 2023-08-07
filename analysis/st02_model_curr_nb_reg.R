@@ -127,13 +127,13 @@ nb_adj_12m <- glm.nb(visits ~ exposure + offset(log(follow_up)) +
                     data = matched_data_12m,
                     link = log)
 
-# combine results
+# Combine results -----
 adj_reg_results <- bind_rows(
       org_reg_results_fn(nb_adj_3m, "3 months"),
       org_reg_results_fn(nb_adj_6m, "6 months"),
       org_reg_results_fn(nb_adj_12m, "12 months")
 ) %>% mutate(model = "Adjusted") %>% relocate(model)
 
-# write outputs:
+# # write outputs:
 bind_rows(crude_reg_results, adj_reg_results) %>% 
       write_csv(here("output", "st_02_non_cluster_model.csv"))
