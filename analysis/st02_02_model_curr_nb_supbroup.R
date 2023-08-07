@@ -211,7 +211,7 @@ subgroup_crude_hospital <- bind_rows(
 bind_rows(
       subgroup_crude_sex, subgroup_crude_hospital,
       subgroup_crude_age_3m, subgroup_crude_age_6m, subgroup_crude_age_12m) %>% 
-      write_csv(here("output", "subgroup_by_cov_crude.csv"))
+      write_csv(here("output", "st_02_subgroup_by_cov_crude.csv"))
 
 # Model 2: adjusted Negative binomial: ------
 # function for sex
@@ -267,5 +267,5 @@ subgroup_adj_sex <- bind_rows(
 )
 
 subgroup_adj_sex %>% 
-      write_csv(here("output", "subgroup_by_cov_adj_testing.csv"))
+      write_csv(here("output", "st_02_subgroup_by_cov_adj_testing.csv"))
 
