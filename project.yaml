@@ -164,7 +164,7 @@ actions:
         matched_table: output/st02_hx_matched_numbers_table.csv
 
 # Contemporary comparison
-# # Basic: including two-part (non-cluster) analysis
+# # Basic: non-cluster analysis
 
   report_02_basic_model_output:
     needs: [import_matched_exposure, import_matched_controls]
@@ -174,7 +174,16 @@ actions:
       moderately_sensitive: 
         model_non_clustered_results: output/st_02_non_cluster_model.csv
 
+# # Basic: non-cluster sub-group analysis
 
+  report_02_basic_model_output:
+    needs: [import_matched_exposure, import_matched_controls]
+    run: 
+      r:latest analysis/st02_02_model_curr_nb_supbroup.R
+    outputs: 
+      moderately_sensitive: 
+        model_non_clustered_crude_results: output/st_02_subgroup_by_cov_crude.csv
+        model_non_clustered_adj_results: output/st_02_subgroup_by_cov_adj_testing.csv
 
 # # Advanced: cluster analysis
   report_03_model_02_clustered_analysis:
