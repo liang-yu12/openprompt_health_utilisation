@@ -72,6 +72,31 @@ crude_complete_6m <- matched_data_6m %>% drop_na(any_of(crude_vars)) %>%
 crude_complete_12m <- matched_data_12m %>% drop_na(any_of(crude_vars)) %>% 
       mutate(visits_binary = ifelse(visits>0, 1, 0))
 
+# Comparing outputs from packages and manually calculation:
+crude_hurdle_3m<- hurdle(visits ~ exposure + offset(log(follow_up)), 
+       data = crude_complete_3m,
+       zero.dist = "binomial",
+       dist = "negbin")
+
+crude_binomial_3m <- glm(visits_binary ~ exposure + offset(log(follow_up)), data = crude_complete_3m,
+                         family=binomial(link="logit")) 
+
+crude_nb_3m <- glm.nb(visits ~ exposure + offset(log(follow_up)), 
+                      data = subset(crude_complete_3m, visits_binary > 0), 
+                      link = log)
+
+
+# Hurdle model coef
+crude_hurdle_3m%>% coef() %>% exp 
+# Binomial part: the same
+crude_binomial_3m%>% coef() %>% exp
+# Truncated negative binomial: the results are different.
+crude_nb_3m %>% coef() %>% exp 
+
+
+
+
+# Calculate manually: 
 # Model 1: crude binomial model: -----
 # 3m
 crude_binomial_3m <- glm(visits_binary ~ exposure + offset(log(follow_up)), data = crude_complete_3m,
