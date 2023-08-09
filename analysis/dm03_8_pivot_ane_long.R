@@ -19,7 +19,7 @@ exp_ae_visit_ts <- lc_exp_matched %>%
             names_to = c("month"),
             values_to = "monthly_ae_visits"
       )
-exp_ae_visit_ts$month <- str_sub(exp_ae_visit_ts$month, 12) # remove all_month_m
+exp_ae_visit_ts$month <- str_sub(exp_ae_visit_ts$month, 11) # remove ae_visit_m
 exp_ae_visit_ts$month <- as.numeric(exp_ae_visit_ts$month)
 
 # Pivot the follow_up time in the exposure data: ========================
@@ -48,7 +48,7 @@ com_ae_visit_ts <- com_matched %>%
             names_to = c("month"),
             values_to = "monthly_ae_visits"
       )
-com_ae_visit_ts$month <- str_sub(com_ae_visit_ts$month, 12) # remove all_month_m
+com_ae_visit_ts$month <- str_sub(com_ae_visit_ts$month, 11) # remove ae_visit_m
 com_ae_visit_ts$month <- as.numeric(com_ae_visit_ts$month)
 
 # Pivot the comparator follow_up time: ========================
