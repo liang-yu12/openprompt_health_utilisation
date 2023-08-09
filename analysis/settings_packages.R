@@ -12,6 +12,7 @@ packages <- c( "broom",
                "pscl",
                "rmarkdown","readr", 
                "stringr",
-               "twopartm", "tidyr", "tibble")
+               "twopartm", "tidyr", "tibble",
+               "VGAM")
 
 lapply(packages, require, character.only = TRUE)
