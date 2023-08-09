@@ -125,4 +125,4 @@ all_reg_results <- bind_rows(
       )
 
 # # write outputs:
-all_reg_results %>% write_csv(here("output", "st_02_non_cluster_model.csv"))
+all_reg_results %>% write_csv(here("output", "st_02_0106_y_gp_no_cluster_model.csv"))
