@@ -9,7 +9,7 @@ from covariates import *
 
 from hx_covariates import *
 from variables import *
-
+from ehrql import minimum_of
 # import matched data
 
 @table_from_file("output/matched_matches_historical.csv")
@@ -64,7 +64,7 @@ dataset.cov_temporary_immune_suppress = temporary_immune_suppress.exists_for_pat
 dataset.end_death = death_date
 dataset.end_deregist = end_reg_date
 dataset.end_lc_cure = lc_cure_date
-dataset.end_date = earliest4(dataset.end_death, dataset.end_deregist, dataset.end_lc_cure, study_end_date)
+dataset.end_date = minimum_of(dataset.end_death, dataset.end_deregist, dataset.end_lc_cure, study_end_date)
 
 # Outcome visit
 # Historical GP visits: 2019-3-1 to 2020-3-1
