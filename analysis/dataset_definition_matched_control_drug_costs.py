@@ -8,6 +8,7 @@ from databuilder.tables.beta.tpp import (
 from ehrql.query_language import table_from_file, PatientFrame, Series
 from covariates import *
 from variables import *
+from ehrql import minimum_of
 # Import matched data
 
 @table_from_file("output/matched_matches_stp.csv")

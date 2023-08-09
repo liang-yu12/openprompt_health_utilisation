@@ -11,7 +11,7 @@ from databuilder.tables.beta.tpp import (
 from ehrql.query_language import table_from_file, PatientFrame, Series
 from covariates import *
 from variables import *
-
+from ehrql import minimum_of
 
 # import matched data
 
