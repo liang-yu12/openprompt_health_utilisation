@@ -33,6 +33,16 @@ actions:
     outputs:
       highly_sensitive:
         cohort: output/dataset_comparator_unmatched.csv
+        
+# # # QC step:         
+  qc_01examine_unmatched_data:
+    run: 
+      r:latest analysis/dataset_definition_lc_gp_list.py
+        --output output/qc01_check_unmatched.csv
+    outputs:
+      highly_sensitive:
+        cohort: output/qc01_check_unmatched.csv
+        
 # # OS matching
   test_matching:
     run:
