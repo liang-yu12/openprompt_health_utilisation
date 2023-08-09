@@ -65,7 +65,7 @@ matched_data_gp_12m$exposure <- relevel(matched_data_gp_12m$exposure, ref = "Com
 # function for outputs:
 
 output_organise_fn <- function(reg_results, model_name){
-      t <- nb_adj_3m %>% summary() %>% 
+      t <- reg_results %>% summary() %>% 
             .$coefficients %>% as.data.frame()
       t$terms <- rownames(t)
       t <- t %>% mutate(lci = Estimate - 1.96*`Std. Error`) %>% 
