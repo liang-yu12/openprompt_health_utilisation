@@ -36,10 +36,9 @@ actions:
         
 # # # QC step:         
   qc_01examine_unmatched_data:
-  needs: [generate_list_gp_use_long_covid_dx, generate_long_covid_exposure_dataset]  
+    needs: [generate_dataset_comparator_exclude_gp_no_long_covid, generate_long_covid_exposure_dataset]  
     run: 
       r:latest analysis/qc01_unmatched_control.R
-        --output output/qc01_check_unmatched.csv
     outputs:
       highly_sensitive:
         cohort: output/qc01_check_unmatched.csv
