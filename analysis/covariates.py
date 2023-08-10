@@ -53,7 +53,7 @@ death_date = ons_deaths.sort_by(ons_deaths.date) \
 end_reg_date = practice_registrations \
     .where(practice_registrations.start_date <= study_start_date - days(90))\
     .except_where(practice_registrations.end_date <= study_start_date) \
-    .sort_by(practice_registrations.end_date) \
+    .sort_by(practice_registrations.start_date) \
     .last_for_patient().end_date.if_null_then(study_end_date)
 
 # The first recorded lc cure date
