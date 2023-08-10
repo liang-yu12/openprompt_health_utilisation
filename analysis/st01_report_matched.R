@@ -36,7 +36,7 @@ explanatory = c("sex", "age", "age_cat", "ethnicity_6", "bmi_cat", "imd_q5", "re
 # Table 1 reporting numbers:  -----
 # basic demographic data
 basic_demographic <- matched_data %>% summary_factorlist(dependent, explanatory, 
-                                    p = TRUE,
+                                    # p = TRUE,
                                     add_row_totals = TRUE,
                                     row_totals_colname = "Total",
                                     cont_cut = 7) 
