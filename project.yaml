@@ -38,7 +38,7 @@ actions:
   qc_01examine_unmatched_data:
   needs: [generate_list_gp_use_long_covid_dx, generate_long_covid_exposure_dataset]  
     run: 
-      r:latest analysis/dataset_definition_lc_gp_list.py
+      r:latest analysis/qc01_unmatched_control.R
         --output output/qc01_check_unmatched.csv
     outputs:
       highly_sensitive:
