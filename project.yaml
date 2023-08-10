@@ -40,7 +40,7 @@ actions:
     run: 
       r:latest analysis/qc01_unmatched_control.R
     outputs:
-      highly_sensitive:
+      moderately_sensitive:
         cohort: output/qc01_check_unmatched.csv
         
 # # OS matching
