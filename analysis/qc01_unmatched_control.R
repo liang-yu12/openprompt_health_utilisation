@@ -56,9 +56,14 @@ lc_com_raw$lc_yes <- as.factor(lc_com_raw$lc_yes)
 unmatched_all <- bind_rows(lc_exp_raw, lc_com_raw)
 unmatched_all$exposure <- as.factor(unmatched_all$exposure)
 
+unmatched_all <- unmatched_all %>% 
+      mutate(death_na = ifelse(is.na(end_death), 0, 1)) %>% 
+      mutate(dereg_na = ifelse(is.na(end_deregist), 0, 1)) %>% 
+      mutate(lc_cure_na = ifelse(is.na(end_lc_cure), 0, 1))
+
 # generate basic summarised table:
 dependent = "exposure"
-explanatory = c("sex", "age", "lc_yes", "wrong_date")
+explanatory = c("sex", "age", "lc_yes", "wrong_date", "death_na", "dereg_na", "lc_cure_na")
 
 unmatched_results <- unmatched_all %>% summary_factorlist(dependent, explanatory) 
 unmatched_results %>% write_csv(here("output", "qc01_check_unmatched.csv"))
