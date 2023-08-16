@@ -118,7 +118,7 @@ actions:
         hx_cohort: output/hx_dataset_comp_unmatched.csv
         
 # # # QC step:         
-  qc_01examine_unmatched_data:
+  qc_02examine_historical_unmatched_data:
     needs: [generate_historical_exp_data, generate_historical_comp_data_exclude_gp_no_long_covid]  
     run: 
       r:latest analysis/qc02_hx_unmatched_check.R
