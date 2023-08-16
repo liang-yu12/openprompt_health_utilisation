@@ -179,7 +179,7 @@ actions:
   report_02_basic_model_output:
     needs: [import_matched_exposure, import_matched_controls]
     run: 
-      r:latest analysis/st02_01_model_curr_nb_reg.R
+      r:latest analysis/st02_01_00_model_curr_nb_reg.R
     outputs: 
       moderately_sensitive: 
         model_non_clustered_results: output/st_02_non_cluster_model.csv
