@@ -1,51 +1,12 @@
 # Load all packages
-source("analysis/settings_packages.R")
+source("analysis/dm02_01_hx_variables.R")
 
-# 1. Data management for DID structure:----
+# Data management for DID structure:----
 # Explanation: Need to create a long table specifying the time period and the exposure group, 
 # So that in the following analysis we can add the interaction term in the DID model 
 
-# First define common variables to select:
-vars <- c("patient_id","age","sex","region","lc_dx","index_date","exposure",
-          "ethnicity" ,"imd", "bmi", "end_death", "end_deregist", "end_lc_cure",
-          "cov_cancer" ,"cov_mental_health", "cov_asthma", "cov_organ_transplant",
-          "cov_chronic_cardiac_disease", "cov_chronic_liver_disease", 
-          "cov_stroke_dementia" ,"cov_other_neuro_diseases", "cov_ra_sle_psoriasis", 
-          "cov_asplenia" ,"cov_hiv" ,"cov_aplastic_anemia",          
-          "cov_permanent_immune_suppress", "cov_temporary_immune_suppress")
-
-comorbidities <- c("cov_cancer",  "cov_mental_health",   "cov_asthma",
-                   "cov_organ_transplant",   "cov_chronic_cardiac_disease",   "cov_chronic_liver_disease",
-                   "cov_stroke_dementia",   "cov_other_neuro_diseases",   "cov_ra_sle_psoriasis",
-                   "cov_asplenia",   "cov_hiv",   "cov_aplastic_anemia",   "cov_permanent_immune_suppress",
-                   "cov_temporary_immune_suppress")
-
-hx_visits <- c("hx_gp_visit_m1", "hx_gp_visit_m2", "hx_gp_visit_m3", "hx_gp_visit_m4", "hx_gp_visit_m5",
-        "hx_gp_visit_m6", "hx_gp_visit_m7", "hx_gp_visit_m8", "hx_gp_visit_m9", "hx_gp_visit_m10",
-        "hx_gp_visit_m11", "hx_gp_visit_m12", "hx_hos_visit_m1", "hx_hos_visit_m2", "hx_hos_visit_m3",
-        "hx_hos_visit_m4", "hx_hos_visit_m5", "hx_hos_visit_m6", "hx_hos_visit_m7", "hx_hos_visit_m8",
-        "hx_hos_visit_m9", "hx_hos_visit_m10", "hx_hos_visit_m11", "hx_hos_visit_m12", "hx_ae_visit_m1",
-        "hx_ae_visit_m2", "hx_ae_visit_m3", "hx_ae_visit_m4", "hx_ae_visit_m5", "hx_ae_visit_m6",
-        "hx_ae_visit_m7", "hx_ae_visit_m8", "hx_ae_visit_m9", "hx_ae_visit_m10", "hx_ae_visit_m11",
-        "hx_ae_visit_m12")
-
-
-now_visits <- c("gp_visit_m1", "gp_visit_m2", "gp_visit_m3", "gp_visit_m4", "gp_visit_m5", "gp_visit_m6",
-             "gp_visit_m7", "gp_visit_m8", "gp_visit_m9", "gp_visit_m10", "gp_visit_m11", "gp_visit_m12",
-             "hos_visit_m1", "hos_visit_m2", "hos_visit_m3", "hos_visit_m4", "hos_visit_m5", "hos_visit_m6",
-             "hos_visit_m7", "hos_visit_m8", "hos_visit_m9", "hos_visit_m10", "hos_visit_m11", "hos_visit_m12",
-             "ae_visit_m1", "ae_visit_m2", "ae_visit_m3", "ae_visit_m4", "ae_visit_m5", "ae_visit_m6",
-             "ae_visit_m7", "ae_visit_m8", "ae_visit_m9", "ae_visit_m10", "ae_visit_m11", "ae_visit_m12")
-
-## Exposure/cases:-----
-hx_cases <- read_csv(here("output", "hx_matched_cases_with_ehr.csv"), 
-                                      col_types = cols(index_date = col_date(format = "%Y-%m-%d"), 
-                                                       bmi_date = col_skip(),
-                                                       end_death = col_date(format = "%Y-%m-%d"), 
-                                                       end_deregist = col_date(format = "%Y-%m-%d"), 
-                                                       end_lc_cure = col_date(format = "%Y-%m-%d")))
-### Combine the all healthcare visit by months:
-#### First get the vector of all visits:
+# Extract the column names for each month: -----
+# Recognise the column name patterns, and then use prefix to separate the historical and current visits
 m1 <- hx_cases[, grepl("_visit_m1$", names(hx_cases)), with = FALSE] %>% names() %>% as.vector()
 m1_hx <- m1[grepl("hx_", m1)] # historical visits
 m1_now <- m1[!grepl("hx_", m1)] # current visits
@@ -94,8 +55,13 @@ m12 <- hx_cases[, grepl("_visit_m12$", names(hx_cases)), with = FALSE] %>% names
 m12_hx <- m12[grepl("hx_", m12)] # historical visits
 m12_now <- m12[!grepl("hx_", m12)] # current visits
 
+# Exposure & Historical subset: ----
 
-# 1. Subset the historical cases: ----
+
+# Define the exposure 
+# split the data
+
+hx_cases %>% names
 hx_exp <- hx_cases %>% dplyr::select(all_of(vars), all_of(hx_visits)) %>% mutate(time = 0)
 
 # 1.1: Combine the historical healthcare visits
