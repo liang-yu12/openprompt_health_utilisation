@@ -44,28 +44,89 @@ hx_cases <- read_csv(here("output", "hx_matched_cases_with_ehr.csv"),
                                                        end_death = col_date(format = "%Y-%m-%d"), 
                                                        end_deregist = col_date(format = "%Y-%m-%d"), 
                                                        end_lc_cure = col_date(format = "%Y-%m-%d")))
-### subset the historical cases: 
+### Combine the all healthcare visit by months:
+#### First get the vector of all visits:
+m1 <- hx_cases[, grepl("_visit_m1$", names(hx_cases)), with = FALSE] %>% names() %>% as.vector()
+m1_hx <- m1[grepl("hx_", m1)] # historical visits
+m1_now <- m1[!grepl("hx_", m1)] # current visits
+
+m2 <- hx_cases[, grepl("_visit_m2$", names(hx_cases)), with = FALSE] %>% names() %>% as.vector()
+m2_hx <- m2[grepl("hx_", m2)] # historical visits
+m2_now <- m2[!grepl("hx_", m2)] # current visits
+
+m3 <- hx_cases[, grepl("_visit_m3$", names(hx_cases)), with = FALSE] %>% names() %>% as.vector()
+m3_hx <- m3[grepl("hx_", m3)] # historical visits
+m3_now <- m3[!grepl("hx_", m3)] # current visits
+
+m4 <- hx_cases[, grepl("_visit_m4$", names(hx_cases)), with = FALSE] %>% names() %>% as.vector()
+m4_hx <- m4[grepl("hx_", m4)] # historical visits
+m4_now <- m4[!grepl("hx_", m4)] # current visits
+
+m5 <- hx_cases[, grepl("_visit_m5$", names(hx_cases)), with = FALSE] %>% names() %>% as.vector()
+m5_hx <- m5[grepl("hx_", m5)] # historical visits
+m5_now <- m5[!grepl("hx_", m5)] # current visits
+
+m6 <- hx_cases[, grepl("_visit_m6$", names(hx_cases)), with = FALSE] %>% names() %>% as.vector()
+m6_hx <- m6[grepl("hx_", m6)] # historical visits
+m6_now <- m6[!grepl("hx_", m6)] # current visits
+
+m7 <- hx_cases[, grepl("_visit_m7$", names(hx_cases)), with = FALSE] %>% names() %>% as.vector()
+m7_hx <- m7[grepl("hx_", m7)] # historical visits
+m7_now <- m7[!grepl("hx_", m7)] # current visits
+
+m8 <- hx_cases[, grepl("_visit_m8$", names(hx_cases)), with = FALSE] %>% names() %>% as.vector()
+m8_hx <- m8[grepl("hx_", m8)] # historical visits
+m8_now <- m8[!grepl("hx_", m8)] # current visits
+
+m9 <- hx_cases[, grepl("_visit_m9$", names(hx_cases)), with = FALSE] %>% names() %>% as.vector()
+m9_hx <- m9[grepl("hx_", m9)] # historical visits
+m9_now <- m9[!grepl("hx_", m9)] # current visits
+
+m10 <- hx_cases[, grepl("_visit_m10$", names(hx_cases)), with = FALSE] %>% names() %>% as.vector()
+m10_hx <- m10[grepl("hx_", m10)] # historical visits
+m10_now <- m10[!grepl("hx_", m10)] # current visits
+
+m11 <- hx_cases[, grepl("_visit_m11$", names(hx_cases)), with = FALSE] %>% names() %>% as.vector()
+m11_hx <- m11[grepl("hx_", m11)] # historical visits
+m11_now <- m11[!grepl("hx_", m11)] # current visits
+
+m12 <- hx_cases[, grepl("_visit_m12$", names(hx_cases)), with = FALSE] %>% names() %>% as.vector()
+m12_hx <- m12[grepl("hx_", m12)] # historical visits
+m12_now <- m12[!grepl("hx_", m12)] # current visits
+
+
+# 1. Subset the historical cases: ----
 hx_exp <- hx_cases %>% dplyr::select(all_of(vars), all_of(hx_visits)) %>% mutate(time = 0)
 
-### Combine the all healthcare visit by months:
-
-m1 <- hx_cases[, grepl("_visit_m1", names(hx_cases)), with = FALSE] %>% names() %>% as.vector()
-# This will also contend m10, need to revise
-
-
-
-
-
-
-
-
-
-
-
+# 1.1: Combine the historical healthcare visits
+hx_exp$all_month_m1 <- rowSums(hx_exp[,m1_hx, with = F], na.rm = T)
+hx_exp$all_month_m2 <- rowSums(hx_exp[,m2_hx, with = F], na.rm = T)
+hx_exp$all_month_m3 <- rowSums(hx_exp[,m3_hx, with = F], na.rm = T)
+hx_exp$all_month_m4 <- rowSums(hx_exp[,m4_hx, with = F], na.rm = T)
+hx_exp$all_month_m5 <- rowSums(hx_exp[,m5_hx, with = F], na.rm = T)
+hx_exp$all_month_m6 <- rowSums(hx_exp[,m6_hx, with = F], na.rm = T)
+hx_exp$all_month_m7 <- rowSums(hx_exp[,m7_hx, with = F], na.rm = T)
+hx_exp$all_month_m8 <- rowSums(hx_exp[,m8_hx, with = F], na.rm = T)
+hx_exp$all_month_m9 <- rowSums(hx_exp[,m9_hx, with = F], na.rm = T)
+hx_exp$all_month_m10 <- rowSums(hx_exp[,m10_hx, with = F], na.rm = T)
+hx_exp$all_month_m11 <- rowSums(hx_exp[,m11_hx, with = F], na.rm = T)
+hx_exp$all_month_m12 <- rowSums(hx_exp[,m12_hx, with = F], na.rm = T)
 
 
+# 1.2 Pivot the dataset to long form 
+visit_cols <- hx_exp[grep("all_month_", names(hx_exp))] %>% 
+      names %>% as.vector() # set up the columns
 
-hx_exp <- setnames(hx_exp, old = hx_visits, new = now_visits) # Rename variables for later combinations
+hx_exp_ts <- hx_exp %>% 
+      pivot_longer(
+            cols = all_of(visit_cols),
+            names_to = c("month"),
+            values_to = "monthly_visits"
+      )
+hx_
+
+
+
 
 ### Define the follow-up time:
 hx_exp <- hx_exp %>% mutate(
