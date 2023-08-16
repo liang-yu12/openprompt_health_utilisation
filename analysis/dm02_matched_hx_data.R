@@ -5,7 +5,6 @@ source("analysis/settings_packages.R")
 # Explanation: Need to create a long table specifying the time period and the exposure group, 
 # So that in the following analysis we can add the interaction term in the DID model 
 
-
 # First define common variables to select:
 vars <- c("patient_id","age","sex","region","lc_dx","index_date","exposure",
           "ethnicity" ,"imd", "bmi", "end_death", "end_deregist", "end_lc_cure",
@@ -38,7 +37,6 @@ now_visits <- c("gp_visit_m1", "gp_visit_m2", "gp_visit_m3", "gp_visit_m4", "gp_
              "ae_visit_m1", "ae_visit_m2", "ae_visit_m3", "ae_visit_m4", "ae_visit_m5", "ae_visit_m6",
              "ae_visit_m7", "ae_visit_m8", "ae_visit_m9", "ae_visit_m10", "ae_visit_m11", "ae_visit_m12")
 
-
 ## Exposure/cases:-----
 hx_cases <- read_csv(here("output", "hx_matched_cases_with_ehr.csv"), 
                                       col_types = cols(index_date = col_date(format = "%Y-%m-%d"), 
@@ -48,6 +46,25 @@ hx_cases <- read_csv(here("output", "hx_matched_cases_with_ehr.csv"),
                                                        end_lc_cure = col_date(format = "%Y-%m-%d")))
 ### subset the historical cases: 
 hx_exp <- hx_cases %>% dplyr::select(all_of(vars), all_of(hx_visits)) %>% mutate(time = 0)
+
+### Combine the all healthcare visit by months:
+
+m1 <- hx_cases[, grepl("_visit_m1", names(hx_cases)), with = FALSE] %>% names() %>% as.vector()
+# This will also contend m10, need to revise
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 hx_exp <- setnames(hx_exp, old = hx_visits, new = now_visits) # Rename variables for later combinations
 
 ### Define the follow-up time:
