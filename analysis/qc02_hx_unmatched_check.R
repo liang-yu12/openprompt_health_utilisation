@@ -50,9 +50,6 @@ unmatched_all <- unmatched_all  %>%
                                   as.numeric(index_date) > as.numeric(end_deregist) |
                                   as.numeric(index_date) > as.numeric(end_lc_cure)), 1, 0))
 
-
-
-
 # generate basic summarised table:
 dependent = "exposure"
 explanatory = c("sex", "age", "region", "wrong_date")
