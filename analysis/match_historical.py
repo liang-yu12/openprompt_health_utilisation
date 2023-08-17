@@ -15,6 +15,11 @@ match(
     index_date_variable="index_date",
     replace_match_index_date_with_case="no_offset", 
     indicator_variable_name="lc_exposure",
+    date_exclusion_variables={
+        "end_death": "before",
+        "end_deregist": "before",
+        "end_lc_cure": "before"
+    },
     output_suffix="_historical",
     output_path="output",
 )
