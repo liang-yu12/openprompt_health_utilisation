@@ -49,8 +49,7 @@ outcome_summary <- matched_data %>% summary_factorlist(dependent, outcomes,
                                                        p = TRUE,
                                                        add_row_totals = TRUE,
                                                        row_totals_colname = "Total",
-                                                       cont_cut = 0,
-                                                       cont = "median")
+                                                       cont_cut = 0)
 
 bind_rows(basic_demographic, outcome_summary) %>% 
       write.csv(here("output", "st01_matched_numbers_table.csv"), row.names = F)
