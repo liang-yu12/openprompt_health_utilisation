@@ -68,10 +68,11 @@ output_organise_fn <- function(reg_results, model_name){
       t <- reg_results %>% summary() %>% 
             .$coefficients %>% as.data.frame()
       t$terms <- rownames(t)
-      t <- t %>% mutate(lci = Estimate - 1.96*`Std. Error`) %>% 
-            mutate(hci = Estimate + 1.96*`Std. Error`) %>% 
+      t <- t %>% mutate(lci = exp(Estimate - 1.96*`Std. Error`)) %>% 
+            mutate(hci = exp(Estimate + 1.96*`Std. Error`)) %>% 
+            mutate(estimate = exp(Estimate)) %>% 
             filter(terms == "exposureLong covid exposure") %>% 
-            dplyr::select(terms, Estimate, lci, hci, `Pr(>|z|)`) %>% 
+            dplyr::select(terms, estimate, lci, hci, `Pr(>|z|)`) %>% 
             mutate(model = model_name) %>% relocate(model) 
       return(t)
 }
