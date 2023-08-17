@@ -5,6 +5,14 @@ source("analysis/dm02_01_hx_variables.R")
 # Explanation: Need to create a long table specifying the time period and the exposure group, 
 # So that in the following analysis we can add the interaction term in the DID model 
 
+# Var: 
+# exposure: 1 "exposure" 0 "comparator"
+# time: 0 "historical" 1 "current"
+
+
+common_vars <- c("patient_id","sex","age_cat", "ethnicity_6", "bmi_cat", 
+                 "region", "imd_q5", "number_comorbidities_cat")
+
 # Extract the column names for each month: -----
 # Recognise the column name patterns, and then use prefix to separate the historical and current visits
 m1 <- hx_cases[, grepl("_visit_m1$", names(hx_cases)), with = FALSE] %>% names() %>% as.vector()
@@ -57,12 +65,7 @@ m12_now <- m12[!grepl("hx_", m12)] # current visits
 
 # Exposure & Historical subset: ----
 
-
-# Define the exposure 
-# split the data
-
-hx_cases %>% names
-hx_exp <- hx_cases %>% dplyr::select(all_of(vars), all_of(hx_visits)) %>% mutate(time = 0)
+hx_exp <- hx_cases # Create a dataset with everything. Will simplify it later
 
 # 1.1: Combine the historical healthcare visits
 hx_exp$all_month_m1 <- rowSums(hx_exp[,m1_hx, with = F], na.rm = T)
@@ -77,6 +80,16 @@ hx_exp$all_month_m9 <- rowSums(hx_exp[,m9_hx, with = F], na.rm = T)
 hx_exp$all_month_m10 <- rowSums(hx_exp[,m10_hx, with = F], na.rm = T)
 hx_exp$all_month_m11 <- rowSums(hx_exp[,m11_hx, with = F], na.rm = T)
 hx_exp$all_month_m12 <- rowSums(hx_exp[,m12_hx, with = F], na.rm = T)
+
+all_months_vars <- hx_exp[,grepl("all_month_",names(hx_exp))] %>% 
+      names %>% as.vector() # extract the names
+
+hx_exp <- hx_exp %>% dplyr::select(all_of(common_vars), all_of(all_months_vars))
+hx_exp$exposure <- 1  # This is exposure group
+hx_exp$time <- 0 #Historical records 
+
+
+
 
 
 # 1.2 Pivot the dataset to long form 
