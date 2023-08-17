@@ -243,7 +243,7 @@ actions:
   report_02_basic_model__subgroup:
     needs: [import_matched_exposure, import_matched_controls]
     run: 
-      r:latest analysis/st02_02_model_curr_nb_supbroup.R
+      r:latest analysis/st02_01_x_subgroups_model_curr_nb.R
     outputs: 
       moderately_sensitive: 
         model_non_clustered_crude_results: output/st_02_subgroup_by_cov_crude.csv
