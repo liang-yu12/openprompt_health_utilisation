@@ -3,7 +3,7 @@ source("analysis/settings_packages.R")
 
 # Exposure group: covariate data management:   ------
 # read in matched lc exposure group:
-hx_cases <- read_csv(here("output", "hx_matched_cases_with_ehr.csv"), 
+hx_cases <- read_csv(here("output", "hx_matched_cases_with_ehr.csv.gz"), 
                      col_types = cols(index_date = col_date(format = "%Y-%m-%d"), 
                                       bmi_date = col_skip(),
                                       end_death = col_date(format = "%Y-%m-%d"), 
@@ -73,7 +73,7 @@ hx_cases[comorbidities] <- NULL
 
 hx_cases %>% names
 # Comparator group: covariate data management ------
-hx_control <- read_csv(here("output", "hx_matched_control_with_ehr.csv"), 
+hx_control <- read_csv(here("output", "hx_matched_control_with_ehr.csv.gz"), 
                        col_types = cols(index_date = col_date(format = "%Y-%m-%d"), 
                                         bmi_date = col_skip(),
                                         end_death = col_date(format = "%Y-%m-%d"), 
