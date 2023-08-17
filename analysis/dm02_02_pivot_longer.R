@@ -156,7 +156,7 @@ now_exp$fu_total %>% summary
 
 
 
-
+# again, some people died before index date!
 
 
 
