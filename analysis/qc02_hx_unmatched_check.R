@@ -46,13 +46,13 @@ unmatched_all$exposure <- as.factor(unmatched_all$exposure)
 
 # examine wrong dates: 
 unmatched_all <- unmatched_all  %>% 
-      mutate(wrong_date = ifelse((as.numeric(index_date) > as.numeric(end_death) |
-                                  as.numeric(index_date) > as.numeric(end_deregist) |
-                                  as.numeric(index_date) > as.numeric(end_lc_cure)), 1, 0))
+      mutate(wrong_death = ifelse((as.numeric(index_date) > as.numeric(end_death)), 1, 0)) %>% 
+      mutate(wrong_regist= ifelse((as.numeric(index_date) > as.numeric(end_deregist)), 1,0)) %>% 
+      mutate(wrong_lc_cure= ifelse((as.numeric(index_date) > as.numeric(end_lc_cure)), 1,0)) 
 
 # generate basic summarised table:
 dependent = "exposure"
-explanatory = c("sex", "age", "region", "wrong_date")
+explanatory = c("sex", "age", "region", "wrong_death", "wrong_regist", "wrong_lc_cure")
 
 unmatched_results <- unmatched_all %>% summary_factorlist(dependent, explanatory) 
 unmatched_results %>% write_csv(here("output", "qc02_hx_check_unmatched.csv"))
