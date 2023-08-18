@@ -7,7 +7,7 @@ source("analysis/dm03_6_pivot_gp_long.R")
 matched_data_gp_ts$month %>% table
 # # 3 months
 matched_data_gp_3m <- matched_data_gp_ts %>% 
-      filter(month %in% c(1,2,3)) %>% 
+      filter(month %in% c(1,2,3) & !is.na(follow_up_time)) %>% 
       group_by(patient_id, exposure) %>% 
       summarise(
             visits = sum(monthly_gp_visits),
@@ -16,7 +16,7 @@ matched_data_gp_3m <- matched_data_gp_ts %>%
 
 # # 6 months
 matched_data_gp_6m <- matched_data_gp_ts %>% 
-      filter(month %in% c(1,2,3,4,5,6)) %>% 
+      filter(month %in% c(1,2,3,4,5,6) & !is.na(follow_up_time)) %>% 
       group_by(patient_id, exposure) %>% 
       summarise(
             visits = sum(monthly_gp_visits),
@@ -25,6 +25,7 @@ matched_data_gp_6m <- matched_data_gp_ts %>%
 
 # follow 12 months 
 matched_data_gp_12m <- matched_data_gp_ts %>% 
+      filter(!is.na(follow_up_time)) %>% 
       group_by(patient_id, exposure) %>% 
       summarise(
             visits = sum(monthly_gp_visits),
@@ -76,7 +77,6 @@ output_organise_fn <- function(reg_results, model_name){
             mutate(model = model_name) %>% relocate(model) 
       return(t)
 }
-
 
 # Stats: one part model -----
 # # Model 1: crude negative binomial model: -----
