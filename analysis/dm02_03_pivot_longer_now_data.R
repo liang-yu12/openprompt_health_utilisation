@@ -245,10 +245,10 @@ now_com_ts <- now_com_ts %>% left_join(now_com_fu_ts,
                                        by = c("patient_id" = "patient_id", 
                                               "month" = "month"))
 
-now_com_ts$comosure <- 0  # comosure group
+now_com_ts$exposure <- 0  # exposure group
 now_com_ts$time <- 1 # contemporary records
 now_com_ts <- now_com_ts %>% 
-      relocate(comosure, .after = "number_comorbidities_cat") %>% 
-      relocate(time, .after = "comosure")
+      relocate(exposure, .after = "number_comorbidities_cat") %>% 
+      relocate(time, .after = "exposure")
 
 
