@@ -3,10 +3,6 @@
 # Load previous data management
 source("analysis/dm02_04_combine_long_data_for_did.R")
 
-crude_distribution <- did_data_12m %>% group_by(exposure, time) %>% 
-      summarise(mean_visits = mean(visits))
-
-
 # Curde negative bionomial model -----
 did_crude_nb <- glm.nb(visits ~ exposure*time + offset(log(follow_up)),
                    data = did_data_12m) 
