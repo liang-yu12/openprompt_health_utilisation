@@ -115,7 +115,11 @@ hx_control <- hx_control  %>% mutate(
 hx_control[to_be_factors] <- lapply(hx_control[to_be_factors], as.factor)
 hx_control[to_be_factors] <- lapply(hx_control[to_be_factors], droplevels)
 
-
+levels(hx_control$imd_q5)<- c("least_deprived",
+                            "2_deprived",
+                            "3_deprived",
+                            "4_deprived",
+                            "most_deprived")
 # deal with comorbidities
 hx_control[comorbidities] <- lapply(hx_control[comorbidities], as.logical)
 hx_control$number_comorbidities <- rowSums(hx_control[comorbidities], na.rm = T)
