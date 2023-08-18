@@ -174,14 +174,6 @@ actions:
         missing_table: output/missing_distribution_table.csv # Missing pattern tab
         missing_pattern: output/missing_pattern_current.png # Missing patter plot
 
-# Historical comparison
-  report02_hx_matched_datasets:
-    needs: [import_matched_historical_exposure, import_matched_historical_controls]
-    run: 
-      r:latest analysis/st02_report_matched_historical.R
-    outputs: 
-      moderately_sensitive: 
-        matched_table: output/st02_hx_matched_numbers_table.csv
 
 # Contemporary comparison
 # # Basic: non-cluster all analysis
@@ -249,6 +241,15 @@ actions:
         model_non_clustered_crude_results: output/st_02_subgroup_by_cov_crude.csv
         model_non_clustered_adj_results: output/st_02_subgroup_by_cov_adj_testing.csv
 
+# Historical: data distribution
+  report05_hx_matched_data_distribution:
+    needs: [import_matched_historical_exposure, import_matched_historical_controls]
+    run: 
+      r:latest analysis/st05_report_matched_historical_records.R
+    outputs: 
+      moderately_sensitive: 
+        historical_table_1: output/st05_hx_matched_numbers_table.csv
+        crude_visits_distribution: output/st05_hx_crude_vistis_exp_time.csv
 
 # # Historical: difference-in-difference model
 
