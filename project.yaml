@@ -250,6 +250,17 @@ actions:
         model_non_clustered_adj_results: output/st_02_subgroup_by_cov_adj_testing.csv
 
 
+# # Historical: difference-in-difference model
+
+  report_05_did_model:      
+    needs: [import_matched_historical_exposure, import_matched_historical_controls]
+    run: 
+      r:latest analysis/st05_did_model.R
+    outputs: 
+      moderately_sensitive: 
+        did_crude: output/st05_did_crude.png
+        did_adj: output/st05_did_adj.png
+        did_reg_predict: output/st05_did_reg.csv
 
 # # Advanced: cluster analysis
   report_03_model_02_clustered_analysis:
