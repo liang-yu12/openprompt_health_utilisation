@@ -111,36 +111,36 @@ crude_reg_results <- bind_rows(
       org_reg_results_fn(nb_crude_6m, "6 months"),
       org_reg_results_fn(nb_crude_12m, "12 months")
 ) %>% mutate(model = "Crude") %>% relocate(model)
-
-# # Model 2: adjusted Negative binomial: ------
-# 3 months
-nb_adj_3m <- glm.nb(visits ~ exposure + offset(log(follow_up)) + 
-                       sex + region + age_cat + imd_q5 + ethnicity_6 + bmi_cat +
-                       number_comorbidities_cat + previous_covid_hosp + cov_covid_vax_n_cat, 
-                 data = matched_data_3m,
-                 link = log)
-
-# 6 months
-nb_adj_6m <- glm.nb(visits ~ exposure + offset(log(follow_up)) + 
-                          sex + region + age_cat + imd_q5 + ethnicity_6 + bmi_cat +
-                          number_comorbidities_cat + previous_covid_hosp + cov_covid_vax_n_cat, 
-                    data = matched_data_6m,
-                    link = log)
-
-# 12 months
-nb_adj_12m <- glm.nb(visits ~ exposure + offset(log(follow_up)) + 
-                          sex + region + age_cat + imd_q5 + ethnicity_6 + bmi_cat +
-                          number_comorbidities_cat + previous_covid_hosp + cov_covid_vax_n_cat, 
-                    data = matched_data_12m,
-                    link = log)
-
-# Combine results -----
-adj_reg_results <- bind_rows(
-      org_reg_results_fn(nb_adj_3m, "3 months"),
-      org_reg_results_fn(nb_adj_6m, "6 months"),
-      org_reg_results_fn(nb_adj_12m, "12 months")
-) %>% mutate(model = "Adjusted") %>% relocate(model)
-
-# # write outputs:
-bind_rows(crude_reg_results, adj_reg_results) %>% 
-      write_csv(here("output", "st_02_non_cluster_model.csv"))
+# 
+# # # Model 2: adjusted Negative binomial: ------
+# # 3 months
+# nb_adj_3m <- glm.nb(visits ~ exposure + offset(log(follow_up)) + 
+#                        sex + region + age_cat + imd_q5 + ethnicity_6 + bmi_cat +
+#                        number_comorbidities_cat + previous_covid_hosp + cov_covid_vax_n_cat, 
+#                  data = matched_data_3m,
+#                  link = log)
+# 
+# # 6 months
+# nb_adj_6m <- glm.nb(visits ~ exposure + offset(log(follow_up)) + 
+#                           sex + region + age_cat + imd_q5 + ethnicity_6 + bmi_cat +
+#                           number_comorbidities_cat + previous_covid_hosp + cov_covid_vax_n_cat, 
+#                     data = matched_data_6m,
+#                     link = log)
+# 
+# # 12 months
+# nb_adj_12m <- glm.nb(visits ~ exposure + offset(log(follow_up)) + 
+#                           sex + region + age_cat + imd_q5 + ethnicity_6 + bmi_cat +
+#                           number_comorbidities_cat + previous_covid_hosp + cov_covid_vax_n_cat, 
+#                     data = matched_data_12m,
+#                     link = log)
+# 
+# # Combine results -----
+# adj_reg_results <- bind_rows(
+#       org_reg_results_fn(nb_adj_3m, "3 months"),
+#       org_reg_results_fn(nb_adj_6m, "6 months"),
+#       org_reg_results_fn(nb_adj_12m, "12 months")
+# ) %>% mutate(model = "Adjusted") %>% relocate(model)
+# 
+# # # write outputs:
+# bind_rows(crude_reg_results, adj_reg_results) %>% 
+crude_reg_results %>%      write_csv(here("output", "st_02_non_cluster_model.csv"))
