@@ -59,6 +59,7 @@ for_covariates <- matched_data_ts %>% distinct(patient_id, exposure, .keep_all =
 for_covariates$sex <- relevel(for_covariates$sex, ref = "female")
 for_covariates$age_cat <- relevel(for_covariates$age_cat, ref = "18-29")
 for_covariates$previous_covid_hosp <- relevel(for_covariates$previous_covid_hosp, "FALSE")
+for_covariates$number_comorbidities_cat <- as.factor(for_covariates$number_comorbidities_cat)
 
 # # add covariates back to the summarised data frame
 matched_data_3m <- left_join(matched_data_3m, for_covariates,
