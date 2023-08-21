@@ -7,20 +7,20 @@ source("analysis/dm03_5_matched_pivot_long.R")
 
 # # 3 months
 matched_data_3m <- matched_data_ts %>% 
-      filter(month %in% c(1,2,3) & !is.na(follow_up_time)) %>% 
+      filter(month %in% c(1,2,3)) %>% 
       group_by(patient_id, exposure) %>% 
       summarise(
-            visits = sum(monthly_visits),
-            follow_up = sum(follow_up_time)) %>% 
+            visits = sum(monthly_visits, na.rm = T),
+            follow_up = sum(follow_up_time, na.rm = T)) %>% 
       ungroup()
 
 # # 6 months
 matched_data_6m <- matched_data_ts %>% 
-      filter(month %in% c(1,2,3,4,5,6) & !is.na(follow_up_time)) %>% 
+      filter(month %in% c(1,2,3,4,5,6)) %>% 
       group_by(patient_id, exposure) %>% 
       summarise(
-            visits = sum(monthly_visits),
-            follow_up = sum(follow_up_time)) %>% 
+            visits = sum(monthly_visits, na.rm = T),
+            follow_up = sum(follow_up_time, na.rm = T)) %>% 
       ungroup()
 
 # follow 12 months 
@@ -28,8 +28,8 @@ matched_data_12m <- matched_data_ts %>%
       filter(!is.na(follow_up_time)) %>% 
       group_by(patient_id, exposure) %>% 
       summarise(
-            visits = sum(monthly_visits),
-            follow_up = sum(follow_up_time)) %>% 
+            visits = sum(monthly_visits, na.rm = T),
+            follow_up = sum(follow_up_time, na.rm = T)) %>% 
       ungroup()
 
 
