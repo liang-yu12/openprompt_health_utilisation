@@ -17,8 +17,8 @@ did_data_12m <- did_data %>%
       filter(!is.na(fu_time)) %>% 
       group_by(patient_id, exposure, time) %>% 
       summarise(
-            visits = sum(monthly_visits),
-            follow_up = sum(fu_time)) %>% 
+            visits = sum(monthly_visits, na.rm = T),
+            follow_up = sum(fu_time, na.rm = T)) %>% 
       ungroup()
 
 # adding covariates back: 
