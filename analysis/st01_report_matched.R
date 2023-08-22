@@ -29,17 +29,20 @@ fu_cols <- matched_data[grep("follow_up_m", names(matched_data))] %>%
 # define variables for table 1
 dependent = "exposure"
 explanatory = c("sex", "age", "age_cat", "ethnicity_6", "bmi_cat", "imd_q5", "region",
-                "long_covid_dx", "covid_positive","previous_covid_hosp",
-                "cov_c19_vaccine_number", "cov_covid_vaccine_number", 
-                "cov_covid_vax_n_cat", "number_comorbidities_cat","admit_over_1m_count")
+                "number_comorbidities_cat",
+                "previous_covid_hosp",
+                "cov_c19_vaccine_number", 
+                "cov_covid_vaccine_number", "cov_covid_vax_n_cat", 
+                "long_covid_dx", "covid_positive"
+                )
 
 # Table 1 reporting numbers:  -----
 # basic demographic data
 basic_demographic <- matched_data %>% summary_factorlist(dependent, explanatory, 
-                                    # p = TRUE,
+                                    p = TRUE,
                                     add_row_totals = TRUE,
                                     row_totals_colname = "Total",
-                                    cont_cut = 7) 
+                                    cont_cut = 5) 
 
 
 # Summarising the outcomes by types:
@@ -49,7 +52,8 @@ outcome_summary <- matched_data %>% summary_factorlist(dependent, outcomes,
                                                        p = TRUE,
                                                        add_row_totals = TRUE,
                                                        row_totals_colname = "Total",
-                                                       cont_cut = 0)
+                                                       cont_cut = 0,
+                                                       cont = "median")
 
 bind_rows(basic_demographic, outcome_summary) %>% 
       write.csv(here("output", "st01_matched_numbers_table.csv"), row.names = F)
