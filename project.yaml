@@ -170,6 +170,7 @@ actions:
     outputs: 
       moderately_sensitive: 
         matched_table: output/st01_matched_numbers_table.csv  # Table 1
+        explore_fu_time: output/st01_matched_numbers_check_fu.csv # check the incorrect follow-up time
         explore_vax_fig: output/st1_exporing_vax_index_date.png # Check vax date
         missing_table: output/missing_distribution_table.csv # Missing pattern tab
         missing_pattern: output/missing_pattern_current.png # Missing patter plot

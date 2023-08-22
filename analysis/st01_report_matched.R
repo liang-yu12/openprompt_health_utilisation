@@ -54,6 +54,26 @@ outcome_summary <- matched_data %>% summary_factorlist(dependent, outcomes,
 bind_rows(basic_demographic, outcome_summary) %>% 
       write.csv(here("output", "st01_matched_numbers_table.csv"), row.names = F)
 
+
+matched_data %>% group_by(exposure) %>% 
+      summarise(
+            zero_count_m1 = sum(follow_up_m1==0, na.rm=T),
+            zero_count_m2 = sum(follow_up_m2 == 0, na.rm=T),
+            zero_count_m3 = sum(follow_up_m3 == 0, na.rm=T),
+            zero_count_m4 = sum(follow_up_m4 == 0, na.rm=T),
+            zero_count_m5 = sum(follow_up_m5 == 0, na.rm=T),
+            zero_count_m6 = sum(follow_up_m6 == 0, na.rm=T),
+            zero_count_m7 = sum(follow_up_m7 == 0, na.rm=T),
+            zero_count_m8 = sum(follow_up_m8 == 0, na.rm=T),
+            zero_count_m9 = sum(follow_up_m9 == 0, na.rm=T),
+            zero_count_m10 = sum(follow_up_m10 == 0, na.rm=T),
+            zero_count_m11 = sum(follow_up_m11 == 0, na.rm=T),
+            zero_count_m12 = sum(follow_up_m12 == 0, na.rm=T)
+      ) %>% 
+write.csv(here("output", "st01_matched_numbers_check_fu.csv"), row.names = F)
+
+
+
 # Exploring the distribution of vaccine number and index dates
 plot_vaccine_distribution <- function(x) {
       # Filter the data by exposure.
