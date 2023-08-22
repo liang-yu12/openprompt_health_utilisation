@@ -8,65 +8,66 @@ now_exp <- hx_cases # subset for current group
 now_exp$fu_total <- as.numeric(now_exp$end_date) - as.numeric(now_exp$index_date)
 
 now_exp <- now_exp %>% 
-      mutate(follow_up_m1 = case_when(
+      mutate(follow_up_m1=case_when(
             fu_total%/%30>=1 ~ 30,
-            fu_total%/%30 <1 ~ fu_total,
+            fu_total%/%30 <1 & fu_total!=0  ~ fu_total,
             fu_total == 0 ~ NA_real_)) %>% 
       mutate(follow_up_m2=case_when(
-            fu_total%/%30>=2 ~ 30,
+            fu_total%/%30> 1 ~ 30,
             fu_total%/%30==1 & fu_total%%30!=0 ~ fu_total%%30,
             fu_total%/%30==1 & fu_total%%30==0 ~ NA_real_,
-            fu_total%/%30< 1 ~ NA_real_)) %>% 
+            fu_total%/%30 < 1 ~ NA_real_)) %>% 
       mutate(follow_up_m3=case_when(
-            fu_total%/%30>=3 ~ 30,
+            fu_total%/%30> 2 ~ 30,
             fu_total%/%30==2 & fu_total%%30!=0  ~ fu_total%%30,
             fu_total%/%30==2 & fu_total%%30==0 ~ NA_real_,
             fu_total%/%30< 2 ~ NA_real_)) %>%
       mutate(follow_up_m4=case_when(
-            fu_total%/%30>=4 ~ 30,
+            fu_total%/%30> 3 ~ 30,
             fu_total%/%30==3 & fu_total%%30!=0  ~ fu_total%%30,
             fu_total%/%30==3 & fu_total%%30==0 ~ NA_real_,
             fu_total%/%30< 3 ~ NA_real_)) %>%
       mutate(follow_up_m5=case_when(
-            fu_total%/%30>=5 ~ 30,
+            fu_total%/%30> 4 ~ 30,
             fu_total%/%30==4 & fu_total%%30!=0  ~ fu_total%%30,
             fu_total%/%30==4 & fu_total%%30==0 ~ NA_real_,
             fu_total%/%30< 4 ~ NA_real_)) %>%
       mutate(follow_up_m6=case_when(
-            fu_total%/%30>=6 ~ 30,
+            fu_total%/%30> 5 ~ 30,
             fu_total%/%30==5 & fu_total%%30!=0 ~ fu_total%%30,
             fu_total%/%30==5 & fu_total%%30==0 ~ NA_real_,
             fu_total%/%30< 5 ~ NA_real_)) %>%
       mutate(follow_up_m7=case_when(
-            fu_total%/%30>=7 ~ 30,
+            fu_total%/%30> 6 ~ 30,
             fu_total%/%30==6 & fu_total%%30!=0 ~ fu_total%%30,
             fu_total%/%30==6 & fu_total%%30==0 ~ NA_real_,
             fu_total%/%30< 6 ~ NA_real_)) %>%
       mutate(follow_up_m8=case_when(
-            fu_total%/%30>=8 ~ 30,
+            fu_total%/%30> 7 ~ 30,
             fu_total%/%30==7 & fu_total%%30!=0 ~ fu_total%%30,
             fu_total%/%30==7 & fu_total%%30==0 ~ NA_real_,
             fu_total%/%30< 7 ~ NA_real_)) %>%
       mutate(follow_up_m9=case_when(
-            fu_total%/%30>=9 ~ 30,
+            fu_total%/%30> 8 ~ 30,
             fu_total%/%30==8 & fu_total%%30!=0 ~ fu_total%%30,
             fu_total%/%30==8 & fu_total%%30==0 ~ NA_real_,
             fu_total%/%30< 8 ~ NA_real_)) %>%
       mutate(follow_up_m10=case_when(
-            fu_total%/%30>=10~ 30,
+            fu_total%/%30> 9~ 30,
             fu_total%/%30==9 & fu_total%%30!=0 ~ fu_total%%30,
             fu_total%/%30==9 & fu_total%%30==0 ~ NA_real_,
             fu_total%/%30<9~NA_real_)) %>%
       mutate(follow_up_m11=case_when(
-            fu_total%/%30>=11~ 30,
+            fu_total%/%30> 10~ 30,
             fu_total%/%30==10 & fu_total%%30!=0 ~ fu_total%%30,
             fu_total%/%30==10 & fu_total%%30==0 ~ NA_real_,
             fu_total%/%30<10~NA_real_)) %>%
       mutate(follow_up_m12=case_when(
-            fu_total%/%30>=12~ 30,
+            fu_total%/%30> 11~ 30,
             fu_total%/%30==11 & fu_total%%30!=0 ~ fu_total%%30,
             fu_total%/%30==11 & fu_total%%30==0 ~ NA_real_,
             fu_total%/%30<11~NA_real_))
+
 
 follow_up <- c("follow_up_m1","follow_up_m2","follow_up_m3","follow_up_m4",
                "follow_up_m5","follow_up_m6","follow_up_m7","follow_up_m8",
@@ -134,65 +135,66 @@ now_com <- hx_control
 now_com$fu_total <- as.numeric(now_com$end_date) - as.numeric(now_com$index_date)
 
 now_com <- now_com %>% 
-      mutate(follow_up_m1 = case_when(
+      mutate(follow_up_m1=case_when(
             fu_total%/%30>=1 ~ 30,
-            fu_total%/%30 <1 ~ fu_total,
+            fu_total%/%30 <1 & fu_total!=0  ~ fu_total,
             fu_total == 0 ~ NA_real_)) %>% 
       mutate(follow_up_m2=case_when(
-            fu_total%/%30>=2 ~ 30,
+            fu_total%/%30> 1 ~ 30,
             fu_total%/%30==1 & fu_total%%30!=0 ~ fu_total%%30,
             fu_total%/%30==1 & fu_total%%30==0 ~ NA_real_,
-            fu_total%/%30< 1 ~ NA_real_)) %>% 
+            fu_total%/%30 < 1 ~ NA_real_)) %>% 
       mutate(follow_up_m3=case_when(
-            fu_total%/%30>=3 ~ 30,
+            fu_total%/%30> 2 ~ 30,
             fu_total%/%30==2 & fu_total%%30!=0  ~ fu_total%%30,
             fu_total%/%30==2 & fu_total%%30==0 ~ NA_real_,
             fu_total%/%30< 2 ~ NA_real_)) %>%
       mutate(follow_up_m4=case_when(
-            fu_total%/%30>=4 ~ 30,
+            fu_total%/%30> 3 ~ 30,
             fu_total%/%30==3 & fu_total%%30!=0  ~ fu_total%%30,
             fu_total%/%30==3 & fu_total%%30==0 ~ NA_real_,
             fu_total%/%30< 3 ~ NA_real_)) %>%
       mutate(follow_up_m5=case_when(
-            fu_total%/%30>=5 ~ 30,
+            fu_total%/%30> 4 ~ 30,
             fu_total%/%30==4 & fu_total%%30!=0  ~ fu_total%%30,
             fu_total%/%30==4 & fu_total%%30==0 ~ NA_real_,
             fu_total%/%30< 4 ~ NA_real_)) %>%
       mutate(follow_up_m6=case_when(
-            fu_total%/%30>=6 ~ 30,
+            fu_total%/%30> 5 ~ 30,
             fu_total%/%30==5 & fu_total%%30!=0 ~ fu_total%%30,
             fu_total%/%30==5 & fu_total%%30==0 ~ NA_real_,
             fu_total%/%30< 5 ~ NA_real_)) %>%
       mutate(follow_up_m7=case_when(
-            fu_total%/%30>=7 ~ 30,
+            fu_total%/%30> 6 ~ 30,
             fu_total%/%30==6 & fu_total%%30!=0 ~ fu_total%%30,
             fu_total%/%30==6 & fu_total%%30==0 ~ NA_real_,
             fu_total%/%30< 6 ~ NA_real_)) %>%
       mutate(follow_up_m8=case_when(
-            fu_total%/%30>=8 ~ 30,
+            fu_total%/%30> 7 ~ 30,
             fu_total%/%30==7 & fu_total%%30!=0 ~ fu_total%%30,
             fu_total%/%30==7 & fu_total%%30==0 ~ NA_real_,
             fu_total%/%30< 7 ~ NA_real_)) %>%
       mutate(follow_up_m9=case_when(
-            fu_total%/%30>=9 ~ 30,
+            fu_total%/%30> 8 ~ 30,
             fu_total%/%30==8 & fu_total%%30!=0 ~ fu_total%%30,
             fu_total%/%30==8 & fu_total%%30==0 ~ NA_real_,
             fu_total%/%30< 8 ~ NA_real_)) %>%
       mutate(follow_up_m10=case_when(
-            fu_total%/%30>=10~ 30,
+            fu_total%/%30> 9~ 30,
             fu_total%/%30==9 & fu_total%%30!=0 ~ fu_total%%30,
             fu_total%/%30==9 & fu_total%%30==0 ~ NA_real_,
             fu_total%/%30<9~NA_real_)) %>%
       mutate(follow_up_m11=case_when(
-            fu_total%/%30>=11~ 30,
+            fu_total%/%30> 10~ 30,
             fu_total%/%30==10 & fu_total%%30!=0 ~ fu_total%%30,
             fu_total%/%30==10 & fu_total%%30==0 ~ NA_real_,
             fu_total%/%30<10~NA_real_)) %>%
       mutate(follow_up_m12=case_when(
-            fu_total%/%30>=12~ 30,
+            fu_total%/%30> 11~ 30,
             fu_total%/%30==11 & fu_total%%30!=0 ~ fu_total%%30,
             fu_total%/%30==11 & fu_total%%30==0 ~ NA_real_,
             fu_total%/%30<11~NA_real_))
+
 
 # Define the current visits
 now_com$all_month_m1 <- rowSums(now_com[,m1_now, with = F], na.rm = T)
