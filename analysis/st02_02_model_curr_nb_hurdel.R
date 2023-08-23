@@ -74,28 +74,52 @@ crude_complete_12m <- matched_data_12m %>% drop_na(any_of(crude_vars)) %>%
       mutate(visits_binary = ifelse(visits>0, 1, 0))
 
 # Comparing outputs from packages and manually calculation:
-crude_hurdle_3m<- hurdle(visits ~ exposure + offset(log(follow_up)), 
-       data = crude_complete_3m,
-       zero.dist = "binomial",
-       dist = "negbin")
 
+# Binomial model: 
 crude_binomial_3m <- glm(visits_binary ~ exposure + offset(log(follow_up)), data = crude_complete_3m,
                          family=binomial(link="logit")) 
 
-crude_nb_3m <- glm.nb(visits ~ exposure + offset(log(follow_up)), 
-                      data = subset(crude_complete_3m, visits_binary > 0), 
-                      link = log)
+# Truncated negative binomial model:
+crude_zt_nb_3m <- vglm(visits ~ exposure + offset(log(follow_up)), 
+                       family = posnegbinomial(),
+                       data = subset(crude_complete_3m, visits_binary > 0))
 
 
-# Hurdle model coef
-crude_hurdle_3m%>% coef() %>% exp 
-# Binomial part: the same
-crude_binomial_3m%>% coef() %>% exp
-# Truncated negative binomial: the results are different.
-crude_nb_3m %>% coef() %>% exp 
+# Hurdle model;
+crude_hurdle_3m<- hurdle(visits ~ exposure + offset(log(follow_up)), 
+                         data = crude_complete_3m,
+                         zero.dist = "binomial",
+                         dist = "negbin")
 
 
+# Prediction: # 3m
+# Predict the chance of being 1/0
+crude_complete_3m$prob_visits <- predict(crude_binomial_3m, type = "response")
 
+# Predict the overall chance: 
+
+
+ptest <- predictvglm(crude_zt_nb_3m, newdata= crude_complete_3m, 
+                     type = "link", se.fit = T)
+
+ptest2 <- predictvglm(crude_zt_nb_3m, newdata= crude_complete_3m, 
+                     type = "response")
+
+ptest$fitted.values %>% exp()
+
+# Multiply them together: 
+crude_complete_3m$hurdle_outcome <- crude_complete_3m$prob_visits*crude_complete_3m$prob_hurdle
+crude_complete_3m %>% group_by(exposure) %>% 
+      summarise(mean = mean(hurdle_outcome),
+                sd = sd(hurdle_outcome))
+
+
+crude_complete_3m$output_package <- predict(crude_hurdle_3m, se.fit = T)
+crude_complete_3m %>% group_by(exposure) %>% 
+      summarise(mean = mean(output_package),
+                sd = sd(output_package))
+
+# The output are very similar. 
 
 # Calculate manually: 
 # Model 1: crude binomial model: -----
