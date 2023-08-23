@@ -6,8 +6,7 @@ source("analysis/dm02_04_combine_long_data_for_did.R")
 # Curde negative bionomial model -----
 did_crude_nb <- glm.nb(visits ~ exposure*time + offset(log(follow_up)),
                    data = did_data_12m) 
-
-did_crude_nb %>% summary
+coef(did_crude_nb) %>% exp()
 # Predict crude model: setup function for outputs: ----
 
 crude_predic_fn <- function(i.exp, i.time){
@@ -58,14 +57,13 @@ dev.off()
 
 # Adjusted negative binomial model ------
 did_adj_nb <- glm.nb(visits ~ exposure*time + offset(log(follow_up)) +
-                           sex + age_cat + ethnicity_6 + bmi_cat + region + imd_q5 + number_comorbidities_cat,
+                           sex + age_cat + ethnicity_6 + bmi_cat +  region + imd_q5 + number_comorbidities_cat,
                      data = did_data_12m) 
-
-
+coef(did_adj_nb) %>% exp()
 # set up functions:
 adj_predic_fn <- function(i.exp, i.time){
       # # set up input new data frame
-      input <- data.frame(exposure = i.exp, 
+      input <- expand.grid(exposure = i.exp, 
                           time = i.time,
                           follow_up = 360,
                           sex = c("female", "male"),
