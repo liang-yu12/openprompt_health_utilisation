@@ -1,4 +1,4 @@
-source(here("analysis", "dm03_9_pivot_opa_long.R"))
+source("analysis/dm03_9_pivot_opa_long.R")
 
 opa_couts_summary <- matched_data_opa_ts %>% group_by(exposure) %>% 
       summarise(opa_median = median(monthly_opa_visits),
