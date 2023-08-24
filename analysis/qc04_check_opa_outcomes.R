@@ -4,7 +4,7 @@ opa_couts_summary <- matched_data_opa_ts %>% group_by(exposure) %>%
       summarise(opa_median = median(monthly_opa_visits),
                 opa_mean = mean(monthly_opa_visits),
                 opa_max = max(monthly_opa_visits),
-                fu_time = mean(follow_up_time)
+                fu_time = mean(follow_up_time, na.rm =T)
                 ) %>% as.data.frame() %>% mutate(data = "original")
 
 
