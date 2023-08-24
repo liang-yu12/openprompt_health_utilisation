@@ -238,8 +238,13 @@ actions:
       moderately_sensitive: 
         model_non_clustered_results: output/st_02_0109_y_opa_no_cluster_model.csv
 
-
-
+  qc_04_check_opa_distribution:
+    needs: [import_matched_exposure, import_matched_controls]
+    run: 
+      r:latest analysis/qc04_check_opa_outcomes.R
+    outputs: 
+      moderately_sensitive: 
+        opa_distribution_all: output/opa_outcome_distribution.csv
 
 # # Basic: non-cluster sub-group analysis
 
