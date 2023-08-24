@@ -176,6 +176,15 @@ actions:
         missing_pattern: output/missing_pattern_current.png # Missing patter plot
 
 
+# Check follow-up time 
+  qc_03_check_na:
+    needs: [import_matched_exposure, import_matched_controls]
+    run: 
+      r:latest analysis/qc03_now_check_followup.R
+    outputs: 
+      moderately_sensitive: 
+        check_na_in_data: output/st02_check_min.csv
+
 # Contemporary comparison
 # # Basic: non-cluster all analysis
 
@@ -186,17 +195,6 @@ actions:
     outputs: 
       moderately_sensitive: 
         model_non_clustered_results: output/st_02_non_cluster_model.csv
-
-
-# Check errors 
-
-  report_000_check_na:
-    needs: [import_matched_exposure, import_matched_controls]
-    run: 
-      r:latest analysis/st02_00_00_check_followup.R
-    outputs: 
-      moderately_sensitive: 
-        check_na_in_data: output/st02_check_min.csv
 
 
 # # Basic: non-cluster gp visits outcome anaylses
