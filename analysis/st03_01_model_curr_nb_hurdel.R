@@ -168,6 +168,6 @@ adj_output_hurdle <- bind_rows(
 
 # Save both outputs
 bind_rows(crude_output_hurdle,adj_output_hurdle) %>% 
-      write_csv(here("output", "st02_02_hurdle_all.csv"))
+      write_csv(here("output", "st03_01_hurdle_all_visits.csv"))
 
 
