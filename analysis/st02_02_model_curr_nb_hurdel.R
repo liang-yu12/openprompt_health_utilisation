@@ -73,116 +73,101 @@ crude_complete_6m <- matched_data_6m %>% drop_na(any_of(crude_vars)) %>%
 crude_complete_12m <- matched_data_12m %>% drop_na(any_of(crude_vars)) %>% 
       mutate(visits_binary = ifelse(visits>0, 1, 0))
 
-# Comparing outputs from packages and manually calculation:
+# Crude Hurdle model: ------
 
-# Binomial model: 
-crude_binomial_3m <- glm(visits_binary ~ exposure + offset(log(follow_up)), data = crude_complete_3m,
-                         family=binomial(link="logit")) 
+# # Manually calculation using vglm
+# # Binomial model: 
+# crude_binomial_3m <- glm(visits_binary ~ exposure + offset(log(follow_up)), data = crude_complete_3m,
+#                          family=binomial(link="logit")) 
+# 
+# # Truncated negative binomial model:
+# crude_zt_nb_3m <- vglm(visits ~ exposure + offset(log(follow_up)), 
+#                        family = posnegbinomial(),
+#                        data = subset(crude_complete_3m, visits_binary > 0))
 
-# Truncated negative binomial model:
-crude_zt_nb_3m <- vglm(visits ~ exposure + offset(log(follow_up)), 
-                       family = posnegbinomial(),
-                       data = subset(crude_complete_3m, visits_binary > 0))
-
-
-# Hurdle model;
-crude_hurdle_3m<- hurdle(visits ~ exposure + offset(log(follow_up)), 
+# Crude Hurdle model using pscl package: 
+crude_hurdle_3m<- hurdle(visits ~ exposure, 
+                         offset = log(follow_up),
                          data = crude_complete_3m,
                          zero.dist = "binomial",
                          dist = "negbin")
 
+crude_hurdle_6m<- hurdle(visits ~ exposure + offset(log(follow_up)), 
+                         offset = log(follow_up),
+                         data = crude_complete_6m,
+                         zero.dist = "binomial",
+                         dist = "negbin")
 
-# Prediction: # 3m
-# Predict the chance of being 1/0
-crude_complete_3m$prob_visits <- predict(crude_binomial_3m, type = "response")
+crude_hurdle_12m<- hurdle(visits ~ exposure + offset(log(follow_up)), 
+                         offset = log(follow_up),
+                         data = crude_complete_12m,
+                         zero.dist = "binomial",
+                         dist = "negbin")
 
-# Predict the overall chance: 
+# Write a function to organise the regression output.
+organise_reg_output_fn <- function(reg_model, model_time){
+      estimate <- reg_model %>% coef() %>% exp() %>% as.data.frame()
+      estimate$estimate <- rownames(estimate)  # get the coeficient
+      
+      e_ci <- crude_hurdle_3m %>% confint() %>% exp %>% as.data.frame()
+      e_ci$estimate <- rownames(e_ci) # get the ci
+      
+      output <- inner_join(estimate, e_ci, by = c("estimate"="estimate")) %>% 
+            rename("rr" = ".") %>% relocate(estimate) %>% 
+            filter(estimate != "count_(Intercept)" & estimate != "zero_(Intercept)") %>% 
+            mutate(time = model_time) %>% relocate(time)
+      return(output)
+}
 
-
-ptest <- predictvglm(crude_zt_nb_3m, newdata= crude_complete_3m, 
-                     type = "link", se.fit = T)
-
-ptest2 <- predictvglm(crude_zt_nb_3m, newdata= crude_complete_3m, 
-                     type = "response")
-
-ptest$fitted.values %>% exp()
-
-# Multiply them together: 
-crude_complete_3m$hurdle_outcome <- crude_complete_3m$prob_visits*crude_complete_3m$prob_hurdle
-crude_complete_3m %>% group_by(exposure) %>% 
-      summarise(mean = mean(hurdle_outcome),
-                sd = sd(hurdle_outcome))
-
-
-crude_complete_3m$output_package <- predict(crude_hurdle_3m, se.fit = T)
-crude_complete_3m %>% group_by(exposure) %>% 
-      summarise(mean = mean(output_package),
-                sd = sd(output_package))
-
-# The output are very similar. 
-
-# Calculate manually: 
-# Model 1: crude binomial model: -----
-# 3m
-crude_binomial_3m <- glm(visits_binary ~ exposure + offset(log(follow_up)), data = crude_complete_3m,
-                         family=binomial(link="logit")) 
-# 6m
-crude_binomial_6m <- glm(visits_binary ~ exposure, data = crude_complete_6m,
-                         family=binomial(link="logit")) 
-# 12m
-crude_binomial_12m <- glm(visits_binary ~ exposure, data = crude_complete_12m,
-                         family=binomial(link="logit")) 
-
-# # Predict the chance of 1/0:
-# 3m
-crude_complete_3m$prob_visits <- predict(crude_binomial_3m, type = "response")
-# 6m
-crude_complete_6m$prob_visits <- predict(crude_binomial_6m, type = "response")
-# 12m
-crude_complete_12m$prob_visits <- predict(crude_binomial_12m, type = "response")
+crude_output_hurdle <- bind_rows(
+      organise_reg_output_fn(crude_hurdle_3m, "3 month"),
+      organise_reg_output_fn(crude_hurdle_6m, "6 month"),
+      organise_reg_output_fn(crude_hurdle_12m, "12 month")
+) %>% mutate(model = "crude")
 
 
-# Model 2: truncated negative binomial model: ------
-# Data management: model through the non-zero outcomes
-non_zero_3m <- subset(crude_complete_3m, visits_binary > 0)
-non_zero_6m <- subset(crude_complete_6m, visits_binary > 0)
-non_zero_12m <- subset(crude_complete_12m, visits_binary > 0)
+# Adjusted hurdle model: 
+# First need to clean the data by excluding obs with NA in variables:
+adj_complete_3m <- matched_data_3m[complete.cases(matched_data_3m),] %>% 
+      mutate(visits_binary = ifelse(visits>0, 1, 0))
+adj_complete_6m <- matched_data_6m[complete.cases(matched_data_6m),] %>% 
+      mutate(visits_binary = ifelse(visits>0, 1, 0))
+adj_complete_12m <- matched_data_12m[complete.cases(matched_data_12m),] %>% 
+      mutate(visits_binary = ifelse(visits>0, 1, 0))
 
-# 3m 
-nb_crude_3m <- glm.nb(visits ~ exposure + offset(log(follow_up)), 
-                      data = non_zero_3m, link = log)
-# 6m 
-nb_crude_6m <- glm.nb(visits ~ exposure + offset(log(follow_up)), 
-                      data = non_zero_6m, link = log)
-# 12m 
-nb_crude_12m <- glm.nb(visits ~ exposure + offset(log(follow_up)), 
-                       data = non_zero_12m, link = log)
+# Run the adjusted model using the complete data:
 
-# # Predict the value:
-crude_non_zero_3m <- predict(nb_crude_3m, se.fit = T, type = "response") %>% 
-      as.data.frame() %>% cbind(non_zero_3m)
+adj_hurdle_3m <- hurdle(visits ~ exposure + age_cat + sex  + cov_covid_vax_n_cat + 
+                        bmi_cat + imd_q5 + ethnicity_6 + region + number_comorbidities_cat,
+                        offset = log(follow_up),
+                        data = adj_complete_3m,
+                        zero.dist = "binomial",
+                        dist = "negbin")
 
-crude_non_zero_6m <- predict(nb_crude_6m, se.fit = T, type = "response") %>% 
-      as.data.frame() %>% cbind(non_zero_6m)
-
-crude_non_zero_12m <- predict(nb_crude_12m, se.fit = T, type = "response") %>% 
-      as.data.frame() %>% cbind(non_zero_12m)
-
-# Multiply the first part and the second part: ---------
-crude_non_zero_3m <- crude_non_zero_3m %>% 
-      mutate(visit_hurdle = prob_visits*fit) %>% 
-      mutate(se_hurdle = prob_visits*se.fit)
-
-crude_non_zero_6m <- crude_non_zero_6m %>% 
-      mutate(visit_hurdle = prob_visits*fit) %>% 
-      mutate(se_hurdle = prob_visits*se.fit)
-
-crude_non_zero_12m <- crude_non_zero_12m %>% 
-      mutate(visit_hurdle = prob_visits*fit) %>% 
-      mutate(se_hurdle = prob_visits*se.fit)
+adj_hurdle_6m <- hurdle(visits ~ exposure + age_cat + sex  + cov_covid_vax_n_cat + 
+                             bmi_cat + imd_q5 + ethnicity_6 + region + number_comorbidities_cat,
+                       offset = log(follow_up),
+                       data = adj_complete_6m,
+                       zero.dist = "binomial",
+                       dist = "negbin")
 
 
+adj_hurdle_12m <- hurdle(visits ~ exposure + age_cat + sex  + cov_covid_vax_n_cat + 
+                              bmi_cat + imd_q5 + ethnicity_6 + region + number_comorbidities_cat,
+                        offset = log(follow_up),
+                        data = adj_complete_12m,
+                        zero.dist = "binomial",
+                        dist = "negbin")
 
-crude_non_zero_3m %>% write_csv(here("output", "crude_non_zero_3m.csv.gz"))
-crude_non_zero_6m %>% write_csv(here("output", "crude_non_zero_6m.csv.gz"))
-crude_non_zero_12m %>% write_csv(here("output", "crude_non_zero_12m.csv.gz"))
+# Combine outputs
+adj_output_hurdle <- bind_rows(
+      organise_reg_output_fn(adj_hurdle_3m, "3 month"),
+      organise_reg_output_fn(adj_hurdle_6m, "6 month"),
+      organise_reg_output_fn(adj_hurdle_12m, "12 month")
+) %>% mutate(model = "Adjusted")
+
+# Save both outputs
+bind_rows(crude_output_hurdle,adj_output_hurdle) %>% 
+      write_csv(here("output", "st02_02_hurdle_all.csv"))
+
+
