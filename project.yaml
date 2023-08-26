@@ -257,7 +257,7 @@ actions:
         model_non_clustered_crude_results: output/st_02_subgroup_by_cov_crude.csv
         model_non_clustered_adj_results: output/st_02_subgroup_by_cov_adj_testing.csv
         
-# Two part model: hurdle model:
+# Two part hurdle model:
 # # All healthcare utilisation 
 
   report_03_hurdle_01_all_visits:
@@ -267,6 +267,36 @@ actions:
     outputs: 
       moderately_sensitive: 
         hurdle_all_visits: output/st03_01_hurdle_all_visits.csv
+
+# # GP utilisation  - hurdle
+
+  report_03_hurdle_02_gp_visits:
+    needs: [import_matched_exposure, import_matched_controls]
+    run: 
+      r:latest analysis/st03_02_model06_gp_hurdel.R
+    outputs: 
+      moderately_sensitive: 
+        hurdle_gp_visits: output/st03_02_hurdle_gp_visits.csv
+
+# # Hospital admission - hurdle
+
+  report_03_hurdle_03_hospital_admin:
+    needs: [import_matched_exposure, import_matched_controls]
+    run: 
+      r:latest analysis/st03_03_model07_hos_hurdel.R
+    outputs: 
+      moderately_sensitive: 
+        hurdle_hospital_admin: output/st03_03_hurdle_hos_visits.csv
+        
+# # A&E visits - hurdle
+        
+  report_03_hurdle_04_ane_visits:
+    needs: [import_matched_exposure, import_matched_controls]
+    run: 
+      r:latest analysis/st03_04_model08_ane_hurdel.R
+    outputs: 
+      moderately_sensitive: 
+        hurdle_ane_visits: output/st03_04_hurdle_ane_visits.csv
 
 # Historical: data distribution
   report05_hx_matched_data_distribution:
