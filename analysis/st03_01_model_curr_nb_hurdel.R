@@ -109,7 +109,7 @@ organise_reg_output_fn <- function(reg_model, model_time){
       estimate <- reg_model %>% coef() %>% exp() %>% as.data.frame()
       estimate$estimate <- rownames(estimate)  # get the coeficient
       
-      e_ci <- crude_hurdle_3m %>% confint() %>% exp %>% as.data.frame()
+      e_ci <- reg_model %>% confint() %>% exp %>% as.data.frame()
       e_ci$estimate <- rownames(e_ci) # get the ci
       
       output <- inner_join(estimate, e_ci, by = c("estimate"="estimate")) %>% 
