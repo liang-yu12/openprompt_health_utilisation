@@ -155,7 +155,7 @@ adj_gp_output_hurdle <- bind_rows(
       organise_reg_output_fn(adj_gp_hurdle_3m, "3 month"),
       organise_reg_output_fn(adj_gp_hurdle_6m, "6 month"),
       organise_reg_output_fn(adj_gp_hurdle_12m, "12 month")
-) %>% mutate(model = "Adjusted")
+) %>% mutate(model = "Adjusted GP")
 
 # Save both outputs
 bind_rows(crude_gp_output_hurdle,adj_gp_output_hurdle) %>% 
