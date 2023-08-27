@@ -213,7 +213,7 @@ for (i in 1:12) {
       skin_drug <- c(skin_drug, paste0("skin_drug_",i))
 }
 
-# # 2.2 multiply the average costs
+# # 2.2 multiply the average costs -----
 
 # GI costs: *5.71
 exp_drug_counts[gi_cost] <- lapply(exp_drug_counts[gi_drug], function(x){x*5.71})
@@ -268,3 +268,13 @@ exp_drug_counts[skin_cost] <- lapply(exp_drug_counts[skin_drug], function(x){x*9
 com_drug_counts[skin_cost] <- lapply(com_drug_counts[skin_drug], function(x){x*9.7})
 
 
+
+# 3. Combine main datasets and the drug costs datasets.
+exp_drug_counts$exposure <- as.factor(exp_drug_counts$exposure)
+lc_exp_matched <- lc_exp_matched %>% left_join(exp_drug_counts, by = c("patient_id" = "patient_id", "exposure" = "exposure"))
+
+com_drug_counts$exposure <- as.factor(com_drug_counts$exposure)
+com_matched <- com_matched %>% left_join(com_drug_counts, by = c("patient_id" = "patient_id", "exposure" = "exposure"))
+
+# housekeeping
+rm(exp_drug_counts, com_drug_counts)
