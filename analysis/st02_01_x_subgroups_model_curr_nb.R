@@ -45,7 +45,7 @@ matched_data_12m <- matched_data_ts %>%
 for_covariates <- matched_data_ts %>% distinct(patient_id, exposure, .keep_all = T) %>% 
       dplyr::select("patient_id",     
                     "exposure",           
-                    "age_cat",                 
+                    "age",                 
                     "sex",                     
                     "bmi_cat",
                     "ethnicity_6",             
@@ -57,7 +57,7 @@ for_covariates <- matched_data_ts %>% distinct(patient_id, exposure, .keep_all =
 
 # Assign covariate levels before adding them back:
 for_covariates$sex <- relevel(for_covariates$sex, ref = "female")
-for_covariates$age_cat <- relevel(for_covariates$age_cat, ref = "18-29")
+# for_covariates$age_cat <- relevel(for_covariates$age_cat, ref = "18-29")
 for_covariates$previous_covid_hosp <- relevel(for_covariates$previous_covid_hosp, "FALSE")
 for_covariates$number_comorbidities_cat <- as.factor(for_covariates$number_comorbidities_cat)
 
@@ -80,59 +80,26 @@ matched_data_12m$exposure <- relevel(matched_data_12m$exposure, ref = "Comparato
 # Use group_by then do(reg), then ungroup. The output from the fo part must be a dataframe
 
 
-# # Sex: ------
-# Function for crude negative binomial models and organise outputs:
-crude_sex_subgroup_fn <- function(data, time){
-
-      results <- data %>% group_by(sex) %>%   # by the variable
-            do(tidy((glm.nb(visits ~ exposure + offset(log(follow_up)),
-                            data = .,link = log)), 
-                    exponentiate=TRUE, conf.int=TRUE)) %>% 
-            ungroup() %>% mutate(model = time)
-            
-      return(results)
-}
-
-subgroup_crude_sex <- bind_rows(
-      crude_sex_subgroup_fn(matched_data_3m, "3 months"),
-      crude_sex_subgroup_fn(matched_data_6m, "6 months"),
-      crude_sex_subgroup_fn(matched_data_12m, "12 months")
-)
-
-
-# # Age groups: ------
-
-
-crude_age_subgroup_fn <- function(data, time){
-      
-      results <- data %>% group_by(age_cat) %>%   # by the variable
-            do(tidy((glm.nb(visits ~ exposure + offset(log(follow_up)),
-                            data = .,link = log)), 
-                    exponentiate=TRUE, conf.int=TRUE)) %>% 
-            ungroup() %>% mutate(model = time)
-      
-      return(results)
-}
-
-# # # age_cat "18-29" "30-39" "40-49" "50-59" "60-69" "70+"  
-# 3 months
-
-subgroup_crude_age <- bind_rows(
-      crude_age_subgroup_fn(matched_data_3m, "3 months"),
-      crude_age_subgroup_fn(matched_data_6m, "6 months"),
-      crude_age_subgroup_fn(matched_data_12m, "12 months")
-      )
-
-
 # # COVID hospitalisations: ------
 # # # previous_covid_hosp: "FALSE" "TRUE" 
 
-crude_hos_subgroup_fn <- function(data, time){
+# Set up reg function output: must be a data.frame for ungroup
+nb_reg_crude_fn <- function(data){
+      reg <- glm.nb(visits ~ exposure + offset(log(follow_up)),
+             data = data,link = log)
+      output <- bind_cols((coef(reg) %>% exp() %>% as.data.frame()),
+          (confint(reg) %>% exp() %>% as.data.frame()))
+      
+      output$terms <- rownames(output)
+      output <- output %>% filter(terms == "exposureLong covid exposure")
+      output <- rename(output, estimates = .) %>% relocate(terms)
+      return(output)
+}
+# set up subgroup function
+hos_subgroup_fn <- function(data, time){
       
       results <- data %>% group_by(previous_covid_hosp) %>%   # by the variable
-            do(tidy((glm.nb(visits ~ exposure + offset(log(follow_up)),
-                            data = .,link = log)), 
-                    exponentiate=TRUE, conf.int=TRUE)) %>% 
+            do(nb_reg_crude_fn(data)) %>% 
             ungroup() %>% mutate(model = time)
       
       return(results)
@@ -140,82 +107,41 @@ crude_hos_subgroup_fn <- function(data, time){
 
 
 subgroup_crude_hospital <- bind_rows(
-      crude_hos_subgroup_fn(matched_data_3m, "3 months"),
-      crude_hos_subgroup_fn(matched_data_6m, "6 months"),
-      crude_hos_subgroup_fn(matched_data_12m, "12 months")
+      hos_subgroup_fn(matched_data_3m, "3 months"),
+      hos_subgroup_fn(matched_data_6m, "6 months"),
+      hos_subgroup_fn(matched_data_12m, "12 months")
 )
 
-crude_all_sub <- bind_rows(
-      subgroup_crude_sex,
-      subgroup_crude_age,
-      subgroup_crude_hospital) %>% relocate(model) %>% 
+crude_all_sub <- subgroup_crude_hospital %>% relocate(model) %>% 
       mutate(nb_model = "Crude") %>% relocate(nb_model)
 
 # Model 2: adjusted Negative binomial: ------
-# function for sex
-
-adj_sex_subgroup_fn <- function(data, time){
-      results <- data %>% group_by(sex) %>%   # by the variable
-            do(tidy((glm.nb(visits ~ exposure + offset(log(follow_up)) + 
-                                  age_cat + previous_covid_hosp + region  + 
-                                  imd_q5 + ethnicity_6 + bmi_cat +
-                                  number_comorbidities_cat + cov_covid_vax_n_cat,
-                            data = ., link = log)), 
-                    exponentiate=TRUE, conf.int=TRUE)) %>% 
-            ungroup() %>% mutate(model = time)
-      return(results)
-}
-
-subgroup_adj_sex <- bind_rows(
-      adj_sex_subgroup_fn(matched_data_3m, "3 months"),
-      adj_sex_subgroup_fn(matched_data_6m, "6 months"),
-      adj_sex_subgroup_fn(matched_data_12m, "12 months")
-)
-
-
-# Function for age_group
-adj_age_subgroup_fn <- function(data, time){
-      results <- data %>% group_by(age_cat) %>%   # by the variable
-            do(tidy((glm.nb(visits ~ exposure + offset(log(follow_up)) + 
-                                  sex + previous_covid_hosp + region  + 
-                                  imd_q5 + ethnicity_6 + bmi_cat +
-                                  number_comorbidities_cat + cov_covid_vax_n_cat,
-                            data = ., link = log)), 
-                    exponentiate=TRUE, conf.int=TRUE)) %>% 
-            ungroup() %>% mutate(model = time)
-      return(results)
-}
-
-subgroup_adj_age <- bind_rows(
-      adj_age_subgroup_fn(matched_data_3m, "3 months"),
-      adj_age_subgroup_fn(matched_data_6m, "6 months"),
-      adj_age_subgroup_fn(matched_data_12m, "12 months")
-)
-
 
 # Function for hospitalisation
-adj_hos_subgroup_fn <- function(data, time){
-      results <- data %>% group_by(previous_covid_hosp) %>%   # by the variable
-            do(tidy((glm.nb(visits ~ exposure + offset(log(follow_up)) + 
-                                  sex + age_cat + previous_covid_hosp + region  + 
-                                  imd_q5 + ethnicity_6 + bmi_cat +
-                                  number_comorbidities_cat + cov_covid_vax_n_cat,
-                            data = ., link = log)), 
-                    exponentiate=TRUE, conf.int=TRUE)) %>% 
-            ungroup() %>% mutate(model = time)
-      return(results)
+
+# Set up reg function output: must be a data.frame for ungroup
+nb_reg_adj_fn <- function(data){
+      reg <- glm.nb(visits ~ exposure + offset(log(follow_up)) +
+                    sex + age + region  + imd_q5 + ethnicity_6 + bmi_cat +
+                          number_comorbidities_cat + cov_covid_vax_n_cat,
+                    data = data,link = log)
+      output <- bind_cols((coef(reg) %>% exp() %>% as.data.frame()),
+                          (confint(reg) %>% exp() %>% as.data.frame()))
+      
+      output$terms <- rownames(output)
+      output <- output %>% filter(terms == "exposureLong covid exposure")
+      output <- rename(output, estimates = .) %>% relocate(terms)
+      return(output)
 }
 
+
 subgroup_adj_hos <- bind_rows(
-      adj_hos_subgroup_fn(matched_data_3m, "3 months"),
-      adj_hos_subgroup_fn(matched_data_6m, "6 months"),
-      adj_hos_subgroup_fn(matched_data_12m, "12 months")
+      hos_subgroup_fn(matched_data_3m, "3 months"),
+      hos_subgroup_fn(matched_data_6m, "6 months"),
+      hos_subgroup_fn(matched_data_12m, "12 months")
 )
 
-adj_all_sub <- bind_rows(
-      subgroup_adj_sex,
-      adj_age_subgroup_fn,
-      subgroup_adj_hos) %>% relocate(model) %>% 
+adj_all_sub <- subgroup_adj_hos %>% relocate(model) %>% 
       mutate(nb_model = "Adjusted") %>% relocate(nb_model)
 
 bind_rows(crude_all_sub, adj_all_sub) %>% 
