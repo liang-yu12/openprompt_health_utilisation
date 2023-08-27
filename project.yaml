@@ -254,8 +254,8 @@ actions:
       r:latest analysis/st02_01_x_subgroups_model_curr_nb.R
     outputs: 
       moderately_sensitive: 
-        model_non_clustered_crude_results: output/st_02_subgroup_by_cov_crude.csv
-        model_non_clustered_adj_results: output/st_02_subgroup_by_cov_adj_testing.csv
+        model_non_clustered_subgroup_results: output/st_02_subgroup_by_cov.csv
+        
         
 # Two part hurdle model:
 # # All healthcare utilisation 
