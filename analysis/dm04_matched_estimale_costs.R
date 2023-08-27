@@ -1,194 +1,270 @@
 # Load previous data management
 source("analysis/dm03_matched_define_monthly_follow_up_time.R")
 
+
+
+# 1. Estimating GP costs -------
 # multiply the average costs:
 # ref: https://doi.org/10.22024/UniKent%2F01.02.100519
 # £42 per consultation
-matched_data <- matched_data %>%
-      mutate(gp_cost_1 = gp_visit_m1 * 42,
-             gp_cost_2 = gp_visit_m2 * 42,
-             gp_cost_3 = gp_visit_m3 * 42,
-             gp_cost_4 = gp_visit_m4 * 42,
-             gp_cost_5 = gp_visit_m5 * 42,
-             gp_cost_6 = gp_visit_m6 * 42,
-             gp_cost_7 = gp_visit_m7 * 42,
-             gp_cost_8 = gp_visit_m8 * 42,
-             gp_cost_9 = gp_visit_m9 * 42,
-             gp_cost_10 = gp_visit_m10 * 42,
-             gp_cost_11 = gp_visit_m11 * 42,
-             gp_cost_12 = gp_visit_m12 * 42)
+gp_cost <- c()
+for (i in 1:12){
+      gp_cost <- c(gp_cost, paste0("gi_cost_", i))
+}
 
-matched_data <- matched_data %>% mutate(
-  gi_cost_1 = gi_drug_1 * 5.71,
-  gi_cost_2 = gi_drug_2 * 5.71,
-  gi_cost_3 = gi_drug_3 * 5.71,
-  gi_cost_4 = gi_drug_4 * 5.71,
-  gi_cost_5 = gi_drug_5 * 5.71,
-  gi_cost_6 = gi_drug_6 * 5.71,
-  gi_cost_7 = gi_drug_7 * 5.71,
-  gi_cost_8 = gi_drug_8 * 5.71,
-  gi_cost_9 = gi_drug_9 * 5.71,
-  gi_cost_10 = gi_drug_10 * 5.71,
-  gi_cost_11 = gi_drug_11 * 5.71,
-  gi_cost_12 = gi_drug_12 * 5.71,
-  cv_cost_1 = cv_drug_1 * 4.84,
-  cv_cost_2 = cv_drug_2 * 4.84,
-  cv_cost_3 = cv_drug_3 * 4.84,
-  cv_cost_4 = cv_drug_4 * 4.84,
-  cv_cost_5 = cv_drug_5 * 4.84,
-  cv_cost_6 = cv_drug_6 * 4.84,
-  cv_cost_7 = cv_drug_7 * 4.84,
-  cv_cost_8 = cv_drug_8 * 4.84,
-  cv_cost_9 = cv_drug_9 * 4.84,
-  cv_cost_10 = cv_drug_10 * 4.84,
-  cv_cost_11 = cv_drug_11 * 4.84,
-  cv_cost_12 = cv_drug_12 * 4.84,
-  chest_cost_1 = chest_drug_1 * 14.47,
-  chest_cost_2 = chest_drug_2 * 14.47,
-  chest_cost_3 = chest_drug_3 * 14.47,
-  chest_cost_4 = chest_drug_4 * 14.47,
-  chest_cost_5 = chest_drug_5 * 14.47,
-  chest_cost_6 = chest_drug_6 * 14.47,
-  chest_cost_7 = chest_drug_7 * 14.47,
-  chest_cost_8 = chest_drug_8 * 14.47,
-  chest_cost_9 = chest_drug_9 * 14.47,
-  chest_cost_10 = chest_drug_10 * 14.47,
-  chest_cost_11 = chest_drug_11 * 14.47,
-  chest_cost_12 = chest_drug_12 * 14.47,
-  cns_cost_1 = cns_drug_1 * 6.93,
-  cns_cost_2 = cns_drug_2 * 6.93,
-  cns_cost_3 = cns_drug_3 * 6.93,
-  cns_cost_4 = cns_drug_4 * 6.93,
-  cns_cost_5 = cns_drug_5 * 6.93,
-  cns_cost_6 = cns_drug_6 * 6.93,
-  cns_cost_7 = cns_drug_7 * 6.93,
-  cns_cost_8 = cns_drug_8 * 6.93,
-  cns_cost_9 = cns_drug_9 * 6.93,
-  cns_cost_10 = cns_drug_10 * 6.93,
-  cns_cost_11 = cns_drug_11 * 6.93,
-  cns_cost_12 = cns_drug_12 * 6.93,
-  inf_cost_1 = inf_drug_1 * 5.26,
-  inf_cost_2 = inf_drug_2 * 5.26,
-  inf_cost_3 = inf_drug_3 * 5.26,
-  inf_cost_4 = inf_drug_4 * 5.26,
-  inf_cost_5 = inf_drug_5 * 5.26,
-  inf_cost_6 = inf_drug_6 * 5.26,
-  inf_cost_7 = inf_drug_7 * 5.26,
-  inf_cost_8 = inf_drug_8 * 5.26,
-  inf_cost_9 = inf_drug_9 * 5.26,
-  inf_cost_10 = inf_drug_10 * 5.26,
-  inf_cost_11 = inf_drug_11 * 5.26,
-  inf_cost_12 = inf_drug_12 * 5.26,
-  meta_cost_1 = meta_drug_1 * 13.04,
-  meta_cost_2 = meta_drug_2 * 13.04,
-  meta_cost_3 = meta_drug_3 * 13.04,
-  meta_cost_4 = meta_drug_4 * 13.04,
-  meta_cost_5 = meta_drug_5 * 13.04,
-  meta_cost_6 = meta_drug_6 * 13.04,
-  meta_cost_7 = meta_drug_7 * 13.04,
-  meta_cost_8 = meta_drug_8 * 13.04,
-  meta_cost_9 = meta_drug_9 * 13.04,
-  meta_cost_10 = meta_drug_10 * 13.04,
-  meta_cost_11 = meta_drug_11 * 13.04,
-  meta_cost_12 = meta_drug_12 * 13.04,
-  gyn_cost_1 = gyn_drug_1 * 7.82,
-  gyn_cost_2 = gyn_drug_2 * 7.82,
-  gyn_cost_3 = gyn_drug_3 * 7.82,
-  gyn_cost_4 = gyn_drug_4 * 7.82,
-  gyn_cost_5 = gyn_drug_5 * 7.82,
-  gyn_cost_6 = gyn_drug_6 * 7.82,
-  gyn_cost_7 = gyn_drug_7 * 7.82,
-  gyn_cost_8 = gyn_drug_8 * 7.82,
-  gyn_cost_9 = gyn_drug_9 * 7.82,
-  gyn_cost_10 = gyn_drug_10 * 7.82,
-  gyn_cost_11 = gyn_drug_11 * 7.82,
-  gyn_cost_12 = gyn_drug_12 * 7.82,
-  cancer_cost_1 = cancer_drug_1 * 37.16,
-  cancer_cost_2 = cancer_drug_2 * 37.16,
-  cancer_cost_3 = cancer_drug_3 * 37.16,
-  cancer_cost_4 = cancer_drug_4 * 37.16,
-  cancer_cost_5 = cancer_drug_5 * 37.16,
-  cancer_cost_6 = cancer_drug_6 * 37.16,
-  cancer_cost_7 = cancer_drug_7 * 37.16,
-  cancer_cost_8 = cancer_drug_8 * 37.16,
-  cancer_cost_9 = cancer_drug_9 * 37.16,
-  cancer_cost_10 = cancer_drug_10 * 37.16,
-  cancer_cost_11 = cancer_drug_11 * 37.16,
-  cancer_cost_12 = cancer_drug_12 * 37.16,
-  diet_cost_1 = diet_drug_1 * 11.42,
-  diet_cost_2 = diet_drug_2 * 11.42,
-  diet_cost_3 = diet_drug_3 * 11.42,
-  diet_cost_4 = diet_drug_4 * 11.42,
-  diet_cost_5 = diet_drug_5 * 11.42,
-  diet_cost_6 = diet_drug_6 * 11.42,
-  diet_cost_7 = diet_drug_7 * 11.42,
-  diet_cost_8 = diet_drug_8 * 11.42,
-  diet_cost_9 = diet_drug_9 * 11.42,
-  diet_cost_10 = diet_drug_10 * 11.42,
-  diet_cost_11 = diet_drug_11 * 11.42,
-  diet_cost_12 = diet_drug_12 * 11.42,
-  muscle_cost_1 = muscle_drug_1 * 5.03,
-  muscle_cost_2 = muscle_drug_2 * 5.03,
-  muscle_cost_3 = muscle_drug_3 * 5.03,
-  muscle_cost_4 = muscle_drug_4 * 5.03,
-  muscle_cost_5 = muscle_drug_5 * 5.03,
-  muscle_cost_6 = muscle_drug_6 * 5.03,
-  muscle_cost_7 = muscle_drug_7 * 5.03,
-  muscle_cost_8 = muscle_drug_8 * 5.03,
-  muscle_cost_9 = muscle_drug_9 * 5.03,
-  muscle_cost_10 = muscle_drug_10 * 5.03,
-  muscle_cost_11 = muscle_drug_11 * 5.03,
-  muscle_cost_12 = muscle_drug_12 * 5.03,
-  eye_cost_1 = eye_drug_1 * 9.98,
-  eye_cost_2 = eye_drug_2 * 9.98,
-  eye_cost_3 = eye_drug_3 * 9.98,
-  eye_cost_4 = eye_drug_4 * 9.98,
-  eye_cost_5 = eye_drug_5 * 9.98,
-  eye_cost_6 = eye_drug_6 * 9.98,
-  eye_cost_7 = eye_drug_7 * 9.98,
-  eye_cost_8 = eye_drug_8 * 9.98,
-  eye_cost_9 = eye_drug_9 * 9.98,
-  eye_cost_10 = eye_drug_10 * 9.98,
-  eye_cost_11 = eye_drug_11 * 9.98,
-  eye_cost_12 = eye_drug_12 * 9.98,
-  ent_cost_1 = ent_drug_1 * 6.81,
-  ent_cost_2 = ent_drug_2 * 6.81,
-  ent_cost_3 = ent_drug_3 * 6.81,
-  ent_cost_4 = ent_drug_4 * 6.81,
-  ent_cost_5 = ent_drug_5 * 6.81,
-  ent_cost_6 = ent_drug_6 * 6.81,
-  ent_cost_7 = ent_drug_7 * 6.81,
-  ent_cost_8 = ent_drug_8 * 6.81,
-  ent_cost_9 = ent_drug_9 * 6.81,
-  ent_cost_10 = ent_drug_10 * 6.81,
-  ent_cost_11 = ent_drug_11 * 6.81,
-  ent_cost_12 = ent_drug_12 * 6.81,
-  skin_cost_1 = skin_drug_1 * 9.7,
-  skin_cost_2 = skin_drug_2 * 9.7,
-  skin_cost_3 = skin_drug_3 * 9.7,
-  skin_cost_4 = skin_drug_4 * 9.7,
-  skin_cost_5 = skin_drug_5 * 9.7,
-  skin_cost_6 = skin_drug_6 * 9.7,
-  skin_cost_7 = skin_drug_7 * 9.7,
-  skin_cost_8 = skin_drug_8 * 9.7,
-  skin_cost_9 = skin_drug_9 * 9.7,
-  skin_cost_10 = skin_drug_10 * 9.7,
-  skin_cost_11 = skin_drug_11 * 9.7,
-  skin_cost_12 = skin_drug_12 * 9.7
-)
+gp_visit <- c()
+for (i in 1:12){
+      gp_visit <- c(gp_visit, paste0("gp_visit_m", i))
+}
 
 
-# calculate total costs: 
-matched_data$all_cost_m1 <- rowSums(matched_data[, grepl("cost_1$", names(matched_data)), with = FALSE], na.rm = TRUE)
-matched_data$all_cost_m2 <- rowSums(matched_data[, grepl("cost_2$", names(matched_data)), with = FALSE], na.rm = TRUE)
-matched_data$all_cost_m3 <- rowSums(matched_data[, grepl("cost_3$", names(matched_data)), with = FALSE], na.rm = TRUE)
-matched_data$all_cost_m4 <- rowSums(matched_data[, grepl("cost_4$", names(matched_data)), with = FALSE], na.rm = TRUE)
-matched_data$all_cost_m5 <- rowSums(matched_data[, grepl("cost_5$", names(matched_data)), with = FALSE], na.rm = TRUE)
-matched_data$all_cost_m6 <- rowSums(matched_data[, grepl("cost_6$", names(matched_data)), with = FALSE], na.rm = TRUE)
-matched_data$all_cost_m7 <- rowSums(matched_data[, grepl("cost_7$", names(matched_data)), with = FALSE], na.rm = TRUE)
-matched_data$all_cost_m8 <- rowSums(matched_data[, grepl("cost_8$", names(matched_data)), with = FALSE], na.rm = TRUE)
-matched_data$all_cost_m9 <- rowSums(matched_data[, grepl("cost_9$", names(matched_data)), with = FALSE], na.rm = TRUE)
-matched_data$all_cost_m10 <- rowSums(matched_data[, grepl("cost_10$", names(matched_data)), with = FALSE], na.rm = TRUE)
-matched_data$all_cost_m11 <- rowSums(matched_data[, grepl("cost_11$", names(matched_data)), with = FALSE], na.rm = TRUE)
-matched_data$all_cost_m12 <- rowSums(matched_data[, grepl("cost_12$", names(matched_data)), with = FALSE], na.rm = TRUE)
+# # exposure group:
+lc_exp_matched[gp_cost] <- lapply(lc_exp_matched[gp_visit], function(x){x*42})
+
+# # comparator group:
+com_matched[gp_cost] <- lapply(com_matched[gp_visit], function(x){x*42})
+
+# 2. Estimating the drug costs: ---------
+# Read in the drug count data
+exp_drug_counts <- read_csv("output/matched_cases_with_drug_costs.csv.gz",
+                            col_types = cols(
+                                  age = col_skip(),
+                                  sex = col_skip(),
+                                  index_date = col_skip(),
+                                  end_death = col_skip(),
+                                  end_deregist = col_skip(),
+                                  end_lc_cure = col_skip(),
+                                  end_date = col_skip()
+                            ))
+
+com_drug_counts <- read_csv("output/matched_control_with_drug_costs.csv.gz",
+                            col_types = cols(
+                                  age = col_skip(),
+                                  sex = col_skip(),
+                                  index_date = col_skip(),
+                                  end_death = col_skip(),
+                                  end_deregist = col_skip(),
+                                  end_lc_cure = col_skip(),
+                                  end_date = col_skip()
+                            ))
+
+
+# # 2.1 set the column vectors: ------
+# ### GI
+# costs 
+gi_cost <- c()
+for (i in 1:12) {
+      gi_cost <- c(gi_cost, paste0("gi_cost_", i))
+}
+# drugs
+gi_drug <- c()
+for (i in 1:12) {
+      gi_drug <- c(gi_drug, paste0("gi_drug_", i))
+}
+
+
+# ### CV:
+# cost
+cv_cost <- c()
+for (i in 1:12) {
+      cv_cost <- c(cv_cost, paste0("cv_cost_", i))
+}
+# drug:
+cv_drug <- c()
+for (i in 1:12) {
+      cv_drug <- c(cv_drug, paste0("cv_drug_", i))
+}
+
+
+# ### chest
+# cost
+chest_cost <- c()
+for (i in 1:12) {
+      chest_cost <- c(chest_cost, paste0("chest_cost_", i))
+}
+# drugs:
+chest_drug <- c()
+for (i in 1:12){
+      chest_drug <- c(chest_drug, paste0("chest_drug_", i))
+}
+
+
+#  ###  CNS
+cns_cost <- c()
+for (i in 1:12) {
+      cns_cost <- c(cns_cost, paste0("cns_cost_", i))
+}
+# drugs:
+cns_drug <- c()
+for (i in 1:12){
+      cns_drug <- c(cns_drug, paste0("cns_drug_", i))
+}
+
+
+# ### infection
+# cost
+inf_cost <- c()
+for (i in 1:12) {
+      inf_cost <- c(inf_cost, paste0("inf_cost_", i))
+}
+# drugs
+inf_drug <- c()
+for (i in 1:12) {
+      inf_drug <- c(inf_drug, paste0("inf_drug_", i))
+}
+
+# ### metabolism drugs
+# cost
+meta_cost <- c()
+for (i in 1:12) {
+      meta_cost <- c(meta_cost, paste0("meta_cost_",i))
+}
+# drug
+meta_drug <- c()
+for (i in 1:12) {
+      meta_drug <- c(meta_drug, paste0("meta_drug_",i))
+}
+
+
+# ### gyn
+# cost
+gyn_cost <- c()
+for (i in 1:12) {
+      gyn_cost <- c(gyn_cost, paste0("gyn_cost_",i))
+}
+# drug
+gyn_drug <- c()
+for (i in 1:12) {
+      gyn_drug <- c(gyn_drug, paste0("gyn_drug_",i))
+}
+
+
+# ### cancer
+# cost
+cancer_cost <- c()
+for (i in 1:12) {
+      cancer_cost <- c(cancer_cost, paste0("cancer_cost_",i))
+}
+# drug
+cancer_drug <- c()
+for (i in 1:12) {
+      cancer_drug <- c(cancer_drug, paste0("cancer_drug_",i))
+}
+
+
+# ### diet
+# cost
+diet_cost <- c()
+for (i in 1:12) {
+      diet_cost <- c(diet_cost, paste0("diet_cost_",i))
+}
+# drug
+diet_drug <- c()
+for (i in 1:12) {
+      diet_drug <- c(diet_drug, paste0("diet_drug_",i))
+}
+
+# ### musculoskeletal
+# cost
+muscle_cost <- c()
+for (i in 1:12) {
+      muscle_cost <- c(muscle_cost, paste0("muscle_cost_",i))
+}
+# drug
+muscle_drug <- c()
+for (i in 1:12) {
+      muscle_drug <- c(muscle_drug, paste0("muscle_drug_",i))
+}
+
+
+# #### opthalmology
+# cost
+eye_cost <- c()
+for (i in 1:12) {
+      eye_cost <- c(eye_cost, paste0("eye_cost_",i))
+}
+# drug
+eye_drug <- c()
+for (i in 1:12) {
+      eye_drug <- c(eye_drug, paste0("eye_drug_",i))
+}
+
+# ### ent
+# cost
+ent_cost <- c()
+for (i in 1:12) {
+      ent_cost <- c(ent_cost, paste0("ent_cost_",i))
+}
+# drug
+ent_drug <- c()
+for (i in 1:12) {
+      ent_drug <- c(ent_drug, paste0("ent_drug_",i))
+}
+
+# ### skin
+# cost
+skin_cost <- c()
+for (i in 1:12) {
+      skin_cost <- c(skin_cost, paste0("skin_cost_",i))
+}
+# drug
+skin_drug <- c()
+for (i in 1:12) {
+      skin_drug <- c(skin_drug, paste0("skin_drug_",i))
+}
+
+# # 2.2 multiply the average costs
+
+# GI costs: *5.71
+exp_drug_counts[gi_cost] <- lapply(exp_drug_counts[gi_drug], function(x){x*5.71})
+com_drug_counts[gi_cost] <- lapply(com_drug_counts[gi_drug], function(x){x*5.71})
+
+# CV costs: *4.84
+exp_drug_counts[cv_cost] <- lapply(exp_drug_counts[cv_drug], function(x){x*4.84})
+com_drug_counts[cv_cost] <- lapply(com_drug_counts[cv_drug], function(x){x*4.84})
+
+# chest: 14.47
+exp_drug_counts[chest_cost] <- lapply(exp_drug_counts[chest_drug], function(x){x*14.47})
+com_drug_counts[chest_cost] <- lapply(com_drug_counts[chest_drug], function(x){x*14.47})
+
+# CNS: 6.93
+exp_drug_counts[cns_cost] <- lapply(exp_drug_counts[cns_drug], function(x){x*6.93})
+com_drug_counts[cns_cost] <- lapply(com_drug_counts[cns_drug], function(x){x*6.93})
+
+# Infection: 5.26
+exp_drug_counts[inf_cost] <- lapply(exp_drug_counts[inf_drug], function(x){x*5.26})
+com_drug_counts[inf_cost] <- lapply(com_drug_counts[inf_drug], function(x){x*5.26})
+
+# Metabolism: 13.04
+exp_drug_counts[meta_cost] <- lapply(exp_drug_counts[meta_drug], function(x){x*13.04})
+com_drug_counts[meta_cost] <- lapply(com_drug_counts[meta_drug], function(x){x*13.04})
+
+# GYN: 7.82
+exp_drug_counts[gyn_cost] <- lapply(exp_drug_counts[gyn_drug], function(x){x*7.82})
+com_drug_counts[gyn_cost] <- lapply(com_drug_counts[gyn_drug], function(x){x*7.82})
+
+# cancer: 37.16
+exp_drug_counts[cancer_cost] <- lapply(exp_drug_counts[cancer_drug], function(x){x*37.16})
+com_drug_counts[cancer_cost] <- lapply(com_drug_counts[cancer_drug], function(x){x*37.16})
+
+# Diet:  11.42
+exp_drug_counts[diet_cost] <- lapply(exp_drug_counts[diet_drug], function(x){x*11.42})
+com_drug_counts[diet_cost] <- lapply(com_drug_counts[diet_drug], function(x){x*11.42})
+
+# Muscle drugs: 5.03
+exp_drug_counts[muscle_cost] <- lapply(exp_drug_counts[muscle_drug], function(x){x*5.03})
+com_drug_counts[muscle_cost] <- lapply(com_drug_counts[muscle_drug], function(x){x*5.03})
+
+# Eye: 9.98
+exp_drug_counts[eye_cost] <- lapply(exp_drug_counts[eye_drug], function(x){x*9.98})
+com_drug_counts[eye_cost] <- lapply(com_drug_counts[eye_drug], function(x){x*9.98})
+
+# ENT: 6.81
+exp_drug_counts[ent_cost] <- lapply(exp_drug_counts[ent_drug], function(x){x*6.81})
+com_drug_counts[ent_cost] <- lapply(com_drug_counts[ent_drug], function(x){x*6.81})
+
+# skin: 9.7
+exp_drug_counts[skin_cost] <- lapply(exp_drug_counts[skin_drug], function(x){x*9.7})
+com_drug_counts[skin_cost] <- lapply(com_drug_counts[skin_drug], function(x){x*9.7})
+
 
