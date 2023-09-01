@@ -9,7 +9,7 @@ source("analysis/dm03_matched_define_monthly_follow_up_time.R")
 # £42 per consultation
 gp_cost <- c()
 for (i in 1:12){
-      gp_cost <- c(gp_cost, paste0("gi_cost_", i))
+      gp_cost <- c(gp_cost, paste0("gp_cost_", i))
 }
 
 gp_visit <- c()
