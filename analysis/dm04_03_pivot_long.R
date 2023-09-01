@@ -1,4 +1,4 @@
-source("analysis/dm04_02_combine_pivot_costs.R")
+source("analysis/dm04_02_combine_costs.R")
 # Goal: pivot the total_cost_ into long form for analysis
 
 # set the columns to pivot
@@ -68,7 +68,6 @@ com_cost_long <- left_join(com_cost_ts, com_fu_ts,
 
 # Combine two datasets: ---------
 matched_cost_ts <- bind_rows(exp_cost_long, com_cost_long)
+# fix the exposure levels
+matched_cost_ts$exposure <- relevel(matched_cost_ts$exposure, ref = "Comparator")
 
-# matched_cost_ts$exposure %>% levels  Need to fix
-exp_cost_long$exposure %>% table
-com_cost_long$exposure %>% table
