@@ -322,4 +322,4 @@ adj_age_subgroup <- bind_rows(
 bind_rows(
       (bind_rows(crude_hos_subgroup, crude_sex_subgroup, crude_age_subgroup) %>% mutate(model_type = "Crude")),
       (bind_rows(adj_hos_subgroup, adj_sex_subgroup, adj_age_subgroup) %>% mutate(model_type = "Crude"))) %>% 
-      write_csv(here("output", "st_03_01x_hurdle_subgroup.csv"))
+      write_csv(here("output", "st_03_05_hurdle_subgroup.csv"))

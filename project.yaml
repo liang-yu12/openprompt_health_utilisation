@@ -298,6 +298,16 @@ actions:
       moderately_sensitive: 
         hurdle_ane_visits: output/st03_04_hurdle_ane_visits.csv
 
+# # Subgroup all visits - hurdle
+
+  report_03_hurdle_05_subgroup_visits:
+    needs: [import_matched_exposure, import_matched_controls]
+    run: 
+      r:latest analysis/st03_05_subgroups_model_hurdle.R
+    outputs: 
+      moderately_sensitive: 
+        hurdle_subgroup_visits: output/st_03_05_hurdle_subgroup.csv
+
 # Historical: data distribution
   report05_hx_matched_data_distribution:
     needs: [import_matched_historical_exposure, import_matched_historical_controls]
