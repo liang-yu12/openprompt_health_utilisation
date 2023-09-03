@@ -109,7 +109,8 @@ crude_twopart_fn <- function(dataset, time_length){
             lci = exp(estimate - 1.69*std.error),
             hci = exp(estimate + 1.69*std.error),
             estimate = exp(estimate)) %>% 
-            dplyr::select(model, term, estimate, lci, hci, p.value)
+            dplyr::select(model, term, estimate, lci, hci, p.value)%>% 
+        filter(term == "exposureLong covid exposure" )
       
       # Gamma glm part: 
       crude_gamma_3m <-  glm(total_cost ~ exposure + offset(log(follow_up)),
@@ -121,7 +122,8 @@ crude_twopart_fn <- function(dataset, time_length){
             lci = exp(estimate - 1.69*std.error),
             hci = exp(estimate + 1.69*std.error),
             estimate = exp(estimate)) %>% 
-            dplyr::select(model, term, estimate, lci, hci, p.value)
+            dplyr::select(model, term, estimate, lci, hci, p.value)%>% 
+        filter(term == "exposureLong covid exposure" )
       
       results <- bind_rows(part_binomial, part_gaama) %>% 
             mutate(time=time_length) %>% relocate(time)
@@ -133,7 +135,62 @@ crude_twopart_fn <- function(dataset, time_length){
 # Organised crude model output: -------
 crude_tpm <- bind_rows(crude_twopart_fn(crude_cost_complete_3m, "3 months"),
                        crude_twopart_fn(crude_cost_complete_6m, "6 months"),
-                       crude_twopart_fn(crude_cost_complete_12m, "12 months"))
+                       crude_twopart_fn(crude_cost_complete_12m, "12 months")) %>% 
+  mutate(adjustement = "Crude")
 
 
+# Adjusted two-part model: 
+# Data management: keep complete data
+adj_cost_complete_3m <- matched_cost_3m[complete.cases(matched_cost_3m),] %>% 
+  mutate(cost_binary = ifelse(total_cost>0, 1, 0))
+adj_cost_complete_6m <- matched_cost_6m[complete.cases(matched_cost_6m),] %>% 
+  mutate(cost_binary = ifelse(total_cost>0, 1, 0))
+adj_cost_complete_12m <- matched_cost_12m[complete.cases(matched_cost_12m),] %>% 
+  mutate(cost_binary = ifelse(total_cost>0, 1, 0))
 
+# Write a function to organise the adjusted model outputs:
+adj_twopart_fn <- function(dataset, time_length){
+  
+  # Binomial part: 
+  curde_binomial_3m <- glm(cost_binary ~ exposure + offset(log(follow_up))+ age_cat + sex  + cov_covid_vax_n_cat + 
+                             bmi_cat + imd_q5 + ethnicity_6 + region + number_comorbidities_cat,
+                           data = dataset,
+                           family = binomial(link="logit"))
+  
+  part_binomial <-  tidy(curde_binomial_3m) %>% mutate(
+    model = "binomial",
+    lci = exp(estimate - 1.69*std.error),
+    hci = exp(estimate + 1.69*std.error),
+    estimate = exp(estimate)) %>% 
+    dplyr::select(model, term, estimate, lci, hci, p.value) %>% 
+    filter(term == "exposureLong covid exposure" )
+  
+  # Gamma glm part: 
+  crude_gamma_3m <-  glm(total_cost ~ exposure + offset(log(follow_up))+ age_cat + sex  + cov_covid_vax_n_cat + 
+                           bmi_cat + imd_q5 + ethnicity_6 + region + number_comorbidities_cat,
+                         data = subset(dataset, cost_binary>0),
+                         family = Gamma(link="log"))
+  
+  part_gaama <- tidy(crude_gamma_3m) %>% mutate(
+    model = "Gamma GLM",
+    lci = exp(estimate - 1.69*std.error),
+    hci = exp(estimate + 1.69*std.error),
+    estimate = exp(estimate)) %>% 
+    dplyr::select(model, term, estimate, lci, hci, p.value)%>% 
+    filter(term == "exposureLong covid exposure" )
+  
+  results <- bind_rows(part_binomial, part_gaama) %>% 
+    mutate(time=time_length) %>% relocate(time)
+  
+  return(results)
+  
+}
+
+# Organised crude model output: -------
+adj_tpm <- bind_rows(crude_twopart_fn(adj_cost_complete_3m, "3 months"),
+                       crude_twopart_fn(adj_cost_complete_6m, "6 months"),
+                       crude_twopart_fn(adj_cost_complete_12m, "12 months")) %>% 
+  mutate(adjustement = "Adjusted")
+
+# Combine outputs
+bind_rows(crude_tpm, adj_tpm) %>% write_csv(here("analysis, st_04_01_total_cost_tpm.csv"))
