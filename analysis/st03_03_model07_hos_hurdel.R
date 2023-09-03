@@ -46,6 +46,14 @@ for_covariates <- matched_data_hos_ts %>% distinct(patient_id, exposure, .keep_a
                 "previous_covid_hosp",     
                 "cov_covid_vax_n_cat",     
                 "number_comorbidities_cat")
+for_covariates$sex <- relevel(for_covariates$sex, ref = "male")
+for_covariates$bmi_cat <- relevel(for_covariates$bmi_cat, ref = "Normal Weight")
+for_covariates$ethnicity_6 <- relevel(for_covariates$ethnicity_6, ref = "White")
+for_covariates$imd_q5 <- relevel(for_covariates$imd_q5, ref = "least_deprived")
+for_covariates$region <- relevel(for_covariates$region, ref = "London" )
+for_covariates$previous_covid_hosp <- relevel(for_covariates$previous_covid_hosp, ref = "FALSE")
+for_covariates$cov_covid_vax_n_cat <- relevel(for_covariates$cov_covid_vax_n_cat, ref = "0 dose")
+for_covariates$number_comorbidities_cat <- relevel(for_covariates$number_comorbidities_cat, ref = "0")
 
 # # add covariates back to the summarised data frame
 matched_data_hos_3m <- left_join(matched_data_hos_3m, for_covariates,
