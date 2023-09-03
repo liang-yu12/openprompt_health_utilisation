@@ -299,11 +299,11 @@ def outpatient_lc_dx_visit(dataset, from_date, num_months, end_date):
         .appointment_date.count_distinct_for_patient()
     setattr(dataset, f"opa_lc_visit_m{num_months}", num_visits)
 
-def hx_outpatient_visit(dataset, from_date, num_months):
+def hx_outpatient_visit(dataset, num_months):
     # Number of total outpatient clinic visits within `num_months` of `from_date`
     num_visits = opa_diag \
-        .where((opa_diag.appointment_date >= from_date + days((num_months-1)*30)) &
-              (opa_diag.appointment_date <  from_date + days(num_months*30))) \
+        .where((opa_diag.appointment_date >= hx_study_start_date + days((num_months-1)*30)) &
+              (opa_diag.appointment_date <  hx_study_start_date + days(num_months*30))) \
         .appointment_date.count_distinct_for_patient()
     setattr(dataset, f"opa_hx_visit_m{num_months}", num_visits)
 
