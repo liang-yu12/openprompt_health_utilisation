@@ -239,7 +239,7 @@ actions:
         model_non_clustered_results: output/st_02_0109_y_opa_no_cluster_model.csv
 
   qc_04_check_opa_distribution:
-    needs: [import_matched_exposure, import_matched_controls]
+    needs: [import_matched_exposure, import_matched_controls, import_matched_historical_exposure, import_matched_historical_controls]
     run: 
       r:latest analysis/qc04_check_opa_outcomes.R
     outputs: 
@@ -311,7 +311,7 @@ actions:
 # Total Costs: twopart model
 
   report_04_total_costs_twopart:
-    needs: [import_matched_exposure, import_matched_controls]
+    needs: [import_matched_exposure, import_matched_controls, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
       r:latest analysis/st04_01_total_cost_twopart.R
     outputs: 
