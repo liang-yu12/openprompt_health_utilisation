@@ -107,7 +107,7 @@ explore_hx_opa <- hx_data %>% group_by(region,exposure) %>%
       summarise(opa_median = median(total_hx_opa),
                 opa_mean = mean(total_hx_opa, na.rm =T),
                 opa_max = max(total_hx_opa),
-                high_use= sum(total_hx_opa>=4, na.rm = T),
+                high_use= sum(total_hx_opa>=(4*12), na.rm = T),
                 fu_time = 360) %>% 
       as.data.frame() %>% mutate(data = "hx_12 month")
 
