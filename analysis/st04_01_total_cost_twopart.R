@@ -193,4 +193,4 @@ adj_tpm <- bind_rows(crude_twopart_fn(adj_cost_complete_3m, "3 months"),
   mutate(adjustement = "Adjusted")
 
 # Combine outputs
-bind_rows(crude_tpm, adj_tpm) %>% write_csv(here("analysis, st_04_01_total_cost_tpm.csv"))
+bind_rows(crude_tpm, adj_tpm) %>% write_csv(here("output, st_04_01_total_cost_tpm.csv"))
