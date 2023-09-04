@@ -85,9 +85,36 @@ opa_summary_12m <- matched_data_opa_12m %>% group_by(region,exposure) %>%
                 fu_time = mean(follow_up, na.rm =T)) %>% 
       as.data.frame() %>% mutate(data = "12 month")
 
+
+# Check the historical data ----
+
+source("analysis/dm02_01_hx_variables.R")
+# vectors for selection:
+opa_hx <- c()
+for (i in 1:12) {
+      opa_hx <- c(opa_hx, paste0("opa_hx_visit_m", i))
+}
+
+hx_data <- bind_rows(hx_cases, hx_control) # combine twodata
+
+# make the factor consistent
+hx_data$exposure <- factor(hx_data$exposure, labels = c("Comparator", "Long covid exposure"))  
+
+hx_data$total_hx_opa <- rowSums(hx_data[opa_hx], na.rm = T)
+
+# group_by 
+explore_hx_opa <- hx_data %>% group_by(region,exposure) %>% 
+      summarise(opa_median = median(total_hx_opa),
+                opa_mean = mean(total_hx_opa, na.rm =T),
+                opa_max = max(total_hx_opa),
+                high_use= sum(total_hx_opa>=4, na.rm = T),
+                fu_time = 360) %>% 
+      as.data.frame() %>% mutate(data = "hx_12 month")
+
 bind_rows(
       opa_couts_summary,
       opa_summary_3m,
       opa_summary_6m,
-      opa_summary_12m
+      opa_summary_12m,
+      explore_hx_opa
 ) %>% write_csv(here("output", "opa_outcome_distribution.csv"))
