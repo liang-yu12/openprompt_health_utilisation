@@ -319,6 +319,15 @@ actions:
       moderately_sensitive: 
         total_costs_tpm: output/st_04_01_total_cost_tpm.csv
 
+# Total costs: predicted costs 
+
+  report_04_01_predicted_cost_twopart:
+    needs: [import_matched_exposure, import_matched_controls, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+    run:
+      r:latest analysis/st04_01_2_predict_cost_twopart.R
+    outputs:
+      moderately_sensitive: 
+        total_cost_predict: output/st_04_01_2_predict_cost_tpm.csv
 
 
 # Historical: data distribution
