@@ -27,6 +27,8 @@ for (i in 1:12){
       opa_lc <- c(opa_lc, paste0("opa_lc_visit_m", i))
 }
 
+costs <- matched_data[grep("_cost_m", names(matched_data))] %>%  names
+
 # summarise follow-up period
 fu_cols <- matched_data[grep("follow_up_m", names(matched_data))] %>% 
       names %>% as.vector()  # summarise follow-up time
@@ -51,7 +53,7 @@ basic_demographic <- matched_data %>% summary_factorlist(dependent, explanatory,
 
 
 # Summarising the outcomes by types:
-outcomes <- c(visit_cols, gp_visits, hos_visits, a_e_visits, opd_visits, opa_lc, fu_cols)
+outcomes <- c(visit_cols, gp_visits, hos_visits, a_e_visits, opd_visits, opa_lc, fu_cols, costs)
 
 outcome_summary <- matched_data %>% summary_factorlist(dependent, outcomes,
                                                        p = TRUE,
