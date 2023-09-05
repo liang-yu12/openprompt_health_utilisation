@@ -245,6 +245,7 @@ actions:
     outputs: 
       moderately_sensitive: 
         opa_distribution_all: output/opa_outcome_distribution.csv
+        opa_distribution_plots: output/opa_distribution_compare.png
 
 # # Basic: non-cluster sub-group analysis
 
