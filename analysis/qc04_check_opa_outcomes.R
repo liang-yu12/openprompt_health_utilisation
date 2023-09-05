@@ -37,7 +37,7 @@ opa_summary_3m <- matched_data_opa_3m %>% group_by(region,exposure) %>%
       summarise(opa_median = median(visits),
                 opa_mean = mean(visits, na.rm =T),
                 opa_max = max(visits),
-                high_use= sum(visits>=4, na.rm = T),
+                high_use= sum(visits>=4*3, na.rm = T),
                 fu_time = mean(follow_up, na.rm =T)) %>% 
       as.data.frame() %>% mutate(data = "3 month")
 
@@ -60,7 +60,7 @@ opa_summary_6m <- matched_data_opa_6m %>% group_by(region,exposure) %>%
       summarise(opa_median = median(visits),
                 opa_mean = mean(visits, na.rm =T),
                 opa_max = max(visits),
-                high_use= sum(visits>=4, na.rm = T),
+                high_use= sum(visits>=4*6, na.rm = T),
                 fu_time = mean(follow_up, na.rm =T)) %>% 
       as.data.frame() %>% mutate(data = "6 month")
 
@@ -81,7 +81,7 @@ opa_summary_12m <- matched_data_opa_12m %>% group_by(region,exposure) %>%
       summarise(opa_median = median(visits),
                 opa_mean = mean(visits, na.rm =T),
                 opa_max = max(visits),
-                high_use= sum(visits>=4, na.rm = T),
+                high_use= sum(visits>=4*12, na.rm = T),
                 fu_time = mean(follow_up, na.rm =T)) %>% 
       as.data.frame() %>% mutate(data = "12 month")
 
