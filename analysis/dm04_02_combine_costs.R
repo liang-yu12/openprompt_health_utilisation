@@ -61,51 +61,40 @@ com_matched$primary_cost_12 <- rowSums(com_matched[p_12], na.rm = T)
 # exclude opd_cost_m for now*
 s_1 <- lc_exp_matched[grepl("_cost_m1$", names(lc_exp_matched))] %>% 
       names %>% as.vector()
-s_1 <- s_1[s_1!="opd_cost_m1"]
 
 s_2 <- lc_exp_matched[grepl("_cost_m2$", names(lc_exp_matched))] %>% 
       names %>% as.vector()
-s_2 <- s_2[s_2!="opd_cost_m2"]
 
 s_3 <- lc_exp_matched[grepl("_cost_m3$", names(lc_exp_matched))] %>% 
       names %>% as.vector()
-s_3 <- s_3[s_3!="opd_cost_m3"]
 
 s_4 <- lc_exp_matched[grepl("_cost_m4$", names(lc_exp_matched))] %>% 
       names %>% as.vector()
-s_4 <- s_4[s_4!="opd_cost_m4"]
 
 s_5 <- lc_exp_matched[grepl("_cost_m5$", names(lc_exp_matched))] %>% 
       names %>% as.vector()
-s_5 <- s_5[s_5!="opd_cost_m5"]
 
 s_6 <- lc_exp_matched[grepl("_cost_m6$", names(lc_exp_matched))] %>% 
       names %>% as.vector()
-s_6 <- s_6[s_6!="opd_cost_m6"]
 
 s_7 <- lc_exp_matched[grepl("_cost_m7$", names(lc_exp_matched))] %>% 
       names %>% as.vector()
-s_7 <- s_7[s_7!="opd_cost_m7"]
 
 s_8 <- lc_exp_matched[grepl("_cost_m8$", names(lc_exp_matched))] %>% 
       names %>% as.vector()
-s_8 <- s_8[s_8!="opd_cost_m8"]
 
 s_9 <- lc_exp_matched[grepl("_cost_m9$", names(lc_exp_matched))] %>% 
       names %>% as.vector()
-s_9 <- s_9[s_9!="opd_cost_m9"]
 
 s_10 <- lc_exp_matched[grepl("_cost_m10$", names(lc_exp_matched))] %>% 
       names %>% as.vector()
-s_10 <- s_10[s_10!="opd_cost_m10"]
 
 s_11 <- lc_exp_matched[grepl("_cost_m11$", names(lc_exp_matched))] %>% 
       names %>% as.vector()
-s_11 <- s_11[s_11!="opd_cost_m11"]
 
 s_12 <- lc_exp_matched[grepl("_cost_m12$", names(lc_exp_matched))] %>% 
       names %>% as.vector()
-s_12 <- s_12[s_12!="opd_cost_m12"]
+
 
 # Then calculate the rowSums
 # Exposure group:
