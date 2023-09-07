@@ -154,29 +154,29 @@ lc_exp_matched$number_comorbidities_cat <- lc_exp_matched$number_comorbidities_c
 # ============== combine the healthcare visits ============== 
 # define healthcare visits: need to exclude long COVID clinic visits (without OPA visit)
 m1 <- lc_exp_matched[, grepl("visit_m1$", names(lc_exp_matched)), with = FALSE] %>% names() %>% as.vector()
-m1 <- m1[!m1=="opa_lc_visit_m1" & !m1=="opa_visit_m1"]
+m1 <- m1[!m1=="opa_lc_visit_m1"]
 m2 <- lc_exp_matched[, grepl("visit_m2$", names(lc_exp_matched)), with = FALSE] %>% names() %>% as.vector()
-m2 <- m2[!m2=="opa_lc_visit_m2" & !m2=="opa_visit_m2"]
+m2 <- m2[!m2=="opa_lc_visit_m2"]
 m3 <- lc_exp_matched[, grepl("visit_m3$", names(lc_exp_matched)), with = FALSE] %>% names() %>% as.vector()
-m3 <- m3[!m3=="opa_lc_visit_m3" & !m3=="opa_visit_m3"]
+m3 <- m3[!m3=="opa_lc_visit_m3"]
 m4 <- lc_exp_matched[, grepl("visit_m4$", names(lc_exp_matched)), with = FALSE] %>% names() %>% as.vector()
-m4 <- m4[!m4=="opa_lc_visit_m4" & !m4=="opa_visit_m4"]
+m4 <- m4[!m4=="opa_lc_visit_m4"]
 m5 <- lc_exp_matched[, grepl("visit_m5$", names(lc_exp_matched)), with = FALSE] %>% names() %>% as.vector()
-m5 <- m5[!m5=="opa_lc_visit_m5" & !m5=="opa_visit_m5"]
+m5 <- m5[!m5=="opa_lc_visit_m5"]
 m6 <- lc_exp_matched[, grepl("visit_m6$", names(lc_exp_matched)), with = FALSE] %>% names() %>% as.vector()
-m6 <- m6[!m6=="opa_lc_visit_m6" & !m6=="opa_visit_m6"]
+m6 <- m6[!m6=="opa_lc_visit_m6"]
 m7 <- lc_exp_matched[, grepl("visit_m7$", names(lc_exp_matched)), with = FALSE] %>% names() %>% as.vector()
-m7 <- m7[!m7=="opa_lc_visit_m7" & !m7=="opa_visit_m7"]
+m7 <- m7[!m7=="opa_lc_visit_m7"]
 m8 <- lc_exp_matched[, grepl("visit_m8$", names(lc_exp_matched)), with = FALSE] %>% names() %>% as.vector()
-m8 <- m8[!m8=="opa_lc_visit_m8" & !m8=="opa_visit_m8"]
+m8 <- m8[!m8=="opa_lc_visit_m8"]
 m9 <- lc_exp_matched[, grepl("visit_m9$", names(lc_exp_matched)), with = FALSE] %>% names() %>% as.vector()
-m9 <- m9[!m9=="opa_lc_visit_m9" & !m9=="opa_visit_m9"]
+m9 <- m9[!m9=="opa_lc_visit_m9"]
 m10 <- lc_exp_matched[, grepl("visit_m10$", names(lc_exp_matched)), with = FALSE] %>% names() %>% as.vector()
-m10 <- m10[!m10=="opa_lc_visit_m10" & !m10=="opa_visit_m10"]
+m10 <- m10[!m10=="opa_lc_visit_m10"]
 m11 <- lc_exp_matched[, grepl("visit_m11$", names(lc_exp_matched)), with = FALSE] %>% names() %>% as.vector()
-m11 <- m11[!m11=="opa_lc_visit_m11" & !m11=="opa_visit_m11"]
+m11 <- m11[!m11=="opa_lc_visit_m11"]
 m12 <- lc_exp_matched[, grepl("visit_m12$", names(lc_exp_matched)), with = FALSE] %>% names() %>% as.vector()
-m12 <- m12[!m12=="opa_lc_visit_m12" & !m12=="opa_visit_m12"]
+m12 <- m12[!m12=="opa_lc_visit_m12"]
 
 
 # combine them
