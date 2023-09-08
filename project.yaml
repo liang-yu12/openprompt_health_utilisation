@@ -267,7 +267,9 @@ actions:
       r:latest analysis/st03_01_model_curr_nb_hurdel.R
     outputs: 
       moderately_sensitive: 
-        hurdle_all_visits: output/st03_01_hurdle_all_visits.csv
+        binomial_visits: output/st03_01_total_binomial.csv
+        hurdle_all_visits: output/st03_01_total_hurdle.csv
+        predicted_visits: output/st03_01_total_predicted_counts.csv
 
 # # GP utilisation  - hurdle
 
