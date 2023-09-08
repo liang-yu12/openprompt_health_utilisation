@@ -279,7 +279,9 @@ actions:
       r:latest analysis/st03_02_model06_gp_hurdel.R
     outputs: 
       moderately_sensitive: 
-        hurdle_gp_visits: output/st03_02_hurdle_gp_visits.csv
+        gp_binomial: output/st03_02_gp_binomial.csv
+        gp_hurdle: output/st03_02_gp_binomial.csv
+        predicted_visits: output/st03_02_gp_predicted_counts.csv
 
 # # Secondary care - hurdle
 
