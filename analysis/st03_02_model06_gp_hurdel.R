@@ -37,7 +37,7 @@ matched_data_gp_12m <- matched_data_gp_ts %>%
 for_covariates <- matched_data_gp_ts %>% distinct(patient_id, exposure, .keep_all = T) %>% 
   dplyr::select("patient_id",     
                 "exposure",           
-                "age_cat",                 
+                "age",                 
                 "sex",                     
                 "bmi_cat",
                 "ethnicity_6",             
