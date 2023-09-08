@@ -242,7 +242,7 @@ st03_02_gp_binomial <- bind_rows(crude_binomial_outputs, adj_binomial_outputs)
 st03_02_gp_binomial %>% write_csv(here("output", "st03_02_gp_binomial.csv"))
 
 st03_02_gp_hurdle <- bind_rows(crude_hurdle_outputs, adj_hurdle_outputs)
-st03_02_gp_hurdle %>% write_csv(here("output", "st03_02_gp_binomial.csv"))
+st03_02_gp_hurdle %>% write_csv(here("output", "st03_02_gp_hurdle.csv"))
 
 
 
