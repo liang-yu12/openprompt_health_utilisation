@@ -279,6 +279,17 @@ actions:
       moderately_sensitive: 
         hurdle_gp_visits: output/st03_02_hurdle_gp_visits.csv
 
+# # Secondary care - hurdle
+
+
+  report_03_hurdle_05_2ndcare_visits:
+    needs: [import_matched_exposure, import_matched_controls]
+    run: r:latest analysis/st03_05_model10_2nd_care_hurdel.R
+    outputs: 
+      moderately_sensitive: 
+        binomial_2nd_care: output/st03_05_2ndcare_binomial.csv
+        hurdle_2nd_care: output/st03_05_2ndcare_hurdle.csv
+
 # # Hospital admission - hurdle
 
   report_03_hurdle_03_hospital_admin:
