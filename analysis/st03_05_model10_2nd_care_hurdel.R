@@ -144,14 +144,14 @@ crude_binomial_outputs <-bind_rows(
       (binomial_tidy_fn(crude_binomial_3m) %>% mutate(time="3 months")),
       (binomial_tidy_fn(crude_binomial_6m) %>% mutate(time="6 months")),
       (binomial_tidy_fn(crude_binomial_12m) %>% mutate(time="12 months"))
-)
+) %>% mutate(Adjustment = "Crude")
 
 # Organise the second part outputs:
 crude_hurdle_outputs <- bind_rows(
       (positive_nb_tidy_fu(crude_nb_3m) %>% mutate(time="3 months")),
       (positive_nb_tidy_fu(crude_nb_6m) %>% mutate(time="6 months")),
       (positive_nb_tidy_fu(crude_nb_12m) %>% mutate(time="12 months"))
-)
+) %>% mutate(Adjustment = "Crude")
 
 # Hurdle model adjusted for covariates
 # First need to clean the data by excluding obs with NA in variables:
@@ -187,11 +187,50 @@ adj_binomial_12m <- glm(visits_binary ~ exposure + offset(log(follow_up)) +
                        data = adj_complete_12m,
                        family=binomial(link="logit")) 
 
-# Hurdle model part 2: positive negative bionomial model:
+# Hurdle model part 2: positive negative binomial model:
 
 # Positive negative binomial
+# 3 months
 adj_nb_3m <- vglm(visits ~ exposure + offset(log(follow_up))+
                         age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + 
                         previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
                      family = posnegbinomial(),
                      data = subset(crude_complete_3m, visits_binary > 0))
+
+# 6 months 
+adj_nb_6m <- vglm(visits ~ exposure + offset(log(follow_up))+
+                        age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + 
+                        previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
+                  family = posnegbinomial(),
+                  data = subset(crude_complete_6m, visits_binary > 0))
+
+# 12 months
+adj_nb_12m <- vglm(visits ~ exposure + offset(log(follow_up))+
+                        age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + 
+                        previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
+                  family = posnegbinomial(),
+                  data = subset(crude_complete_12m, visits_binary > 0))
+
+
+
+# Combine and organised regression outputs
+adj_binomial_outputs <-bind_rows(
+      (binomial_tidy_fn(adj_binomial_3m) %>% mutate(time="3 months")),
+      (binomial_tidy_fn(adj_binomial_6m) %>% mutate(time="6 months")),
+      (binomial_tidy_fn(adj_binomial_12m) %>% mutate(time="12 months"))
+) %>% mutate(Adjustment = "Adjusted")
+
+# Organise the second part outputs:
+adj_hurdle_outputs <- bind_rows(
+      (positive_nb_tidy_fu(adj_nb_3m) %>% mutate(time="3 months")),
+      (positive_nb_tidy_fu(adj_nb_6m) %>% mutate(time="6 months")),
+      (positive_nb_tidy_fu(adj_nb_12m) %>% mutate(time="12 months"))
+) %>% mutate(Adjustment = "Adjusted")
+
+
+# Combine total outputs:
+st03_05_2ndcare_binomial <- bind_rows(crude_binomial_outputs, adj_binomial_outputs)
+st03_05_2ndcare_binomial %>% write_csv(here("output", "st03_05_2ndcare_binomial.csv"))
+
+st03_05_2ndcare_hurdle <- bind_rows(crude_hurdle_outputs, adj_hurdle_outputs)
+st03_05_2ndcare_hurdle %>% write_csv(here("output", "st03_05_2ndcare_hurdle.csv"))
