@@ -153,7 +153,7 @@ crude_hurdle_outputs <- bind_rows(
       (positive_nb_tidy_fu(crude_nb_12m) %>% mutate(time="12 months"))
 ) %>% mutate(Adjustment = "Crude")
 
-# Hurdle model adjusted for covariates
+# Hurdle model adjusted for covariates -------
 # First need to clean the data by excluding obs with NA in variables:
 adj_complete_3m <- matched_3m_2nd[complete.cases(matched_3m_2nd),] %>% 
       mutate(visits_binary = ifelse(visits>0, 1, 0))
@@ -234,3 +234,46 @@ st03_05_2ndcare_binomial %>% write_csv(here("output", "st03_05_2ndcare_binomial.
 
 st03_05_2ndcare_hurdle <- bind_rows(crude_hurdle_outputs, adj_hurdle_outputs)
 st03_05_2ndcare_hurdle %>% write_csv(here("output", "st03_05_2ndcare_hurdle.csv"))
+
+
+# Predict the average healthcare visits in the secondary care sector:  ----
+# function to predict the average adjusted visits:
+average_visits_fn <- function(dataset, reg_1st, reg_2nd){
+      # part 1:
+      p1 <- predict(reg_1st, type= "response") # predict the first part non-zero prob
+      dataset$nonzero_prob <- p1 # add the probability to the original data
+      # part 2: 
+      p2 <- predictvglm(reg_2nd, newdata = dataset, type = "terms", se.fit = T)
+      dataset <- mutate(
+            predict_visit = exp(p2$fitted.values),
+            predict_lci = exp(p2$fitted.values - 1.96*p2$se.fit),
+            predict_hci = exp(p2$fitted.values + 1.96*p2$se.fit)
+            )
+      # multiply p1 and p2
+      dataset <- dataset %>% mutate(
+            c_visit = nonzero_prob*predict_visit,
+            c_lci = nonzero_prob*predict_lci,
+            c_hci = nonzero_prob*predict_hci)
+      
+      results <- dataset %>% group_by(exposure) %>% 
+            summarise(visits = mean(c_visit),
+                      lci = mean(c_lci),
+                      hci = mean(c_hci)
+                      )
+      return(results)
+}
+
+# run the predict function and summarised the average vistis:
+summarised_results <- bind_rows(
+      (average_visits_fn(dataset = adj_complete_3m, 
+                  reg_1st = adj_binomial_3m, 
+                  reg_2nd = adj_nb_3m) %>% mutate(time = "3 months")),
+      (average_visits_fn(dataset = adj_complete_6m, 
+                   reg_1st = adj_binomial_6m, 
+                   reg_2nd = adj_nb_6m) %>% mutate(time = "6 months")),
+      (average_visits_fn(dataset = adj_complete_12m, 
+                   reg_1st = adj_binomial_12m, 
+                   reg_2nd = adj_nb_12m) %>% mutate(time = "12 months")))
+
+summarised_results %>% write_csv(here("output", "st03_05_predicted_counts.csv"))
+
