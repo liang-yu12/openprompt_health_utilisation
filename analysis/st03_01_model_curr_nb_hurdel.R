@@ -245,7 +245,7 @@ average_visits_fn <- function(dataset, reg_1st, reg_2nd){
       dataset$nonzero_prob <- p1 # add the probability to the original data
       # part 2: 
       p2 <- predictvglm(reg_2nd, newdata = dataset, type = "terms", se.fit = T)
-      dataset <- mutate(
+      dataset <- dataset %>% mutate(
             predict_visit = exp(p2$fitted.values),
             predict_lci = exp(p2$fitted.values - 1.96*p2$se.fit),
             predict_hci = exp(p2$fitted.values + 1.96*p2$se.fit)
