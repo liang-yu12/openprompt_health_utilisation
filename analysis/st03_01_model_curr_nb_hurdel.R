@@ -237,45 +237,81 @@ st03_01_total_hurdle <- bind_rows(crude_hurdle_outputs, adj_hurdle_outputs)
 st03_01_total_hurdle %>% write_csv(here("output", "st03_01_total_hurdle.csv"))
 
 
-# Predict the average healthcare visits in the secondary care sector:  ----
+# Predict the average healthcare visits in each group:  ----
 # function to predict the average adjusted visits:
-average_visits_fn <- function(dataset, reg_1st, reg_2nd){
-      # part 1:
-      p1 <- predict(reg_1st, type= "response") # predict the first part non-zero prob
-      dataset$nonzero_prob <- p1 # add the probability to the original data
-      # part 2: 
-      p2 <- predictvglm(reg_2nd, newdata = dataset, type = "terms", se.fit = T)
-      dataset <- dataset %>% mutate(
-            predict_visit = exp(p2$fitted.values),
-            predict_lci = exp(p2$fitted.values - 1.96*p2$se.fit),
-            predict_hci = exp(p2$fitted.values + 1.96*p2$se.fit)
-      )
-      # multiply p1 and p2
-      dataset <- dataset %>% mutate(
-            c_visit = nonzero_prob*predict_visit,
-            c_lci = nonzero_prob*predict_lci,
-            c_hci = nonzero_prob*predict_hci)
-      
-      results <- dataset %>% group_by(exposure) %>% 
-            summarise(visits = mean(c_visit),
-                      lci = mean(c_lci),
-                      hci = mean(c_hci)
-            )
-      return(results)
+avg_visit_predict_fn <- function(i.exp, fu_time, reg_1st, reg_2nd){
+  # first set up a input dataset:
+  # i.exp = "Comparator" or "Long covid exposure" 
+  
+  input <- expand.grid(exposure = i.exp, 
+                       follow_up = fu_time,
+                       sex = c("female", "male"),
+                       age = mean(crude_complete_12m$age, na.rm = T),
+                       ethnicity_6 = c("White","Mixed","South Asian", "Black","Other","Not stated"),
+                       bmi_cat = c("Underweight","Normal Weight", "Overweight", "Obese"),
+                       region = c("East", "East Midlands", "London", "North East","North West",
+                                  "South East","South West","West Midlands", "Yorkshire and The Humber"),
+                       imd_q5 = c("least_deprived", "2_deprived", "3_deprived","4_deprived","most_deprived"),
+                       number_comorbidities_cat = c("0", "1", "2", "3"))
+  
+  # Part 1: predict the first part non-zero prob
+  p1 <- predict(reg_1st, newdata = input,  type= "response")
+  # Part 2: predict the second part visits
+  p2 <- predictvglm(crude_nb_12m, newdata = input, type = "terms", se.fit = T)
+  
+  # Calculate the confidence interval of the part 2, then multiply by the first part:
+  p_data <- p1 %>% as.data.frame() %>% rename( nonzero_prob = ".") %>% 
+    mutate(
+      predict_visit = exp(p2$fitted.values),
+      predict_lci = exp(p2$fitted.values - 1.96*p2$se.fit),
+      predict_hci = exp(p2$fitted.values + 1.96*p2$se.fit)) %>% 
+    mutate(c_visit = nonzero_prob*predict_visit,
+           c_lci = nonzero_prob*predict_lci,
+           c_hci = nonzero_prob*predict_hci)
+  
+  # summarised the results: 
+  results <- p_data %>% summarise(visits = mean(c_visit),
+                                  lci = mean(c_lci),
+                                  hci = mean(c_hci)
+  )
+  return(results)
 }
-
 # run the predict function and summarised the average vistis:
-summarised_results <- bind_rows(
-      (average_visits_fn(dataset = adj_complete_3m, 
-                         reg_1st = adj_binomial_3m, 
-                         reg_2nd = adj_nb_3m) %>% mutate(time = "3 months")),
-      (average_visits_fn(dataset = adj_complete_6m, 
-                         reg_1st = adj_binomial_6m, 
-                         reg_2nd = adj_nb_6m) %>% mutate(time = "6 months")),
-      (average_visits_fn(dataset = adj_complete_12m, 
-                         reg_1st = adj_binomial_12m, 
-                         reg_2nd = adj_nb_12m) %>% mutate(time = "12 months")))
+crude_summarised_results <- bind_rows(
+  avg_visit_predict_fn(i.exp = "Comparator",fu_time=30*3,crude_binomial_3m,crude_nb_3m) %>% 
+    mutate(exposure = "Comparator", time = "3 months") %>% relocate(time, exposure),
+  avg_visit_predict_fn(i.exp = "Long covid exposure",fu_time=30*3,crude_binomial_3m,crude_nb_3m) %>% 
+    mutate(exposure = "Long covid exposure", time = "3 months") %>% relocate(time, exposure),
+  
+  avg_visit_predict_fn(i.exp = "Comparator",fu_time=30*6,crude_binomial_6m,crude_nb_6m) %>% 
+    mutate(exposure = "Comparator", time = "6 months") %>% relocate(time, exposure),
+  avg_visit_predict_fn(i.exp = "Long covid exposure",fu_time=30*6,crude_binomial_6m,crude_nb_6m) %>% 
+    mutate(exposure = "Long covid exposure", time = "6 months") %>% relocate(time, exposure),
+  
+  avg_visit_predict_fn(i.exp = "Comparator",fu_time=30*12,crude_binomial_12m,crude_nb_12m) %>% 
+    mutate(exposure = "Comparator", time = "12 months") %>% relocate(time, exposure),
+  avg_visit_predict_fn(i.exp = "Long covid exposure",fu_time=30*12,crude_binomial_12m,crude_nb_12m) %>% 
+    mutate(exposure = "Long covid exposure", time = "12 months") %>% relocate(time, exposure)
+  ) %>% mutate(adjustment = "Crude")
 
-summarised_results %>% write_csv(here("output", "st03_01_total_predicted_counts.csv"))
+adj_summarised_results <- bind_rows(
+  avg_visit_predict_fn(i.exp = "Comparator",fu_time=30*3,adj_binomial_3m,adj_nb_3m) %>% 
+    mutate(exposure = "Comparator", time = "3 months") %>% relocate(time, exposure),
+  avg_visit_predict_fn(i.exp = "Long covid exposure",fu_time=30*3,adj_binomial_3m,adj_nb_3m) %>% 
+    mutate(exposure = "Long covid exposure", time = "3 months") %>% relocate(time, exposure),
+  
+  avg_visit_predict_fn(i.exp = "Comparator",fu_time=30*6,adj_binomial_6m,adj_nb_6m) %>% 
+    mutate(exposure = "Comparator", time = "6 months") %>% relocate(time, exposure),
+  avg_visit_predict_fn(i.exp = "Long covid exposure",fu_time=30*6,adj_binomial_6m,adj_nb_6m) %>% 
+    mutate(exposure = "Long covid exposure", time = "6 months") %>% relocate(time, exposure),
+  
+  avg_visit_predict_fn(i.exp = "Comparator",fu_time=30*12,adj_binomial_12m,adj_nb_12m) %>% 
+    mutate(exposure = "Comparator", time = "12 months") %>% relocate(time, exposure),
+  avg_visit_predict_fn(i.exp = "Long covid exposure",fu_time=30*12,adj_binomial_12m,adj_nb_12m) %>% 
+    mutate(exposure = "Long covid exposure", time = "12 months") %>% relocate(time, exposure)
+)%>% mutate(adjustment = "Adjusted")
+
+bind_rows(crude_summarised_results, adj_summarised_results) %>% 
+  write_csv(here("output", "st03_01_total_predicted_counts.csv"))
 
 
