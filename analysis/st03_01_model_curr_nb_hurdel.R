@@ -252,6 +252,7 @@ avg_visit_predict_fn <- function(i.exp, fu_time, reg_1st, reg_2nd){
                        region = c("East", "East Midlands", "London", "North East","North West",
                                   "South East","South West","West Midlands", "Yorkshire and The Humber"),
                        imd_q5 = c("least_deprived", "2_deprived", "3_deprived","4_deprived","most_deprived"),
+                       previous_covid_hosp = c("FALSE", "TRUE"),
                        number_comorbidities_cat = c("0", "1", "2", "3"))
   
   # Part 1: predict the first part non-zero prob
