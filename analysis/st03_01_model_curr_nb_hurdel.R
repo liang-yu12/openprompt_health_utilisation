@@ -254,7 +254,7 @@ avg_visit_predict_fn <- function(dataset, fu_time, reg_1st, reg_2nd){
       # Part 1: predict the first part non-zero prob
       input$nonzero_prob <- predict(reg_1st, newdata = input,  type= "response")
       # Part 2: predict the second part visits
-      p2 <- predictvglm(reg_2nd, newdata = input, type = "terms", se.fit = T)
+      p2 <- predictvglm(reg_2nd, newdata = input, type = "link", se.fit = T)
       
       # Calculate the confidence interval of the part 2, then multiply by the first part:
       results <- input %>% 
