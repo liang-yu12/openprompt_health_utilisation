@@ -37,7 +37,7 @@ matched_data_12m <- matched_data_ts %>%
 for_covariates <- matched_data_ts %>% distinct(patient_id, exposure, .keep_all = T) %>% 
       dplyr::select("patient_id",     
                     "exposure",           
-                    "age",                 
+                    "age", "age_cat",               
                     "sex",                     
                     "bmi_cat",
                     "ethnicity_6",             
@@ -73,7 +73,8 @@ matched_data_6m$exposure <- relevel(matched_data_6m$exposure, ref = "Comparator"
 matched_data_12m$exposure <- relevel(matched_data_12m$exposure, ref = "Comparator")
 
 # Stats: two part (Hurdle) model -----
-# first need to exclude rows with NA and create 1/0 outcomes:
+
+# Crude data management: first need to exclude rows with NA and create 1/0 outcomes:
 crude_vars <- c("visits", "exposure", "follow_up")#for crude anaylsis
 
 crude_complete_3m <- matched_data_3m %>% drop_na(any_of(crude_vars)) %>% 
@@ -87,7 +88,8 @@ crude_complete_12m <- matched_data_12m %>% drop_na(any_of(crude_vars)) %>%
 # Crude hurdle model: ----
 # # 3 months
 # binomial model: 
-crude_binomial_3m <-  glm(visits_binary ~ exposure + offset(log(follow_up)), data = crude_complete_3m,
+crude_binomial_3m <-  glm(visits_binary ~ exposure + offset(log(follow_up)), 
+                          data = crude_complete_3m,
                           family=binomial(link="logit")) 
 # Positive negative binomial (truncated)
 crude_nb_3m <- vglm(visits ~ exposure + offset(log(follow_up)),
@@ -96,7 +98,8 @@ crude_nb_3m <- vglm(visits ~ exposure + offset(log(follow_up)),
 
 # # 6 months:
 # binomial
-crude_binomial_6m <-  glm(visits_binary ~ exposure + offset(log(follow_up)), data = crude_complete_6m,
+crude_binomial_6m <-  glm(visits_binary ~ exposure + offset(log(follow_up)), 
+                          data = crude_complete_6m,
                           family=binomial(link="logit")) 
 # Positive negative binomial (truncated)
 crude_nb_6m <- vglm(visits ~ exposure + offset(log(follow_up)),
@@ -105,7 +108,8 @@ crude_nb_6m <- vglm(visits ~ exposure + offset(log(follow_up)),
 
 # # 12 months
 # binomial
-crude_binomial_12m <-  glm(visits_binary ~ exposure + offset(log(follow_up)), data = crude_complete_12m,
+crude_binomial_12m <-  glm(visits_binary ~ exposure + offset(log(follow_up)), 
+                           data = crude_complete_12m,
                            family=binomial(link="logit")) 
 # Positive negative binomial (truncated)
 crude_nb_12m <- vglm(visits ~ exposure + offset(log(follow_up)),
@@ -272,13 +276,19 @@ avg_visit_predict_fn <- function(dataset, fu_time, reg_1st, reg_2nd){
 }
 # run the predict function and summarised the average vistis:
 crude_summarised_results <- bind_rows(
-  avg_visit_predict_fn(dataset = crude_complete_3m,fu_time=30*3,crude_binomial_3m,crude_nb_3m) %>% 
-    mutate(time = "3 months") %>% relocate(time),
-  avg_visit_predict_fn(dataset = crude_complete_6m,fu_time=30*6,crude_binomial_6m,crude_nb_6m) %>% 
-    mutate(time = "6 months") %>% relocate(time),
-  avg_visit_predict_fn(dataset = crude_complete_12m,fu_time=30*12,crude_binomial_12m,crude_nb_12m) %>% 
-    mutate(time = "12 months") %>% relocate(time),
-  ) %>% mutate(adjustment = "Crude")
+  avg_visit_predict_fn(dataset = crude_complete_3m,
+                       fu_time=30*3,
+                       crude_binomial_3m,
+                       crude_nb_3m) %>% mutate(time = "3 months") %>% relocate(time),
+  avg_visit_predict_fn(dataset = crude_complete_6m,
+                       fu_time=30*6,
+                       crude_binomial_6m,
+                       crude_nb_6m) %>% mutate(time = "6 months") %>% relocate(time),
+  avg_visit_predict_fn(dataset = crude_complete_12m,
+                       fu_time=30*12,
+                       crude_binomial_12m,
+                       crude_nb_12m) %>% mutate(time = "12 months") %>% relocate(time)) %>% 
+      mutate(adjustment = "Crude")
 
 adj_summarised_results <- bind_rows(
   avg_visit_predict_fn(dataset = adj_complete_3m,
