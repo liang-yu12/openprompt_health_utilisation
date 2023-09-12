@@ -36,7 +36,7 @@ matched_cost_12m <- matched_cost_ts %>%
 for_covariates <- matched_cost_ts %>% distinct(patient_id, exposure, .keep_all = T) %>% 
       dplyr::select("patient_id",     
                     "exposure",           
-                    "age_cat",                 
+                    "age_cat",  "age",
                     "sex",                     
                     "bmi_cat",
                     "ethnicity_6",             
@@ -89,18 +89,19 @@ crude_cost_complete_12m <- matched_cost_12m %>% drop_na(any_of(crude_vars)) %>%
 
 # Crude prediction: -----
 # write function: 
-crude_predict_cost_fn <- function(dataset){
+crude_predict_cost_fn <- function(dataset, fu_time){
+      
+      # change the dataset fullow up time for the prediction
+      input <- dataset %>% mutate(follow_up = fu_time)
       
       #First part model
       logit_reg <- glm(cost_binary ~ exposure + offset(log(follow_up)),
                                  data = dataset,
                                  family = binomial(link="logit")) 
       # predict non-zero visit chance
-      nonzero_chance <- predict(logit_reg, type = "response")
+      input$nonzero_chance <- predict(logit_reg, newdata = input, type = "response")
       
-      dataset$nonzero_chance <- nonzero_chance
-      
-      # run second part model
+            # run second part model
       tpm_reg <- glm(total_cost ~ exposure + offset(log(follow_up)),
                                 data = subset(dataset, cost_binary>0),
                                 family = Gamma(link="log")) 
@@ -110,19 +111,19 @@ crude_predict_cost_fn <- function(dataset){
 
       
       # Calculate 95% CI
-      dataset <- dataset %>% mutate(
+      input <- input %>% mutate(
             twopm_cost= exp(tpm$fit),
             twopm_cost_lci = exp(tpm$fit - 1.96*tpm$se.fit),
             twopm_cost_hci = exp(tpm$fit + 1.96*tpm$se.fit))
       
       # Multiply the non-zero chance and the predicted costs
-      dataset <- dataset %>% mutate(
+      input <- input %>% mutate(
             c_cost = nonzero_chance*twopm_cost,
             c_cost_lci =nonzero_chance*twopm_cost_lci,
             c_cost_hci =nonzero_chance*twopm_cost_hci,)
       
       # Summarise the output:
-      results <- dataset %>% group_by(exposure) %>% 
+      results <- input %>% group_by(exposure) %>% 
             summarise(cost=mean(c_cost),
                       lci=mean(c_cost_lci),
                       uci=mean(c_cost_hci)
@@ -131,9 +132,10 @@ crude_predict_cost_fn <- function(dataset){
 }
 
 crude_predict_costs <- bind_rows(
-      crude_predict_cost_fn(crude_cost_complete_3m) %>% mutate(time="3 months"),
-      crude_predict_cost_fn(crude_cost_complete_6m) %>% mutate(time="6 months"),
-      crude_predict_cost_fn(crude_cost_complete_12m) %>% mutate(time="12 months"))
+      crude_predict_cost_fn(crude_cost_complete_3m, 30*3) %>% mutate(time="3 months"),
+      crude_predict_cost_fn(crude_cost_complete_6m, 30*6) %>% mutate(time="6 months"),
+      crude_predict_cost_fn(crude_cost_complete_12m, 30*12) %>% mutate(time="12 months")) %>% 
+      mutate(adjustment = "Crude") %>% relocate(adjustment)
 
 # Adjusted two-part model: ------
 # Data management: keep complete data
@@ -145,17 +147,18 @@ adj_cost_complete_12m <- matched_cost_12m[complete.cases(matched_cost_12m),] %>%
       mutate(cost_binary = ifelse(total_cost>0, 1, 0))
 
 
-adj_predict_cost_fn <- function(dataset){
+adj_predict_cost_fn <- function(dataset, fu_time){
+      # change the dataset fullow up time for the prediction
+      input <- dataset %>% mutate(follow_up = fu_time)
       
       #First part model
       logit_reg <- glm(cost_binary ~ exposure + offset(log(follow_up))+ age_cat + sex  + cov_covid_vax_n_cat + 
                              bmi_cat + imd_q5 + ethnicity_6 + region + number_comorbidities_cat,
                        data = dataset,
                        family = binomial(link="logit")) 
-      # predict non-zero visit chance
-      nonzero_chance <- predict(logit_reg, type = "response")
       
-      dataset$nonzero_chance <- nonzero_chance
+      # predict non-zero visit chance
+      input$nonzero_chance  <- predict(logit_reg, newdata = input,  type = "response")
       
       # run second part model
       tpm_reg <- glm(total_cost ~ exposure + offset(log(follow_up))+ age_cat + sex  + cov_covid_vax_n_cat + 
@@ -164,23 +167,23 @@ adj_predict_cost_fn <- function(dataset){
                      family = Gamma(link="log")) 
       
       # Predict the cost by using original data
-      tpm <- predict(tpm_reg, newdata = dataset, type ="link", se.fit =T)
+      tpm <- predict(tpm_reg, newdata = input, type ="link", se.fit =T)
       
       
       # Calculate 95% CI
-      dataset <- dataset %>% mutate(
+      input <- input %>% mutate(
             twopm_cost= exp(tpm$fit),
             twopm_cost_lci = exp(tpm$fit - 1.96*tpm$se.fit),
             twopm_cost_hci = exp(tpm$fit + 1.96*tpm$se.fit))
       
       # Multiply the non-zero chance and the predicted costs
-      dataset <- dataset %>% mutate(
+      input <- input %>% mutate(
             c_cost = nonzero_chance*twopm_cost,
             c_cost_lci =nonzero_chance*twopm_cost_lci,
             c_cost_hci =nonzero_chance*twopm_cost_hci,)
       
       # Summarise the output:
-      results <- dataset %>% group_by(exposure) %>% 
+      results <- input %>% group_by(exposure) %>% 
             summarise(cost=mean(c_cost),
                       lci=mean(c_cost_lci),
                       uci=mean(c_cost_hci)
@@ -191,11 +194,11 @@ adj_predict_cost_fn <- function(dataset){
 
 # combine outputs
 adj_predict_costs <- bind_rows(
-      crude_predict_cost_fn(adj_cost_complete_3m) %>% mutate(time="3 months"),
-      crude_predict_cost_fn(adj_cost_complete_6m) %>% mutate(time="6 months"),
-      crude_predict_cost_fn(adj_cost_complete_12m) %>% mutate(time="12 months"))
+      crude_predict_cost_fn(adj_cost_complete_3m, 30*3) %>% mutate(time="3 months"),
+      crude_predict_cost_fn(adj_cost_complete_6m, 30*6) %>% mutate(time="6 months"),
+      crude_predict_cost_fn(adj_cost_complete_12m, 30*12) %>% mutate(time="12 months")) %>% 
+      mutate(adjustment = "Adjusted") %>% relocate(adjustment)
 
-total_costs <- bind_rows((crude_predict_costs %>% mutate(model = "Crude") %>% relocate(model)),
-adj_predict_costs %>% mutate(model = "Adjusted") %>% relocate(model)) 
+total_costs <- bind_rows(crude_predict_costs, adj_predict_costs) 
 
 total_costs %>% write_csv(here("output","st_04_01_2_predict_cost_tpm.csv"))
