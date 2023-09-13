@@ -57,8 +57,7 @@ com_matched$primary_cost_12 <- rowSums(com_matched[p_12], na.rm = T)
 
 
 # 2. Combine secondary care -----
-# Secondary care: apc_cost_m, er_cost_m, 
-# exclude opd_cost_m for now*
+# Secondary care: apc_cost_m, er_cost_m, opd_cost_m
 s_1 <- lc_exp_matched[grepl("_cost_m1$", names(lc_exp_matched))] %>% 
       names %>% as.vector()
 
