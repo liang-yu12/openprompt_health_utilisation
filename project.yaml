@@ -355,6 +355,15 @@ actions:
         gp_cost_twopm: output/st04_02_gp_cost_twopm_output.csv
         gp_predicted_costs: output/st04_02_predict_gp_cost_tpm.csv
 
+# APC costs: run two part model and predict costs
+  report_04_03_predict_apc_cost_twopm:
+    needs: [import_matched_exposure, import_matched_controls, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+    run: 
+      r:latest analysis/st04_03_predict_apc_cost_twopart.R
+    outputs: 
+      moderately_sensitive: 
+        apc_cost_twopm: output/st04_03_apc_cost_twopm_output.csv
+        apc_predicted_costs: output/st04_03_predict_apc_cost_tpm.csv
 
 # Historical: data distribution
   report05_hx_matched_data_distribution:
