@@ -75,7 +75,7 @@ com_cost_long <- left_join(com_cost_ts, com_fu_ts,
 
 
 # Combine two datasets: ---------
-matched_gp_cost_ts <- bind_rows(exp_cost_long, com_cost_long)
+matched_apc_cost_ts <- bind_rows(exp_cost_long, com_cost_long)
 # fix the exposure levels
-matched_gp_cost_ts$exposure <- relevel(matched_gp_cost_ts$exposure, ref = "Comparator")
+matched_apc_cost_ts$exposure <- relevel(matched_gp_cost_ts$exposure, ref = "Comparator")
 
