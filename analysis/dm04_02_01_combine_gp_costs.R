@@ -1,0 +1,30 @@
+source("analysis/dm04_02_combine_costs.R")
+
+
+# Exposure group
+lc_exp_matched$total_gp_cost_1 <- rowSums(lc_exp_matched[,c("primary_cost_1")])
+lc_exp_matched$total_gp_cost_2 <- rowSums(lc_exp_matched[,c("primary_cost_2")])
+lc_exp_matched$total_gp_cost_3 <- rowSums(lc_exp_matched[,c("primary_cost_3")])
+lc_exp_matched$total_gp_cost_4 <- rowSums(lc_exp_matched[, c("primary_cost_4")])
+lc_exp_matched$total_gp_cost_5 <- rowSums(lc_exp_matched[, c("primary_cost_5")])
+lc_exp_matched$total_gp_cost_6 <- rowSums(lc_exp_matched[, c("primary_cost_6")])
+lc_exp_matched$total_gp_cost_7 <- rowSums(lc_exp_matched[, c("primary_cost_7")])
+lc_exp_matched$total_gp_cost_8 <- rowSums(lc_exp_matched[, c("primary_cost_8")])
+lc_exp_matched$total_gp_cost_9 <- rowSums(lc_exp_matched[, c("primary_cost_9")])
+lc_exp_matched$total_gp_cost_10 <- rowSums(lc_exp_matched[, c("primary_cost_10")])
+lc_exp_matched$total_gp_cost_11 <- rowSums(lc_exp_matched[, c("primary_cost_11")])
+lc_exp_matched$total_gp_cost_12 <- rowSums(lc_exp_matched[, c("primary_cost_12")])
+
+# Comparator group:
+com_matched$total_gp_cost_1 <- rowSums(com_matched[,c("primary_cost_1")])
+com_matched$total_gp_cost_2 <- rowSums(com_matched[,c("primary_cost_2")])
+com_matched$total_gp_cost_3 <- rowSums(com_matched[,c("primary_cost_3")])
+com_matched$total_gp_cost_4 <- rowSums(com_matched[, c("primary_cost_4")])
+com_matched$total_gp_cost_5 <- rowSums(com_matched[, c("primary_cost_5")])
+com_matched$total_gp_cost_6 <- rowSums(com_matched[, c("primary_cost_6")])
+com_matched$total_gp_cost_7 <- rowSums(com_matched[, c("primary_cost_7")])
+com_matched$total_gp_cost_8 <- rowSums(com_matched[, c("primary_cost_8")])
+com_matched$total_gp_cost_9 <- rowSums(com_matched[, c("primary_cost_9")])
+com_matched$total_gp_cost_10 <- rowSums(com_matched[, c("primary_cost_10")])
+com_matched$total_gp_cost_11 <- rowSums(com_matched[, c("primary_cost_11")])
+com_matched$total_gp_cost_12 <- rowSums(com_matched[, c("primary_cost_12")])
