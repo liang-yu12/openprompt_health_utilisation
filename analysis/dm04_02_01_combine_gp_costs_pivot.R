@@ -37,7 +37,7 @@ com_matched$total_gp_cost_12 <- rowSums(com_matched[, c("primary_cost_12")])
 # set the columns to pivot
 total_gp_cost <- c()
 for (i in 1:12) {
-      total_gp_cost <- c(total_gp_cost, paste0("total_cost_", i))
+      total_gp_cost <- c(total_gp_cost, paste0("total_gp_cost_", i))
 }
 
 
@@ -50,7 +50,7 @@ exp_cost_ts <- lc_exp_matched %>%
             values_to = "monthly_gp_cost"
       )
 
-exp_cost_ts$month <- str_sub(exp_cost_ts$month, 12) # remove "total_cost_"
+exp_cost_ts$month <- str_sub(exp_cost_ts$month, 15) # remove "total_gp_cost_"
 exp_cost_ts$month <- as.numeric(exp_cost_ts$month)
 
 # pivot exposure follow-up time
@@ -82,7 +82,7 @@ com_cost_ts <- com_matched %>%
             values_to = "monthly_gp_cost"
       )
 
-com_cost_ts$month <- str_sub(com_cost_ts$month, 12)
+com_cost_ts$month <- str_sub(com_cost_ts$month, 15)
 com_cost_ts$month <- as.numeric(com_cost_ts$month)
 
 # Pivot the comparator follow_up time: 
