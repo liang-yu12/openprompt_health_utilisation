@@ -282,4 +282,4 @@ adj_gp_costs <- bind_rows(
 
 total_gp_costs <- bind_rows(crude_gp_costs, adj_gp_costs) 
 
-total_gp_costs %>% write_csv(here("output","st_04_02_predict_gp_cost_tpm.csv"))
+total_gp_costs %>% write_csv(here("output","st04_02_predict_gp_cost_tpm.csv"))
