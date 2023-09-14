@@ -76,11 +76,6 @@ matched_cost_3m$exposure <- relevel(matched_cost_3m$exposure, ref = "Comparator"
 matched_cost_6m$exposure <- relevel(matched_cost_6m$exposure, ref = "Comparator")
 matched_cost_12m$exposure <- relevel(matched_cost_12m$exposure, ref = "Comparator")
 
-# Increase dummy data size:
-# matched_cost_3m <- sample_n(matched_cost_3m, 1000000, replace = TRUE)
-# matched_cost_6m <- sample_n(matched_cost_6m, 1000000, replace = TRUE)
-# matched_cost_12m <- sample_n(matched_cost_12m, 1000000, replace = TRUE)
-
 
 # Crude model data management: -----
 # exclude rows with NA in the model: 
