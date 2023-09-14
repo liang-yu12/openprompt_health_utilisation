@@ -109,8 +109,7 @@ tidy_binomial_fn <- function(logit_reg){
             lci = exp(estimate - 1.96*std.error),
             hci = exp(estimate + 1.96*std.error),
             estimate = exp(estimate)) %>% 
-            dplyr::select(model, term, estimate, lci, hci, p.value)%>% 
-            filter(term == "exposureLong covid exposure" )
+            dplyr::select(model, term, estimate, lci, hci, p.value)
       return(part_binomial)
 }
 
@@ -118,7 +117,8 @@ crude_binomial_apc <- bind_rows(
       tidy_binomial_fn(crude_bi_3m) %>% mutate(time = "3 months"),
       tidy_binomial_fn(crude_bi_6m) %>% mutate(time = "6 months"),      
       tidy_binomial_fn(crude_bi_12m) %>% mutate(time = "12 months")) %>% 
-      mutate(adjustment = "Crude")  # combine the binomial outputs
+      mutate(adjustment = "Crude") %>% 
+      arrange(desc(term =="exposureLong covid exposure"))  # combine the binomial outputs
 
 # Crude Gamma GLM function (Second part) -----
 # Gamma GLM model function:
@@ -141,8 +141,7 @@ tidy_gamma_glm_fn <- function(gamma_glm){
             lci = exp(estimate - 1.96*std.error),
             hci = exp(estimate + 1.96*std.error),
             estimate = exp(estimate)) %>% 
-            dplyr::select(model, term, estimate, lci, hci, p.value)%>% 
-            filter(term == "exposureLong covid exposure" )
+            dplyr::select(model, term, estimate, lci, hci, p.value)
       return(part_gaama)
 }
 
@@ -150,7 +149,8 @@ crude_gamma_glm_apc <- bind_rows(
       tidy_gamma_glm_fn(crude_gamma_3m) %>% mutate(time = "3 months"),
       tidy_gamma_glm_fn(crude_gamma_6m) %>% mutate(time = "6 months"),
       tidy_gamma_glm_fn(crude_gamma_12m) %>% mutate(time = "12 months")) %>%
-      mutate(adjustment = "Crude")
+      mutate(adjustment = "Crude") %>% 
+      arrange(desc(term =="exposureLong covid exposure")) 
 
 # Adjusted models:
 
@@ -181,7 +181,8 @@ adj_binomial_apc <- bind_rows(
       tidy_binomial_fn(adj_bi_3m) %>% mutate(time = "3 months"),
       tidy_binomial_fn(adj_bi_6m) %>% mutate(time = "6 months"),
       tidy_binomial_fn(adj_bi_12m) %>% mutate(time = "12 months")) %>% 
-      mutate(adjustement = "Adjusted")
+      mutate(adjustement = "Adjusted")%>% 
+      arrange(desc(term =="exposureLong covid exposure")) 
 
 # adjusted Gamma GLM model (Second part) ----
 # Adjusted Gamma glm function
@@ -202,7 +203,9 @@ adj_gamma_glm_apc <- bind_rows(
       tidy_gamma_glm_fn(adj_gamma_3m) %>% mutate(time = "3 months"),       
       tidy_gamma_glm_fn(adj_gamma_6m) %>% mutate(time = "6 months"),       
       tidy_gamma_glm_fn(adj_gamma_12m) %>% mutate(time = "12 months")) %>% 
-      mutate(adjustment = "Adjusted")
+      mutate(adjustment = "Adjusted")%>% 
+      arrange(desc(term =="exposureLong covid exposure")) 
+
 
 # save the output:
 bind_rows(crude_binomial_apc, crude_gamma_glm_apc,
