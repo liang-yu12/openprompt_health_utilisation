@@ -19,3 +19,5 @@ registration = practice_registrations \
 dataset = Dataset()
 dataset.define_population(lc_dx.exists_for_patient())
 dataset.gp_practice = registration.practice_pseudo_id
+
+dataset.configure_dummy_dataset(population_size=5000)
