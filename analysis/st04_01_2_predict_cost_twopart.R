@@ -107,7 +107,7 @@ crude_predict_cost_fn <- function(dataset, fu_time){
                                 family = Gamma(link="log")) 
       
       # Predict the cost by using original data
-      tpm <- predict(tpm_reg, newdata = dataset, type ="link", se.fit =T)
+      tpm <- predict(tpm_reg, newdata = input, type ="link", se.fit =T)
 
       
       # Calculate 95% CI
