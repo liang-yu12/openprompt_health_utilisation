@@ -228,7 +228,7 @@ predict_avg_apc_cost_fn <- function(dataset, fu_time, first_reg, sec_reg){
       input$nonzero_chance <- predict(first_reg, newdata = input, type = "response")
       
       # Predict the cost by using original data
-      tpm <- predict(sec_reg, newdata = dataset, type ="link", se.fit =T)
+      tpm <- predict(sec_reg, newdata = input, type ="link", se.fit =T)
       
       # Calculate 95% CI
       input <- input %>% mutate(
