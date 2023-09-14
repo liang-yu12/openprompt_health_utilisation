@@ -3,7 +3,7 @@ source("analysis/dm04_02_combine_costs.R")
 # Data management of the APC cost data for two part model
 
 # Combine APC costs
-# Pivot the GP cost ------
+# Pivot the apc cost ------
 
 # set the columns to pivot
 total_apc_cost <- c()
@@ -77,5 +77,5 @@ com_cost_long <- left_join(com_cost_ts, com_fu_ts,
 # Combine two datasets: ---------
 matched_apc_cost_ts <- bind_rows(exp_cost_long, com_cost_long)
 # fix the exposure levels
-matched_apc_cost_ts$exposure <- relevel(matched_gp_cost_ts$exposure, ref = "Comparator")
+matched_apc_cost_ts$exposure <- relevel(matched_apc_cost_ts$exposure, ref = "Comparator")
 
