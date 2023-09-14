@@ -241,9 +241,9 @@ predict_avg_gp_cost_fn <- function(dataset, fu_time, first_reg, sec_reg){
       
       # Summarise the output:
       results <- input %>% group_by(exposure) %>% 
-            summarise(cost=mean(c_gp_cost),
-                      lci=mean(c_gp_cost_lci),
-                      uci=mean(c_gp_cost_hci)
+            summarise(cost=mean(c_gp_cost, na.rm =T),
+                      lci=mean(c_gp_cost_lci, na.rm =T),
+                      uci=mean(c_gp_cost_hci, na.rm =T)
             )
       return(results)
 }
