@@ -105,8 +105,8 @@ crude_bi_12m <- crude_bi_fn(crude_gp_cost_complete_12m)
 tidy_binomial_fn <- function(logit_reg){
       part_binomial <-  tidy(logit_reg) %>% mutate(
             model = "binomial",
-            lci = exp(estimate - 1.69*std.error),
-            hci = exp(estimate + 1.69*std.error),
+            lci = exp(estimate - 1.96*std.error),
+            hci = exp(estimate + 1.96*std.error),
             estimate = exp(estimate)) %>% 
             dplyr::select(model, term, estimate, lci, hci, p.value)
       return(part_binomial)
@@ -137,8 +137,8 @@ crude_gamma_12m <- crude_gamma_fn(crude_gp_cost_complete_12m)
 tidy_gamma_glm_fn <- function(gamma_glm){
       part_gaama <- tidy(gamma_glm) %>% mutate(
             model = "Gamma GLM",
-            lci = exp(estimate - 1.69*std.error),
-            hci = exp(estimate + 1.69*std.error),
+            lci = exp(estimate - 1.96*std.error),
+            hci = exp(estimate + 1.96*std.error),
             estimate = exp(estimate)) %>% 
             dplyr::select(model, term, estimate, lci, hci, p.value)
             
