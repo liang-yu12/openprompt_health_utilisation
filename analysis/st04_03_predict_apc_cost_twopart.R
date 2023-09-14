@@ -111,8 +111,8 @@ crude_bi_12m <- crude_bi_fn(crude_apc_cost_complete_12m)
 tidy_binomial_fn <- function(logit_reg){
       part_binomial <-  tidy(logit_reg) %>% mutate(
             model = "binomial",
-            lci = exp(estimate - 1.69*std.error),
-            hci = exp(estimate + 1.69*std.error),
+            lci = exp(estimate - 1.96*std.error),
+            hci = exp(estimate + 1.96*std.error),
             estimate = exp(estimate)) %>% 
             dplyr::select(model, term, estimate, lci, hci, p.value)%>% 
             filter(term == "exposureLong covid exposure" )
@@ -143,8 +143,8 @@ crude_gamma_12m <- crude_gamma_fn(crude_apc_cost_complete_12m)
 tidy_gamma_glm_fn <- function(gamma_glm){
       part_gaama <- tidy(gamma_glm) %>% mutate(
             model = "Gamma GLM",
-            lci = exp(estimate - 1.69*std.error),
-            hci = exp(estimate + 1.69*std.error),
+            lci = exp(estimate - 1.96*std.error),
+            hci = exp(estimate + 1.96*std.error),
             estimate = exp(estimate)) %>% 
             dplyr::select(model, term, estimate, lci, hci, p.value)%>% 
             filter(term == "exposureLong covid exposure" )
@@ -254,15 +254,15 @@ predict_avg_apc_cost_fn <- function(dataset, fu_time, first_reg, sec_reg){
 # run the prediction model and combine outcomes:
 # Crude costs: ----
 crude_apc_costs <- bind_rows(
-      predict_avg_apc_cost_fn(dataset = crude_apc_cost_complete_3m, 
+      predict_avg_apc_cost_fn(dataset = matched_cost_3m, 
                              fu_time = 30*3,
                              first_reg = crude_bi_3m, 
                              sec_reg = crude_gamma_3m) %>% mutate(time="3 months"),
-      predict_avg_apc_cost_fn(dataset = crude_apc_cost_complete_6m, 
+      predict_avg_apc_cost_fn(dataset = matched_cost_6m, 
                              fu_time = 30*6,
                              first_reg = crude_bi_6m, 
                              sec_reg = crude_gamma_6m) %>% mutate(time="6 months"),
-      predict_avg_apc_cost_fn(dataset = crude_apc_cost_complete_12m, 
+      predict_avg_apc_cost_fn(dataset = matched_cost_12m, 
                              fu_time = 30*12,
                              first_reg = crude_bi_12m, 
                              sec_reg = crude_gamma_12m) %>% mutate(time="12 months")) %>% 
@@ -271,15 +271,15 @@ crude_apc_costs <- bind_rows(
 # Adjusted costs: ----
 # combine outputs
 adj_apc_costs <- bind_rows(
-      predict_avg_apc_cost_fn(dataset = adj_apc_cost_complete_3m, 
+      predict_avg_apc_cost_fn(dataset = matched_cost_3m, 
                              fu_time = 30*3,
                              first_reg = adj_bi_3m, 
                              sec_reg = adj_gamma_3m) %>% mutate(time="3 months"),
-      predict_avg_apc_cost_fn(dataset = adj_apc_cost_complete_6m, 
+      predict_avg_apc_cost_fn(dataset = matched_cost_6m, 
                              fu_time = 30*6,
                              first_reg = adj_bi_6m, 
                              sec_reg = adj_gamma_6m) %>% mutate(time="6 months"),
-      predict_avg_apc_cost_fn(dataset = adj_apc_cost_complete_12m, 
+      predict_avg_apc_cost_fn(dataset = matched_cost_12m, 
                              fu_time = 30*12,
                              first_reg = adj_bi_12m, 
                              sec_reg = adj_gamma_12m) %>% mutate(time="12 months")) %>% 
