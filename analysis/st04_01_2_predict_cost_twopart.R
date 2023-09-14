@@ -124,9 +124,9 @@ crude_predict_cost_fn <- function(dataset, fu_time){
       
       # Summarise the output:
       results <- input %>% group_by(exposure) %>% 
-            summarise(cost=mean(c_cost),
-                      lci=mean(c_cost_lci),
-                      uci=mean(c_cost_hci)
+            summarise(cost=mean(c_cost, na.rm =T),
+                      lci=mean(c_cost_lci, na.rm =T),
+                      uci=mean(c_cost_hci, na.rm =T)
             )
       return(results)
 }
@@ -184,9 +184,9 @@ adj_predict_cost_fn <- function(dataset, fu_time){
       
       # Summarise the output:
       results <- input %>% group_by(exposure) %>% 
-            summarise(cost=mean(c_cost),
-                      lci=mean(c_cost_lci),
-                      uci=mean(c_cost_hci)
+            summarise(cost=mean(c_cost, na.rm =T),
+                      lci=mean(c_cost_lci, na.rm =T),
+                      uci=mean(c_cost_hci, na.rm =T)
             )
       return(results)
 }
@@ -194,9 +194,9 @@ adj_predict_cost_fn <- function(dataset, fu_time){
 
 # combine outputs
 adj_predict_costs <- bind_rows(
-      crude_predict_cost_fn(adj_cost_complete_3m, 30*3) %>% mutate(time="3 months"),
-      crude_predict_cost_fn(adj_cost_complete_6m, 30*6) %>% mutate(time="6 months"),
-      crude_predict_cost_fn(adj_cost_complete_12m, 30*12) %>% mutate(time="12 months")) %>% 
+      adj_predict_cost_fn(adj_cost_complete_3m, 30*3) %>% mutate(time="3 months"),
+      adj_predict_cost_fn(adj_cost_complete_6m, 30*6) %>% mutate(time="6 months"),
+      adj_predict_cost_fn(adj_cost_complete_12m, 30*12) %>% mutate(time="12 months")) %>% 
       mutate(adjustment = "Adjusted") %>% relocate(adjustment)
 
 total_costs <- bind_rows(crude_predict_costs, adj_predict_costs) 
