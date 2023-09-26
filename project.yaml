@@ -186,78 +186,7 @@ actions:
         check_na_in_data: output/st02_check_min.csv
 
 # Contemporary comparison
-# # Basic: non-cluster all analysis
 
-  report_02_basic_model_output:
-    needs: [import_matched_exposure, import_matched_controls]
-    run: 
-      r:latest analysis/st02_01_00_model_curr_nb_reg.R
-    outputs: 
-      moderately_sensitive: 
-        model_non_clustered_results: output/st_02_non_cluster_model.csv
-
-
-# # Basic: non-cluster gp visits outcome anaylses
-
-  report_02_basic_model_gp_output:
-    needs: [import_matched_exposure, import_matched_controls]
-    run: 
-      r:latest analysis/st02_01_06_y_gp_model_curr_nb_reg.R
-    outputs: 
-      moderately_sensitive: 
-        model_non_clustered_results: output/st_02_0106_y_gp_no_cluster_model.csv
-
-# # Basic: non-cluster hospital visits outcome anaylses
-
-  report_02_basic_model_hos_output:
-    needs: [import_matched_exposure, import_matched_controls]
-    run: 
-      r:latest analysis/st02_01_07_y_hos_model_curr_nb_reg.R
-    outputs: 
-      moderately_sensitive: 
-        model_non_clustered_results: output/st_02_0107_y_hos_no_cluster_model.csv
-
-
-# # Basic: non-cluster A&E visits outcome anaylses
-
-  report_02_basic_model_ane_output:
-    needs: [import_matched_exposure, import_matched_controls]
-    run: 
-      r:latest analysis/st02_01_08_y_ane_model_curr_nb_reg.R
-    outputs: 
-      moderately_sensitive: 
-        model_non_clustered_results: output/st_02_0108_y_ae_no_cluster_model.csv
-
-# # Basic: non-cluster outpatient clinic visits outcome anaylses
-
-  report_02_basic_model_opa_output:
-    needs: [import_matched_exposure, import_matched_controls]
-    run: 
-      r:latest analysis/st02_01_09_y_opa_model_curr_nb_reg.R
-    outputs: 
-      moderately_sensitive: 
-        model_non_clustered_results: output/st_02_0109_y_opa_no_cluster_model.csv
-
-  qc_04_check_opa_distribution:
-    needs: [import_matched_exposure, import_matched_controls, import_matched_historical_exposure, import_matched_historical_controls]
-    run: 
-      r:latest analysis/qc04_check_opa_outcomes.R
-    outputs: 
-      moderately_sensitive: 
-        opa_distribution_all: output/opa_outcome_distribution.csv
-        opa_distribution_plots: output/opa_distribution_compare.png
-
-# # Basic: non-cluster sub-group analysis
-
-  report_02_basic_model__subgroup:
-    needs: [import_matched_exposure, import_matched_controls]
-    run: 
-      r:latest analysis/st02_01_x_subgroups_model_curr_nb.R
-    outputs: 
-      moderately_sensitive: 
-        model_non_clustered_subgroup_results: output/st_02_subgroup_by_cov.csv
-        
-        
 # Two part hurdle model:
 # # All healthcare utilisation 
 
@@ -283,18 +212,6 @@ actions:
         gp_hurdle: output/st03_02_gp_hurdle.csv
         predicted_visits: output/st03_02_gp_predicted_counts.csv
 
-# # Secondary care - hurdle
-
-
-  report_03_hurdle_05_2ndcare_visits:
-    needs: [import_matched_exposure, import_matched_controls]
-    run: r:latest analysis/st03_05_model10_2nd_care_hurdel.R
-    outputs: 
-      moderately_sensitive: 
-        binomial_2nd_care: output/st03_05_2ndcare_binomial.csv
-        hurdle_2nd_care: output/st03_05_2ndcare_hurdle.csv
-        predicted_adjusted_care: output/st03_05_predicted_counts.csv
-
 # # Hospital admission - hurdle
 
   report_03_hurdle_03_hospital_admin:
@@ -303,7 +220,9 @@ actions:
       r:latest analysis/st03_03_model07_hos_hurdel.R
     outputs: 
       moderately_sensitive: 
-        hurdle_hospital_admin: output/st03_03_hurdle_hos_visits.csv
+        hos_binomial: output/st03_03_hos_binomial.csv
+        hos_hurdle: output/st03_03_hos_hurdle.csv
+        predicted_hos_admin_counts: output/st03_03_hos_predicted_counts.csv
         
 # # A&E visits - hurdle
         
