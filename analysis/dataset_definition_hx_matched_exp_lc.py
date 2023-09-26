@@ -189,4 +189,4 @@ outpatient_visit(dataset, from_date=lc_dx.date, num_months=10, end_date=dataset.
 outpatient_visit(dataset, from_date=lc_dx.date, num_months=11, end_date=dataset.end_date)
 outpatient_visit(dataset, from_date=lc_dx.date, num_months=12, end_date=dataset.end_date)
 
-dataset.configure_dummy_dataset(population_size=5000)
+dataset.configure_dummy_data(population_size=10000)
