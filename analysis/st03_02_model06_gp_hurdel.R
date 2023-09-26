@@ -186,6 +186,9 @@ average_visits_fn <- function(dataset, reg_1st, reg_2nd){
 
 # run the predict function and summarised the average vistis:
 summarised_results <- bind_rows(
+      (average_visits_fn(dataset = crude_complete_gp_12m, 
+                         reg_1st = crude_binomial_12m, 
+                         reg_2nd = crude_nb_12m) %>% mutate(model = "Crude")),
       (average_visits_fn(dataset = adj_gp_complete_12m, 
                          reg_1st = adj_binomial_12m, 
                          reg_2nd = adj_nb_12m) %>% mutate(time = "12 months")))
