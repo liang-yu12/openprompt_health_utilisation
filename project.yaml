@@ -232,8 +232,10 @@ actions:
       r:latest analysis/st03_04_model08_ane_hurdel.R
     outputs: 
       moderately_sensitive: 
-        hurdle_ane_visits: output/st03_04_hurdle_ane_visits.csv
-
+        ane_binomial: output/st03_04_ane_binomial.csv
+        ane_hurdle: output/st03_04_ane_hurdle.csv
+        predicted_ane_visits: output/st03_04_ane_predicted_counts.csv
+        
 # # Subgroup all visits - hurdle
 
   report_03_hurdle_05_subgroup_visits:
