@@ -3,7 +3,7 @@
 packages <- c( "broom", 
                "dplyr", "data.table",
                "Epi",
-               "forcats", "finalfit", "forcats", 
+               "forcats", "finalfit", "forcats", "forestploter",
                "ggplot2", "ggpubr", "gtools", "geepack",
                "here", "Hmisc", 
                "knitr", 
