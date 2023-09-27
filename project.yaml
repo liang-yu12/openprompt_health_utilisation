@@ -249,6 +249,19 @@ actions:
         ane_hurdle: output/st03_04_ane_hurdle.csv
         predicted_ane_visits: output/st03_04_ane_predicted_counts.csv
         
+# # QC 06: check A&E visits:
+
+  qc_06_a_and_e_visits:
+    needs: [import_matched_exposure, import_matched_controls]
+    run: 
+      r:latest analysis/qc06_check_ane_distribution_models.R
+    outputs: 
+      moderately_sensitive: 
+        ane_distribution: output/qc06_ane_distribution_compare.png
+        ane_overdispersion: output/qc06_ane_vist_overdispersion_test.csv
+        ane_model_comparison: output/qc06_ane_vist_model_compare.csv
+        
+        
 # # OPA visits - hurdle
         
   report_03_hurdle_05_opa_visits:
