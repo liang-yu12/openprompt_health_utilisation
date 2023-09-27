@@ -27,7 +27,7 @@ crude_ane_complete_12m <- matched_data_ae_12m %>% drop_na(any_of(crude_vars)) %>
 
 # 1. Exploring data distribution: -----
 # Plots distribution:
-png(file=here("output", "qc05_hos_distribution_compare.png"),
+png(file=here("output", "qc06_ane_distribution_compare.png"),
     width=1800, height=900)
 
 matched_data_ae_12m %>% 
@@ -48,7 +48,7 @@ with(mod, cbind(res.deviance = deviance,
                 df = df.residual,
                 p = pchisq(deviance, df.residual, lower.tail=FALSE),
                 dev_df_ratio = deviance/df.residual)) %>% as.data.frame() %>% 
-      write_csv(here("output", "qc05_hos_vist_overdispersion_test.csv"))
+      write_csv(here("output", "qc06_ane_vist_overdispersion_test.csv"))
 
 
 # 3. Stats: model comparison -----
