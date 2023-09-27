@@ -191,7 +191,7 @@ summarised_results <- bind_rows(
                          reg_2nd = crude_nb_12m) %>% mutate(model = "Crude")),
       (average_visits_fn(dataset = adj_gp_complete_12m, 
                          reg_1st = adj_binomial_12m, 
-                         reg_2nd = adj_nb_12m) %>% mutate(time = "12 months")))
+                         reg_2nd = adj_nb_12m) %>% mutate(model = "Adjusted")))
 
 summarised_results %>% write_csv(here("output", "st03_02_gp_predicted_counts.csv"))
 
