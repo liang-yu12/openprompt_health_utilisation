@@ -57,7 +57,7 @@ crude_binomial_12m <-  glm(visits_binary ~ exposure + offset(log(follow_up)), da
 
 # Part 2: Positive negative binomial (truncated)
 crude_nb_12m <- vglm(visits ~ exposure + offset(log(follow_up)),
-                     family = pospoisson(),
+                     family = posnegbinomial(),
                      data = subset(crude_opa_complete_12m, visits_binary > 0))
 
 
@@ -121,7 +121,7 @@ adj_binomial_12m <- glm(visits_binary ~ exposure + offset(log(follow_up)) +
 adj_nb_12m <- vglm(visits ~ exposure + offset(log(follow_up))+
                          age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + 
                          previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
-                   family = pospoisson(),
+                   family = posnegbinomial(),
                    data = subset(adj_opa_complete_12m, visits_binary > 0))
 
 
