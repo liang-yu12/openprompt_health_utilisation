@@ -247,6 +247,7 @@ actions:
       moderately_sensitive: 
         ane_binomial: output/st03_04_ane_binomial.csv
         ane_hurdle: output/st03_04_ane_hurdle.csv
+        ane_reg_summary: output/ane_reg_summary.txt
         predicted_ane_visits: output/st03_04_ane_predicted_counts.csv
         
 # # QC 06: check A&E visits:
