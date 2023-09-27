@@ -58,7 +58,7 @@ crude_binomial_12m <-  glm(visits_binary ~ exposure + offset(log(follow_up)), da
 
 # Part 2: Positive negative binomial (truncated)
 crude_nb_12m <- vglm(visits ~ exposure + offset(log(follow_up)),
-                     family = posnegbinomial(),
+                     family = pospoisson(),
                      data = subset(crude_ae_complete_12m, visits_binary > 0))
 
 
@@ -122,7 +122,7 @@ adj_binomial_12m <- glm(visits_binary ~ exposure + offset(log(follow_up)) +
 adj_nb_12m <- vglm(visits ~ exposure + offset(log(follow_up))+
                          age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + 
                          previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
-                   family = posnegbinomial(),
+                   family = pospoisson(),
                    data = subset(adj_ae_complete_12m, visits_binary > 0))
 
 
@@ -143,6 +143,18 @@ st03_04_ane_binomial %>% write_csv(here("output", "st03_04_ane_binomial.csv"))
 
 st03_04_ane_hurdle <- bind_rows(crude_hurdle_outputs, adj_hurdle_outputs)
 st03_04_ane_hurdle %>% write_csv(here("output", "st03_04_ane_hurdle.csv"))
+
+# Save the detailed outputs to a text file:
+sink(here("output", "ane_reg_summary.txt"))
+print("# Crude binomial model output part 1 ---------")
+print(summary(crude_binomial_12m))
+print("# Crude hurdle model output part 2 ---------")
+print(summary(crude_nb_12m))
+print("# Adjusted binomial model output part 1 ---------")
+print(summary(adj_binomial_12m))
+print("# Adjusted hurdle model output part 2 ---------")
+print(summary(adj_nb_12m))
+sink()
 
 
 # Predict the average healthcare visits:  ----
