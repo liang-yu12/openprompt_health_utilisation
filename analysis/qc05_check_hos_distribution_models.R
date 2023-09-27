@@ -19,6 +19,12 @@ matched_data_hos_12m <- matched_data_hos_ts %>%
 # correct the level of exposure groups
 matched_data_hos_12m$exposure <- relevel(matched_data_hos_12m$exposure, ref = "Comparator")
 
+# Exclude rows with NA and create 1/0 outcomes:
+crude_vars <- c("visits", "exposure", "follow_up")#for crude anaylsis
+
+crude_hos_complete_12m <- matched_data_hos_12m %>% drop_na(any_of(crude_vars)) %>% 
+      mutate(visits_binary = ifelse(visits>0, 1, 0))
+
 # 1. Exploring data distribution: -----
 # Plots distribution:
 png(file=here("output", "qc05_hos_distribution_compare.png"),
@@ -41,18 +47,11 @@ mod <- glm(visits ~ exposure + offset(log(follow_up)),
 with(mod, cbind(res.deviance = deviance, 
                 df = df.residual,
                 p = pchisq(deviance, df.residual, lower.tail=FALSE),
-                dev_df_ratio = deviance/df.residual)) %>% 
+                dev_df_ratio = deviance/df.residual)) %>% as.data.frame() %>% 
       write_csv(here("output", "qc05_hos_vist_overdispersion_test.csv"))
 
 
 # 3. Stats: model comparison -----
-# first need to exclude rows with NA and create 1/0 outcomes:
-crude_vars <- c("visits", "exposure", "follow_up")#for crude anaylsis
-
-crude_hos_complete_12m <- matched_data_hos_12m %>% drop_na(any_of(crude_vars)) %>% 
-      mutate(visits_binary = ifelse(visits>0, 1, 0))
-
-
 # Part 2: Positive negative binomial (truncated)
 pos_negbinomial <- vglm(visits ~ exposure + offset(log(follow_up)),
                      family = posnegbinomial(),
