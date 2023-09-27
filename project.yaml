@@ -287,6 +287,17 @@ actions:
         gp_visit_dispersion: output/qc07_gp_vist_overdispersion_test.csv
         opa_visit_dispersion: output/qc07_opa_vist_overdispersion_test.csv
 
+# # Visulize outcomes:
+
+  healthcare_visit_all_outcomes:
+    needs: [report_03_hurdle_01_all_visits, report_03_hurdle_02_gp_visits, report_03_hurdle_03_hospital_admin, report_03_hurdle_04_ane_visits,report_03_hurdle_05_opa_visits]
+    run: 
+      r:latest analysis/st03_visualise_outcomes.R
+    outputs: 
+      moderately_sensitive: 
+        outcomes_plots: output/st03_healthcare_visits.png
+
+
 # # Subgroup all visits - hurdle
 
   report_03_hurdle_05_subgroup_visits:
