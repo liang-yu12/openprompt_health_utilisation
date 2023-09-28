@@ -123,12 +123,6 @@ plot(two_forest)
 
 # Stacked barplot: -----------
 # Read in outcome data:
-total_predicted_counts <- read_csv("output/st03_01_total_predicted_counts.csv") %>% 
-      filter(time == "12 months" & adjustment == "Adjusted") %>% 
-      mutate(Type = "Total healthcare visits")
-total_predicted_counts$time <- NULL
-total_predicted_counts <- rename(total_predicted_counts, model = adjustment)
-
 gp_predicted_counts <- read_csv("output/st03_02_gp_predicted_counts.csv") %>% 
       filter(model == "Adjusted") %>% 
       mutate(Type = "GP visits")
@@ -146,7 +140,6 @@ hos_predicted_counts <- read_csv("output/st03_03_hos_predicted_counts.csv") %>%
       mutate(Type = "Hospital admission")
 
 all_predicted_stacked <- bind_rows(
-      total_predicted_counts,
       gp_predicted_counts,
       opa_predicted_counts,
       ane_predicted_counts,
