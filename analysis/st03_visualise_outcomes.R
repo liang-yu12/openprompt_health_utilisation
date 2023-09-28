@@ -160,4 +160,4 @@ visits_barplot <- ggplot(all_predicted_stacked, aes(fill=Type, y=visits, x=expos
 # Combine plots together : ----------
 
 visits_all_plots <- ggarrange(two_forest, visits_barplot, ncol = 1)
-ggsave(visits_all_plots, file = "output/st03_healthcare_visits.png",width=8, height=4)
+ggsave(visits_all_plots, file = "output/st03_healthcare_visits.png",width=9, height=4)
