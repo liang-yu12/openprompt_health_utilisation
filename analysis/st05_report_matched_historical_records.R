@@ -30,9 +30,6 @@ did_data <- did_data %>% mutate(month_x = case_when(
 plot_data <- did_data %>% group_by(exposure, month_x) %>% 
       summarise(visits =mean(monthly_visits, na.rm = TRUE))
 
-plot_data$month_x <- as.factor(plot_data$month_x)
-
-
 line_plot <- ggplot(plot_data, aes(x = month_x, y = visits, color = exposure)) + 
       geom_line()+ geom_vline(xintercept = 13) +
       xlab("Time before and after long COVID") + ylab("Mean healthcare visits") +
@@ -48,4 +45,5 @@ line_plot <- ggplot(plot_data, aes(x = month_x, y = visits, color = exposure)) +
                                   "Contemporary month 10", "Contemporary month 11", "Contemporary month 12")) + 
       theme_bw() +
       theme(axis.text.x = element_text(size=6, angle=20))
-ggsave(line_plot, file = "output/st05_hx_now_comparison.jpg", width = 12, height = 4)
+
+ggsave(file = "output/st05_hx_now_comparison.jpg", width = 12, height = 4)
