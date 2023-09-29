@@ -145,10 +145,23 @@ all_predicted_stacked <- bind_rows(
       ane_predicted_counts,
       hos_predicted_counts
 )
+all_predicted_stacked$model <- NULL
+
+# change order by assigning the order of the factor
+visit_type <- c("Outpatient clinic visits", "Hospital admission","A&E visits","GP visits")
+
+all_predicted_stacked$Type <- factor(all_predicted_stacked$Type, levels=visit_type)
+all_predicted_stacked <- all_predicted_stacked %>% arrange(factor(Type, levels=visit_type)) 
+
+# Colour blind friendly:
+cbp1 <- c("#E76F51", "#E9C46A", "#2A9D8F", "#264653")
 
 
-visits_barplot <- ggplot(all_predicted_stacked, aes(fill=Type, y=visits, x=exposure)) + 
-      geom_bar(position="stack", stat="identity") +  coord_flip() 
+(visits_barplot <- ggplot(all_predicted_stacked, aes(fill=Type, y=visits, x=exposure)) + 
+      geom_bar(position="stack", stat="identity") +  coord_flip() +
+      guides(fill=guide_legend(title="Healthcare sector type")) +
+      ylab("Average healthcare visit frequency") + xlab(" ") +
+      scale_fill_manual(values = cbp1))
 
 # Combine plots together : ----------
 
