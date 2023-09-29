@@ -36,7 +36,7 @@ matched_cost_12m <- matched_cost_ts %>%
 for_covariates <- matched_cost_ts %>% distinct(patient_id, exposure, .keep_all = T) %>% 
       dplyr::select("patient_id",     
                     "exposure",           
-                    "age_cat",                 
+                    "age",                 
                     "sex",                     
                     "bmi_cat",
                     "ethnicity_6",             
@@ -46,7 +46,7 @@ for_covariates <- matched_cost_ts %>% distinct(patient_id, exposure, .keep_all =
                     "cov_covid_vax_n_cat",     
                     "number_comorbidities_cat")
 
-levels_check <- c("exposure", "age_cat", "sex", "bmi_cat", "ethnicity_6", "imd_q5",                  
+levels_check <- c("exposure", "sex", "bmi_cat", "ethnicity_6", "imd_q5",                  
                   "region", "previous_covid_hosp", "cov_covid_vax_n_cat", "number_comorbidities_cat")
 
 
@@ -87,59 +87,83 @@ crude_cost_complete_6m <- matched_cost_3m %>% drop_na(any_of(crude_vars)) %>%
 crude_cost_complete_12m <- matched_cost_3m %>% drop_na(any_of(crude_vars)) %>% 
       mutate(cost_binary = ifelse(total_cost>0, 1, 0)) 
 
-# Two-part model:
+# Crude Two-part model: -----
+# First part: binomial model 
 
-# # use twopm: same results
-# crude_twopm_3m <- tpm(total_cost ~ exposure + offset(log(follow_up)),
-#                       data = crude_cost_complete_3m,
-#                       link_part1 = "logit", family_part2 = Gamma(link = "log"))
-# summary(crude_twopm_3m)
+curde_binomial_3m <- glm(cost_binary ~ exposure + offset(log(follow_up)),
+                         data = crude_cost_complete_3m,
+                         family = binomial(link="logit"))
+
+curde_binomial_6m <- glm(cost_binary ~ exposure + offset(log(follow_up)),
+                         data = crude_cost_complete_6m,
+                         family = binomial(link="logit"))
+
+curde_binomial_12m <- glm(cost_binary ~ exposure + offset(log(follow_up)),
+                         data = crude_cost_complete_12m,
+                         family = binomial(link="logit"))
 
 
 # Write a function to organise the crude model outputs:
-crude_twopart_fn <- function(dataset, time_length){
+binary_output_fn <- function(bi_reg){
       
       # Binomial part: 
-      curde_binomial_3m <- glm(cost_binary ~ exposure + offset(log(follow_up)),
-                               data = dataset,
-                               family = binomial(link="logit"))
-      
-      part_binomial <-  tidy(curde_binomial_3m) %>% mutate(
+      results <-  tidy(bi_reg) %>% mutate(
             model = "binomial",
-            lci = exp(estimate - 1.69*std.error),
-            hci = exp(estimate + 1.69*std.error),
+            lci = exp(estimate - 1.96*std.error),
+            hci = exp(estimate + 1.96*std.error),
             estimate = exp(estimate)) %>% 
             dplyr::select(model, term, estimate, lci, hci, p.value)%>% 
         filter(term == "exposureLong covid exposure" )
-      
-      # Gamma glm part: 
-      crude_gamma_3m <-  glm(total_cost ~ exposure + offset(log(follow_up)),
-                             data = subset(dataset, cost_binary>0),
-                             family = Gamma(link="log"))
-      
-      part_gaama <- tidy(crude_gamma_3m) %>% mutate(
-            model = "Gamma GLM",
-            lci = exp(estimate - 1.69*std.error),
-            hci = exp(estimate + 1.69*std.error),
-            estimate = exp(estimate)) %>% 
-            dplyr::select(model, term, estimate, lci, hci, p.value)%>% 
-        filter(term == "exposureLong covid exposure" )
-      
-      results <- bind_rows(part_binomial, part_gaama) %>% 
-            mutate(time=time_length) %>% relocate(time)
       
       return(results)
       
 }
 
-# Organised crude model output: -------
-crude_tpm <- bind_rows(crude_twopart_fn(crude_cost_complete_3m, "3 months"),
-                       crude_twopart_fn(crude_cost_complete_6m, "6 months"),
-                       crude_twopart_fn(crude_cost_complete_12m, "12 months")) %>% 
-  mutate(adjustement = "Crude")
+crude_binary <- bind_rows(
+      binary_output_fn(curde_binomial_3m) %>% mutate(time = "3m"),
+      binary_output_fn(curde_binomial_6m) %>% mutate(time = "6m"),
+      binary_output_fn(curde_binomial_12m) %>% mutate(time = "12m")
+) %>% mutate(model = "Crude")
 
 
-# Adjusted two-part model: 
+
+# Gamma glm part: 
+crude_gamma_3m <-  glm(total_cost ~ exposure + offset(log(follow_up)),
+                       data = subset(crude_cost_complete_3m, cost_binary>0),
+                       family = Gamma(link="log"))
+
+crude_gamma_6m <-  glm(total_cost ~ exposure + offset(log(follow_up)),
+                       data = subset(crude_cost_complete_6m, cost_binary>0),
+                       family = Gamma(link="log"))
+
+crude_gamma_12m <-  glm(total_cost ~ exposure + offset(log(follow_up)),
+                       data = subset(crude_cost_complete_12m, cost_binary>0),
+                       family = Gamma(link="log"))
+
+
+gamma_output_fn <- function(gamma_reg){
+      
+      # Binomial part: 
+      results <-  tidy(gamma_reg) %>% mutate(
+            model = "Gamma GLM",
+            lci = exp(estimate - 1.96*std.error),
+            hci = exp(estimate + 1.96*std.error),
+            estimate = exp(estimate)) %>% 
+            dplyr::select(model, term, estimate, lci, hci, p.value)%>% 
+            filter(term == "exposureLong covid exposure" )
+      
+      return(results)
+      
+}
+
+crude_gamma <- bind_rows(
+      gamma_output_fn(crude_gamma_3m) %>% mutate(time = "3m"),
+      gamma_output_fn(crude_gamma_6m) %>% mutate(time = "6m"),
+      gamma_output_fn(crude_gamma_12m) %>% mutate(time = "12m")
+) %>% mutate(model = "Crude")
+
+
+# Adjusted two-part model: ----------
 # Data management: keep complete data
 adj_cost_complete_3m <- matched_cost_3m[complete.cases(matched_cost_3m),] %>% 
   mutate(cost_binary = ifelse(total_cost>0, 1, 0))
@@ -148,49 +172,95 @@ adj_cost_complete_6m <- matched_cost_6m[complete.cases(matched_cost_6m),] %>%
 adj_cost_complete_12m <- matched_cost_12m[complete.cases(matched_cost_12m),] %>% 
   mutate(cost_binary = ifelse(total_cost>0, 1, 0))
 
-# Write a function to organise the adjusted model outputs:
-adj_twopart_fn <- function(dataset, time_length){
-  
-  # Binomial part: 
-  curde_binomial_3m <- glm(cost_binary ~ exposure + offset(log(follow_up))+ age_cat + sex  + cov_covid_vax_n_cat + 
+
+# First part: binomial model:
+
+adj_binomial_3m <- glm(cost_binary ~ exposure + offset(log(follow_up))+ age + sex  + cov_covid_vax_n_cat + 
+                               bmi_cat + imd_q5 + ethnicity_6 + region + number_comorbidities_cat,
+                         data = adj_cost_complete_3m,
+                         family = binomial(link="logit"))
+
+adj_binomial_6m <- glm(cost_binary ~ exposure + offset(log(follow_up))+ age + sex  + cov_covid_vax_n_cat + 
                              bmi_cat + imd_q5 + ethnicity_6 + region + number_comorbidities_cat,
-                           data = dataset,
-                           family = binomial(link="logit"))
-  
-  part_binomial <-  tidy(curde_binomial_3m) %>% mutate(
-    model = "binomial",
-    lci = exp(estimate - 1.69*std.error),
-    hci = exp(estimate + 1.69*std.error),
-    estimate = exp(estimate)) %>% 
-    dplyr::select(model, term, estimate, lci, hci, p.value) %>% 
-    filter(term == "exposureLong covid exposure" )
-  
-  # Gamma glm part: 
-  crude_gamma_3m <-  glm(total_cost ~ exposure + offset(log(follow_up))+ age_cat + sex  + cov_covid_vax_n_cat + 
+                       data = adj_cost_complete_6m,
+                       family = binomial(link="logit"))
+
+adj_binomial_12m <- glm(cost_binary ~ exposure + offset(log(follow_up))+ age + sex  + cov_covid_vax_n_cat + 
+                             bmi_cat + imd_q5 + ethnicity_6 + region + number_comorbidities_cat,
+                       data = adj_cost_complete_12m,
+                       family = binomial(link="logit"))
+
+adj_binary <- bind_rows(
+      binary_output_fn(adj_binomial_3m) %>% mutate(time = "3m"),
+      binary_output_fn(adj_binomial_6m) %>% mutate(time = "6m"),
+      binary_output_fn(adj_binomial_12m) %>% mutate(time = "12m")
+) %>% mutate(model = "Adjusted")
+
+
+# Second part: Gamma GLM
+
+adj_gamma_3m <-  glm(total_cost ~ exposure + offset(log(follow_up))+ age + sex  + cov_covid_vax_n_cat + 
+                             bmi_cat + imd_q5 + ethnicity_6 + region + number_comorbidities_cat,
+                       data = subset(adj_cost_complete_3m, cost_binary>0),
+                       family = Gamma(link="log"))
+
+adj_gamma_6m <-  glm(total_cost ~ exposure + offset(log(follow_up))+ age + sex  + cov_covid_vax_n_cat + 
                            bmi_cat + imd_q5 + ethnicity_6 + region + number_comorbidities_cat,
-                         data = subset(dataset, cost_binary>0),
-                         family = Gamma(link="log"))
-  
-  part_gaama <- tidy(crude_gamma_3m) %>% mutate(
-    model = "Gamma GLM",
-    lci = exp(estimate - 1.69*std.error),
-    hci = exp(estimate + 1.69*std.error),
-    estimate = exp(estimate)) %>% 
-    dplyr::select(model, term, estimate, lci, hci, p.value)%>% 
-    filter(term == "exposureLong covid exposure" )
-  
-  results <- bind_rows(part_binomial, part_gaama) %>% 
-    mutate(time=time_length) %>% relocate(time)
-  
-  return(results)
-  
+                     data = subset(adj_cost_complete_6m, cost_binary>0),
+                     family = Gamma(link="log"))
+
+adj_gamma_12m <-  glm(total_cost ~ exposure + offset(log(follow_up))+ age + sex  + cov_covid_vax_n_cat + 
+                           bmi_cat + imd_q5 + ethnicity_6 + region + number_comorbidities_cat,
+                     data = subset(adj_cost_complete_12m, cost_binary>0),
+                     family = Gamma(link="log"))
+
+
+adj_gamma <- bind_rows(
+      gamma_output_fn(adj_gamma_3m) %>% mutate(time = "3m"),
+      gamma_output_fn(adj_gamma_6m) %>% mutate(time = "6m"),
+      gamma_output_fn(adj_gamma_12m) %>% mutate(time = "12m")
+) %>% mutate(model = "Adjusted")
+
+
+
+
+
+
+# Organised all outputs: -------
+all_binary <- bind_rows(crude_binary, adj_binary)
+all_gamma <- bind_rows(crude_gamma, adj_gamma)
+
+all_binary %>% write_csv(here("output", "st04_01_total_cost_binary.csv"))
+all_gamma%>% write_csv(here("output", "st04_01_total_cost_gammaglm.csv"))
+
+# Predicting cost: ------
+
+adj_predict_cost_fn <- function(dataset, fu_time, reg_1st, reg_2nd ){
+      # change the dataset fullow up time for the prediction
+      input <- dataset %>% mutate(follow_up = fu_time)
+      
+      # Part 1: predict the first part non-zero prob
+      input$nonzero_prob <- predict(reg_1st, newdata = input,  type= "response")
+
+      # Part 2: predict the second part visits
+      p2 <- predict(reg_2nd, newdata = input, type = "response")
+      
+      # Calculate the confidence interval of the part 2, then multiply by the first part:
+      results <- input %>% 
+            mutate(predicted_cost = p2) %>% 
+            mutate(c_cost = nonzero_prob*predicted_cost) %>% 
+            group_by(exposure) %>% 
+            summarise(visits = mean(c_cost) # summarised the results by exposure: 
+            )
+      
+      return(results)
 }
 
-# Organised crude model output: -------
-adj_tpm <- bind_rows(crude_twopart_fn(adj_cost_complete_3m, "3 months"),
-                       crude_twopart_fn(adj_cost_complete_6m, "6 months"),
-                       crude_twopart_fn(adj_cost_complete_12m, "12 months")) %>% 
-  mutate(adjustement = "Adjusted")
+adj_predict_cost_fn(dataset = adj_cost_complete_12m,
+                    fu_time = 30*12,
+                    reg_1st = adj_binomial_12m,
+                    reg_2nd = adj_gamma_12m) %>% 
+      write_csv(here("output", "st04_01_total_cost_predicted_costs.csv"))
 
-# Combine outputs
-bind_rows(crude_tpm, adj_tpm) %>% write_csv(here("output", "st04_01_total_cost_tpm.csv"))
+
+
