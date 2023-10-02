@@ -147,6 +147,9 @@ st03_05_opa_hurdle %>% write_csv(here("output", "st03_05_opa_hurdle.csv"))
 # Predict the average healthcare visits:  ----
 # function to predict the average adjusted visits:
 average_visits_fn <- function(dataset, reg_1st, reg_2nd){
+      
+      dataset <- dataset %>% mutate(follow_up = 30*12)
+      
       # part 1:
       p1 <- predict(reg_1st, type= "response") # predict the first part non-zero prob
       dataset$nonzero_prob <- p1 # add the probability to the original data
