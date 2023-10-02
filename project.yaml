@@ -316,17 +316,10 @@ actions:
       r:latest analysis/st04_01_total_cost_twopart.R
     outputs: 
       moderately_sensitive: 
-        total_costs_tpm: output/st_04_01_total_cost_tpm.csv
-
-# Total costs: predicted costs 
-
-  report_04_01_predicted_cost_twopart:
-    needs: [import_matched_exposure, import_matched_controls, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
-    run:
-      r:latest analysis/st04_01_2_predict_cost_twopart.R
-    outputs:
-      moderately_sensitive: 
-        total_cost_predict: output/st_04_01_2_predict_cost_tpm.csv
+        binary_total_cost: output/st04_01_total_cost_binary.csv
+        tpm_total_cost: output/st04_01_total_cost_gammaglm.csv
+        predicted_total_costs: output/st04_01_total_cost_predicted_costs.csv
+        
 
 #  GP costs: run two part model and predict costs
   report_04_02_predict_gp_cost_twopm:
