@@ -118,13 +118,17 @@ combine <- full_join(part1, part2)
 
 combine[,c(1,2,6,7,11)] %>% names
 
+
+tm <- forest_theme(core=list(bg_params=list(fill = c("#FFFFFF"))))
+
 two_forest <- forest(
       data = combine[,c(1,2,6,7,11)],
       est = list(combine$estimate, combine$estimate2),
       lower = list(combine$lci, combine$lci2),
       upper = list(combine$hci,combine$hci2),
       ci_column = c(2, 4),
-      ref_line = 1)
+      ref_line = 1,
+      theme = tm)
 plot(two_forest)
 
 
@@ -168,10 +172,11 @@ cbp1 <- c("#E76F51", "#E9C46A", "#2A9D8F", "#264653")
 (costs_barplot <- ggplot(all_predicted_stacked, aes(fill=Type, y=cost, x=exposure)) + 
       geom_bar(position="stack", stat="identity") +  coord_flip() +
       guides(fill=guide_legend(title="Healthcare sector type")) +
-      ylab("Average healthcare visit frequency") + xlab(" ") +
+      ylab("Average healthcare costs") + xlab(" ") + theme_bw() +
       scale_fill_manual(values = cbp1))
 
 # Combine plots together : ----------
 
 costs_all_plots <- ggarrange(two_forest, costs_barplot, ncol = 1)
-ggsave(costs_all_plots, file = "output/st04_healthcare_costs.png",width=12, height=4)
+ggsave(costs_all_plots, file = "output/st04_healthcare_costs.png",
+       width=9, height=5, units = "in", dpi = 300)
