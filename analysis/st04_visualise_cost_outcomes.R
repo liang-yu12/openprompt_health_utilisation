@@ -179,4 +179,4 @@ cbp1 <- c("#E76F51", "#E9C46A", "#2A9D8F", "#264653")
 
 costs_all_plots <- ggarrange(two_forest, costs_barplot, ncol = 1)
 ggsave(costs_all_plots, file = "output/st04_healthcare_costs.png",
-       width=9, height=5, units = "in", dpi = 300)
+       width=11, height=5, units = "in", dpi = 300)
