@@ -207,8 +207,12 @@ adj_gamma_glm_gp <- bind_rows(
       arrange(desc(term == "exposureLong covid exposure"))
 
 # save the output:
-bind_rows(crude_binomial_gp, crude_gamma_glm_gp,
-      adj_binomial_gp, adj_gamma_glm_gp) %>% 
+bind_rows(crude_binomial_gp,
+          adj_binomial_gp) %>% 
+      write_csv(here("output", "st04_02_gp_cost_binomial_output.csv"))
+
+
+bind_rows(crude_gamma_glm_gp, adj_gamma_glm_gp) %>% 
       write_csv(here("output", "st04_02_gp_cost_twopm_output.csv"))
 
 
