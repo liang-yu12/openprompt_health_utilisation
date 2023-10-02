@@ -214,8 +214,7 @@ adj_gamma_glm_apc <- bind_rows(
 bind_rows(crude_binomial_apc, adj_binomial_apc) %>% 
       write_csv(here("output", "st04_03_apc_cost_binomial_output.csv"))
 # Gamma glm part 
-bind_rows(crude_binomial_apc, crude_gamma_glm_apc,
-      adj_binomial_apc, adj_gamma_glm_apc) %>% 
+bind_rows(crude_gamma_glm_apc, adj_gamma_glm_apc) %>% 
       write_csv(here("output", "st04_03_apc_cost_twopm_output.csv"))
 
 
