@@ -115,7 +115,6 @@ two_forest <- forest(
       lower = list(combine$lci, combine$lci2),
       upper = list(combine$hci,combine$hci2),
       ci_column = c(2, 4),
-      xlim = c(0, 4),
       ref_line = 1)
 plot(two_forest)
 
