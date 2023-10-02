@@ -214,8 +214,7 @@ bind_rows(crude_binomial_opa, adj_binomial_opa) %>%
       write_csv(here("output", "st04_05_opa_cost_binomial_output.csv"))
 
 # # Gamma GLM part
-bind_rows(crude_binomial_opa, crude_gamma_glm_opa,
-      adj_binomial_opa, adj_gamma_glm_opa) %>% 
+bind_rows(crude_gamma_glm_opa,adj_gamma_glm_opa) %>% 
       write_csv(here("output", "st04_05_opa_cost_twopm_output.csv"))
 
 
