@@ -289,7 +289,7 @@ actions:
 
 # # Visulize outcomes:
 
-  healthcare_visit_all_outcomes:
+  visualise_visit_outcomes:
     needs: [report_03_hurdle_01_all_visits, report_03_hurdle_02_gp_visits, report_03_hurdle_03_hospital_admin, report_03_hurdle_04_ane_visits,report_03_hurdle_05_opa_visits]
     run: 
       r:latest analysis/st03_visualise_outcomes.R
@@ -364,6 +364,16 @@ actions:
         opa_cost_binomial: output/st04_05_opa_cost_binomial_output.csv
         opa_cost_twopm: output/st04_05_opa_cost_twopm_output.csv
         opa_predicted_costs: output/st04_05_predict_opa_cost_tpm.csv
+
+# # Visulize outcomes:
+
+  visualise_cost_outcomes:
+    needs: [report_04_total_costs_twopart, report_04_02_predict_gp_cost_twopm, report_04_03_predict_apc_cost_twopm, report_04_04_predict_ane_cost_twopm, report_04_05_predict_opa_cost_twopm]
+    run: 
+      r:latest analysis/st04_visualise_cost_outcomes.R
+    outputs: 
+      moderately_sensitive: 
+        outcomes_plots: output/st04_healthcare_costs.png
 
 
 # Historical: data distribution
