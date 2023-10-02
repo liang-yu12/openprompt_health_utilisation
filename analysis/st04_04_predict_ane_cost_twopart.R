@@ -181,7 +181,7 @@ adj_binomial_ane <- bind_rows(
       tidy_binomial_fn(adj_bi_3m) %>% mutate(time = "3 months"),
       tidy_binomial_fn(adj_bi_6m) %>% mutate(time = "6 months"),
       tidy_binomial_fn(adj_bi_12m) %>% mutate(time = "12 months")) %>% 
-      mutate(adjustement = "Adjusted")%>% 
+      mutate(adjustment = "Adjusted")%>% 
       arrange(desc(term =="exposureLong covid exposure")) 
 
 # adjusted Gamma GLM model (Second part) ----
