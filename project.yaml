@@ -387,17 +387,17 @@ actions:
         crude_visits_distribution: output/st05_hx_crude_vistis_exp_time.csv
         hx_now_line_chart: output/st05_hx_now_comparison.jpg
 
-# # Historical: difference-in-difference model
+# # Historical: difference-in-difference model with two-part model
 
-  report_05_did_model:      
+  report_05_did_tpm_model:      
     needs: [import_matched_historical_exposure, import_matched_historical_controls]
     run: 
-      r:latest analysis/st05_did_model.R
+      r:latest analysis/st05_did_twopart.R
     outputs: 
       moderately_sensitive: 
-        did_crude: output/st05_did_crude.png
-        did_adj: output/st05_did_adj.png
-        did_reg_predict: output/st05_did_reg.csv
+        did_crude_plot: output/st05_did_crude.png
+        did_adj_plot: output/st05_did_adj.png
+        did_reg_table: output/st05_did_tpm_predicted.csv
 
 # Supplementary materials
 
