@@ -117,7 +117,6 @@ two_forest <- forest(
       lower = list(combine$lci, combine$lci2),
       upper = list(combine$hci,combine$hci2),
       ci_column = c(2, 4),
-      xlim = c(0.9,6),
       ref_line = 1,
       theme = tm)
 plot(two_forest)
@@ -162,7 +161,7 @@ cbp1 <- c("#E76F51", "#E9C46A", "#2A9D8F", "#264653")
 
 (visits_barplot <- ggplot(all_predicted_stacked, aes(fill=Type, y=visits, x=exposure)) + 
       geom_bar(position="stack", stat="identity") +  coord_flip() +
-      guides(fill=guide_legend(title="Healthcare sector type")) +
+      guides(fill=guide_legend(title="Healthcare type")) +
       ylab("Average healthcare visit frequency") + xlab(" ") +
       scale_fill_manual(values = cbp1))
 
