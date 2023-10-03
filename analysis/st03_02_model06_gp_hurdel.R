@@ -87,8 +87,8 @@ positive_nb_tidy_fu <- function(vg_reg){
       t2$term <- rownames(t2)
       t3 <- t2 %>% filter(term == "exposureLong covid exposure" )
       results <- t3 %>% mutate(
-            lci = exp(Estimate - 1.69*`Std. Error`),
-            hci = exp(Estimate + 1.69*`Std. Error`),
+            lci = exp(Estimate - 1.96*`Std. Error`),
+            hci = exp(Estimate + 1.96*`Std. Error`),
             estimate = exp(Estimate),
             p.value = `Pr(>|z|)`,
             model = "Positive Negative Bionomial") %>% 
