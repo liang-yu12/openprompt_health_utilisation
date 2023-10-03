@@ -10,7 +10,7 @@ source("analysis/dm02_01_hx_variables.R")
 # time: 0 "historical" 1 "current"
 
 
-common_vars <- c("patient_id","sex","age_cat", "ethnicity_6", "bmi_cat", 
+common_vars <- c("patient_id","sex","age_cat", "age", "ethnicity_6", "bmi_cat", 
                  "region", "imd_q5", "number_comorbidities_cat")
 
 # Extract the column names for each month: -----
