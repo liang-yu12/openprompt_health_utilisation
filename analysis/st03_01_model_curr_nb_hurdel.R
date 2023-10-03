@@ -121,8 +121,8 @@ crude_nb_12m <- vglm(visits ~ exposure + offset(log(follow_up)),
 binomial_tidy_fn <- function(bi_reg){
       bi_results <- bi_reg %>% tidy() %>% mutate(
             model = "binomial",
-            lci = exp(estimate - 1.69*std.error),
-            hci = exp(estimate + 1.69*std.error),
+            lci = exp(estimate - 1.96*std.error),
+            hci = exp(estimate + 1.96*std.error),
             estimate = exp(estimate)) %>% 
             dplyr::select(model, term, estimate, lci, hci, p.value)%>% 
             filter(term == "exposureLong covid exposure" )      
@@ -137,8 +137,8 @@ positive_nb_tidy_fu <- function(vg_reg){
       t2$term <- rownames(t2)
       t3 <- t2 %>% filter(term == "exposureLong covid exposure" )
       results <- t3 %>% mutate(
-            lci = exp(Estimate - 1.69*`Std. Error`),
-            hci = exp(Estimate + 1.69*`Std. Error`),
+            lci = exp(Estimate - 1.96*`Std. Error`),
+            hci = exp(Estimate + 1.96*`Std. Error`),
             estimate = exp(Estimate),
             p.value = `Pr(>|z|)`,
             model = "Positive Negative Bionomial") %>% 
