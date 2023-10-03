@@ -128,6 +128,7 @@ two_forest <- forest(
       upper = list(combine$hci,combine$hci2),
       ci_column = c(2, 4),
       ref_line = 1,
+      xlim = c(0.8, 7.5),
       theme = tm)
 plot(two_forest)
 
@@ -179,4 +180,4 @@ cbp1 <- c("#E76F51", "#E9C46A", "#2A9D8F", "#264653")
 
 costs_all_plots <- ggarrange(two_forest, costs_barplot, ncol = 1)
 ggsave(costs_all_plots, file = "output/st04_healthcare_costs.png",
-       width=11, height=5, units = "in", dpi = 300)
+       width=11.5, height=5, units = "in", dpi = 300)
