@@ -394,6 +394,7 @@ actions:
         historical_table_1: output/st05_hx_matched_numbers_table.csv
         crude_visits_distribution: output/st05_hx_crude_vistis_exp_time.csv
         hx_now_line_chart: output/st05_hx_now_comparison.jpg
+        hx_now_smooth_line: output/st05_smooth_comparison.jpg
 
 # # Historical: difference-in-difference model with two-part model
 
