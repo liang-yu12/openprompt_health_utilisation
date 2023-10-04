@@ -47,3 +47,23 @@ line_plot <- ggplot(plot_data, aes(x = month_x, y = visits, color = exposure)) +
       theme(axis.text.x = element_text(size=6, angle=20))
 
 ggsave(file = "output/st05_hx_now_comparison.jpg", width = 12, height = 4)
+
+
+# try loess smoth
+ggplot(did_data, aes(x = month_x, y = monthly_visits, color = exposure)) + 
+      scale_colour_hue(guide = "none") + geom_smooth(method="gam", se=TRUE)+ 
+      geom_vline(xintercept = 13) +
+      xlab("Time before and after long COVID (Month)") + ylab("Mean healthcare visits") +
+      scale_x_continuous(breaks = seq(1, 25),
+                         labels = c(" 1", "2", "Month 3", "Month 4", "Month 5", "Month 6", 
+                                    "Month 7", "Month 8", "Month 9",
+                                    "Month 10", "Month 11", "Month 12",
+                                    "Index date",
+                                    "Month 1", "Month 2", "Month 3", "Month 4", "Month 5", "Month 6", 
+                                    "Month 7", "Month 8", "Month 9",
+                                    "Month 10", "Month 11", "Month 12")) + 
+      theme_bw() + 
+      theme(axis.text.x = element_text(size=8, angle=20)) +
+      annotate("text", x = 5, y=0.35, label = "Historical records",hjust = 0.2) +
+      annotate("text", x = 18, y=0.35, label = "Contemporary records",hjust = 0.2)
+
