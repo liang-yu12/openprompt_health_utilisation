@@ -73,6 +73,8 @@ adj_did_tpm_12m <- did_data_12m[complete.cases(did_data_12m),] %>% group_by(time
       mutate(visits_binary = ifelse(visits>0, 1, 0)) %>% 
       ungroup()
 
+adj_did_tpm_12m$ethnicity_6 <- droplevels(adj_did_tpm_12m$ethnicity_6)
+
 # First part: adjusted binomial model with interaction term with time
 adj_binomial_12m <-  glm(visits_binary ~ exposure*time + offset(log(follow_up)) +
                                  sex + age + bmi_cat + ethnicity_6 + region + imd_q5 + number_comorbidities_cat, 
@@ -95,7 +97,7 @@ adj_predic_fn <- function(i.exp, i.time, reg_1st, reg_2nd){
                        follow_up = 360,
                        sex = c("female", "male"),
                        age =  mean_age %>% filter(exposure == i.exp) %>% .$mean_age,
-                       ethnicity_6 = c("White","Mixed","South Asian", "Black","Other","Not stated"),
+                       ethnicity_6 = c("White","Mixed","South Asian", "Black","Other"),
                        bmi_cat = c("Underweight","Normal Weight", "Overweight", "Obese"),
                        region = c("East", "East Midlands", "London", "North East","North West",
                                   "South East","South West","West Midlands", "Yorkshire and The Humber"),
