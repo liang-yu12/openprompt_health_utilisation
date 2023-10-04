@@ -55,6 +55,15 @@ predicted_crude_value <- bind_rows(
 )
 
 # Visualize the results
+
+# Order the outputs
+exposure_order <- c("Comparator", "Long COVID exposure")
+time_order <- c("Historical", "Contemporary")
+
+predicted_crude_value$exposure <- factor(predicted_crude_value$exposure, levels = exposure_order)
+predicted_crude_value$time <- factor(predicted_crude_value$time, levels = time_order)
+
+
 ggplot(predicted_crude_value, aes(x= time,
                                   y= visits,
                                   color = exposure)) +
@@ -143,6 +152,10 @@ predicted_adj_value <- bind_rows(
       adj_predic_fn(i.exp = "Comparator", i.time = "Contemporary", reg_1st = adj_binomial_12m, reg_2nd = adj_nb_12m),
       adj_predic_fn(i.exp = "Long COVID exposure", i.time = "Contemporary", reg_1st = adj_binomial_12m, reg_2nd = adj_nb_12m)
 )
+
+
+predicted_adj_value$exposure <- factor(predicted_adj_value$exposure, levels = exposure_order)
+predicted_adj_value$time <- factor(predicted_adj_value$time, levels = time_order)
 
 # Visualize the results
 
