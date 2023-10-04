@@ -275,6 +275,7 @@ actions:
       moderately_sensitive: 
         opa_binomial: output/st03_05_opa_binomial.csv
         opa_hurdle: output/st03_05_opa_hurdle.csv
+        opa_reg_summary: output/st03_05_opa_reg_summary.txt
         predicted_opa_visits: output/st03_05_opa_predicted_counts.csv
 
 # # QC07: check over dispersion of the rest outcomes:

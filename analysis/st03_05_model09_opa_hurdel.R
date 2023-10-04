@@ -143,6 +143,17 @@ st03_05_opa_binomial %>% write_csv(here("output", "st03_05_opa_binomial.csv"))
 st03_05_opa_hurdle <- bind_rows(crude_hurdle_outputs, adj_hurdle_outputs)
 st03_05_opa_hurdle %>% write_csv(here("output", "st03_05_opa_hurdle.csv"))
 
+# Save the detailed outputs to a text file:
+sink(here("output", "st03_05_opa_reg_summary.txt"))
+print("# Crude binomial model output part 1 ---------")
+print(summary(crude_binomial_12m))
+print("# Crude hurdle model output part 2 ---------")
+print(summary(crude_nb_12m))
+print("# Adjusted binomial model output part 1 ---------")
+print(summary(adj_binomial_12m))
+print("# Adjusted hurdle model output part 2 ---------")
+print(summary(adj_nb_12m))
+sink()
 
 # Predict the average healthcare visits:  ----
 # function to predict the average adjusted visits:
