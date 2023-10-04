@@ -209,6 +209,7 @@ actions:
       r:latest analysis/st03_02_model06_gp_hurdel.R
     outputs: 
       moderately_sensitive: 
+        gp_reg_summary: output/st03_02_gp_reg_summary.txt
         gp_binomial: output/st03_02_gp_binomial.csv
         gp_hurdle: output/st03_02_gp_hurdle.csv
         predicted_visits: output/st03_02_gp_predicted_counts.csv
