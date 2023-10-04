@@ -20,6 +20,21 @@ crude_nb_12m <- vglm(visits ~ exposure*time  + offset(log(follow_up)),
                      family = posnegbinomial(),
                      data = subset(did_tpm_12m, visits_binary > 0))
 
+# Function to tidy vglm output:
+tidy.vglm <- function(x, conf.int=FALSE, conf.level=0.95) {
+      co <- as.data.frame(coef(summary(x)))
+      names(co) <- c("estimate","std.error","statistic","p.value")
+      if (conf.int) {
+            qq <- qnorm((1+conf.level)/2)
+            co <- transform(co,
+                            conf.low=estimate-qq*std.error,
+                            conf.high=estimate+qq*std.error)
+      }
+      co <- data.frame(term=rownames(co),co)
+      rownames(co) <- NULL
+      return(co)
+}
+
 
 # Predict crude model: setup function for outputs: ----
 
@@ -173,3 +188,19 @@ bind_rows(
       (predicted_crude_value %>% mutate(model = "crude") %>% relocate(model)),
       (predicted_adj_value %>% mutate(model="adjusted") %>% relocate(model))
 ) %>% write_csv(here("output", "st05_did_tpm_predicted.csv"))
+
+
+# Save the regression outputs:
+
+
+sink(here("output", "st05_did_reg_summary_output.txt"))
+print("# Crude binomial model output part 1 ---------")
+print(crude_binomial_12m %>% tidy(exponentiate = T))
+print("# Crude hurdle model output part 2 ---------")
+print(tidy.vglm(crude_nb_12m, conf.int=T))
+print("# Adjusted binomial model output part 1 ---------")
+print(adj_binomial_12m %>% tidy(exponentiate = T))
+print("# Adjusted hurdle model output part 2 ---------")
+print(tidy.vglm(adj_nb_12m, conf.int=T))
+sink()
+

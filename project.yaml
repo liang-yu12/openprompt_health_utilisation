@@ -407,6 +407,7 @@ actions:
         did_crude_plot: output/st05_did_crude.png
         did_adj_plot: output/st05_did_adj.png
         did_reg_table: output/st05_did_tpm_predicted.csv
+        did_reg_summary: output/st05_did_reg_summary_output.txt
 
 # Supplementary materials
 
