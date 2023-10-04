@@ -195,7 +195,8 @@ actions:
     run: 
       r:latest analysis/st03_01_model_curr_nb_hurdel.R
     outputs: 
-      moderately_sensitive: 
+      moderately_sensitive:
+        total_reg_summary: output/st03_01_total_reg_summary.txt
         binomial_visits: output/st03_01_total_binomial.csv
         hurdle_all_visits: output/st03_01_total_hurdle.csv
         predicted_visits: output/st03_01_total_predicted_counts.csv

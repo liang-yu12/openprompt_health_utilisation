@@ -232,6 +232,20 @@ adj_hurdle_outputs <- bind_rows(
       (positive_nb_tidy_fu(adj_nb_12m) %>% mutate(time="12 months"))
 ) %>% mutate(Adjustment = "Adjusted")
 
+# Save the detailed outputs to a text file:
+sink(here("output", "st03_01_total_reg_summary.txt"))
+print("# Crude binomial model output part 1 ---------")
+print(summary(crude_binomial_12m))
+print("# Crude hurdle model output part 2 ---------")
+print(summary(crude_nb_12m))
+print("# Adjusted binomial model output part 1 ---------")
+print(summary(adj_binomial_12m))
+print("# Adjusted hurdle model output part 2 ---------")
+print(summary(adj_nb_12m))
+sink()
+
+
+
 
 # Combine total outputs and save:
 st03_01_total_binomial <- bind_rows(crude_binomial_outputs, adj_binomial_outputs)
