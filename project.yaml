@@ -334,6 +334,7 @@ actions:
       moderately_sensitive: 
         gp_cost-binomial: output/st04_02_gp_cost_binomial_output.csv
         gp_cost_twopm: output/st04_02_gp_cost_twopm_output.csv
+        gp_cost_tpm_reg_summary: output/st04_02_gp_reg_summary.txt
         gp_predicted_costs: output/st04_02_predict_gp_cost_tpm.csv
 
 # APC costs: run two part model and predict costs
