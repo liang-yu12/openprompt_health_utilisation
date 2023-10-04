@@ -222,7 +222,17 @@ adj_gamma <- bind_rows(
 ) %>% mutate(model = "Adjusted")
 
 
-
+# Save the detailed outputs to a text file:
+sink(here("output", "st04_01_total_reg_summary.txt"))
+print("# Crude binomial model output part 1 ---------")
+print(summary(crude_binary))
+print("# Crude hurdle model output part 2 ---------")
+print(summary(crude_gamma))
+print("# Adjusted binomial model output part 1 ---------")
+print(summary(adj_binary))
+print("# Adjusted hurdle model output part 2 ---------")
+print(summary(adj_gamma))
+sink()
 
 
 

@@ -321,6 +321,7 @@ actions:
       moderately_sensitive: 
         binary_total_cost: output/st04_01_total_cost_binary.csv
         tpm_total_cost: output/st04_01_total_cost_gammaglm.csv
+        total_cost_tpm_summary: output/st04_01_total_reg_summary.txt
         predicted_total_costs: output/st04_01_total_cost_predicted_costs.csv
         
 
