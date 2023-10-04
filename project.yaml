@@ -358,6 +358,7 @@ actions:
       moderately_sensitive: 
         ane_cost_binomial: output/st04_04_ane_cost_binomial_output.csv
         ane_cost_twopm: output/st04_04_ane_cost_twopm_output.csv
+        ane_cost_reg_summary: output/st04_04_ane_reg_summary.txt
         ane_predicted_costs: output/st04_04_predict_ane_cost_tpm.csv
 
 # OPA costs: run two part model and predict costs
