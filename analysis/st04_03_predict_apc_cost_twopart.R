@@ -218,6 +218,21 @@ bind_rows(crude_gamma_glm_apc, adj_gamma_glm_apc) %>%
       write_csv(here("output", "st04_03_apc_cost_twopm_output.csv"))
 
 
+# Save the detailed outputs to a text file:
+sink(here("output", "st04_03_apc_cost_reg_summary.txt"))
+print("# Crude binomial model output part 1 ---------")
+print(summary(crude_binary))
+print("# Crude hurdle model output part 2 ---------")
+print(summary(crude_gamma))
+print("# Adjusted binomial model output part 1 ---------")
+print(summary(adj_binary))
+print("# Adjusted hurdle model output part 2 ---------")
+print(summary(adj_gamma))
+sink()
+
+
+
+
 # Crude prediction: -----
 # Use the outputs from the previous models and run the prediction.
 # the follow-up time are set according to the model length
