@@ -370,6 +370,7 @@ actions:
       moderately_sensitive: 
         opa_cost_binomial: output/st04_05_opa_cost_binomial_output.csv
         opa_cost_twopm: output/st04_05_opa_cost_twopm_output.csv
+        opa_cost_reg_summary: output/st04_05_opa_reg_summary.txt
         opa_predicted_costs: output/st04_05_predict_opa_cost_tpm.csv
 
 # # Visulize outcomes:
