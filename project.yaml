@@ -200,8 +200,8 @@ actions:
         binomial_visits: output/st03_01_total_binomial.csv
         hurdle_all_visits: output/st03_01_total_hurdle.csv
         predicted_visits: output/st03_01_total_predicted_counts.csv
-        total_bi_model_count: output/st03_01_total_binomial_model_counts.csv
-        total_hurdle_count: output/st03_01_total_gamma_model_counts.csv
+        total_visit_bi_model_count: output/st03_01_total_binomial_model_counts.csv
+        total_visit_hurdle_count: output/st03_01_total_gamma_model_counts.csv
 
 # # GP utilisation  - hurdle
 
@@ -215,8 +215,8 @@ actions:
         gp_binomial: output/st03_02_gp_binomial.csv
         gp_hurdle: output/st03_02_gp_hurdle.csv
         predicted_gp_visits: output/st03_02_gp_predicted_counts.csv
-        gp_bi_model_count: output/st03_02_gp_binomial_model_counts.csv
-        gp_hurdle_model_count: output/st03_02_gp_hurdle_model_counts.csv
+        gp_visit_bi_model_count: output/st03_02_gp_binomial_model_counts.csv
+        gp_visit_hurdle_model_count: output/st03_02_gp_hurdle_model_counts.csv
 
 # # Hospital admission - hurdle
 
@@ -230,8 +230,8 @@ actions:
         hos_hurdle: output/st03_03_hos_hurdle.csv
         hos_reg_summary: output/hos_reg_summary.txt
         predicted_hos_admin_counts: output/st03_03_hos_predicted_counts.csv
-        hos_bi_model_count: output/st03_03_hos_binomial_model_counts.csv
-        hos_hurdle_model_count: output/st03_03_hos_hurdle_model_counts.csv
+        hos_visit_bi_model_count: output/st03_03_hos_binomial_model_counts.csv
+        hos_visit_hurdle_model_count: output/st03_03_hos_hurdle_model_counts.csv
         
 # # QC 05: check hospital admission distribution:
 
@@ -257,8 +257,8 @@ actions:
         ane_hurdle: output/st03_04_ane_hurdle.csv
         ane_reg_summary: output/ane_reg_summary.txt
         predicted_ane_visits: output/st03_04_ane_predicted_counts.csv
-        ane_bi_model_visit_count: output/st03_04_ane_binomial_model_counts.csv
-        ane_hurdle_model_visit_count: output/st03_04_ane_hurdle_model_counts.csv
+        ane_visit_bi_model_count: output/st03_04_ane_binomial_model_counts.csv
+        ane_visit_hurdle_model_count: output/st03_04_ane_hurdle_model_counts.csv
                 
 # # QC 06: check A&E visits:
 
@@ -285,8 +285,8 @@ actions:
         opa_hurdle: output/st03_05_opa_hurdle.csv
         opa_reg_summary: output/st03_05_opa_reg_summary.txt
         predicted_opa_visits: output/st03_05_opa_predicted_counts.csv
-        opa_bi_model_visit_count: output/st03_05_opa_binomial_model_counts.csv
-        opa_hurdle_model_visit_count: output/st03_05_opa_hurdle_model_counts.csv
+        opa_visit_bi_model_count: output/st03_05_opa_binomial_model_counts.csv
+        opa_visit_hurdle_model_count: output/st03_05_opa_hurdle_model_counts.csv
                 
 # # QC07: check over dispersion of the rest outcomes:
 
@@ -333,8 +333,8 @@ actions:
         tpm_total_cost: output/st04_01_total_cost_gammaglm.csv
         total_cost_tpm_summary: output/st04_01_total_reg_summary.txt
         predicted_total_costs: output/st04_01_total_cost_predicted_costs.csv
-        total_bi_model_check: output/st04_01_total_binomial_model_counts.csv
-        total_gamma_model_check: output/st04_01_total_gamma_model_counts.csv
+        total_cost_bi_model_check: output/st04_01_total_binomial_model_counts.csv
+        total_cost_gamma_model_check: output/st04_01_total_gamma_model_counts.csv
 
 #  GP costs: run two part model and predict costs
   report_04_02_predict_gp_cost_twopm:
@@ -347,8 +347,8 @@ actions:
         gp_cost_twopm: output/st04_02_gp_cost_twopm_output.csv
         gp_cost_tpm_reg_summary: output/st04_02_gp_reg_summary.txt
         gp_predicted_costs: output/st04_02_predict_gp_cost_tpm.csv
-        gp_bi_model_check: output/st04_02_gp_binomial_model_counts.csv
-        gp_gamma_model_check: output/st04_02_gp_gamma_model_counts.csv
+        gp_cost_bi_model_check: output/st04_02_gp_binomial_model_counts.csv
+        gp_cost_gamma_model_check: output/st04_02_gp_gamma_model_counts.csv
 
 
 # APC costs: run two part model and predict costs
@@ -362,8 +362,8 @@ actions:
         apc_cost_twopm: output/st04_03_apc_cost_twopm_output.csv
         apc_cost_reg_summary: output/st04_03_apc_cost_reg_summary.txt
         apc_predicted_costs: output/st04_03_predict_apc_cost_tpm.csv
-        apc_bi_model_check: output/st04_03_apc_binomial_model_counts.csv
-        apc_gamma_model_check: output/st04_03_apc_gamma_model_counts.csv
+        apc_cost_bi_model_check: output/st04_03_apc_binomial_model_counts.csv
+        apc_cost_gamma_model_check: output/st04_03_apc_gamma_model_counts.csv
 
 # A&E costs: run two part model and predict costs
   report_04_04_predict_ane_cost_twopm:
@@ -376,8 +376,8 @@ actions:
         ane_cost_twopm: output/st04_04_ane_cost_twopm_output.csv
         ane_cost_reg_summary: output/st04_04_ane_reg_summary.txt
         ane_predicted_costs: output/st04_04_predict_ane_cost_tpm.csv
-        ane_bi_model_check: output/st04_04_ane_binomial_model_counts.csv
-        ane_gamma_model_check: output/st04_04_ane_gamma_model_counts.csv
+        ane_cost_bi_model_check: output/st04_04_ane_binomial_model_counts.csv
+        ane_cost_gamma_model_check: output/st04_04_ane_gamma_model_counts.csv
 
 # OPA costs: run two part model and predict costs
   report_04_05_predict_opa_cost_twopm:
@@ -390,8 +390,8 @@ actions:
         opa_cost_twopm: output/st04_05_opa_cost_twopm_output.csv
         opa_cost_reg_summary: output/st04_05_opa_reg_summary.txt
         opa_predicted_costs: output/st04_05_predict_opa_cost_tpm.csv
-        opa_bi_model_check: output/st04_05_opa_binomial_model_counts.csv
-        opa_gamma_model_check: output/st04_05_opa_gamma_model_counts.csv
+        opa_cost_bi_model_check: output/st04_05_opa_binomial_model_counts.csv
+        opa_cost_gamma_model_check: output/st04_05_opa_gamma_model_counts.csv
 
 # # Visulize outcomes:
 
