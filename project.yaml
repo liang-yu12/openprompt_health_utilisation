@@ -352,6 +352,8 @@ actions:
         apc_cost_twopm: output/st04_03_apc_cost_twopm_output.csv
         apc_cost_reg_summary: output/st04_03_apc_cost_reg_summary.txt
         apc_predicted_costs: output/st04_03_predict_apc_cost_tpm.csv
+        apc_bi_model_check: output/st04_03_apc_binomial_model_counts.csv
+        apc_gamma_model_check: output/st04_03_apc_gamma_model_counts.csv
 
 # A&E costs: run two part model and predict costs
   report_04_04_predict_ane_cost_twopm:
