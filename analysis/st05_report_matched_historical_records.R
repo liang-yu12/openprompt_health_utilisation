@@ -17,49 +17,58 @@ did_data_12m %>% group_by(exposure, time) %>%
 
 # Describing healthcare utilisation by time and exposure -------
 
-did_data %>% names
-did_data$month %>% table
-table(did_data$time, did_data$month)
+# Data management for including NA visits
+# Separate comparators and exposure, and assign NA to the visits during COVID pandemic
+# set the month %in% 1:7 because no long COVID diagnoses between Apr 2020 and Oct 2020
+com_with_na <- did_data %>% dplyr::select(exposure, time, month, monthly_visits) %>% 
+      filter(exposure == "Comparator" & time == "Historical" & month %in% 1:7) %>% 
+      mutate(time = "COVID pandemic", monthly_visits = NA_real_) %>% 
+      mutate(month = month + 12) # set up month as a cont. var
 
-did_data <- did_data %>% mutate(month_x = case_when(
-      time == "Historical" ~ as.numeric(month), 
-      time == "Contemporary" ~ (as.numeric(month) +13))
-      )
+exp_with_na <- did_data %>% dplyr::select(exposure, time, month, monthly_visits) %>% 
+      filter(exposure == "Long COVID exposure" & time == "Historical" & month %in% 1:7) %>% 
+      mutate(time = "COVID pandemic", monthly_visits = NA_real_) %>% 
+      mutate(month = month + 12)
 
-# collapsed the data by obtaining the mean of each month
-plot_data <- did_data %>% group_by(exposure, month_x) %>% 
-      summarise(visits =mean(monthly_visits, na.rm = TRUE))
+# For the contemporary data, set it as a cont. var after the COVID pandemic period
+did_plot_interrupt <- did_data %>% dplyr::select(exposure, time, month, monthly_visits) %>% 
+      mutate(month = case_when(
+            time == "Historical" ~ as.numeric(month), 
+            time == "Contemporary" ~ (as.numeric(month) + 19))
+      ) %>% dplyr::select(exposure, time, month, monthly_visits) 
 
-line_plot <- ggplot(plot_data, aes(x = month_x, y = visits, color = exposure)) + 
-      geom_line()+ geom_vline(xintercept = 13) +
-      xlab("Time before and after long COVID") + ylab("Mean healthcare visits") +
-      scale_x_continuous(breaks = seq(1, 25),
-                         labels = c("Historical month 1", "Historical month 2", "Historical month 3", 
-                                  "Historical month 4", "Historical month 5", "Historical month 6", 
-                                  "Historical month 7", "Historical month 8", "Historical month 9",
-                                  "Historical month 10", "Historical month 11", "Historical month 12",
-                                  "Long COVID index date",
-                                  "Contemporary month 1", "Contemporary month 2", "Contemporary month 3", 
-                                  "Contemporary month 4", "Contemporary month 5", "Contemporary month 6", 
-                                  "Contemporary month 7", "Contemporary month 8", "Contemporary month 9", 
-                                  "Contemporary month 10", "Contemporary month 11", "Contemporary month 12")) + 
-      theme_bw() +
-      theme(axis.text.x = element_text(size=6, angle=20))
+# combine the data and reset the factor levels.
+did_plot_interrupt <- bind_rows(did_plot_interrupt, exp_with_na, com_with_na)
+did_plot_interrupt$time  <- factor(did_plot_interrupt$time, levels = c("Historical", "COVID pandemic", "Contemporary"))
 
-ggsave(file = "output/st05_hx_now_comparison.jpg", width = 12, height = 4)
-
-
-# try loess smoth
-ggplot(did_data, aes(x = month_x, y = monthly_visits, color = exposure)) + 
-      scale_colour_hue(guide = "none") + geom_smooth(method="gam", se=TRUE)+ 
-      geom_vline(xintercept = 13) +
-      xlab("Time before and after diagnosed with long COVID (Month)") + ylab("Mean healthcare visits") +
-      scale_x_continuous(breaks = seq(1, 25),
-                         labels = c("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
-                                    "Index date",
-                                    "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12")) + 
+# Plot the trend before and after long COVID using LOESS smooth:
+ggplot() + 
+      geom_smooth(
+            data = did_plot_interrupt %>% filter(time == "Historical"), 
+            aes(x = month, y = monthly_visits, color = exposure),
+            method="gam", se=TRUE) + 
+      geom_smooth(
+            data = did_plot_interrupt %>% filter(time == "COVID pandemic"), 
+            aes(x = month, y = monthly_visits, color = exposure),
+            method="gam", se=TRUE) + 
+      geom_smooth(
+            data = did_plot_interrupt %>% filter(time == "Contemporary"), 
+            aes(x = month, y = monthly_visits, color = exposure),
+            method="gam", se=TRUE) + 
+      scale_colour_hue(guide = "none") + 
+      geom_vline(xintercept = 12) + 
+      geom_vline(xintercept = 20) +
+      xlab("Time before and after diagnosed with long COVID") + ylab("Mean healthcare visits") +
+      scale_x_continuous(breaks = seq(1, 31),
+                         labels = c("2019 March", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "2020 March", 
+                                    " ", " "," ", " "," ",  " ", " ", "Long COVID diagnoses",
+                                    " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ")) + 
       theme_bw() + 
       theme(axis.text.x = element_text(size=10)) +
       annotate("text", x = 5, y=0.35, label = "Historical records",hjust = 0.2) +
-      annotate("text", x = 18, y=0.35, label = "Contemporary records",hjust = 0.2)
+      annotate("text", x = 15, y=0.35, label = "COVID pandemic",hjust = 0.2) +
+      annotate("text", x = 25, y=0.35, label = "Contemporary records",hjust = 0.2)
+
+
 ggsave(file = "output/st05_smooth_comparison.jpg", width = 12, height = 4)
+
