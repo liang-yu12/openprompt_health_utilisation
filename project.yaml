@@ -257,7 +257,9 @@ actions:
         ane_hurdle: output/st03_04_ane_hurdle.csv
         ane_reg_summary: output/ane_reg_summary.txt
         predicted_ane_visits: output/st03_04_ane_predicted_counts.csv
-        
+        ane_bi_model_visit_count: output/st03_04_ane_binomial_model_counts.csv
+        ane_hurdle_model_visit_count: output/st03_04_ane_hurdle_model_counts.csv
+                
 # # QC 06: check A&E visits:
 
   qc_06_a_and_e_visits:
