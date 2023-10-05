@@ -380,6 +380,8 @@ actions:
         opa_cost_twopm: output/st04_05_opa_cost_twopm_output.csv
         opa_cost_reg_summary: output/st04_05_opa_reg_summary.txt
         opa_predicted_costs: output/st04_05_predict_opa_cost_tpm.csv
+        opa_bi_model_check: output/st04_05_opa_binomial_model_counts.csv
+        opa_gamma_model_check: output/st04_05_opa_gamma_model_counts.csv
 
 # # Visulize outcomes:
 
