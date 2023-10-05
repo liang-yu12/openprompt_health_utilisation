@@ -116,17 +116,8 @@ adj_predic_fn <- function(i.exp, i.time, reg_1st, reg_2nd){
     summarise(mean_age= mean(age, na.rm = T))
   
   # # set up input new data frame
-  input <- expand.grid(exposure = i.exp, 
-                       time = i.time, 
-                       follow_up = 360,
-                       sex = c("female", "male"),
-                       age =  mean_age %>% filter(exposure == i.exp) %>% .$mean_age,
-                       ethnicity_6 = c("White","Mixed","South Asian", "Black","Other"),
-                       bmi_cat = c("Underweight","Normal Weight", "Overweight", "Obese"),
-                       region = c("East", "East Midlands", "London", "North East","North West",
-                                  "South East","South West","West Midlands", "Yorkshire and The Humber"),
-                       imd_q5 = c("least_deprived", "2_deprived", "3_deprived","4_deprived","most_deprived"),
-                       number_comorbidities_cat = c("0", "1", "2", "3"))
+  input <- adj_did_tpm_12m %>% filter(exposure == i.exp, time == i.time) %>% 
+        mutate(follow_up = 360)
   
   p1 <- predict(reg_1st, newdata = input, type = "response")                     
   p2 <- predict(reg_2nd, newdata = input, type = "link", se.fit = T)
