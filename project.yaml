@@ -337,6 +337,9 @@ actions:
         gp_cost_twopm: output/st04_02_gp_cost_twopm_output.csv
         gp_cost_tpm_reg_summary: output/st04_02_gp_reg_summary.txt
         gp_predicted_costs: output/st04_02_predict_gp_cost_tpm.csv
+        gp_bi_model_check: output/st04_02_gp_binomial_model_counts.csv
+        gp_gamma_model_check: output/st04_02_gp_gamma_model_counts.csv
+
 
 # APC costs: run two part model and predict costs
   report_04_03_predict_apc_cost_twopm:

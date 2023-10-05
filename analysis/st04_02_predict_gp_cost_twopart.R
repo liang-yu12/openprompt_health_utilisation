@@ -305,3 +305,60 @@ adj_gp_costs <- bind_rows(
 total_gp_costs <- bind_rows(crude_gp_costs, adj_gp_costs) 
 
 total_gp_costs %>% write_csv(here("output","st04_02_predict_gp_cost_tpm.csv"))
+
+
+
+# Summarize the datasets for output checking: -----
+
+# Logit model count:
+bi_model_count_fn <- function(data){
+      
+      data %>% group_by(exposure) %>% 
+            summarise(
+                  non_zero_count = sum(cost_binary > 0),
+                  zero_count = sum(cost_binary == 0),
+                  n = n()
+            )
+}
+
+# Gamma model count:
+gamma_model_count_fn <- function(data){
+      
+      data %>% filter(cost_binary>0) %>% 
+            group_by(exposure) %>% 
+            summarise(
+                  mean_cost = mean(gp_cost),
+                  min_cost = min(gp_cost),
+                  max_cost = max(gp_cost),
+                  n = n(),
+                  demonimator = sum(follow_up))
+}
+
+
+# Summarise binomial model data:
+bind_rows(
+      bind_rows(
+            bi_model_count_fn(crude_gp_cost_complete_3m) %>% mutate(time = "3m"),
+            bi_model_count_fn(crude_gp_cost_complete_6m) %>% mutate(time = "6m"),
+            bi_model_count_fn(crude_gp_cost_complete_12m) %>% mutate(time = "12m")) %>% 
+            mutate(model = "Crude"),
+      bind_rows(
+            bi_model_count_fn(adj_gp_cost_complete_3m) %>% mutate(time = "3m"),
+            bi_model_count_fn(adj_gp_cost_complete_6m) %>% mutate(time = "6m"),
+            bi_model_count_fn(adj_gp_cost_complete_12m) %>% mutate(time = "12m")) %>% 
+            mutate(model = "Adjusted")) %>% 
+      write_csv("output/st04_02_gp_binomial_model_counts.csv")
+
+
+bind_rows(
+      bind_rows(
+            gamma_model_count_fn(crude_gp_cost_complete_3m) %>% mutate(time = "3m"),
+            gamma_model_count_fn(crude_gp_cost_complete_6m) %>% mutate(time = "6m"),
+            gamma_model_count_fn(crude_gp_cost_complete_12m) %>% mutate(time = "12m")) %>% 
+            mutate(model = "Crude"),
+      bind_rows(
+            gamma_model_count_fn(adj_gp_cost_complete_3m) %>% mutate(time = "3m"),
+            gamma_model_count_fn(adj_gp_cost_complete_6m) %>% mutate(time = "6m"),
+            gamma_model_count_fn(adj_gp_cost_complete_12m) %>% mutate(time = "12m")) %>% 
+            mutate(model = "Adjusted")) %>% 
+      write_csv("output/st04_02_gp_gamma_model_counts.csv")
