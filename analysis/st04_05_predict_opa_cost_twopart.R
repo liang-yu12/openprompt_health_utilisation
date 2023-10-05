@@ -221,13 +221,13 @@ bind_rows(crude_gamma_glm_opa,adj_gamma_glm_opa) %>%
 # Save the detailed outputs to a text file:
 sink(here("output", "st04_05_opa_reg_summary.txt"))
 print("# Crude binomial model output part 1 ---------")
-print(summary(crude_binary))
+print(summary(crude_binomial_opa))
 print("# Crude gamma model output part 2 ---------")
-print(summary(crude_gamma))
+print(summary(crude_gamma_glm_opa))
 print("# Adjusted binomial model output part 1 ---------")
-print(summary(adj_binary))
+print(summary(adj_binomial_opa))
 print("# Adjusted gamma model output part 2 ---------")
-print(summary(adj_gamma))
+print(summary(adj_gamma_glm_opa))
 sink()
 
 
