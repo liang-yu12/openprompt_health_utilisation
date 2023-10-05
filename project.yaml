@@ -230,6 +230,8 @@ actions:
         hos_hurdle: output/st03_03_hos_hurdle.csv
         hos_reg_summary: output/hos_reg_summary.txt
         predicted_hos_admin_counts: output/st03_03_hos_predicted_counts.csv
+        hos_bi_model_count: output/st03_03_hos_binomial_model_counts.csv
+        hos_hurdle_model_count: output/st03_03_hos_hurdle_model_counts.csv
         
 # # QC 05: check hospital admission distribution:
 
