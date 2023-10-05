@@ -198,3 +198,45 @@ summarised_results <- bind_rows(
 summarised_results %>% write_csv(here("output", "st03_05_opa_predicted_counts.csv"))
 
 
+# Summarize the datasets for output checking: -----
+
+# Logit model count:
+bi_model_count_fn <- function(data){
+      
+      data %>% group_by(exposure) %>% 
+            summarise(
+                  non_zero_count = sum(visits_binary > 0),
+                  zero_count = sum(visits_binary == 0),
+                  n = n()
+            )
+}
+
+# Hurdle model count:
+hurdle_model_count_fn <- function(data){
+      
+      data %>% filter(visits_binary>0) %>% 
+            group_by(exposure) %>% 
+            summarise(
+                  mean_visit = mean(visits),
+                  min_visit = min(visits),
+                  max_visit = max(visits),
+                  n = n(),
+                  demonimator = sum(follow_up))
+}
+
+
+# Summarise binomial model data:
+bind_rows(
+      (bi_model_count_fn(crude_opa_complete_12m) %>% mutate(time = "12m") %>% 
+             mutate(model = "Crude")),
+      (bi_model_count_fn(adj_opa_complete_12m) %>% mutate(time = "12m")) %>% 
+            mutate(model = "Adjusted")) %>% 
+      write_csv("output/st03_05_opa_binomial_model_counts.csv")
+
+
+bind_rows(
+      (hurdle_model_count_fn(crude_opa_complete_12m) %>% mutate(time = "12m")) %>% 
+            mutate(model = "Crude"),
+      (hurdle_model_count_fn(adj_opa_complete_12m) %>% mutate(time = "12m")) %>% 
+            mutate(model = "Adjusted")) %>% 
+      write_csv("output/st03_05_opa_hurdle_model_counts.csv")

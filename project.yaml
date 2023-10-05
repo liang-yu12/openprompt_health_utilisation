@@ -285,7 +285,9 @@ actions:
         opa_hurdle: output/st03_05_opa_hurdle.csv
         opa_reg_summary: output/st03_05_opa_reg_summary.txt
         predicted_opa_visits: output/st03_05_opa_predicted_counts.csv
-
+        opa_bi_model_visit_count: output/st03_05_opa_binomial_model_counts.csv
+        opa_hurdle_model_visit_count: output/st03_05_opa_hurdle_model_counts.csv
+                
 # # QC07: check over dispersion of the rest outcomes:
 
   qc_07_check_over_dispersion:
