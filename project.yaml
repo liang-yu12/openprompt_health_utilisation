@@ -200,6 +200,8 @@ actions:
         binomial_visits: output/st03_01_total_binomial.csv
         hurdle_all_visits: output/st03_01_total_hurdle.csv
         predicted_visits: output/st03_01_total_predicted_counts.csv
+        total_bi_model_count: output/st03_01_total_binomial_model_counts.csv
+        total_hurdle_count: output/st03_01_total_gamma_model_counts.csv
 
 # # GP utilisation  - hurdle
 

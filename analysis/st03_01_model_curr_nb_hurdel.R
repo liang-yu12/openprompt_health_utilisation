@@ -323,3 +323,61 @@ bind_rows(crude_summarised_results, adj_summarised_results) %>%
   write_csv(here("output", "st03_01_total_predicted_counts.csv"))
 
 
+# Summarize the datasets for output checking: -----
+
+# Logit model count:
+bi_model_count_fn <- function(data){
+      
+      data %>% group_by(exposure) %>% 
+            summarise(
+                  non_zero_count = sum(visits_binary > 0),
+                  zero_count = sum(visits_binary == 0),
+                  n = n()
+            )
+}
+
+# Hurdle model count:
+hurdle_model_count_fn <- function(data){
+      
+      data %>% filter(visits_binary>0) %>% 
+            group_by(exposure) %>% 
+            summarise(
+                  mean_visit = mean(visits),
+                  min_visit = min(visits),
+                  max_visit = max(visits),
+                  n = n(),
+                  demonimator = sum(follow_up))
+}
+
+
+
+# Summarise binomial model data:
+bind_rows(
+      bind_rows(
+            bi_model_count_fn(crude_complete_3m) %>% mutate(time = "3m"),
+            bi_model_count_fn(crude_complete_6m) %>% mutate(time = "6m"),
+            bi_model_count_fn(crude_complete_12m) %>% mutate(time = "12m")) %>% 
+            mutate(model = "Crude"),
+      bind_rows(
+            bi_model_count_fn(adj_complete_3m) %>% mutate(time = "3m"),
+            bi_model_count_fn(adj_complete_6m) %>% mutate(time = "6m"),
+            bi_model_count_fn(adj_complete_12m) %>% mutate(time = "12m")) %>% 
+            mutate(model = "Adjusted")) %>% 
+      write_csv("output/st03_01_total_binomial_model_counts.csv")
+
+
+bind_rows(
+      bind_rows(
+            hurdle_model_count_fn(crude_complete_3m) %>% mutate(time = "3m"),
+            hurdle_model_count_fn(crude_complete_6m) %>% mutate(time = "6m"),
+            hurdle_model_count_fn(crude_complete_12m) %>% mutate(time = "12m")) %>% 
+            mutate(model = "Crude"),
+      bind_rows(
+            hurdle_model_count_fn(adj_complete_3m) %>% mutate(time = "3m"),
+            hurdle_model_count_fn(adj_complete_6m) %>% mutate(time = "6m"),
+            hurdle_model_count_fn(adj_complete_12m) %>% mutate(time = "12m")) %>% 
+            mutate(model = "Adjusted")) %>% 
+      write_csv("output/st03_01_total_gamma_model_counts.csv")
+
+
+
