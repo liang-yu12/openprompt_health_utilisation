@@ -112,9 +112,7 @@ adj_nb_12m <- vglm(visits ~ exposure*time  + offset(log(follow_up)) +
                      data = subset(adj_did_tpm_12m, visits_binary > 0))
 
 adj_predic_fn <- function(i.exp, i.time, reg_1st, reg_2nd){
-  mean_age <- adj_did_tpm_12m %>% group_by(exposure) %>% 
-    summarise(mean_age= mean(age, na.rm = T))
-  
+
   # # set up input new data frame
   input <- adj_did_tpm_12m %>% filter(exposure == i.exp, time == i.time) %>% 
         mutate(follow_up = 360)
