@@ -8,7 +8,7 @@ lc_exp_matched %>% names
 # set the columns to pivot
 total_ane_cost <- c()
 for (i in 1:12) {
-      total_ane_cost <- c(total_ane_cost, paste0("ae_visit_m", i))
+      total_ane_cost <- c(total_ane_cost, paste0("er_cost_m", i))
 }
 
 # pivot exposure group: -----
