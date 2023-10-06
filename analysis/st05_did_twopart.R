@@ -9,16 +9,20 @@ did_tpm_12m <- did_data_12m %>% group_by(time) %>%
       mutate(visits_binary = ifelse(visits>0, 1, 0)) %>% 
       ungroup()
       
-
+# Crude complete data: keep complete cases
+crude_did_tpm_12 <- did_tpm_12m %>% dplyr::select(visits_binary, exposure, time, follow_up)
+crude_did_tpm_12 <- crude_did_tpm_12[complete.cases(crude_did_tpm_12),]
+      
+      
 # First part: Binomial model with interaction term with time
 crude_binomial_12m <-  glm(visits_binary ~ exposure*time + offset(log(follow_up)), 
-                           data = did_tpm_12m,
+                           data = crude_did_tpm_12,
                            family=binomial(link="logit")) 
 
 # Positive negative binomial (truncated) with interaction term time
 crude_nb_12m <- vglm(visits ~ exposure*time  + offset(log(follow_up)),
                      family = posnegbinomial(),
-                     data = subset(did_tpm_12m, visits_binary > 0))
+                     data = subset(crude_did_tpm_12, visits_binary > 0))
 
 # Function to tidy vglm output:
 tidy.vglm <- function(x, conf.int=FALSE, conf.level=0.95) {
@@ -38,35 +42,49 @@ tidy.vglm <- function(x, conf.int=FALSE, conf.level=0.95) {
 
 # Predict crude model: setup function for outputs: ----
 
-crude_predic_fn <- function(i.exp, i.time, reg_1st, reg_2nd){
+crude_predic_fn <- function(i.exp, i.time){
       # # set up input new data frame
-      input <- expand.grid(exposure = i.exp, 
-                          time = i.time,
-                          follow_up = 360)
+      input <- crude_did_tpm_12 %>% filter(exposure == i.exp, time == i.time) %>% 
+            mutate(follow_up = 360)
+      
       # Prediction:
-      results <- data.frame(
-            exposure = i.exp,
-            time = i.time,
-            nonzero_prob = predict(reg_1st, newdata = input, type = "response"))  # first part 
+      p1 <- predict(crude_binomial_12m, newdata = input, type = "response")           
       
-      p2 <- predictvglm(reg_2nd, newdata = input, type = "link", se.fit = T) 
+      p2 <- predictvglm(crude_nb_12m, newdata = input, type = "link", se.fit = T) 
       
-      results <- results %>% mutate(
-            visits = mean(exp(p2$fitted.values), na.rm = T)*nonzero_prob,
-            lci   = mean(exp(p2$fitted.values - 1.96*p2$se.fit))*nonzero_prob,
-            hci   = mean(exp(p2$fitted.values + 1.96*p2$se.fit))*nonzero_prob,
-      )
-      results$nonzero_prob <- NULL
+      p2_fit<- p2$fitted.values %>% as.data.frame() %>% 
+            dplyr::select(`loglink(munb)`) %>% rename(fitted = `loglink(munb)`) 
+      
+      p2_se <- p2$se.fit %>% as.data.frame()%>% 
+            dplyr::select(`loglink(munb)`)  %>% rename(se = `loglink(munb)`)
+      
+      
+      predicted_visits <- data.frame(
+            nonzero_prob = p1,
+            p_visits = p2_fit$fitted,
+            p_se= p2_se$se) %>% 
+            mutate(c_visits = exp(p_visits)*nonzero_prob,
+                   c_lci = exp(p_visits - 1.96*p_se)*nonzero_prob,
+                   c_hci = exp(p_visits + 1.96*p_se)*nonzero_prob) %>% 
+            dplyr::select(c_visits, c_lci, c_hci)
+      
+      # summarise the results
+      results <- predicted_visits %>% summarise(
+            visits = mean(c_visits, na.rm =T),
+            lci = mean(c_lci, na.rm =T),
+            hci = mean(c_hci, na.rm = T)) %>% 
+            mutate(exposure = i.exp, time = i.time) %>% 
+            relocate(exposure, time)
       
       return(results)
 }
 
 # combine outputs: 
 predicted_crude_value <- bind_rows(
-      crude_predic_fn(i.exp = "Comparator", i.time = "Historical", reg_1st = crude_binomial_12m, reg_2nd = crude_nb_12m),
-      crude_predic_fn(i.exp = "Long COVID exposure", i.time = "Historical", reg_1st = crude_binomial_12m, reg_2nd = crude_nb_12m),
-      crude_predic_fn(i.exp = "Comparator", i.time = "Contemporary", reg_1st = crude_binomial_12m, reg_2nd = crude_nb_12m),
-      crude_predic_fn(i.exp = "Long COVID exposure", i.time = "Contemporary", reg_1st = crude_binomial_12m, reg_2nd = crude_nb_12m)
+      crude_predic_fn(i.exp = "Comparator", i.time = "Historical"),
+      crude_predic_fn(i.exp = "Long COVID exposure", i.time = "Historical"),
+      crude_predic_fn(i.exp = "Comparator", i.time = "Contemporary"),
+      crude_predic_fn(i.exp = "Long COVID exposure", i.time = "Contemporary")
 )
 
 # Visualize the results
@@ -111,14 +129,14 @@ adj_nb_12m <- vglm(visits ~ exposure*time  + offset(log(follow_up)) +
                      family = posnegbinomial(),
                      data = subset(adj_did_tpm_12m, visits_binary > 0))
 
-adj_predic_fn <- function(i.exp, i.time, reg_1st, reg_2nd){
+adj_predic_fn <- function(i.exp, i.time){
 
   # # set up input new data frame
   input <- adj_did_tpm_12m %>% filter(exposure == i.exp, time == i.time) %>% 
         mutate(follow_up = 360)
   
-  p1 <- predict(reg_1st, newdata = input, type = "response")                     
-  p2 <- predict(reg_2nd, newdata = input, type = "link", se.fit = T)
+  p1 <- predict(adj_binomial_12m, newdata = input, type = "response")                     
+  p2 <- predict(adj_nb_12m, newdata = input, type = "link", se.fit = T)
   
   
   # the fitted value outcome is a matrix. Only need the mean value
@@ -151,10 +169,10 @@ adj_predic_fn <- function(i.exp, i.time, reg_1st, reg_2nd){
 
 
 predicted_adj_value <- bind_rows(
-      adj_predic_fn(i.exp = "Comparator", i.time = "Historical", reg_1st = adj_binomial_12m, reg_2nd = adj_nb_12m),
-      adj_predic_fn(i.exp = "Long COVID exposure", i.time = "Historical", reg_1st = adj_binomial_12m, reg_2nd = adj_nb_12m),
-      adj_predic_fn(i.exp = "Comparator", i.time = "Contemporary", reg_1st = adj_binomial_12m, reg_2nd = adj_nb_12m),
-      adj_predic_fn(i.exp = "Long COVID exposure", i.time = "Contemporary", reg_1st = adj_binomial_12m, reg_2nd = adj_nb_12m)
+      adj_predic_fn(i.exp = "Comparator", i.time = "Historical"),
+      adj_predic_fn(i.exp = "Long COVID exposure", i.time = "Historical"),
+      adj_predic_fn(i.exp = "Comparator", i.time = "Contemporary"),
+      adj_predic_fn(i.exp = "Long COVID exposure", i.time = "Contemporary")
 )
 
 
