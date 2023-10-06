@@ -10,7 +10,7 @@ did_tpm_12m <- did_data_12m %>% group_by(time) %>%
       ungroup()
       
 # Crude complete data: keep complete cases
-crude_did_tpm_12 <- did_tpm_12m %>% dplyr::select(visits_binary, exposure, time, follow_up)
+crude_did_tpm_12 <- did_tpm_12m %>% dplyr::select(visits ,visits_binary, exposure, time, follow_up)
 crude_did_tpm_12 <- crude_did_tpm_12[complete.cases(crude_did_tpm_12),]
       
       
