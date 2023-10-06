@@ -49,6 +49,7 @@ for_covariates <- matched_ane_cost_ts %>% distinct(patient_id, exposure, .keep_a
 levels_check <- c("exposure", "age_cat", "sex", "bmi_cat", "ethnicity_6", "imd_q5",                  
                   "region", "previous_covid_hosp", "cov_covid_vax_n_cat", "number_comorbidities_cat")
 
+lapply(for_covariates[levels_check], levels) # need to correct some levels
 
 for_covariates$sex <- relevel(for_covariates$sex, ref = "male")
 for_covariates$bmi_cat <- relevel(for_covariates$bmi_cat, ref = "Normal Weight")
@@ -58,8 +59,6 @@ for_covariates$region <- relevel(for_covariates$region, ref = "London" )
 for_covariates$previous_covid_hosp <- relevel(for_covariates$previous_covid_hosp, ref = "FALSE")
 for_covariates$cov_covid_vax_n_cat <- relevel(for_covariates$cov_covid_vax_n_cat, ref = "0 dose")
 for_covariates$number_comorbidities_cat <- relevel(for_covariates$number_comorbidities_cat, ref = "0")
-
-lapply(for_covariates[levels_check], levels) # need to correct some levels
 
 # # add covariates back to the summarised data frame
 matched_cost_3m <- left_join(matched_cost_3m, for_covariates,
