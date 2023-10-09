@@ -227,14 +227,14 @@ bind_rows(
       bi_model_count_fn(adj_complete_6m) %>% mutate(time = "6m"),
       bi_model_count_fn(adj_complete_12m) %>% mutate(time = "12m")) %>% 
       mutate(model = "Adjusted") %>% 
-      write_csv("output/st03_05_sub_lc_only_model_counts.csv")
+      write_csv("output/st03_05_sub_lc_only_bi_model_counts.csv")
 
 bind_rows(
       hurdle_model_count_fn(adj_complete_3m) %>% mutate(time = "3m"),
       hurdle_model_count_fn(adj_complete_6m) %>% mutate(time = "6m"),
       hurdle_model_count_fn(adj_complete_12m) %>% mutate(time = "12m")) %>% 
       mutate(model = "Adjusted") %>% 
-      write_csv("output/st03_05_sub_lc_only_model_counts.csv")
+      write_csv("output/st03_05_sub_lc_only_hurdle_model_counts.csv")
 
 
 
