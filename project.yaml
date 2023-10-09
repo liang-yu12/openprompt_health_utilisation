@@ -311,6 +311,20 @@ actions:
         outcomes_plots: output/st03_healthcare_visits.png
 
 
+
+# # Subgroup analyses 1: factors associated with high healthcare use among LC
+  report_sub_lc_only_factors:  
+    needs: [import_matched_exposure, import_matched_controls]
+    run: 
+      r:latest analysis/st03_05_subgroup_lc_only_factors.R
+    outputs: 
+      moderately_sensitive:
+        lc_only_reg_summary: output/st03_05_subgroup_lc_only_reg_summary.txt
+        lc_only_bi_visits: output/st03_05_sub_lc_only_binomial.csv
+        lc_only_hurdle_visits: output/st03_05_sub_lc_only_hurdle.csv
+        lc_only_model_count: output/st03_05_sub_lc_only_bi_model_counts.csv
+        lc_only_hurdle_count: output/output/st03_05_sub_lc_only_hurdle_model_counts.csv
+
 # # Subgroup all visits - hurdle
 
   report_03_hurdle_05_subgroup_visits:
