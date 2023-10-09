@@ -323,7 +323,7 @@ actions:
         lc_only_bi_visits: output/st03_05_sub_lc_only_binomial.csv
         lc_only_hurdle_visits: output/st03_05_sub_lc_only_hurdle.csv
         lc_only_model_count: output/st03_05_sub_lc_only_bi_model_counts.csv
-        lc_only_hurdle_count: output/output/st03_05_sub_lc_only_hurdle_model_counts.csv
+        lc_only_hurdle_count: output/st03_05_sub_lc_only_hurdle_model_counts.csv
 
 # # Subgroup all visits - hurdle
 
