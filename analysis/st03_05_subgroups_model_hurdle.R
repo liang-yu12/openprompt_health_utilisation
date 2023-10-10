@@ -45,20 +45,21 @@ matched_data_12m <- matched_data_ts %>%
 for_covariates <- matched_data_ts %>% distinct(patient_id, exposure, .keep_all = T) %>% 
       dplyr::select("patient_id",     
                     "exposure",           
-                    "age",
-                    "age_cat",
+                    "age", "age_cat",               
                     "sex",                     
                     "bmi_cat",
                     "ethnicity_6",             
                     "imd_q5",                  
                     "region",      
+                    "cov_asthma",
+                    "cov_mental_health",   
                     "previous_covid_hosp",     
                     "cov_covid_vax_n_cat",     
                     "number_comorbidities_cat")
-
 # Assign covariate levels before adding them back:
 for_covariates$sex <- relevel(for_covariates$sex, ref = "female")
-# for_covariates$age_cat <- relevel(for_covariates$age_cat, ref = "18-29")
+for_covariates$cov_mental_health <- relevel(for_covariates$cov_mental_health, ref = "FALSE")
+for_covariates$previous_covid_hosp <- relevel(for_covariates$previous_covid_hosp, ref = "FALSE")
 for_covariates$previous_covid_hosp <- relevel(for_covariates$previous_covid_hosp, "FALSE")
 for_covariates$number_comorbidities_cat <- as.factor(for_covariates$number_comorbidities_cat)
 
