@@ -45,6 +45,8 @@ for_covariates <- matched_data_ts %>% distinct(patient_id, exposure, .keep_all =
                     "ethnicity_6",             
                     "imd_q5",                  
                     "region",      
+                    "cov_asthma",
+                    "cov_mental_health",   
                     "previous_covid_hosp",     
                     "cov_covid_vax_n_cat",     
                     "number_comorbidities_cat")
@@ -54,6 +56,8 @@ for_covariates$bmi_cat <- relevel(for_covariates$bmi_cat, ref = "Normal Weight")
 for_covariates$ethnicity_6 <- relevel(for_covariates$ethnicity_6, ref = "White")
 for_covariates$imd_q5 <- relevel(for_covariates$imd_q5, ref = "least_deprived")
 for_covariates$region <- relevel(for_covariates$region, ref = "London" )
+for_covariates$cov_mental_health <- relevel(for_covariates$cov_mental_health, ref = "FALSE")
+for_covariates$previous_covid_hosp <- relevel(for_covariates$previous_covid_hosp, ref = "FALSE")
 for_covariates$previous_covid_hosp <- relevel(for_covariates$previous_covid_hosp, ref = "FALSE")
 for_covariates$cov_covid_vax_n_cat <- relevel(for_covariates$cov_covid_vax_n_cat, ref = "0 dose")
 for_covariates$number_comorbidities_cat <- relevel(for_covariates$number_comorbidities_cat, ref = "0")
@@ -119,21 +123,21 @@ adj_complete_12m <- matched_data_lc_12m[complete.cases(matched_data_lc_12m),] %>
 # Hurdle model part 1: binomial model:
 # 3 Months
 adj_binomial_3m <- glm(visits_binary ~ offset(log(follow_up)) +
-                             age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + 
+                             age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
                              previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
                        data = adj_complete_3m,
                        family=binomial(link="logit")) 
 
 # 6 Months
 adj_binomial_6m <- glm(visits_binary ~ offset(log(follow_up)) +
-                             age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + 
+                             age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
                              previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
                        data = adj_complete_6m,
                        family=binomial(link="logit")) 
 
 # 12 Months
 adj_binomial_12m <- glm(visits_binary ~ offset(log(follow_up)) +
-                              age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + 
+                              age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
                               previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
                         data = adj_complete_12m,
                         family=binomial(link="logit")) 
@@ -143,21 +147,21 @@ adj_binomial_12m <- glm(visits_binary ~ offset(log(follow_up)) +
 # Positive negative binomial
 # 3 months
 adj_nb_3m <- vglm(visits ~ offset(log(follow_up))+
-                        age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + 
+                        age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
                         previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
                   family = posnegbinomial(),
                   data = subset(adj_complete_3m, visits_binary > 0))
 
 # 6 months 
 adj_nb_6m <- vglm(visits ~ offset(log(follow_up))+
-                        age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + 
+                        age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
                         previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
                   family = posnegbinomial(),
                   data = subset(adj_complete_6m, visits_binary > 0))
 
 # 12 months
 adj_nb_12m <- vglm(visits ~ offset(log(follow_up))+
-                         age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + 
+                         age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
                          previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
                    family = posnegbinomial(),
                    data = subset(adj_complete_12m, visits_binary > 0))
