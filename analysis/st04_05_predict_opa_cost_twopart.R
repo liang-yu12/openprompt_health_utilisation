@@ -48,8 +48,9 @@ for_covariates <- matched_opa_cost_ts %>% distinct(patient_id, exposure, .keep_a
                     "cov_covid_vax_n_cat",     
                     "number_comorbidities_cat")
 
-levels_check <- c("exposure", "age_cat", "sex", "bmi_cat", "ethnicity_6", "imd_q5",                  
-                  "region", "previous_covid_hosp", "cov_covid_vax_n_cat", "number_comorbidities_cat")
+levels_check <- c("exposure", "age_cat", "sex", "bmi_cat", "ethnicity_6", "imd_q5", "cov_asthma",
+                  "cov_mental_health", "region", "previous_covid_hosp", "cov_covid_vax_n_cat", 
+                  "number_comorbidities_cat")
 
 
 for_covariates$sex <- relevel(for_covariates$sex, ref = "male")
