@@ -18,22 +18,26 @@ matched_data_hos_12m <- matched_data_hos_ts %>%
 
 # # Add covariates for adjustment
 for_covariates <- matched_data_hos_ts %>% distinct(patient_id, exposure, .keep_all = T) %>% 
-  dplyr::select("patient_id",     
-                "exposure",           
-                "age",                 
-                "sex",                     
-                "bmi_cat",
-                "ethnicity_6",             
-                "imd_q5",                  
-                "region",      
-                "previous_covid_hosp",     
-                "cov_covid_vax_n_cat",     
-                "number_comorbidities_cat")
+      dplyr::select("patient_id",     
+                    "exposure",           
+                    "age", "age_cat",               
+                    "sex",                     
+                    "bmi_cat",
+                    "ethnicity_6",             
+                    "imd_q5",                  
+                    "region",      
+                    "cov_asthma",
+                    "cov_mental_health",   
+                    "previous_covid_hosp",     
+                    "cov_covid_vax_n_cat",     
+                    "number_comorbidities_cat")
 for_covariates$sex <- relevel(for_covariates$sex, ref = "male")
 for_covariates$bmi_cat <- relevel(for_covariates$bmi_cat, ref = "Normal Weight")
 for_covariates$ethnicity_6 <- relevel(for_covariates$ethnicity_6, ref = "White")
 for_covariates$imd_q5 <- relevel(for_covariates$imd_q5, ref = "least_deprived")
 for_covariates$region <- relevel(for_covariates$region, ref = "London" )
+for_covariates$cov_mental_health <- relevel(for_covariates$cov_mental_health, ref = "FALSE")
+for_covariates$previous_covid_hosp <- relevel(for_covariates$previous_covid_hosp, ref = "FALSE")
 for_covariates$previous_covid_hosp <- relevel(for_covariates$previous_covid_hosp, ref = "FALSE")
 for_covariates$cov_covid_vax_n_cat <- relevel(for_covariates$cov_covid_vax_n_cat, ref = "0 dose")
 for_covariates$number_comorbidities_cat <- relevel(for_covariates$number_comorbidities_cat, ref = "0")
@@ -114,7 +118,7 @@ adj_hos_complete_12m <- matched_data_hos_12m[complete.cases(matched_data_hos_12m
 # Hurdle model part 1: binomial model:
 # 12 Months
 adj_binomial_12m <- glm(visits_binary ~ exposure + offset(log(follow_up)) +
-                              age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + 
+                              age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
                               previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
                         data = adj_hos_complete_12m,
                         family=binomial(link="logit")) 
@@ -123,7 +127,7 @@ adj_binomial_12m <- glm(visits_binary ~ exposure + offset(log(follow_up)) +
 # Hurdle model part 2: truncated negative binomial model:
 # 12 months
 adj_nb_12m <- vglm(visits ~ exposure + offset(log(follow_up))+
-                         age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + 
+                         age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
                          previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
                    family = pospoisson(),
                    data = subset(adj_hos_complete_12m, visits_binary > 0))
