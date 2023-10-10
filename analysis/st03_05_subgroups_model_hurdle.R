@@ -78,64 +78,129 @@ matched_data_3m$exposure <- relevel(matched_data_3m$exposure, ref = "Comparator"
 matched_data_6m$exposure <- relevel(matched_data_6m$exposure, ref = "Comparator")
 matched_data_12m$exposure <- relevel(matched_data_12m$exposure, ref = "Comparator")
 
+# Keep complete cases
+adj_complete_3m <- matched_data_12m[complete.cases(matched_data_12m),] %>% 
+  mutate(visits_binary = ifelse(visits>0, 1, 0))
+
+adj_complete_6m <- matched_data_12m[complete.cases(matched_data_12m),] %>% 
+  mutate(visits_binary = ifelse(visits>0, 1, 0))
+
+adj_complete_12m <- matched_data_12m[complete.cases(matched_data_12m),] %>% 
+  mutate(visits_binary = ifelse(visits>0, 1, 0))
+
+
 # Stats: Subgroup analyses by different covariates -----
+# Fit an interaction term between exposure and the cov.
 
-# set a function for organising the regression output
-nb_reg_crude_fn <- function(data, sub_level){
-      reg <- glm.nb(visits ~ exposure + offset(log(follow_up)),
-                    data = data,link = log)
-      output <- bind_cols((coef(reg) %>% exp() %>% as.data.frame()),
-                          (confint(reg) %>% exp() %>% as.data.frame()))
-      
-      output$terms <- rownames(output)
-      output <- output %>% filter(terms == "exposureLong covid exposure")
-      output <- rename(output, estimates = .) %>% relocate(terms) %>% 
-            mutate(subgroup = sub_level) %>% relocate(subgroup)
-      return(output)
+# # By previous hospitalisation ----
+
+adj_complete_12m$previous_covid_hosp %>% levels()  # "FALSE" "TRUE" 
+# create a new var using TRUE as baseline for interaction
+adj_complete_12m$previous_covid_hosp_true <- factor(adj_complete_12m$previous_covid_hosp, 
+                                                    levels = c("TRUE", "FALSE"))
+
+# first-part: Binomial model
+
+# Tidy binomial model:
+binomial_tidy_fn <- function(bi_reg){
+  bi_results <- bi_reg %>% tidy() %>% mutate(
+    model = "binomial",
+    lci = exp(estimate - 1.96*std.error),
+    hci = exp(estimate + 1.96*std.error),
+    estimate = exp(estimate)) %>% 
+    dplyr::select(model, term, estimate, lci, hci, p.value)%>% 
+    filter(term == "exposureLong covid exposure" )      
+  return(bi_results)
 }
 
-## By hospitalisation: -----
-# Customize another function for hospitalisatioin;
-crude_hos_subgroup_fn <- function(data, hos_var){
-      # split the data by covid hospitalisation
-      hos <-split(data, hos_var)
-      hos_t <- hos$`TRUE`
-      hos_f <- hos$`FALSE`
-      
-      results <- bind_rows(
-            nb_reg_crude_fn(hos_t, "Hospitalised"),
-            nb_reg_crude_fn(hos_f, "Not hospitalised")
-      ) 
-      return(results)
+# No interaction:
+hos_no_binomial_12m <- glm(visits_binary ~ exposure + previous_covid_hosp + offset(log(follow_up)) +
+                            age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                            cov_covid_vax_n_cat +number_comorbidities_cat, 
+                          data = adj_complete_12m,
+                          family=binomial(link="logit")) 
+# False stratum: 
+hos_f_binomial_12m <- glm(visits_binary ~ exposure*previous_covid_hosp + offset(log(follow_up)) +
+                          age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                          cov_covid_vax_n_cat +number_comorbidities_cat, 
+                        data = adj_complete_12m,
+                        family=binomial(link="logit")) 
+
+# True stratum:  
+hos_t_binomial_12m <- glm(visits_binary ~ exposure*previous_covid_hosp_true + offset(log(follow_up)) +
+                            age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                            cov_covid_vax_n_cat +number_comorbidities_cat, 
+                          data = adj_complete_12m,
+                          family=binomial(link="logit")) 
+
+# Likelihood ratio test 
+lrt_bi <- lmtest::lrtest(hos_f_binomial_12m, hos_no_binomial_12m) %>% 
+  dplyr::select(`Pr(>Chisq)`) 
+
+
+# Organise binomial outcomes:
+hos_bi_sub <- bind_rows(
+  binomial_tidy_fn(hos_f_binomial_12m) %>% mutate(stratum = "No hospital admission"),
+  binomial_tidy_fn(hos_t_binomial_12m) %>% mutate(stratum = "Admitted due to COVID")) %>% 
+bind_cols(lrt_bi)
+
+
+# # Second hurdle part: positive negative binomial:
+
+# Tidy up the function
+positive_nb_tidy_fu <- function(vg_reg){
+  
+  t1 <- vg_reg %>%summary
+  t2 <- t1@coef3 %>% as.data.frame()
+  t2$term <- rownames(t2)
+  t3 <- t2 %>% filter(term == "exposureLong covid exposure" )
+  results <- t3 %>% mutate(
+    lci = exp(Estimate - 1.96*`Std. Error`),
+    hci = exp(Estimate + 1.96*`Std. Error`),
+    estimate = exp(Estimate),
+    p.value = `Pr(>|z|)`,
+    model = "Positive Negative Bionomial") %>% 
+    dplyr::select(model, term, estimate, lci, hci, p.value)
+  return(results)
 }
 
-crude_hos_subgroup <- bind_rows(
-      crude_hos_subgroup_fn(matched_data_3m, matched_data_3m$previous_covid_hosp) %>% mutate(time="3m"),
-      crude_hos_subgroup_fn(matched_data_6m, matched_data_6m$previous_covid_hosp) %>% mutate(time="6m"),
-      crude_hos_subgroup_fn(matched_data_12m, matched_data_12m$previous_covid_hosp) %>% mutate(time="12m"))
+# No interaction: 
+hos_no_hurdle_12m <- vglm(visits ~ exposure + previous_covid_hosp + offset(log(follow_up))+
+                     age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                     cov_covid_vax_n_cat +number_comorbidities_cat, 
+                   family = posnegbinomial(),
+                   data = subset(adj_complete_12m, visits_binary > 0))
+# No admission stratum:
+hos_f_hurdle_12m <- vglm(visits ~ exposure*previous_covid_hosp + offset(log(follow_up))+
+                            age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                            cov_covid_vax_n_cat +number_comorbidities_cat, 
+                          family = posnegbinomial(),
+                          data = subset(adj_complete_12m, visits_binary > 0))
+# Admitted stratum
+hos_t_hurdle_12m <- vglm(visits ~ exposure*previous_covid_hosp_true + offset(log(follow_up))+
+                           age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                           cov_covid_vax_n_cat +number_comorbidities_cat, 
+                         family = posnegbinomial(),
+                         data = subset(adj_complete_12m, visits_binary > 0))
+# LR test:
+lrt_hurdle <- lrtest_vglm(hos_f_hurdle_12m, hos_no_hurdle_12m)
+lrt_hos_tpm <- lrt_hurdle@Body %>% as.data.frame() %>% dplyr::select(`Pr(>Chisq)`)
+
+
+bind_rows(positive_nb_tidy_fu(hos_f_hurdle_12m) %>% mutate(stratum = "No hospital admission"),
+          positive_nb_tidy_fu(hos_t_binomial_12m) %>% mutate(stratum = "Admitted due to COVID")) %>% 
+bind_cols(lrt_hos_tpm)
+
+
+
+
+
 
 
 
 ## By sex:-----
-# customize a function for sex:
-crude_sex_subgroup_fn <- function(data, sex_var){
-      # split the data by covid hospitalisation
-      sex_g <-split(data, sex_var)
-      sex_m <- sex_g$male
-      sex_f <- sex_g$female
-      
-      results <- bind_rows(
-            nb_reg_crude_fn(sex_m, "Male"),
-            nb_reg_crude_fn(sex_f, "Female")
-      ) 
-      return(results)
-}
 
-crude_sex_subgroup <- bind_rows(
-      crude_sex_subgroup_fn(matched_data_3m, matched_data_3m$sex) %>% mutate(time="3m"),
-      crude_sex_subgroup_fn(matched_data_6m, matched_data_6m$sex) %>% mutate(time="6m"),
-      crude_sex_subgroup_fn(matched_data_12m, matched_data_12m$sex) %>% mutate(time="12m")
-)
+
 
 
 ### By agegroup
