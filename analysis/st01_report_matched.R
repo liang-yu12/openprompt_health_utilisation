@@ -36,6 +36,8 @@ fu_cols <- matched_data[grep("follow_up_m", names(matched_data))] %>%
 # define variables for table 1
 dependent = "exposure"
 explanatory = c("sex", "age", "age_cat", "ethnicity_6", "bmi_cat", "imd_q5", "region",
+                "cov_asthma",
+                "cov_mental_health",   
                 "number_comorbidities_cat",
                 "previous_covid_hosp",
                 "cov_c19_vaccine_number", 
