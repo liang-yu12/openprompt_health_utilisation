@@ -48,8 +48,9 @@ for_covariates <- matched_opa_cost_ts %>% distinct(patient_id, exposure, .keep_a
                     "cov_covid_vax_n_cat",     
                     "number_comorbidities_cat")
 
-levels_check <- c("exposure", "age_cat", "sex", "bmi_cat", "ethnicity_6", "imd_q5",                  
-                  "region", "previous_covid_hosp", "cov_covid_vax_n_cat", "number_comorbidities_cat")
+levels_check <- c("exposure", "age_cat", "sex", "bmi_cat", "ethnicity_6", "imd_q5", "cov_asthma",
+                  "cov_mental_health", "region", "previous_covid_hosp", "cov_covid_vax_n_cat", 
+                  "number_comorbidities_cat")
 
 
 for_covariates$sex <- relevel(for_covariates$sex, ref = "male")
@@ -279,10 +280,10 @@ predict_avg_opa_cost_fn <- function(dataset, fu_time, first_reg, sec_reg){
 # run the prediction model and combine outcomes:
 # Crude costs: ----
 crude_opa_costs <- bind_rows(
-      predict_avg_opa_cost_fn(dataset = matched_cost_3m, 
-                             fu_time = 30*3,
-                             first_reg = crude_bi_3m, 
-                             sec_reg = crude_gamma_3m) %>% mutate(time="3 months"),
+      # predict_avg_opa_cost_fn(dataset = matched_cost_3m, 
+      #                        fu_time = 30*3,
+      #                        first_reg = crude_bi_3m, 
+      #                        sec_reg = crude_gamma_3m) %>% mutate(time="3 months"),
       predict_avg_opa_cost_fn(dataset = matched_cost_6m, 
                              fu_time = 30*6,
                              first_reg = crude_bi_6m, 
@@ -296,10 +297,10 @@ crude_opa_costs <- bind_rows(
 # Adjusted costs: ----
 # combine outputs
 adj_opa_costs <- bind_rows(
-      predict_avg_opa_cost_fn(dataset = matched_cost_3m, 
-                             fu_time = 30*3,
-                             first_reg = adj_bi_3m, 
-                             sec_reg = adj_gamma_3m) %>% mutate(time="3 months"),
+      # predict_avg_opa_cost_fn(dataset = matched_cost_3m, 
+      #                        fu_time = 30*3,
+      #                        first_reg = adj_bi_3m, 
+      #                        sec_reg = adj_gamma_3m) %>% mutate(time="3 months"),
       predict_avg_opa_cost_fn(dataset = matched_cost_6m, 
                              fu_time = 30*6,
                              first_reg = adj_bi_6m, 
