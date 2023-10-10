@@ -97,6 +97,47 @@ actions:
       highly_sensitive:
         cohort: output/matched_control_with_drug_costs.csv.gz
 
+# # After matching data management: for new version of data
+  import_matched_exposure_update:
+    run: >
+       databuilder:v0
+        generate-dataset analysis/dataset_definition_matched_cases.py
+        --output output/matched_cases_with_ehr_update.csv.gz
+    needs: [test_matching]
+    outputs: 
+      highly_sensitive:
+        cohort: output/matched_cases_with_ehr_update.csv.gz
+
+  import_matched_control_updates:
+    run: >
+       databuilder:v0
+        generate-dataset analysis/dataset_definition_matched_control.py
+        --output output/matched_control_with_ehr.csv_update.gz
+    needs: [test_matching]
+    outputs: 
+      highly_sensitive:
+        cohort: output/matched_control_with_ehr_update.csv.gz
+
+
+  import_matched_exposure_drug_cost_update:
+    run: >
+       databuilder:v0
+        generate-dataset analysis/dataset_definition_matched_cases_drug_costs.py
+        --output output/matched_cases_with_drug_costs_update.csv.gz
+    needs: [test_matching]
+    outputs: 
+      highly_sensitive:
+        cohort: output/matched_cases_with_drug_costs_update.csv.gz
+
+  import_matched_controls_drug_costs_update:
+    run: >
+       databuilder:v0
+        generate-dataset analysis/dataset_definition_matched_control_drug_costs.py
+        --output output/matched_control_with_drug_costs_update.csv.gz
+    needs: [test_matching]
+    outputs: 
+      highly_sensitive:
+        cohort: output/matched_control_with_drug_costs_update.csv.gz
 
 # Historical comparison data management:
 # # Before matching data management:
