@@ -11,6 +11,7 @@ source("analysis/dm02_01_hx_variables.R")
 
 
 common_vars <- c("patient_id","sex","age_cat", "age", "ethnicity_6", "bmi_cat", 
+                 "cov_asthma", "cov_mental_health",
                  "region", "imd_q5", "number_comorbidities_cat")
 
 # Extract the column names for each month: -----

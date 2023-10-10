@@ -119,13 +119,15 @@ adj_did_tpm_12m$ethnicity_6 <- droplevels(adj_did_tpm_12m$ethnicity_6)
 
 # First part: adjusted binomial model with interaction term with time
 adj_binomial_12m <-  glm(visits_binary ~ exposure*time + offset(log(follow_up)) +
-                                 sex + age + bmi_cat + ethnicity_6 + region + imd_q5 + number_comorbidities_cat, 
+                               sex + age + bmi_cat + ethnicity_6 + region + imd_q5 + 
+                               cov_asthma + cov_mental_health + number_comorbidities_cat, 
                            data = adj_did_tpm_12m,
                            family=binomial(link="logit")) 
 
 # Second part: adjusted positive negative binomial (truncated) with interaction term time
 adj_nb_12m <- vglm(visits ~ exposure*time  + offset(log(follow_up)) +
-                           sex + age + bmi_cat + ethnicity_6 + region + imd_q5 + number_comorbidities_cat,
+                         sex + age + bmi_cat + ethnicity_6 + region + imd_q5 + 
+                         cov_asthma + cov_mental_health + number_comorbidities_cat,
                      family = posnegbinomial(),
                      data = subset(adj_did_tpm_12m, visits_binary > 0))
 
