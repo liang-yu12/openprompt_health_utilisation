@@ -36,12 +36,14 @@ matched_cost_12m <- matched_cost_ts %>%
 for_covariates <- matched_cost_ts %>% distinct(patient_id, exposure, .keep_all = T) %>% 
       dplyr::select("patient_id",     
                     "exposure",           
-                    "age",                 
+                    "age", "age_cat",               
                     "sex",                     
                     "bmi_cat",
                     "ethnicity_6",             
                     "imd_q5",                  
                     "region",      
+                    "cov_asthma",
+                    "cov_mental_health",   
                     "previous_covid_hosp",     
                     "cov_covid_vax_n_cat",     
                     "number_comorbidities_cat")
@@ -55,6 +57,8 @@ for_covariates$bmi_cat <- relevel(for_covariates$bmi_cat, ref = "Normal Weight")
 for_covariates$ethnicity_6 <- relevel(for_covariates$ethnicity_6, ref = "White")
 for_covariates$imd_q5 <- relevel(for_covariates$imd_q5, ref = "least_deprived")
 for_covariates$region <- relevel(for_covariates$region, ref = "London" )
+for_covariates$cov_mental_health <- relevel(for_covariates$cov_mental_health, ref = "FALSE")
+for_covariates$previous_covid_hosp <- relevel(for_covariates$previous_covid_hosp, ref = "FALSE")
 for_covariates$previous_covid_hosp <- relevel(for_covariates$previous_covid_hosp, ref = "FALSE")
 for_covariates$cov_covid_vax_n_cat <- relevel(for_covariates$cov_covid_vax_n_cat, ref = "0 dose")
 for_covariates$number_comorbidities_cat <- relevel(for_covariates$number_comorbidities_cat, ref = "0")
@@ -176,17 +180,20 @@ adj_cost_complete_12m <- matched_cost_12m[complete.cases(matched_cost_12m),] %>%
 # First part: binomial model:
 
 adj_binomial_3m <- glm(cost_binary ~ exposure + offset(log(follow_up))+ age + sex  + cov_covid_vax_n_cat + 
-                               bmi_cat + imd_q5 + ethnicity_6 + region + number_comorbidities_cat,
+                             bmi_cat + imd_q5 + ethnicity_6 + region + cov_asthma + cov_mental_health +
+                             number_comorbidities_cat,
                          data = adj_cost_complete_3m,
                          family = binomial(link="logit"))
 
 adj_binomial_6m <- glm(cost_binary ~ exposure + offset(log(follow_up))+ age + sex  + cov_covid_vax_n_cat + 
-                             bmi_cat + imd_q5 + ethnicity_6 + region + number_comorbidities_cat,
+                             bmi_cat + imd_q5 + ethnicity_6 + region + cov_asthma + cov_mental_health +
+                             number_comorbidities_cat,
                        data = adj_cost_complete_6m,
                        family = binomial(link="logit"))
 
 adj_binomial_12m <- glm(cost_binary ~ exposure + offset(log(follow_up))+ age + sex  + cov_covid_vax_n_cat + 
-                             bmi_cat + imd_q5 + ethnicity_6 + region + number_comorbidities_cat,
+                              bmi_cat + imd_q5 + ethnicity_6 + region + cov_asthma + cov_mental_health +
+                              number_comorbidities_cat,
                        data = adj_cost_complete_12m,
                        family = binomial(link="logit"))
 
@@ -200,17 +207,20 @@ adj_binary <- bind_rows(
 # Second part: Gamma GLM
 
 adj_gamma_3m <-  glm(total_cost ~ exposure + offset(log(follow_up))+ age + sex  + cov_covid_vax_n_cat + 
-                             bmi_cat + imd_q5 + ethnicity_6 + region + number_comorbidities_cat,
+                           bmi_cat + imd_q5 + ethnicity_6 + region + cov_asthma + cov_mental_health +
+                           number_comorbidities_cat,
                        data = subset(adj_cost_complete_3m, cost_binary>0),
                        family = Gamma(link="log"))
 
 adj_gamma_6m <-  glm(total_cost ~ exposure + offset(log(follow_up))+ age + sex  + cov_covid_vax_n_cat + 
-                           bmi_cat + imd_q5 + ethnicity_6 + region + number_comorbidities_cat,
+                           bmi_cat + imd_q5 + ethnicity_6 + region + cov_asthma + cov_mental_health +
+                           number_comorbidities_cat,
                      data = subset(adj_cost_complete_6m, cost_binary>0),
                      family = Gamma(link="log"))
 
 adj_gamma_12m <-  glm(total_cost ~ exposure + offset(log(follow_up))+ age + sex  + cov_covid_vax_n_cat + 
-                           bmi_cat + imd_q5 + ethnicity_6 + region + number_comorbidities_cat,
+                            bmi_cat + imd_q5 + ethnicity_6 + region + cov_asthma + cov_mental_health +
+                            number_comorbidities_cat,
                      data = subset(adj_cost_complete_12m, cost_binary>0),
                      family = Gamma(link="log"))
 
