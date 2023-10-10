@@ -5,7 +5,7 @@ source("analysis/dm02_04_combine_long_data_for_did.R")
 did_data_12m %>% summary_factorlist(
       dependent = "exposure",
       explanatory = c("sex", "age_cat", "ethnicity_6", "bmi_cat", "imd_q5", 
-                      "region", "number_comorbidities_cat"),
+                      "region", "cov_asthma", "cov_mental_health", "number_comorbidities_cat"),
       p = TRUE
 ) %>% write.csv(here("output", "st05_hx_matched_numbers_table.csv"), row.names = F)
 
