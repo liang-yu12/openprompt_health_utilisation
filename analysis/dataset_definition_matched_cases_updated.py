@@ -229,4 +229,4 @@ cost_opa_fn(dataset, from_date=dataset.index_date, num_months=10, end_date=datas
 cost_opa_fn(dataset, from_date=dataset.index_date, num_months=11, end_date=dataset.end_date)
 cost_opa_fn(dataset, from_date=dataset.index_date, num_months=12, end_date=dataset.end_date)
 
-dataset.configure_dummy_data(population_size=10000)
+dataset.configure_dummy_data(population_size=30000)
