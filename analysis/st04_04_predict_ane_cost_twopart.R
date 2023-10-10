@@ -36,12 +36,14 @@ matched_cost_12m <- matched_ane_cost_ts %>%
 for_covariates <- matched_ane_cost_ts %>% distinct(patient_id, exposure, .keep_all = T) %>% 
       dplyr::select("patient_id",     
                     "exposure",           
-                    "age_cat",  "age",
+                    "age", "age_cat",               
                     "sex",                     
                     "bmi_cat",
                     "ethnicity_6",             
                     "imd_q5",                  
                     "region",      
+                    "cov_asthma",
+                    "cov_mental_health",   
                     "previous_covid_hosp",     
                     "cov_covid_vax_n_cat",     
                     "number_comorbidities_cat")
@@ -56,6 +58,8 @@ for_covariates$bmi_cat <- relevel(for_covariates$bmi_cat, ref = "Normal Weight")
 for_covariates$ethnicity_6 <- relevel(for_covariates$ethnicity_6, ref = "White")
 for_covariates$imd_q5 <- relevel(for_covariates$imd_q5, ref = "least_deprived")
 for_covariates$region <- relevel(for_covariates$region, ref = "London" )
+for_covariates$cov_mental_health <- relevel(for_covariates$cov_mental_health, ref = "FALSE")
+for_covariates$previous_covid_hosp <- relevel(for_covariates$previous_covid_hosp, ref = "FALSE")
 for_covariates$previous_covid_hosp <- relevel(for_covariates$previous_covid_hosp, ref = "FALSE")
 for_covariates$cov_covid_vax_n_cat <- relevel(for_covariates$cov_covid_vax_n_cat, ref = "0 dose")
 for_covariates$number_comorbidities_cat <- relevel(for_covariates$number_comorbidities_cat, ref = "0")
@@ -165,6 +169,7 @@ adj_ane_cost_complete_12m <- matched_cost_12m[complete.cases(matched_cost_12m),]
 # Adjusted binomial function:
 adj_bi_fn <- function(dataset){
       glm(cost_binary ~ exposure + offset(log(follow_up))+ age + sex  + cov_covid_vax_n_cat + 
+                cov_asthma + cov_mental_health + 
                 bmi_cat + imd_q5 + ethnicity_6 + region + number_comorbidities_cat,
           data = dataset,
           family = binomial(link="logit"))
@@ -187,7 +192,8 @@ adj_binomial_ane <- bind_rows(
 # Adjusted Gamma glm function
 adj_gamma_fn <- function(dataset){
       glm(ane_cost ~ exposure + offset(log(follow_up))+ age + sex  + cov_covid_vax_n_cat + 
-            bmi_cat + imd_q5 + ethnicity_6 + region + number_comorbidities_cat,
+                cov_asthma + cov_mental_health + 
+                bmi_cat + imd_q5 + ethnicity_6 + region + number_comorbidities_cat,
           data = subset(dataset, cost_binary>0),
           family = Gamma(link="log")) 
 }
