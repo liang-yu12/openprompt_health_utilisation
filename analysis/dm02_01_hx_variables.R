@@ -54,7 +54,7 @@ levels(hx_cases$imd_q5)<- c("least_deprived",
                             "4_deprived",
                             "most_deprived")
 # commorbidities:
-comorbidities <- c("cov_cancer",  "cov_mental_health",   "cov_asthma",
+comorbidities <- c("cov_cancer",  
                    "cov_organ_transplant",   "cov_chronic_cardiac_disease",   "cov_chronic_liver_disease",
                    "cov_stroke_dementia",   "cov_other_neuro_diseases",   "cov_ra_sle_psoriasis",
                    "cov_asplenia",   "cov_hiv",   "cov_aplastic_anemia",   "cov_permanent_immune_suppress",
