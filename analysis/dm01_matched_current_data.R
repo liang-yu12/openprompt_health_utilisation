@@ -129,7 +129,7 @@ lc_exp_matched$fu_total %>% summary
 
 ## ============== Caclulate the number of comorbidities 
 
-comorbidities <- c("cov_cancer",  "cov_mental_health",   "cov_asthma",
+comorbidities <- c("cov_cancer",  
 "cov_organ_transplant",   "cov_chronic_cardiac_disease",   "cov_chronic_liver_disease",
 "cov_stroke_dementia",   "cov_other_neuro_diseases",   "cov_ra_sle_psoriasis",
 "cov_asplenia",   "cov_hiv",   "cov_aplastic_anemia",   "cov_permanent_immune_suppress",
