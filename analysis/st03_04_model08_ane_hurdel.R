@@ -72,8 +72,8 @@ crude_nb_12m <- vglm(visits ~ exposure + offset(log(follow_up)),
 binomial_tidy_fn <- function(bi_reg){
       bi_results <- bi_reg %>% tidy() %>% mutate(
             model = "binomial",
-            lci = exp(estimate - 1.69*std.error),
-            hci = exp(estimate + 1.69*std.error),
+            lci = exp(estimate - 1.96*std.error),
+            hci = exp(estimate + 1.96*std.error),
             estimate = exp(estimate)) %>% 
             dplyr::select(model, term, estimate, lci, hci, p.value)%>% 
             filter(term == "exposureLong covid exposure" )      
