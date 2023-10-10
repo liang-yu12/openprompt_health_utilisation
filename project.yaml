@@ -57,7 +57,7 @@ actions:
         matching_report: output/matching_report_stp.txt
 # # After matching data management
   import_matched_exposure:
-    run: >
+    run: 
        databuilder:v0
         generate-dataset analysis/dataset_definition_matched_cases.py
         --output output/matched_cases_with_ehr.csv.gz
@@ -67,7 +67,7 @@ actions:
         cohort: output/matched_cases_with_ehr.csv.gz
 
   import_matched_controls:
-    run: >
+    run: 
        databuilder:v0
         generate-dataset analysis/dataset_definition_matched_control.py
         --output output/matched_control_with_ehr.csv.gz
@@ -78,7 +78,7 @@ actions:
 
 
   import_matched_exposure_drug_cost:
-    run: >
+    run: 
        databuilder:v0
         generate-dataset analysis/dataset_definition_matched_cases_drug_costs.py
         --output output/matched_cases_with_drug_costs.csv.gz
@@ -88,7 +88,7 @@ actions:
         cohort: output/matched_cases_with_drug_costs.csv.gz
 
   import_matched_controls_drug_costs:
-    run: >
+    run: 
        databuilder:v0
         generate-dataset analysis/dataset_definition_matched_control_drug_costs.py
         --output output/matched_control_with_drug_costs.csv.gz
@@ -99,9 +99,9 @@ actions:
 
 # # After matching data management: for new version of data
   import_matched_exposure_update:
-    run: >
+    run: 
        databuilder:v0
-        generate-dataset analysis/dataset_definition_matched_cases_update.py
+        generate-dataset analysis/dataset_definition_matched_cases_updated.py
         --output output/matched_cases_with_ehr_update.csv.gz
     needs: [test_matching]
     outputs: 
@@ -109,9 +109,9 @@ actions:
         cohort: output/matched_cases_with_ehr_update.csv.gz
 
   import_matched_control_updates:
-    run: >
+    run: 
        databuilder:v0
-        generate-dataset analysis/dataset_definition_matched_control_update.py
+        generate-dataset analysis/dataset_definition_matched_control_updated.py
         --output output/matched_control_with_ehr_update.csv.gz
     needs: [test_matching]
     outputs: 
@@ -161,7 +161,7 @@ actions:
 
 # # After matching data management
   import_matched_historical_exposure:
-    run: >
+    run: 
        databuilder:v0
         generate-dataset analysis/dataset_definition_hx_matched_exp_lc.py
         --output output/hx_matched_cases_with_ehr.csv.gz
