@@ -88,8 +88,7 @@ binomial_tidy_fn <- function(bi_reg){
             lci = exp(estimate - 1.96*std.error),
             hci = exp(estimate + 1.96*std.error),
             estimate = exp(estimate)) %>% 
-            dplyr::select(model, term, estimate, lci, hci, p.value)%>% 
-            filter(term == "exposureLong covid exposure" )      
+            dplyr::select(model, term, estimate, lci, hci, p.value)
       return(bi_results)
 }
 
@@ -99,8 +98,7 @@ positive_nb_tidy_fu <- function(vg_reg){
       t1 <- vg_reg %>%summary
       t2 <- t1@coef3 %>% as.data.frame()
       t2$term <- rownames(t2)
-      t3 <- t2 %>% filter(term == "exposureLong covid exposure" )
-      results <- t3 %>% mutate(
+      results <- t2 %>% mutate(
             lci = exp(Estimate - 1.96*`Std. Error`),
             hci = exp(Estimate + 1.96*`Std. Error`),
             estimate = exp(Estimate),
@@ -188,9 +186,6 @@ print(summary(adj_binomial_12m))
 print("# Adjusted hurdle model output part 2 ---------")
 print(summary(adj_nb_12m))
 sink()
-
-
-
 
 # Combine total outputs and save:
 
