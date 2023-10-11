@@ -13,24 +13,6 @@ source("analysis/dm03_5_matched_pivot_long.R")
 # Collapsing data by summarising the visits and follow-up time, and 
 # generate three datasets for follow-up 3m, 6m, and 12m
 
-# # 3 months
-matched_data_3m <- matched_data_ts %>% 
-      filter(month %in% c(1,2,3) & !is.na(follow_up_time)) %>% 
-      group_by(patient_id, exposure) %>% 
-      summarise(
-            visits = sum(monthly_visits),
-            follow_up = sum(follow_up_time)) %>% 
-      ungroup()
-
-# # 6 months
-matched_data_6m <- matched_data_ts %>% 
-      filter(month %in% c(1,2,3,4,5,6) & !is.na(follow_up_time)) %>% 
-      group_by(patient_id, exposure) %>% 
-      summarise(
-            visits = sum(monthly_visits),
-            follow_up = sum(follow_up_time)) %>% 
-      ungroup()
-
 # follow 12 months 
 matched_data_12m <- matched_data_ts %>% 
       filter(!is.na(follow_up_time)) %>% 
@@ -60,31 +42,18 @@ for_covariates <- matched_data_ts %>% distinct(patient_id, exposure, .keep_all =
 for_covariates$sex <- relevel(for_covariates$sex, ref = "female")
 for_covariates$cov_mental_health <- relevel(for_covariates$cov_mental_health, ref = "FALSE")
 for_covariates$previous_covid_hosp <- relevel(for_covariates$previous_covid_hosp, ref = "FALSE")
-for_covariates$previous_covid_hosp <- relevel(for_covariates$previous_covid_hosp, "FALSE")
+for_covariates$cov_asthma <- relevel(for_covariates$cov_asthma, "FALSE")
+for_covariates$cov_mental_health <- relevel(for_covariates$cov_mental_health, "FALSE")
 for_covariates$number_comorbidities_cat <- as.factor(for_covariates$number_comorbidities_cat)
 
 # # add covariates back to the summarised data frame
-matched_data_3m <- left_join(matched_data_3m, for_covariates,
-                               by = c("patient_id" = "patient_id", "exposure" = "exposure"))
-
-matched_data_6m <- left_join(matched_data_6m, for_covariates,
-                             by = c("patient_id" = "patient_id", "exposure" = "exposure"))
-
 matched_data_12m <- left_join(matched_data_12m, for_covariates,
                              by = c("patient_id" = "patient_id", "exposure" = "exposure"))
 
 # correct the levels of variables
-matched_data_3m$exposure <- relevel(matched_data_3m$exposure, ref = "Comparator")
-matched_data_6m$exposure <- relevel(matched_data_6m$exposure, ref = "Comparator")
 matched_data_12m$exposure <- relevel(matched_data_12m$exposure, ref = "Comparator")
 
 # Keep complete cases
-adj_complete_3m <- matched_data_12m[complete.cases(matched_data_12m),] %>% 
-  mutate(visits_binary = ifelse(visits>0, 1, 0))
-
-adj_complete_6m <- matched_data_12m[complete.cases(matched_data_12m),] %>% 
-  mutate(visits_binary = ifelse(visits>0, 1, 0))
-
 adj_complete_12m <- matched_data_12m[complete.cases(matched_data_12m),] %>% 
   mutate(visits_binary = ifelse(visits>0, 1, 0))
 
@@ -134,7 +103,7 @@ hos_t_binomial_12m <- glm(visits_binary ~ exposure*previous_covid_hosp_true + of
                           family=binomial(link="logit")) 
 
 # Likelihood ratio test 
-lrt_bi <- lmtest::lrtest(hos_f_binomial_12m, hos_no_binomial_12m) %>% 
+lrt_hos_bi <- lmtest::lrtest(hos_f_binomial_12m, hos_no_binomial_12m) %>% 
   dplyr::select(`Pr(>Chisq)`) 
 
 
@@ -142,7 +111,7 @@ lrt_bi <- lmtest::lrtest(hos_f_binomial_12m, hos_no_binomial_12m) %>%
 hos_bi_sub <- bind_rows(
   binomial_tidy_fn(hos_f_binomial_12m) %>% mutate(stratum = "No hospital admission"),
   binomial_tidy_fn(hos_t_binomial_12m) %>% mutate(stratum = "Admitted due to COVID")) %>% 
-bind_cols(lrt_bi)
+bind_cols(lrt_hos_bi)
 
 
 # # Second hurdle part: positive negative binomial:
@@ -183,209 +152,229 @@ hos_t_hurdle_12m <- vglm(visits ~ exposure*previous_covid_hosp_true + offset(log
                          family = posnegbinomial(),
                          data = subset(adj_complete_12m, visits_binary > 0))
 # LR test:
-lrt_hurdle <- lrtest_vglm(hos_f_hurdle_12m, hos_no_hurdle_12m)
-lrt_hos_tpm <- lrt_hurdle@Body %>% as.data.frame() %>% dplyr::select(`Pr(>Chisq)`)
+# Write a function to organise the vglm outcomes
+lrt_hurdle <- function(interaction, no_interaction){
+      compare_hurdle_lrt <- VGAM::lrtest_vglm(interaction, no_interaction)
+      results <- compare_hurdle_lrt@Body %>% as.data.frame() %>% dplyr::select(`Pr(>Chisq)`)
+      return(results)
+}
+      
+lrt_hos_tpm <- lrt_hurdle(hos_f_hurdle_12m, hos_no_hurdle_12m)      
 
+# Orgaise hurdle outcomes
+hos_hurdle_sub <- bind_rows(
+      positive_nb_tidy_fu(hos_f_hurdle_12m) %>% mutate(stratum = "No hospital admission"),
+      positive_nb_tidy_fu(hos_t_hurdle_12m) %>% mutate(stratum = "Admitted due to COVID")) %>% 
+      bind_cols(lrt_hos_tpm)
 
-bind_rows(positive_nb_tidy_fu(hos_f_hurdle_12m) %>% mutate(stratum = "No hospital admission"),
-          positive_nb_tidy_fu(hos_t_binomial_12m) %>% mutate(stratum = "Admitted due to COVID")) %>% 
-bind_cols(lrt_hos_tpm)
-
-
-
-
-
-
+# Save the output
+bind_rows(hos_bi_sub, hos_hurdle_sub) %>% write_csv(here("output", "st03_05_subgroup_hospitalisation.csv"))
 
 
 ## By sex:-----
+# Ref: female 
+adj_complete_12m$sex %>% levels  #"female" "male"  
+adj_complete_12m$sex_f <- adj_complete_12m$sex
+# Ref: male 
+adj_complete_12m$sex_m <- factor(adj_complete_12m$sex, levels = c("male","female"))
+
+# Part 1: Binomial model: 
+
+# No interaction:
+sex_no_binomial_12m <- glm(visits_binary ~ exposure + sex_f + offset(log(follow_up)) +
+                                 age + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                                 previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
+                              data = adj_complete_12m,
+                              family=binomial(link="logit")) 
+
+# Female stratum:
+sex_f_binomial <- glm(visits_binary ~ exposure*sex_f + offset(log(follow_up)) +
+                            age + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                            previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
+                      data = adj_complete_12m,
+                      family=binomial(link="logit")) 
+
+# Male stratum:
+sex_m_binomial <- glm(visits_binary ~ exposure*sex_m + offset(log(follow_up)) +
+                            age + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                            previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
+                      data = adj_complete_12m,
+                      family=binomial(link="logit")) 
+
+# LR test: 
+lrt_sex_bi <- lmtest::lrtest(sex_f_binomial, sex_no_binomial_12m) %>% 
+      dplyr::select(`Pr(>Chisq)`) 
+
+# Organise binomial outcomes:
+sex_bi_sub <- bind_rows(
+      binomial_tidy_fn(sex_f_binomial) %>% mutate(stratum = "Female"),
+      binomial_tidy_fn(sex_m_binomial) %>% mutate(stratum = "Male")) %>% 
+      bind_cols(lrt_sex_bi)
+
+# Part 2: Truncated negative binomial reg
+
+# No interaction:
+sex_no_hurdle_12m <- vglm(visits ~ exposure + sex_f + offset(log(follow_up)) +
+                                age + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                                previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
+                          family = posnegbinomial(),
+                          data = subset(adj_complete_12m, visits_binary > 0))
+
+# Female stratum:
+sex_f_hurdle_12m <- vglm(visits ~ exposure*sex_f + offset(log(follow_up)) +
+                                age + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                                previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
+                          family = posnegbinomial(),
+                          data = subset(adj_complete_12m, visits_binary > 0))
+
+# Male stratum:
+sex_m_hurdle_12m <- vglm(visits ~ exposure*sex_m + offset(log(follow_up)) +
+                               age + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                               previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
+                         family = posnegbinomial(),
+                         data = subset(adj_complete_12m, visits_binary > 0))
+
+# LR test 
+sex_hurdle_lrt <- lrt_hurdle(sex_f_hurdle_12m, sex_no_hurdle_12m)
+
+# organise_hurdle_outcomes
+sex_hudle_sub <- bind_rows(
+      positive_nb_tidy_fu(sex_f_hurdle_12m) %>% mutate(stratum = "Female"),
+      positive_nb_tidy_fu(sex_m_hurdle_12m) %>% mutate(stratum = "Male")) %>% 
+      bind_cols(sex_hurdle_lrt)
+
+# save outputs
+bind_rows(sex_bi_sub, sex_hudle_sub) %>% write_csv(here("output", "st03_05_subgroup_sex.csv"))
+
+# By age groups-----
+# set ref for each stratum
+adj_complete_12m$age_cat %>% levels #"18-29" "30-39" "40-49" "50-59" "60-69" "70+"  
+# ref: 18-29
+adj_complete_12m$age_cat_18 <- relevel(adj_complete_12m$age_cat, ref = "18-29")
+# ref: "30-39"
+adj_complete_12m$age_cat_30 <- relevel(adj_complete_12m$age_cat, ref = "30-39")
+# ref: "40-49"
+adj_complete_12m$age_cat_40 <- relevel(adj_complete_12m$age_cat, ref = "40-49")
+# ref: "50-59"
+adj_complete_12m$age_cat_50 <- relevel(adj_complete_12m$age_cat, ref = "50-59")
+# ref: "60-69"
+adj_complete_12m$age_cat_60 <- relevel(adj_complete_12m$age_cat, ref = "60-69")
+# ref: "70+"  
+adj_complete_12m$age_cat_70 <- relevel(adj_complete_12m$age_cat, ref = "70+"  )
 
 
 
+# Part 1: Binomial model: 
 
-### By agegroup
-# customize a function for age group:
-crude_age_subgroup_fn <- function(data, age_var){
-      # split the data by covid hospitalisation
-      age_c <-split(data, age_var)
-      age_18_29 <- age_c$`18-29`
-      age_30_39 <- age_c$`30-39`
-      age_40_49 <- age_c$`40-49`
-      age_50_59 <- age_c$`50-59`
-      age_60_69 <- age_c$`60-69`
-      age_over_70 <- age_c$`70+`
-      
-      results <- bind_rows(
-            nb_reg_crude_fn(age_18_29, "Age 28-29"),
-            nb_reg_crude_fn(age_30_39, "Age 30-39"),
-            nb_reg_crude_fn(age_40_49, "Age 40-49"),
-            nb_reg_crude_fn(age_50_59, "Age 50-59"),
-            nb_reg_crude_fn(age_60_69, "Age 60-69"),
-            nb_reg_crude_fn(age_over_70, "Age over 70")
-      ) 
-      return(results)
+# No interaction:
+age_no_binomial_12m <- glm(visits_binary ~ exposure + sex + offset(log(follow_up)) +
+                                 age_cat_18 + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                                 previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
+                           data = adj_complete_12m,
+                           family=binomial(link="logit")) 
+# set up a function to shorten the codes:
+age_bi_interaction_fn <- function(cat){
+      glm(visits_binary ~ exposure*cat + sex + offset(log(follow_up)) +
+                bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
+          data = adj_complete_12m,
+          family=binomial(link="logit")) 
 }
 
-crude_age_subgroup <- bind_rows(
-      crude_age_subgroup_fn(matched_data_3m, matched_data_3m$age_cat) %>% mutate(time="3m"),
-      crude_age_subgroup_fn(matched_data_6m, matched_data_6m$age_cat) %>% mutate(time="6m"),
-      crude_age_subgroup_fn(matched_data_12m, matched_data_12m$age_cat) %>% mutate(time="12m")
-)
+# Age 18 group (same as default)
+age_18_bi <- age_bi_interaction_fn(adj_complete_12m$age_cat_18)
+# Age 30 group
+age_30_bi <- age_bi_interaction_fn(adj_complete_12m$age_cat_30)
+# Age 40:
+age_40_bi <- age_bi_interaction_fn(adj_complete_12m$age_cat_40)
+# Age 50: 
+age_50_bi <- age_bi_interaction_fn(adj_complete_12m$age_cat_50)
+# Age 60: 
+age_60_bi <- age_bi_interaction_fn(adj_complete_12m$age_cat_60)
+# Age 70: 
+age_70_bi <- age_bi_interaction_fn(adj_complete_12m$age_cat_70)
+
+# LR test 
+lr_age_bi <- lmtest::lrtest(age_18_bi, age_no_binomial_12m) %>% 
+      dplyr::select(`Pr(>Chisq)`) %>% 
+      add_row(`Pr(>Chisq)` = c(NA,NA,NA,NA)) # add rows for combining results
+
+# Organise binomial regression outputs
+age_bi_sub <- bind_rows( binomial_tidy_fn(age_18_bi) %>% mutate(stratum = "18-29"),
+                         binomial_tidy_fn(age_30_bi) %>% mutate(stratum = "30-39"),
+                         binomial_tidy_fn(age_40_bi) %>% mutate(stratum = "40-49"),
+                         binomial_tidy_fn(age_50_bi) %>% mutate(stratum = "50-59"),
+                         binomial_tidy_fn(age_60_bi) %>% mutate(stratum = "60-69"),
+                         binomial_tidy_fn(age_70_bi) %>% mutate(stratum = "70+")) %>% 
+      add_column(lr_age_bi)
 
 
-# Model 2: adjusted hurdle model with negative binomial: ------
-# Only Keep complete data:
+# Part 2: positive negative binomial
 
-adj_complete_3m <- matched_data_3m[complete.cases(matched_data_3m),]
-adj_complete_6m <- matched_data_6m[complete.cases(matched_data_6m),]
-adj_complete_12m <- matched_data_12m[complete.cases(matched_data_12m),]
+# No interaction
+age_no_hurdle_12m <- vglm(visits ~ exposure + age_cat_18 + offset(log(follow_up)) +
+                                sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                                previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
+                          family = posnegbinomial(),
+                          data = subset(adj_complete_12m, visits_binary > 0))
 
+# ref: 18 
+age_18_hurdle <- vglm(visits ~ exposure*age_cat_18 + offset(log(follow_up)) +
+           sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+           previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
+     family = posnegbinomial(),
+     data = subset(adj_complete_12m, visits_binary > 0))     
 
-# By hospitalisation adjusted model ----
-# Set up reg function output: need to customized for hospitalisation: 
-hos_hurdle_reg_adj_fn <- function(sub_data, sub_group_name){
-      
-      reg <- hurdle(visits ~ exposure + sex + age_cat + region  + imd_q5 + 
-                          ethnicity_6 + bmi_cat + number_comorbidities_cat + 
-                          cov_covid_vax_n_cat, 
-                    offset = log(follow_up),
-                    data = sub_data,
-                    zero.dist = "binomial",
-                    dist = "negbin")
-      
-      output <- bind_cols((coef(reg) %>% exp() %>% as.data.frame()),
-                          (confint(reg) %>% exp() %>% as.data.frame()))
-      
-      output$terms <- rownames(output)
-      output <- output %>% filter(terms != "count_(Intercept)" & terms != "zero_(Intercept)")
-      output <- rename(output, estimates = .) %>% relocate(terms) %>% 
-            mutate(subgroup = sub_group_name) %>% relocate(subgroup)
-      return(output)
-}
+# ref: 30 
+age_30_hurdle <- vglm(visits ~ exposure*age_cat_30 + offset(log(follow_up)) +
+                            sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                            previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
+                      family = posnegbinomial(),
+                      data = subset(adj_complete_12m, visits_binary > 0))     
 
+# ref: 40
+age_40_hurdle <- vglm(visits ~ exposure*age_cat_40 + offset(log(follow_up)) +
+                            sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                            previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
+                      family = posnegbinomial(),
+                      data = subset(adj_complete_12m, visits_binary > 0))     
 
-adj_hos_subgroup_fn <- function(data, hos_var){
-      # split the data by covid hospitalisation
-      hos <-split(data, hos_var)
-      hos_t <- hos$`TRUE`
-      hos_f <- hos$`FALSE`
-      
-      results <- bind_rows(
-            hos_hurdle_reg_adj_fn(hos_t, "Hospitalised"),
-            hos_hurdle_reg_adj_fn(hos_f, "Not hospitalised")
-      ) 
-      return(results)
-}
+# ref: 50
+age_50_hurdle <- vglm(visits ~ exposure*age_cat_50 + offset(log(follow_up)) +
+                            sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                            previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
+                      family = posnegbinomial(),
+                      data = subset(adj_complete_12m, visits_binary > 0))     
 
-adj_hos_subgroup <- bind_rows(
-      adj_hos_subgroup_fn(adj_complete_3m, adj_complete_3m$previous_covid_hosp) %>% mutate(time="3m"),
-      adj_hos_subgroup_fn(adj_complete_6m, adj_complete_6m$previous_covid_hosp) %>% mutate(time="6m"),
-      adj_hos_subgroup_fn(adj_complete_12m, adj_complete_12m$previous_covid_hosp) %>% mutate(time="12m"))
+# ref: 60
+age_60_hurdle <- vglm(visits ~ exposure*age_cat_60 + offset(log(follow_up)) +
+                            sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                            previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
+                      family = posnegbinomial(),
+                      data = subset(adj_complete_12m, visits_binary > 0))     
 
+# ref: 70
+age_70_hurdle <- vglm(visits ~ exposure*age_cat_70 + offset(log(follow_up)) +
+                            sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                            previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
+                      family = posnegbinomial(),
+                      data = subset(adj_complete_12m, visits_binary > 0))     
 
-# By sex adjusted model ----
-# set hurdle function for running sex subgroup
-sex_hurdle_reg_adj_fn <- function(sub_data, sub_group_name){
-      
-      reg <- hurdle(visits ~ exposure + age_cat + region  + imd_q5 + 
-                          ethnicity_6 + bmi_cat + number_comorbidities_cat + 
-                          previous_covid_hosp + cov_covid_vax_n_cat, 
-                    offset = log(follow_up),
-                    data = sub_data,
-                    zero.dist = "binomial",
-                    dist = "negbin")
-      
-      output <- bind_cols((coef(reg) %>% exp() %>% as.data.frame()),
-                          (confint(reg) %>% exp() %>% as.data.frame()))
-      
-      output$terms <- rownames(output)
-      output <- output %>% filter(terms != "count_(Intercept)" & terms != "zero_(Intercept)")
-      output <- rename(output, estimates = .) %>% relocate(terms) %>% 
-            mutate(subgroup = sub_group_name) %>% relocate(subgroup)
-      return(output)
-}
-
-# Split function 
-adj_sex_subgroup_fn <- function(data, sex_var){
-      # split the data by covid hospitalisation
-      sex_g <-split(data, sex_var)
-      sex_m <- sex_g$male
-      sex_f <- sex_g$female
-      
-      results <- bind_rows(
-            sex_hurdle_reg_adj_fn(sex_m, "Male"),
-            sex_hurdle_reg_adj_fn(sex_f, "Female")
-      ) 
-      return(results)
-}
-
-# Combine results
-adj_sex_subgroup <- bind_rows(
-      adj_sex_subgroup_fn(adj_complete_3m, adj_complete_3m$sex) %>% mutate(time="3m"),
-      adj_sex_subgroup_fn(adj_complete_6m, adj_complete_6m$sex) %>% mutate(time="6m"),
-      adj_sex_subgroup_fn(adj_complete_12m, adj_complete_12m$sex) %>% mutate(time="12m")
-)
+# LR test: 
+age_cat_hurdle_lrt <- lrt_hurdle(age_18_hurdle, age_no_hurdle_12m) %>% 
+      add_row(`Pr(>Chisq)` = c(NA,NA,NA,NA)) 
 
 
-# By age groups ------------
-# set hurdle function for age group regression 
-age_hurdle_reg_adj_fn <- function(sub_data, sub_group_name){
-      
-      reg <- hurdle(visits ~ exposure + sex+ region  + imd_q5 + 
-                          ethnicity_6 + bmi_cat + number_comorbidities_cat + 
-                          previous_covid_hosp + cov_covid_vax_n_cat, 
-                    offset = log(follow_up),
-                    data = sub_data,
-                    zero.dist = "binomial",
-                    dist = "negbin")
-      
-      output <- bind_cols((coef(reg) %>% exp() %>% as.data.frame()),
-                          (confint(reg) %>% exp() %>% as.data.frame()))
-      
-      output$terms <- rownames(output)
-      output <- output %>% filter(terms != "count_(Intercept)" & terms != "zero_(Intercept)")
-      output <- rename(output, estimates = .) %>% relocate(terms) %>% 
-            mutate(subgroup = sub_group_name) %>% relocate(subgroup)
-      return(output)
-}
-
-adj_age_hurdle_subgroup_fn <- function(data, age_var){
-      # split the data by covid hospitalisation
-      age_c <-split(data, age_var)
-      age_18_29 <- age_c$`18-29`
-      age_30_39 <- age_c$`30-39`
-      age_40_49 <- age_c$`40-49`
-      age_50_59 <- age_c$`50-59`
-      age_60_69 <- age_c$`60-69`
-      age_over_70 <- age_c$`70+`
-      
-      results <- bind_rows(
-            age_hurdle_reg_adj_fn(age_18_29, "Age 28-29"),
-            age_hurdle_reg_adj_fn(age_30_39, "Age 30-39"),
-            age_hurdle_reg_adj_fn(age_40_49, "Age 40-49"),
-            age_hurdle_reg_adj_fn(age_50_59, "Age 50-59"),
-            age_hurdle_reg_adj_fn(age_60_69, "Age 60-69"),
-            age_hurdle_reg_adj_fn(age_over_70, "Age over 70")
-      ) 
-      return(results)
-}
+# organise age outputs
+age_hurdle_sub <- bind_rows(
+      positive_nb_tidy_fu(age_18_hurdle) %>% mutate(stratum = "18-29"),
+      positive_nb_tidy_fu(age_30_hurdle) %>% mutate(stratum = "30-39"),
+      positive_nb_tidy_fu(age_40_hurdle) %>% mutate(stratum = "40-49"),
+      positive_nb_tidy_fu(age_50_hurdle) %>% mutate(stratum = "50-59"),
+      positive_nb_tidy_fu(age_60_hurdle) %>% mutate(stratum = "60-69"),
+      positive_nb_tidy_fu(age_70_hurdle) %>% mutate(stratum = "70+")) %>% 
+      add_column(age_cat_hurdle_lrt)
 
 
-
-# Combine results
-adj_age_subgroup <- bind_rows(
-      adj_age_hurdle_subgroup_fn(adj_complete_3m, adj_complete_3m$age_cat) %>% mutate(time="3m"),
-      adj_age_hurdle_subgroup_fn(adj_complete_6m, adj_complete_6m$age_cat) %>% mutate(time="6m"),
-      adj_age_hurdle_subgroup_fn(adj_complete_12m, adj_complete_12m$age_cat) %>% mutate(time="12m")
-)
-
-
-
-
-
-# Save outputs
-
-bind_rows(
-      (bind_rows(crude_hos_subgroup, crude_sex_subgroup, crude_age_subgroup) %>% mutate(model_type = "Crude")),
-      (bind_rows(adj_hos_subgroup, adj_sex_subgroup, adj_age_subgroup) %>% mutate(model_type = "Crude"))) %>% 
-      write_csv(here("output", "st_03_05_hurdle_subgroup.csv"))
+# Save outputs:
+bind_rows(age_bi_sub, age_hurdle_sub) %>% write_csv(here("output", "st03_05_subgroup_age.csv"))
