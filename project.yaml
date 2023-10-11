@@ -347,7 +347,7 @@ actions:
         
 # # visualise subgroup lc only outputs:
   visualise_sub_lc_only_factors:  
-    needs: [import_matched_exposure, import_matched_controls]
+    needs: [report_sub_lc_only_factors]
     run: 
       r:latest analysis/st03_sub_visualise_lc_factors.R
     outputs: 
