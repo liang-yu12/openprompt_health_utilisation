@@ -345,6 +345,15 @@ actions:
         lc_only_model_count: output/st03_05_sub_lc_only_bi_model_counts.csv
         lc_only_hurdle_count: output/st03_05_sub_lc_only_hurdle_model_counts.csv
 
+# # OC step: check lc only analysis model assumption
+  qc_08_lc_only_factors:  
+    needs: [import_matched_exposure, import_matched_controls]
+    run: 
+      r:latest analysis/qc08_subgroup_lconly_check_dispersion.R
+    outputs: 
+      moderately_sensitive:
+        lc_only_model_check: output/qc08_lc_only_overdispersion_test.csv
+
 # # Subgroup all visits by hospitalisation, sex, age - hurdle
   report_03_hurdle_05_subgroup_visits:
     needs: [import_matched_exposure, import_matched_controls]
