@@ -345,15 +345,16 @@ actions:
         lc_only_model_count: output/st03_05_sub_lc_only_bi_model_counts.csv
         lc_only_hurdle_count: output/st03_05_sub_lc_only_hurdle_model_counts.csv
 
-# # Subgroup all visits - hurdle
-
+# # Subgroup all visits by hospitalisation, sex, age - hurdle
   report_03_hurdle_05_subgroup_visits:
     needs: [import_matched_exposure, import_matched_controls]
     run: 
       r:latest analysis/st03_05_subgroups_model_hurdle.R
     outputs: 
       moderately_sensitive: 
-        hurdle_subgroup_visits: output/st_03_05_hurdle_subgroup.csv
+        previous_hospitalisation_stratum: output/st03_05_subgroup_hospitalisation.csv
+        sex_stratum: output/st03_05_subgroup_sex.csv
+        age_cat_stratum: output/st03_05_subgroup_age.csv
 
 # Total Costs: twopart model
 
