@@ -1,6 +1,6 @@
 # openPROMPT - healthcare utilisation of people with long COVID 
 ### Protocol: 
-* The ongoing protocol is [here](https://docs.google.com/document/d/1Uwsv8XzW4TKmS2zbGQuo1qt41Jg0nkjm/edit?usp=share_link&ouid=117227935465371333291&rtpof=true&sd=true)
+* The protocol is [here]([https://docs.google.com/document/d/1Uwsv8XzW4TKmS2zbGQuo1qt41Jg0nkjm/edit?usp=share_link&ouid=117227935465371333291&rtpof=true&sd=true](https://github.com/opensafely/openprompt_health_utilisation/blob/main/OpenPROMPT_longCOVID_healthcare_utilisation_protocol.pdf))
 
 ### Dataset explanation
 - This project uses OpenSAFELY Data Builder
