@@ -297,5 +297,5 @@ plot(two_forest)
 
 
 ggsave(two_forest, file = "output/st03_sub_lc_factors.png",
-       width=12, height=12, units = "in", dpi = 300)
+       width=20, height=12, units = "in", dpi = 300)
 
