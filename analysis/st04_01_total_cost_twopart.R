@@ -270,7 +270,7 @@ adj_predict_cost_fn <- function(dataset, fu_time, reg_1st, reg_2nd ){
             mutate(predicted_cost = p2) %>% 
             mutate(c_cost = nonzero_prob*predicted_cost) %>% 
             group_by(exposure) %>% 
-            summarise(visits = mean(c_cost) # summarised the results by exposure: 
+            summarise(costs = mean(c_cost) # summarised the results by exposure: 
             )
       
       return(results)
