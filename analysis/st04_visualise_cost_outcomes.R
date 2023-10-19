@@ -58,8 +58,8 @@ total_binomial <- rename(total_binomial, `Healthcare utilisation type` = Type)
 
 # tpm models: -------------
 # Read in results: 
-total_tpm <- read_csv("output/st04_01_total_cost_predicted_costs.csv") %>% 
-      filter(time == "12 months" & adjustment == "Adjusted"& term == "exposureLong covid exposure") %>% 
+total_tpm <- read_csv("output/st04_01_total_cost_gammaglm.csv") %>% 
+      filter(time == "12m" & model == "Adjusted"& term == "exposureLong covid exposure") %>% 
       mutate(Type = "Total healthcare costs")
 
 gp_tpm <- read_csv("output/st04_02_gp_cost_twopm_output.csv")  %>% 
