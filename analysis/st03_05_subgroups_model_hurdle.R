@@ -6,12 +6,12 @@ source("analysis/dm03_5_matched_pivot_long.R")
 # - age groups: "18-29" "30-39" "40-49" "50-59" "60-69" "70+"  
 # - previous hospitalisation:"FALSE" "TRUE" 
 
-# outcome types: 3m, 6m, 12m,
+# outcome types:12m,
 # model:hurdle model 
 
 # Data management for modeling:: --------
 # Collapsing data by summarising the visits and follow-up time, and 
-# generate three datasets for follow-up 3m, 6m, and 12m
+# generate three datasets for follow-up 12m
 
 # follow 12 months 
 matched_data_12m <- matched_data_ts %>% 
@@ -58,6 +58,80 @@ adj_complete_12m <- matched_data_12m[complete.cases(matched_data_12m),] %>%
   mutate(visits_binary = ifelse(visits>0, 1, 0))
 
 
+# Functions for organising outcomes: 
+
+
+# Tidy binomial model:
+binomial_tidy_fn <- function(bi_reg){
+      bi_results <- bi_reg %>% tidy() %>% mutate(
+            model = "binomial",
+            lci = exp(estimate - 1.96*std.error),
+            hci = exp(estimate + 1.96*std.error),
+            estimate = exp(estimate)) %>% 
+            dplyr::select(model, term, estimate, lci, hci, p.value)%>% 
+            filter(term == "exposureLong covid exposure" )      
+      return(bi_results)
+}
+
+
+# Tidy up second part outcome
+positive_nb_tidy_fu <- function(vg_reg){
+      
+      t1 <- vg_reg %>%summary
+      t2 <- t1@coef3 %>% as.data.frame()
+      t2$term <- rownames(t2)
+      t3 <- t2 %>% filter(term == "exposureLong covid exposure" )
+      results <- t3 %>% mutate(
+            lci = exp(Estimate - 1.96*`Std. Error`),
+            hci = exp(Estimate + 1.96*`Std. Error`),
+            estimate = exp(Estimate),
+            p.value = `Pr(>|z|)`,
+            model = "Positive Negative Bionomial") %>% 
+            dplyr::select(model, term, estimate, lci, hci, p.value)
+      return(results)
+}
+
+# Predict the outcomes by different group and stratum
+adj_predic_fn <- function(factor, value, part_1, part_2){
+      
+      input <- adj_complete_12m %>% 
+            filter(factor == value) %>% 
+            mutate(follow_up = 360)
+      
+      input$nonzero_prob <- predict(hos_f_binomial_12m, newdata = input, type = "response")                     
+      
+      
+      p2 <- predict(hos_f_hurdle_12m, newdata = input, type = "link", se.fit = T)
+      
+      input<- bind_cols(
+            input, 
+            (p2$fitted.values %>% as.data.frame() %>% 
+                   dplyr::select(`loglink(munb)`) %>% 
+                   rename(p_visits = `loglink(munb)`)),
+            (p2$se.fit %>% as.data.frame()%>% 
+                   dplyr::select(`loglink(munb)`) %>% 
+                   rename(p_se = `loglink(munb)`))
+      )
+      
+      
+      input_c <- input %>% 
+            mutate(c_visits = exp(p_visits)*nonzero_prob,
+                   c_lci = exp(p_visits - 1.96*p_se)*nonzero_prob,
+                   c_hci = exp(p_visits + 1.96*p_se)*nonzero_prob) %>% 
+            dplyr::select(exposure, c_visits, c_lci, c_hci)
+      
+      # summarise the results
+      results <- input_c %>% 
+            group_by(exposure) %>% 
+            summarise(
+            visits = mean(c_visits, na.rm =T),
+            lci = mean(c_lci, na.rm =T),
+            hci = mean(c_hci, na.rm = T)) %>% 
+            mutate(stratum = value) %>% relocate(stratum)
+      return(results)
+}
+
+
 # Stats: Subgroup analyses by different covariates -----
 # Fit an interaction term between exposure and the cov.
 
@@ -69,18 +143,6 @@ adj_complete_12m$previous_covid_hosp_true <- factor(adj_complete_12m$previous_co
                                                     levels = c("TRUE", "FALSE"))
 
 # first-part: Binomial model
-
-# Tidy binomial model:
-binomial_tidy_fn <- function(bi_reg){
-  bi_results <- bi_reg %>% tidy() %>% mutate(
-    model = "binomial",
-    lci = exp(estimate - 1.96*std.error),
-    hci = exp(estimate + 1.96*std.error),
-    estimate = exp(estimate)) %>% 
-    dplyr::select(model, term, estimate, lci, hci, p.value)%>% 
-    filter(term == "exposureLong covid exposure" )      
-  return(bi_results)
-}
 
 # No interaction:
 hos_no_binomial_12m <- glm(visits_binary ~ exposure + previous_covid_hosp + offset(log(follow_up)) +
@@ -116,22 +178,6 @@ bind_cols(lrt_hos_bi)
 
 # # Second hurdle part: positive negative binomial:
 
-# Tidy up the function
-positive_nb_tidy_fu <- function(vg_reg){
-  
-  t1 <- vg_reg %>%summary
-  t2 <- t1@coef3 %>% as.data.frame()
-  t2$term <- rownames(t2)
-  t3 <- t2 %>% filter(term == "exposureLong covid exposure" )
-  results <- t3 %>% mutate(
-    lci = exp(Estimate - 1.96*`Std. Error`),
-    hci = exp(Estimate + 1.96*`Std. Error`),
-    estimate = exp(Estimate),
-    p.value = `Pr(>|z|)`,
-    model = "Positive Negative Bionomial") %>% 
-    dplyr::select(model, term, estimate, lci, hci, p.value)
-  return(results)
-}
 
 # No interaction: 
 hos_no_hurdle_12m <- vglm(visits ~ exposure + previous_covid_hosp + offset(log(follow_up))+
@@ -170,6 +216,15 @@ hos_hurdle_sub <- bind_rows(
 # Save the output
 bind_rows(hos_bi_sub, hos_hurdle_sub) %>% write_csv(here("output", "st03_05_subgroup_hospitalisation.csv"))
 
+
+# Predict the outcomes: 
+
+predicted_by_hos <- bind_rows(
+      adj_predic_fn(factor = adj_complete_12m$previous_covid_hosp, value = "FALSE",
+                    part_1 = hos_f_binomial_12m, part_2 = hos_f_hurdle_12m),
+      adj_predic_fn(factor = adj_complete_12m$previous_covid_hosp, value = "TRUE",
+                    part_1 = hos_t_binomial_12m, part_2 = hos_t_hurdle_12m)) %>% 
+      mutate(group = "Previous hospitalisation") %>% relocate(group)
 
 ## By sex:-----
 # Ref: female 
@@ -245,6 +300,17 @@ sex_hudle_sub <- bind_rows(
 
 # save outputs
 bind_rows(sex_bi_sub, sex_hudle_sub) %>% write_csv(here("output", "st03_05_subgroup_sex.csv"))
+
+
+# Predicted the outcomes:
+predicted_by_sex <- bind_rows(
+      adj_predic_fn(factor = adj_complete_12m$sex, value = "female",
+                    part_1 = sex_f_binomial, part_2 = sex_f_hurdle_12m),
+      adj_predic_fn(factor = adj_complete_12m$sex, value = "male",
+                    part_1 = sex_m_binomial, part_2 = sex_m_hurdle_12m)) %>% 
+      mutate(group = "Sex") %>% relocate(group)
+
+
 
 # By age groups-----
 # set ref for each stratum
@@ -378,3 +444,27 @@ age_hurdle_sub <- bind_rows(
 
 # Save outputs:
 bind_rows(age_bi_sub, age_hurdle_sub) %>% write_csv(here("output", "st03_05_subgroup_age.csv"))
+
+
+# Predict by age groups:
+predicted_by_agegroup <- bind_rows(
+      adj_predic_fn(factor = adj_complete_12m$age_cat, value = "18-29",
+                    part_1 = age_18_bi, part_2 = age_18_hurdle),
+      adj_predic_fn(factor = adj_complete_12m$age_cat, value = "30-39",
+                    part_1 = age_30_bi, part_2 = age_30_hurdle),
+      adj_predic_fn(factor = adj_complete_12m$age_cat, value = "40-49",
+                    part_1 = age_40_bi, part_2 = age_40_hurdle),
+      adj_predic_fn(factor = adj_complete_12m$age_cat, value = "50-59",
+                    part_1 = age_50_bi, part_2 = age_50_hurdle),
+      adj_predic_fn(factor = adj_complete_12m$age_cat, value = "60-69",
+                    part_1 = age_60_bi, part_2 = age_60_hurdle),
+      adj_predic_fn(factor = adj_complete_12m$age_cat, value = "70+",
+                    part_1 = age_70_bi, part_2 = age_70_hurdle)) %>% 
+      mutate(group = "Age group") %>% relocate(group)
+
+
+# combine the prediction outputs:
+bind_rows(
+      predicted_by_hos,
+      predicted_by_sex,
+      predicted_by_agegroup) %>% write_csv(here("output", "st03_05_subgroup_predicted_value.csv"))
