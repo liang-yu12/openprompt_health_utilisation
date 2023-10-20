@@ -377,6 +377,7 @@ actions:
         previous_hospitalisation_stratum: output/st03_05_subgroup_hospitalisation.csv
         sex_stratum: output/st03_05_subgroup_sex.csv
         age_cat_stratum: output/st03_05_subgroup_age.csv
+        predict_subgoups_visits: output/st03_05_subgroup_predicted_value.csv
 
 # Total Costs: twopart model
 
