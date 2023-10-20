@@ -162,7 +162,7 @@ cbp1 <- c("#E76F51", "#E9C46A", "#2A9D8F", "#264653")
 (visits_barplot <- ggplot(all_predicted_stacked, aes(fill=Type, y=visits, x=exposure)) + 
       geom_bar(position="stack", stat="identity") +  coord_flip() +
       guides(fill=guide_legend(title="Healthcare type")) +
-      ylab("Average healthcare visit frequency") + xlab(" ") +
+      ylab("Average healthcare visit frequency") + xlab(" ") + theme_bw() +
       scale_fill_manual(values = cbp1))
 
 # Combine plots together : ----------
