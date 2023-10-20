@@ -339,11 +339,15 @@ actions:
       r:latest analysis/st03_05_subgroup_lc_only_factors.R
     outputs: 
       moderately_sensitive:
+        all_factors_bi_or: output/st03_05_sub_all_factors_binomial.csv
+        all_factors_hurdle_rr: output/st03_05_sub_all_factors_hurdle.csv
         lc_only_reg_summary: output/st03_05_subgroup_lc_only_reg_summary.txt
         lc_only_bi_visits: output/st03_05_sub_lc_only_binomial.csv
         lc_only_hurdle_visits: output/st03_05_sub_lc_only_hurdle.csv
-        lc_only_model_count: output/st03_05_sub_lc_only_bi_model_counts.csv
-        lc_only_hurdle_count: output/st03_05_sub_lc_only_hurdle_model_counts.csv
+        nolc_bi_or: output/st03_05_sub_nolc_binomial.csv
+        nolc_hurdle_rr: output/st03_05_sub_nolc_hurdle.csv
+        sub_all_lc_no_model_count: output/st03_05_sub_lc_only_bi_model_counts.csv
+        sub_all_lc_no_hurdle_count: output/st03_05_sub_lc_only_hurdle_model_counts.csv
         
 # # visualise subgroup lc only outputs:
   visualise_sub_lc_only_factors:  
