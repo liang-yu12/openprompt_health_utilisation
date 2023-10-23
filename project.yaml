@@ -476,7 +476,10 @@ actions:
         gp_inconsistence_monthly_trend: output/qc09_gp_non_zero_counts_comparison.png
         hos_inconsistence: output/qc09_hos_inconsistent_visit_cost.csv
         hos_inconsistence_trend: output/qc09_hos_non_zero_counts_comparison.png
-        
+        ae_inconsistence: output/qc09_ae_inconsistent_visit_cost.csv
+        ae_inconsistence_monthly: output/qc09_ae_non_zero_counts_comparison.png
+        opa_inconsistence: output/qc09_opa_inconsistent_visit_cost.csv
+        opa_inconsistence_monthly: output/qc09_opa_non_zero_counts_comparison.png
 
 # Historical: data distribution
   report05_hx_matched_data_distribution:

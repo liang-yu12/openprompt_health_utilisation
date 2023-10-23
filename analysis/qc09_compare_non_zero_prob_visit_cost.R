@@ -210,7 +210,7 @@ com_inconsistent <- ggplot() +
 
 ggarrange(exp_inconsistent, com_inconsistent, common.legend = T,
           ncol = 2, labels = c("Long COVID group", "Comparator group")
-          )
+          )%>% annotate_figure(top = text_grob("Total visits and costs comparison"))
 # save outputs:
 ggsave(file = "output/qc09_non_zero_counts_comparison.png", width = 12, height = 4)
 
@@ -409,12 +409,12 @@ com_gp_inconsistent <- ggplot() +
 
 ggarrange(exp_gp_inconsistent, com_gp_inconsistent, common.legend = T,
           ncol = 2, labels = c("Long COVID group", "Comparator group")
-)
+)%>% annotate_figure(top = text_grob("GP visits and costs comparison"))
 # save outputs:
 ggsave(file = "output/qc09_gp_non_zero_counts_comparison.png", width = 12, height = 4)
 
 
-# 3. Hospitalisation comparison:
+# 3. Hospitalisation comparison: -------
 
 # # Long COVID exposure group: -----
 
@@ -609,12 +609,12 @@ com_hos_inconsistent <- ggplot() +
 
 ggarrange(exp_hos_inconsistent, com_hos_inconsistent, common.legend = T,
           ncol = 2, labels = c("Long COVID group", "Comparator group")
-)
+)%>% annotate_figure(top = text_grob("Hospital admission and costs comparison"))
 # save outputs:
 ggsave(file = "output/qc09_hos_non_zero_counts_comparison.png", width = 12, height = 4)
 
 
-# 4. A&E visit/costs:
+# 4. A&E visit/costs: ----------
 
 
 # # Long COVID exposure group: -----
@@ -810,7 +810,201 @@ com_ae_inconsistent <- ggplot() +
 
 ggarrange(exp_ae_inconsistent, com_ae_inconsistent, common.legend = T,
           ncol = 2, labels = c("Long COVID group", "Comparator group")
-)
+) %>% annotate_figure(top = text_grob("A&E visits and costs comparison"))
 # save outputs:
 ggsave(file = "output/qc09_ae_non_zero_counts_comparison.png", width = 12, height = 4)
 
+# 5. Outpatient clinic visit/costs -----
+# # Long COVID exposure group: -----
+
+# create binomial outcomes in each months
+lc_exp_matched <- lc_exp_matched %>%
+      mutate(
+            bi_opa_visit_m1 = ifelse(opa_visit_m1>0, 1, 0),
+            bi_opa_visit_m2 = ifelse(opa_visit_m2>0, 1, 0),
+            bi_opa_visit_m3 = ifelse(opa_visit_m3>0, 1, 0),
+            bi_opa_visit_m4 = ifelse(opa_visit_m4>0, 1, 0),
+            bi_opa_visit_m5 = ifelse(opa_visit_m5>0, 1, 0),
+            bi_opa_visit_m6 = ifelse(opa_visit_m6>0, 1, 0),
+            bi_opa_visit_m7 = ifelse(opa_visit_m7>0, 1, 0),
+            bi_opa_visit_m8 = ifelse(opa_visit_m8>0, 1, 0),
+            bi_opa_visit_m9 = ifelse(opa_visit_m9>0, 1, 0),
+            bi_opa_visit_m10 = ifelse(opa_visit_m10>0, 1, 0),
+            bi_opa_visit_m11 = ifelse(opa_visit_m11>0, 1, 0),
+            bi_opa_visit_m12 = ifelse(opa_visit_m12>0, 1, 0)
+      )
+
+lc_exp_matched <- lc_exp_matched %>% 
+      mutate(
+            bi_opa_cost_m1 = ifelse(opd_cost_m1>0, 1, 0),
+            bi_opa_cost_m2 = ifelse(opd_cost_m2>0, 1, 0),
+            bi_opa_cost_m3 = ifelse(opd_cost_m3>0, 1, 0),
+            bi_opa_cost_m4 = ifelse(opd_cost_m4>0, 1, 0),
+            bi_opa_cost_m5 = ifelse(opd_cost_m5>0, 1, 0),
+            bi_opa_cost_m6 = ifelse(opd_cost_m6>0, 1, 0),
+            bi_opa_cost_m7 = ifelse(opd_cost_m7>0, 1, 0),
+            bi_opa_cost_m8 = ifelse(opd_cost_m8>0, 1, 0),
+            bi_opa_cost_m9 = ifelse(opd_cost_m9>0, 1, 0),
+            bi_opa_cost_m10 = ifelse(opd_cost_m10>0, 1, 0),
+            bi_opa_cost_m11 = ifelse(opd_cost_m11>0, 1, 0),
+            bi_opa_cost_m12 = ifelse(opd_cost_m12>0, 1, 0)
+      )
+
+# vectors of opa visits and costs
+
+# Initialize an empty list to store the results
+exp_opa <- list()
+
+# Loop over the months
+for(i in 1:12) {
+      # Create the column names
+      opa_visits_m <- paste0("bi_opa_visit_m", i)
+      opa_cost_m <- paste0("bi_opa_cost_m", i)
+      
+      # Call the function and store the result in the list
+      exp_opa[[i]] <- compare_bi_visit_cost_fn(data = lc_exp_matched, 
+                                               visits_m = opa_visits_m, 
+                                               cost_m = opa_cost_m, 
+                                               mont_n = i)
+}
+
+# Combine all data frames in the list
+exp_opa_compare <- bind_rows(exp_opa) %>% mutate(exposure = "Long COVID exposure")
+
+
+# combine all opa visits in 12 months
+opa_visit_12m <- c()
+for(i in 1:12){
+      opa_visit_12m <- c(opa_visit_12m, paste0("bi_opa_visit_m", i))
+}
+
+lc_exp_matched$opa_visit_12m <- rowSums(lc_exp_matched[,opa_visit_12m]) # add them together
+lc_exp_matched <-lc_exp_matched %>% mutate(opa_visit_12m = ifelse(opa_visit_12m>0, 1,0)) # recode
+
+# combine all costs
+opa_cost_12m <- c()
+for(i in 1:12){
+      opa_cost_12m <- c(opa_cost_12m, paste0("bi_opa_cost_m", i))
+}
+lc_exp_matched$opa_cost_12m <- rowSums(lc_exp_matched[,opa_cost_12m]) 
+lc_exp_matched <- lc_exp_matched %>% mutate(opa_cost_12m = ifelse(opa_cost_12m>0, 1,0)) # recode
+
+
+exp_12m_opa <- compare_bi_visit_cost_fn(data = lc_exp_matched, 
+                                        visits_m = "opa_visit_12m", 
+                                        cost_m = "opa_cost_12m", 
+                                        mont_n = "total 12 months") %>% 
+      mutate(exposure = "Long COVID exposure")
+
+# Combine outputs for saving later: 
+
+exp_opa_tabulate <- bind_rows(exp_opa_compare %>% mutate(month = as.character(month)), 
+                              exp_12m_opa)
+
+# # Comparator: ----
+# create binomial outcomes in each months
+com_matched <- com_matched %>%
+      mutate(
+            bi_opa_visit_m1 = ifelse(opa_visit_m1>0, 1, 0),
+            bi_opa_visit_m2 = ifelse(opa_visit_m2>0, 1, 0),
+            bi_opa_visit_m3 = ifelse(opa_visit_m3>0, 1, 0),
+            bi_opa_visit_m4 = ifelse(opa_visit_m4>0, 1, 0),
+            bi_opa_visit_m5 = ifelse(opa_visit_m5>0, 1, 0),
+            bi_opa_visit_m6 = ifelse(opa_visit_m6>0, 1, 0),
+            bi_opa_visit_m7 = ifelse(opa_visit_m7>0, 1, 0),
+            bi_opa_visit_m8 = ifelse(opa_visit_m8>0, 1, 0),
+            bi_opa_visit_m9 = ifelse(opa_visit_m9>0, 1, 0),
+            bi_opa_visit_m10 = ifelse(opa_visit_m10>0, 1, 0),
+            bi_opa_visit_m11 = ifelse(opa_visit_m11>0, 1, 0),
+            bi_opa_visit_m12 = ifelse(opa_visit_m12>0, 1, 0)
+      )
+
+com_matched <- com_matched %>% 
+      mutate(
+            bi_opa_cost_m1 = ifelse(opd_cost_m1>0, 1, 0),
+            bi_opa_cost_m2 = ifelse(opd_cost_m2>0, 1, 0),
+            bi_opa_cost_m3 = ifelse(opd_cost_m3>0, 1, 0),
+            bi_opa_cost_m4 = ifelse(opd_cost_m4>0, 1, 0),
+            bi_opa_cost_m5 = ifelse(opd_cost_m5>0, 1, 0),
+            bi_opa_cost_m6 = ifelse(opd_cost_m6>0, 1, 0),
+            bi_opa_cost_m7 = ifelse(opd_cost_m7>0, 1, 0),
+            bi_opa_cost_m8 = ifelse(opd_cost_m8>0, 1, 0),
+            bi_opa_cost_m9 = ifelse(opd_cost_m9>0, 1, 0),
+            bi_opa_cost_m10 = ifelse(opd_cost_m10>0, 1, 0),
+            bi_opa_cost_m11 = ifelse(opd_cost_m11>0, 1, 0),
+            bi_opa_cost_m12 = ifelse(opd_cost_m12>0, 1, 0)
+      )
+
+
+# Initialize an empty list to store the results
+com_opa <- list()
+
+# Loop over the months
+for(i in 1:12) {
+      # Create the column names
+      opa_visits_m <- paste0("bi_opa_visit_m", i)
+      opa_cost_m <- paste0("bi_opa_cost_m", i)
+      
+      # Call the function and store the result in the list
+      com_opa[[i]] <- compare_bi_visit_cost_fn(data = com_matched, 
+                                               visits_m = opa_visits_m, 
+                                               cost_m = opa_cost_m, 
+                                               mont_n = i)
+}
+
+# Combine all data frames in the list
+com_opa_compare <- bind_rows(com_opa) %>% mutate(exposure = "Comparator")
+
+
+
+# combine all opa visits in 12 months
+com_matched$opa_visit_12m <- rowSums(com_matched[,opa_visit_12m]) # add them together
+com_matched <-com_matched %>% mutate(opa_visit_12m = ifelse(opa_visit_12m>0, 1,0)) # recode
+
+# combine all costs
+com_matched$opa_cost_12m <- rowSums(com_matched[,opa_cost_12m]) 
+com_matched <- com_matched %>% mutate(opa_cost_12m = ifelse(opa_cost_12m>0, 1,0)) # recode
+
+
+com_12m_opa <- compare_bi_visit_cost_fn(data = com_matched, 
+                                        visits_m = "opa_visit_12m", 
+                                        cost_m = "opa_cost_12m", 
+                                        mont_n = "total 12 months") %>% 
+      mutate(exposure = "Comparator")
+
+# Combine outputs for saving later: 
+
+com_opa_tabulate <- bind_rows(com_opa_compare %>% mutate(month = as.character(month)), 
+                              com_12m_opa)
+
+
+# Combine and saving
+bind_rows(exp_opa_tabulate, com_opa_tabulate) %>% relocate(exposure) %>% 
+      write_csv(here("output", "qc09_opa_inconsistent_visit_cost.csv"))
+
+# # Line graph showing the trend of the inconsistent pair: -----
+exp_opa_inconsistent <- ggplot() + 
+      geom_line(data = (filter(exp_opa_compare, visit =="No")),
+                aes(x = month, y = have_cost, color = visit)) +
+      geom_line(data = (filter(exp_opa_compare, visit =="Yes")),
+                aes(x = month, y = no_cost, color = visit)) +
+      ylab("Inconsistent pair counts") + xlab("Month") + theme_bw() + 
+      scale_colour_discrete(labels=c("No visit but have costs", "Visited without costs")) +
+      theme(legend.title = element_blank()) +
+      scale_x_continuous(breaks = seq(1, 12))
+
+com_opa_inconsistent <- ggplot() + 
+      geom_line(data = (filter(com_opa_compare, visit =="No")),
+                aes(x = month, y = have_cost, color = visit)) +
+      geom_line(data = (filter(com_opa_compare, visit =="Yes")),
+                aes(x = month, y = no_cost, color = visit)) +
+      ylab("Inconsistent pair counts") + xlab("Month") + theme_bw() +
+      scale_colour_discrete(labels=c("No visit but have costs", "Visited without costs")) +
+      theme(legend.title = element_blank()) +
+      scale_x_continuous(breaks = seq(1, 12))
+
+ggarrange(exp_opa_inconsistent, com_opa_inconsistent, common.legend = T,
+          ncol = 2, labels = c("Long COVID group", "Comparator group")
+) %>% annotate_figure(top = text_grob("Outpatient clinic visits and costs comparison"))
+# save outputs:
+ggsave(file = "output/qc09_opa_non_zero_counts_comparison.png", width = 12, height = 4)
