@@ -462,6 +462,18 @@ actions:
       moderately_sensitive: 
         outcomes_plots: output/st04_healthcare_costs.png
 
+# QC: check the inconsistent pairs between visits and costs data:
+
+  qc09_visit_cost_inconsistence:
+    needs: [import_matched_exposure, import_matched_controls, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+    run: 
+      r:latest analysis/qc09_compare_non_zero_prob_visit_cost.R
+    outputs: 
+      moderately_sensitive: 
+        total_inconsistence: output/qc09_total_inconsistent_visit_cost.csv
+        total_inconcsistence_trend_month: output/qc09_non_zero_counts_comparison.png
+
+
 
 # Historical: data distribution
   report05_hx_matched_data_distribution:
