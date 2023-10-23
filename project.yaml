@@ -472,8 +472,10 @@ actions:
       moderately_sensitive: 
         total_inconsistence: output/qc09_total_inconsistent_visit_cost.csv
         total_inconcsistence_trend_month: output/qc09_non_zero_counts_comparison.png
-
-
+        gp_inconsistence: output/qc09_gp_inconsistent_visit_cost.csv
+        gp_inconsistence_monthly_trend: output/qc09_gp_non_zero_counts_comparison.png
+        
+        
 
 # Historical: data distribution
   report05_hx_matched_data_distribution:
