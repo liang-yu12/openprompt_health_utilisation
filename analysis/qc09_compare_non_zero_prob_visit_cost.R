@@ -1,7 +1,25 @@
 source("analysis/dm04_02_combine_costs.R")
 
-# Total healthcare visits vs total healthcare costs
+# Goal: Compare total healthcare visits vs total healthcare costs
 
+# Function to tabulate the visit(0/1) and cost(0/1)
+
+compare_bi_visit_cost_fn <- function(data, visits_m, cost_m, mont_n){
+      visits_m <- rlang::sym(visits_m)
+      cost_m <- rlang::sym(cost_m)
+      
+      result <- data %>% group_by(!!visits_m) %>% 
+            summarise(have_cost = sum(!!cost_m==1, na.rm = TRUE),
+                      no_cost = sum(!!cost_m==0, na.rm = TRUE)) %>% 
+            mutate(month = mont_n, 
+                   visit = ifelse(!!visits_m==1, "Yes", "No")) %>% 
+            dplyr::select(month, visit, have_cost,no_cost)
+      return(result)
+}
+
+# Long COVID exposure group: -----
+
+# create binomial outcomes in each months
 lc_exp_matched <- lc_exp_matched %>%
       mutate(
             bi_visit_m1 = ifelse(all_month_m1>0, 1, 0),
@@ -35,20 +53,6 @@ lc_exp_matched <- lc_exp_matched %>%
       )
 
 
-# Function to tabulate the visit(0/1) and cost(0/1)
-
-compare_bi_visit_cost_fn <- function(data, visits_m, cost_m, mont_n){
-      visits_m <- rlang::sym(visits_m)
-      cost_m <- rlang::sym(cost_m)
-      
-      result <- data %>% group_by(!!visits_m) %>% 
-            summarise(have_cost = sum(!!cost_m==1, na.rm = TRUE),
-                      no_cost = sum(!!cost_m==0, na.rm = TRUE)) %>% 
-            mutate(month = mont_n, 
-                   visit = ifelse(!!visits_m==1, "Yes", "No")) %>% 
-            dplyr::select(month, visit, have_cost,no_cost)
-      return(result)
-}
 
 # Initialize an empty list to store the results
 exp_total <- list()
@@ -69,9 +73,38 @@ for(i in 1:12) {
 # Combine all data frames in the list
 exp_total_compare <- bind_rows(total) %>% mutate(exposure = "Long COVID exposure")
 
+# combine all visits 
+visit_12m <- c()
+for(i in 1:12){
+      visit_12m <- c(visit_12m, paste0("bi_visit_m", i))
+}
+
+lc_exp_matched$visits_12m <- rowSums(lc_exp_matched[,visit_12m]) # add them together
+lc_exp_matched <-lc_exp_matched %>% mutate(visits_12m = ifelse(visits_12m>0, 1,0)) # recode
+
+# combine all costs
+cost_12m <- c()
+for(i in 1:12){
+      cost_12m <- c(cost_12m, paste0("bi_cost_m", i))
+}
+lc_exp_matched$cost_12m <- rowSums(lc_exp_matched[,cost_12m]) 
+lc_exp_matched <- lc_exp_matched %>% mutate(cost_12m = ifelse(cost_12m>0, 1,0)) # recode
 
 
-# Comparator group:
+exp_12m_total <- compare_bi_visit_cost_fn(data = lc_exp_matched, 
+                                          visits_m = "visits_12m", 
+                                          cost_m = "cost_12m", 
+                                          mont_n = "total 12 months") %>% 
+      mutate(exposure = "Long COVID exposure")
+
+# Combine outputs for saving later: 
+
+exp_tabulate <- bind_rows(exp_total_compare %>% mutate(month = as.character(month)), 
+          exp_12m_total)
+
+
+# Comparator group: ------
+# Create binomial outcomes
 com_matched <- com_matched %>%
       mutate(
             bi_visit_m1 = ifelse(all_month_m1>0, 1, 0),
@@ -125,7 +158,35 @@ for(i in 1:12) {
 # Combine all data frames in the list
 com_total_compare <- bind_rows(com_total) %>% mutate(exposure = "Comparator")
 
-# Line graph showing the trend of the inconsistent pair:
+
+
+# Combine visits and const in 12 months
+# visits
+com_matched$visits_12m <- rowSums(com_matched[,visit_12m]) # add them together
+com_matched <-com_matched %>% mutate(visits_12m = ifelse(visits_12m>0, 1,0)) # recode
+
+# costs
+com_matched$cost_12m <- rowSums(com_matched[,cost_12m]) 
+com_matched <- com_matched %>% mutate(cost_12m = ifelse(cost_12m>0, 1,0)) # recode
+
+
+com_12m_total <- compare_bi_visit_cost_fn(data = com_matched, 
+                                          visits_m = "visits_12m", 
+                                          cost_m = "cost_12m", 
+                                          mont_n = "total 12 months") %>% 
+      mutate(exposure = "Comparator")
+
+# Combine outputs for saving later: 
+
+com_tabulate <- bind_rows(com_total_compare %>% mutate(month = as.character(month)), 
+                          com_12m_total)
+
+
+# Combine and saving
+bind_rows(exp_tabulate, com_tabulate) %>% relocate(exposure) %>% 
+      write_csv(here("output", "qc09_total_inconsistent_visit_cost.csv"))
+
+# Line graph showing the trend of the inconsistent pair: -----
 
 exp_inconsistent <- ggplot() + 
       geom_line(data = (filter(exp_total_compare, visit =="No")),
@@ -152,3 +213,6 @@ ggarrange(exp_inconsistent, com_inconsistent, common.legend = T,
           )
 # save outputs:
 ggsave(file = "output/qc09_non_zero_counts_comparison.png", width = 12, height = 4)
+
+
+# Check the 
