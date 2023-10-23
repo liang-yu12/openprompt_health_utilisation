@@ -414,5 +414,169 @@ ggarrange(exp_gp_inconsistent, com_gp_inconsistent, common.legend = T,
 ggsave(file = "output/qc09_gp_non_zero_counts_comparison.png", width = 12, height = 4)
 
 
-# 
+# 3. Hospitalisation comparison:
 
+# # Long COVID exposure group: -----
+
+# create binomial outcomes in each months
+lc_exp_matched <- lc_exp_matched %>%
+      mutate(
+            bi_hos_visit_m1 = ifelse(hos_visit_m1>0, 1, 0),
+            bi_hos_visit_m2 = ifelse(hos_visit_m2>0, 1, 0),
+            bi_hos_visit_m3 = ifelse(hos_visit_m3>0, 1, 0),
+            bi_hos_visit_m4 = ifelse(hos_visit_m4>0, 1, 0),
+            bi_hos_visit_m5 = ifelse(hos_visit_m5>0, 1, 0),
+            bi_hos_visit_m6 = ifelse(hos_visit_m6>0, 1, 0),
+            bi_hos_visit_m7 = ifelse(hos_visit_m7>0, 1, 0),
+            bi_hos_visit_m8 = ifelse(hos_visit_m8>0, 1, 0),
+            bi_hos_visit_m9 = ifelse(hos_visit_m9>0, 1, 0),
+            bi_hos_visit_m10 = ifelse(hos_visit_m10>0, 1, 0),
+            bi_hos_visit_m11 = ifelse(hos_visit_m11>0, 1, 0),
+            bi_hos_visit_m12 = ifelse(hos_visit_m12>0, 1, 0)
+      )
+
+lc_exp_matched <- lc_exp_matched %>% 
+      mutate(
+            bi_hos_cost_m1 = ifelse(apc_cost_m1>0, 1, 0),
+            bi_hos_cost_m2 = ifelse(apc_cost_m2>0, 1, 0),
+            bi_hos_cost_m3 = ifelse(apc_cost_m3>0, 1, 0),
+            bi_hos_cost_m4 = ifelse(apc_cost_m4>0, 1, 0),
+            bi_hos_cost_m5 = ifelse(apc_cost_m5>0, 1, 0),
+            bi_hos_cost_m6 = ifelse(apc_cost_m6>0, 1, 0),
+            bi_hos_cost_m7 = ifelse(apc_cost_m7>0, 1, 0),
+            bi_hos_cost_m8 = ifelse(apc_cost_m8>0, 1, 0),
+            bi_hos_cost_m9 = ifelse(apc_cost_m9>0, 1, 0),
+            bi_hos_cost_m10 = ifelse(apc_cost_m10>0, 1, 0),
+            bi_hos_cost_m11 = ifelse(apc_cost_m11>0, 1, 0),
+            bi_hos_cost_m12 = ifelse(apc_cost_m12>0, 1, 0)
+      )
+
+# vectors of hos visits and costs
+
+# Initialize an empty list to store the results
+exp_hos <- list()
+
+# Loop over the months
+for(i in 1:12) {
+      # Create the column names
+      hos_visits_m <- paste0("bi_hos_visit_m", i)
+      hos_cost_m <- paste0("bi_hos_cost_m", i)
+      
+      # Call the function and store the result in the list
+      exp_hos[[i]] <- compare_bi_visit_cost_fn(data = lc_exp_matched, 
+                                               visits_m = hos_visits_m, 
+                                               cost_m = hos_cost_m, 
+                                               mont_n = i)
+}
+
+# Combine all data frames in the list
+exp_hos_compare <- bind_rows(exp_hos) %>% mutate(exposure = "Long COVID exposure")
+
+
+# combine all hos visits in 12 months
+hos_visit_12m <- c()
+for(i in 1:12){
+      hos_visit_12m <- c(hos_visit_12m, paste0("bi_hos_visit_m", i))
+}
+
+lc_exp_matched$hos_visit_12m <- rowSums(lc_exp_matched[,hos_visit_12m]) # add them together
+lc_exp_matched <-lc_exp_matched %>% mutate(hos_visit_12m = ifelse(hos_visit_12m>0, 1,0)) # recode
+
+# combine all costs
+hos_cost_12m <- c()
+for(i in 1:12){
+      hos_cost_12m <- c(hos_cost_12m, paste0("bi_hos_cost_m", i))
+}
+lc_exp_matched$hos_cost_12m <- rowSums(lc_exp_matched[,hos_cost_12m]) 
+lc_exp_matched <- lc_exp_matched %>% mutate(hos_cost_12m = ifelse(hos_cost_12m>0, 1,0)) # recode
+
+
+exp_12m_hos <- compare_bi_visit_cost_fn(data = lc_exp_matched, 
+                                        visits_m = "hos_visit_12m", 
+                                        cost_m = "hos_cost_12m", 
+                                        mont_n = "total 12 months") %>% 
+      mutate(exposure = "Long COVID exposure")
+
+# Combine outputs for saving later: 
+
+exp_hos_tabulate <- bind_rows(exp_hos_compare %>% mutate(month = as.character(month)), 
+                              exp_12m_hos)
+
+
+
+
+# # Comparator: ----
+# create binomial outcomes in each months
+com_matched <- com_matched %>%
+      mutate(
+            bi_hos_visit_m1 = ifelse(hos_visit_m1>0, 1, 0),
+            bi_hos_visit_m2 = ifelse(hos_visit_m2>0, 1, 0),
+            bi_hos_visit_m3 = ifelse(hos_visit_m3>0, 1, 0),
+            bi_hos_visit_m4 = ifelse(hos_visit_m4>0, 1, 0),
+            bi_hos_visit_m5 = ifelse(hos_visit_m5>0, 1, 0),
+            bi_hos_visit_m6 = ifelse(hos_visit_m6>0, 1, 0),
+            bi_hos_visit_m7 = ifelse(hos_visit_m7>0, 1, 0),
+            bi_hos_visit_m8 = ifelse(hos_visit_m8>0, 1, 0),
+            bi_hos_visit_m9 = ifelse(hos_visit_m9>0, 1, 0),
+            bi_hos_visit_m10 = ifelse(hos_visit_m10>0, 1, 0),
+            bi_hos_visit_m11 = ifelse(hos_visit_m11>0, 1, 0),
+            bi_hos_visit_m12 = ifelse(hos_visit_m12>0, 1, 0)
+      )
+
+com_matched <- com_matched %>% 
+      mutate(
+            bi_hos_cost_m1 = ifelse(apc_cost_m1>0, 1, 0),
+            bi_hos_cost_m2 = ifelse(apc_cost_m2>0, 1, 0),
+            bi_hos_cost_m3 = ifelse(apc_cost_m3>0, 1, 0),
+            bi_hos_cost_m4 = ifelse(apc_cost_m4>0, 1, 0),
+            bi_hos_cost_m5 = ifelse(apc_cost_m5>0, 1, 0),
+            bi_hos_cost_m6 = ifelse(apc_cost_m6>0, 1, 0),
+            bi_hos_cost_m7 = ifelse(apc_cost_m7>0, 1, 0),
+            bi_hos_cost_m8 = ifelse(apc_cost_m8>0, 1, 0),
+            bi_hos_cost_m9 = ifelse(apc_cost_m9>0, 1, 0),
+            bi_hos_cost_m10 = ifelse(apc_cost_m10>0, 1, 0),
+            bi_hos_cost_m11 = ifelse(apc_cost_m11>0, 1, 0),
+            bi_hos_cost_m12 = ifelse(apc_cost_m12>0, 1, 0)
+      )
+
+
+# Initialize an empty list to store the results
+com_hos <- list()
+
+# Loop over the months
+for(i in 1:12) {
+      # Create the column names
+      hos_visits_m <- paste0("bi_hos_visit_m", i)
+      hos_cost_m <- paste0("bi_hos_cost_m", i)
+      
+      # Call the function and store the result in the list
+      com_hos[[i]] <- compare_bi_visit_cost_fn(data = com_matched, 
+                                               visits_m = hos_visits_m, 
+                                               cost_m = hos_cost_m, 
+                                               mont_n = i)
+}
+
+# Combine all data frames in the list
+com_hos_compare <- bind_rows(com_hos) %>% mutate(exposure = "Comparator")
+
+
+
+# combine all hos visits in 12 months
+com_matched$hos_visit_12m <- rowSums(com_matched[,hos_visit_12m]) # add them together
+com_matched <-com_matched %>% mutate(hos_visit_12m = ifelse(hos_visit_12m>0, 1,0)) # recode
+
+# combine all costs
+com_matched$hos_cost_12m <- rowSums(com_matched[,hos_cost_12m]) 
+com_matched <- com_matched %>% mutate(hos_cost_12m = ifelse(hos_cost_12m>0, 1,0)) # recode
+
+
+com_12m_hos <- compare_bi_visit_cost_fn(data = com_matched, 
+                                        visits_m = "hos_visit_12m", 
+                                        cost_m = "hos_cost_12m", 
+                                        mont_n = "total 12 months") %>% 
+      mutate(exposure = "Comparator")
+
+# Combine outputs for saving later: 
+
+com_hos_tabulate <- bind_rows(com_hos_compare %>% mutate(month = as.character(month)), 
+                              com_12m_hos)
