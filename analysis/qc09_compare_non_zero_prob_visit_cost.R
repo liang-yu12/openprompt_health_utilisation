@@ -79,7 +79,7 @@ for(i in 1:12){
       visit_12m <- c(visit_12m, paste0("bi_visit_m", i))
 }
 
-lc_exp_matched$visits_12m <- rowSums(lc_exp_matched[,visit_12m]) # add them together
+lc_exp_matched$visits_12m <- rowSums(lc_exp_matched[,visit_12m],na.rm = T) # add them together
 lc_exp_matched <-lc_exp_matched %>% mutate(visits_12m = ifelse(visits_12m>0, 1,0)) # recode
 
 # combine all costs
@@ -87,7 +87,7 @@ cost_12m <- c()
 for(i in 1:12){
       cost_12m <- c(cost_12m, paste0("bi_cost_m", i))
 }
-lc_exp_matched$cost_12m <- rowSums(lc_exp_matched[,cost_12m]) 
+lc_exp_matched$cost_12m <- rowSums(lc_exp_matched[,cost_12m],na.rm = T) 
 lc_exp_matched <- lc_exp_matched %>% mutate(cost_12m = ifelse(cost_12m>0, 1,0)) # recode
 
 
@@ -280,7 +280,7 @@ for(i in 1:12){
       gp_visit_12m <- c(gp_visit_12m, paste0("bi_gp_visit_m", i))
 }
 
-lc_exp_matched$gp_visit_12m <- rowSums(lc_exp_matched[,gp_visit_12m]) # add them together
+lc_exp_matched$gp_visit_12m <- rowSums(lc_exp_matched[,gp_visit_12m],na.rm = T) # add them together
 lc_exp_matched <-lc_exp_matched %>% mutate(gp_visit_12m = ifelse(gp_visit_12m>0, 1,0)) # recode
 
 # combine all costs
@@ -288,7 +288,7 @@ gp_cost_12m <- c()
 for(i in 1:12){
       gp_cost_12m <- c(gp_cost_12m, paste0("bi_gp_cost_m", i))
 }
-lc_exp_matched$gp_cost_12m <- rowSums(lc_exp_matched[,gp_cost_12m]) 
+lc_exp_matched$gp_cost_12m <- rowSums(lc_exp_matched[,gp_cost_12m],na.rm = T) 
 lc_exp_matched <- lc_exp_matched %>% mutate(gp_cost_12m = ifelse(gp_cost_12m>0, 1,0)) # recode
 
 
@@ -362,11 +362,11 @@ com_gp_compare <- bind_rows(com_gp) %>% mutate(exposure = "Comparator")
 
 
 # combine all gp visits in 12 months
-com_matched$gp_visit_12m <- rowSums(com_matched[,gp_visit_12m]) # add them together
+com_matched$gp_visit_12m <- rowSums(com_matched[,gp_visit_12m],na.rm = T) # add them together
 com_matched <-com_matched %>% mutate(gp_visit_12m = ifelse(gp_visit_12m>0, 1,0)) # recode
 
 # combine all costs
-com_matched$gp_cost_12m <- rowSums(com_matched[,gp_cost_12m]) 
+com_matched$gp_cost_12m <- rowSums(com_matched[,gp_cost_12m],na.rm = T) 
 com_matched <- com_matched %>% mutate(gp_cost_12m = ifelse(gp_cost_12m>0, 1,0)) # recode
 
 
@@ -479,7 +479,7 @@ for(i in 1:12){
       hos_visit_12m <- c(hos_visit_12m, paste0("bi_hos_visit_m", i))
 }
 
-lc_exp_matched$hos_visit_12m <- rowSums(lc_exp_matched[,hos_visit_12m]) # add them together
+lc_exp_matched$hos_visit_12m <- rowSums(lc_exp_matched[,hos_visit_12m],na.rm = T) # add them together
 lc_exp_matched <-lc_exp_matched %>% mutate(hos_visit_12m = ifelse(hos_visit_12m>0, 1,0)) # recode
 
 # combine all costs
@@ -487,7 +487,7 @@ hos_cost_12m <- c()
 for(i in 1:12){
       hos_cost_12m <- c(hos_cost_12m, paste0("bi_hos_cost_m", i))
 }
-lc_exp_matched$hos_cost_12m <- rowSums(lc_exp_matched[,hos_cost_12m]) 
+lc_exp_matched$hos_cost_12m <- rowSums(lc_exp_matched[,hos_cost_12m],na.rm = T) 
 lc_exp_matched <- lc_exp_matched %>% mutate(hos_cost_12m = ifelse(hos_cost_12m>0, 1,0)) # recode
 
 
@@ -562,11 +562,11 @@ com_hos_compare <- bind_rows(com_hos) %>% mutate(exposure = "Comparator")
 
 
 # combine all hos visits in 12 months
-com_matched$hos_visit_12m <- rowSums(com_matched[,hos_visit_12m]) # add them together
+com_matched$hos_visit_12m <- rowSums(com_matched[,hos_visit_12m],na.rm = T) # add them together
 com_matched <-com_matched %>% mutate(hos_visit_12m = ifelse(hos_visit_12m>0, 1,0)) # recode
 
 # combine all costs
-com_matched$hos_cost_12m <- rowSums(com_matched[,hos_cost_12m]) 
+com_matched$hos_cost_12m <- rowSums(com_matched[,hos_cost_12m],na.rm = T) 
 com_matched <- com_matched %>% mutate(hos_cost_12m = ifelse(hos_cost_12m>0, 1,0)) # recode
 
 
@@ -680,7 +680,7 @@ for(i in 1:12){
       ae_visit_12m <- c(ae_visit_12m, paste0("bi_ae_visit_m", i))
 }
 
-lc_exp_matched$ae_visit_12m <- rowSums(lc_exp_matched[,ae_visit_12m]) # add them together
+lc_exp_matched$ae_visit_12m <- rowSums(lc_exp_matched[,ae_visit_12m],na.rm = T) # add them together
 lc_exp_matched <-lc_exp_matched %>% mutate(ae_visit_12m = ifelse(ae_visit_12m>0, 1,0)) # recode
 
 # combine all costs
@@ -688,7 +688,7 @@ ae_cost_12m <- c()
 for(i in 1:12){
       ae_cost_12m <- c(ae_cost_12m, paste0("bi_ae_cost_m", i))
 }
-lc_exp_matched$ae_cost_12m <- rowSums(lc_exp_matched[,ae_cost_12m]) 
+lc_exp_matched$ae_cost_12m <- rowSums(lc_exp_matched[,ae_cost_12m],na.rm = T) 
 lc_exp_matched <- lc_exp_matched %>% mutate(ae_cost_12m = ifelse(ae_cost_12m>0, 1,0)) # recode
 
 
@@ -763,11 +763,11 @@ com_ae_compare <- bind_rows(com_ae) %>% mutate(exposure = "Comparator")
 
 
 # combine all ae visits in 12 months
-com_matched$ae_visit_12m <- rowSums(com_matched[,ae_visit_12m]) # add them together
+com_matched$ae_visit_12m <- rowSums(com_matched[,ae_visit_12m],na.rm = T) # add them together
 com_matched <-com_matched %>% mutate(ae_visit_12m = ifelse(ae_visit_12m>0, 1,0)) # recode
 
 # combine all costs
-com_matched$ae_cost_12m <- rowSums(com_matched[,ae_cost_12m]) 
+com_matched$ae_cost_12m <- rowSums(com_matched[,ae_cost_12m],na.rm = T) 
 com_matched <- com_matched %>% mutate(ae_cost_12m = ifelse(ae_cost_12m>0, 1,0)) # recode
 
 
@@ -878,7 +878,7 @@ for(i in 1:12){
       opa_visit_12m <- c(opa_visit_12m, paste0("bi_opa_visit_m", i))
 }
 
-lc_exp_matched$opa_visit_12m <- rowSums(lc_exp_matched[,opa_visit_12m]) # add them together
+lc_exp_matched$opa_visit_12m <- rowSums(lc_exp_matched[,opa_visit_12m],na.rm = T) # add them together
 lc_exp_matched <-lc_exp_matched %>% mutate(opa_visit_12m = ifelse(opa_visit_12m>0, 1,0)) # recode
 
 # combine all costs
@@ -886,7 +886,7 @@ opa_cost_12m <- c()
 for(i in 1:12){
       opa_cost_12m <- c(opa_cost_12m, paste0("bi_opa_cost_m", i))
 }
-lc_exp_matched$opa_cost_12m <- rowSums(lc_exp_matched[,opa_cost_12m]) 
+lc_exp_matched$opa_cost_12m <- rowSums(lc_exp_matched[,opa_cost_12m],na.rm = T) 
 lc_exp_matched <- lc_exp_matched %>% mutate(opa_cost_12m = ifelse(opa_cost_12m>0, 1,0)) # recode
 
 
@@ -958,11 +958,11 @@ com_opa_compare <- bind_rows(com_opa) %>% mutate(exposure = "Comparator")
 
 
 # combine all opa visits in 12 months
-com_matched$opa_visit_12m <- rowSums(com_matched[,opa_visit_12m]) # add them together
+com_matched$opa_visit_12m <- rowSums(com_matched[,opa_visit_12m],na.rm = T) # add them together
 com_matched <-com_matched %>% mutate(opa_visit_12m = ifelse(opa_visit_12m>0, 1,0)) # recode
 
 # combine all costs
-com_matched$opa_cost_12m <- rowSums(com_matched[,opa_cost_12m]) 
+com_matched$opa_cost_12m <- rowSums(com_matched[,opa_cost_12m],na.rm = T) 
 com_matched <- com_matched %>% mutate(opa_cost_12m = ifelse(opa_cost_12m>0, 1,0)) # recode
 
 
