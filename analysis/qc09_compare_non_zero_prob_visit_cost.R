@@ -22,36 +22,36 @@ compare_bi_visit_cost_fn <- function(data, visits_m, cost_m, mont_n){
 # create binomial outcomes in each months
 lc_exp_matched <- lc_exp_matched %>%
       mutate(
-            bi_visit_m1 = ifelse(all_month_m1>0, 1, 0),
-            bi_visit_m2 = ifelse(all_month_m2>0, 1, 0),
-            bi_visit_m3 = ifelse(all_month_m3>0, 1, 0),
-            bi_visit_m4 = ifelse(all_month_m4>0, 1, 0),
-            bi_visit_m5 = ifelse(all_month_m5>0, 1, 0),
-            bi_visit_m6 = ifelse(all_month_m6>0, 1, 0),
-            bi_visit_m7 = ifelse(all_month_m7>0, 1, 0),
-            bi_visit_m8 = ifelse(all_month_m8>0, 1, 0),
-            bi_visit_m9 = ifelse(all_month_m9>0, 1, 0),
-            bi_visit_m10 = ifelse(all_month_m10>0, 1, 0),
-            bi_visit_m11 = ifelse(all_month_m11>0, 1, 0),
-            bi_visit_m12 = ifelse(all_month_m12>0, 1, 0)
+            bi_visit_m1 = ifelse(all_month_m1>0 & !is.na(all_month_m1), 1, 0),
+            bi_visit_m2 = ifelse(all_month_m2>0 & !is.na(all_month_m2), 1, 0),
+            bi_visit_m3 = ifelse(all_month_m3>0 & !is.na(all_month_m3), 1, 0),
+            bi_visit_m4 = ifelse(all_month_m4>0 & !is.na(all_month_m4), 1, 0),
+            bi_visit_m5 = ifelse(all_month_m5>0 & !is.na(all_month_m5), 1, 0),
+            bi_visit_m6 = ifelse(all_month_m6>0 & !is.na(all_month_m6), 1, 0),
+            bi_visit_m7 = ifelse(all_month_m7>0 & !is.na(all_month_m7), 1, 0),
+            bi_visit_m8 = ifelse(all_month_m8>0 & !is.na(all_month_m8), 1, 0),
+            bi_visit_m9 = ifelse(all_month_m9>0 & !is.na(all_month_m9), 1, 0),
+            bi_visit_m10 = ifelse(all_month_m10>0 & !is.na(all_month_m10), 1, 0),
+            bi_visit_m11 = ifelse(all_month_m11>0 & !is.na(all_month_m11), 1, 0),
+            bi_visit_m12 = ifelse(all_month_m12>0 & !is.na(all_month_m12), 1, 0)
       )
+
 
 lc_exp_matched <- lc_exp_matched %>% 
       mutate(
-            bi_cost_m1 = ifelse(total_cost_1>0, 1, 0),
-            bi_cost_m2 = ifelse(total_cost_2>0, 1, 0),
-            bi_cost_m3 = ifelse(total_cost_3>0, 1, 0),
-            bi_cost_m4 = ifelse(total_cost_4>0, 1, 0),
-            bi_cost_m5 = ifelse(total_cost_5>0, 1, 0),
-            bi_cost_m6 = ifelse(total_cost_6>0, 1, 0),
-            bi_cost_m7 = ifelse(total_cost_7>0, 1, 0),
-            bi_cost_m8 = ifelse(total_cost_8>0, 1, 0),
-            bi_cost_m9 = ifelse(total_cost_9>0, 1, 0),
-            bi_cost_m10 = ifelse(total_cost_10>0, 1, 0),
-            bi_cost_m11 = ifelse(total_cost_11>0, 1, 0),
-            bi_cost_m12 = ifelse(total_cost_12>0, 1, 0)
+            bi_cost_m1 = ifelse(total_cost_1>0 & !is.na(total_cost_1), 1, 0),
+            bi_cost_m2 = ifelse(total_cost_2>0 & !is.na(total_cost_2), 1, 0),
+            bi_cost_m3 = ifelse(total_cost_3>0 & !is.na(total_cost_3), 1, 0),
+            bi_cost_m4 = ifelse(total_cost_4>0 & !is.na(total_cost_4), 1, 0),
+            bi_cost_m5 = ifelse(total_cost_5>0 & !is.na(total_cost_5), 1, 0),
+            bi_cost_m6 = ifelse(total_cost_6>0 & !is.na(total_cost_6), 1, 0),
+            bi_cost_m7 = ifelse(total_cost_7>0 & !is.na(total_cost_7), 1, 0),
+            bi_cost_m8 = ifelse(total_cost_8>0 & !is.na(total_cost_8), 1, 0),
+            bi_cost_m9 = ifelse(total_cost_9>0 & !is.na(total_cost_9), 1, 0),
+            bi_cost_m10 = ifelse(total_cost_10>0 & !is.na(total_cost_10), 1, 0),
+            bi_cost_m11 = ifelse(total_cost_11>0 & !is.na(total_cost_11), 1, 0),
+            bi_cost_m12 = ifelse(total_cost_12>0 & !is.na(total_cost_12), 1, 0)
       )
-
 
 
 # Initialize an empty list to store the results
@@ -74,26 +74,26 @@ for(i in 1:12) {
 exp_total_compare <- bind_rows(exp_total) %>% mutate(exposure = "Long COVID exposure")
 
 # combine all visits 
-visit_12m <- c()
+all_visit_12m <- c()
 for(i in 1:12){
-      visit_12m <- c(visit_12m, paste0("bi_visit_m", i))
+      all_visit_12m <- c(all_visit_12m, paste0("bi_visit_m", i))
 }
 
-lc_exp_matched$visits_12m <- rowSums(lc_exp_matched[,visit_12m],na.rm = T) # add them together
-lc_exp_matched <-lc_exp_matched %>% mutate(visits_12m = ifelse(visits_12m>0, 1,0)) # recode
+lc_exp_matched$all_visit_12m <- rowSums(lc_exp_matched[,all_visit_12m],na.rm = T) # add them together
+lc_exp_matched <-lc_exp_matched %>% mutate(all_visit_12m = ifelse(all_visit_12m>0, 1,0)) # recode
 
 # combine all costs
-cost_12m <- c()
+all_cost_12m <- c()
 for(i in 1:12){
-      cost_12m <- c(cost_12m, paste0("bi_cost_m", i))
+      all_cost_12m <- c(all_cost_12m, paste0("bi_cost_m", i))
 }
-lc_exp_matched$cost_12m <- rowSums(lc_exp_matched[,cost_12m],na.rm = T) 
-lc_exp_matched <- lc_exp_matched %>% mutate(cost_12m = ifelse(cost_12m>0, 1,0)) # recode
+lc_exp_matched$all_cost_12m <- rowSums(lc_exp_matched[,all_cost_12m],na.rm = T) 
+lc_exp_matched <- lc_exp_matched %>% mutate(all_cost_12m = ifelse(all_cost_12m>0, 1,0)) # recode
 
 
 exp_12m_total <- compare_bi_visit_cost_fn(data = lc_exp_matched, 
-                                          visits_m = "visits_12m", 
-                                          cost_m = "cost_12m", 
+                                          visits_m = "all_visit_12m", 
+                                          cost_m = "all_cost_12m", 
                                           mont_n = "total 12 months") %>% 
       mutate(exposure = "Long COVID exposure")
 
@@ -107,35 +107,35 @@ exp_tabulate <- bind_rows(exp_total_compare %>% mutate(month = as.character(mont
 # Create binomial outcomes
 com_matched <- com_matched %>%
       mutate(
-            bi_visit_m1 = ifelse(all_month_m1>0, 1, 0),
-            bi_visit_m2 = ifelse(all_month_m2>0, 1, 0),
-            bi_visit_m3 = ifelse(all_month_m3>0, 1, 0),
-            bi_visit_m4 = ifelse(all_month_m4>0, 1, 0),
-            bi_visit_m5 = ifelse(all_month_m5>0, 1, 0),
-            bi_visit_m6 = ifelse(all_month_m6>0, 1, 0),
-            bi_visit_m7 = ifelse(all_month_m7>0, 1, 0),
-            bi_visit_m8 = ifelse(all_month_m8>0, 1, 0),
-            bi_visit_m9 = ifelse(all_month_m9>0, 1, 0),
-            bi_visit_m10 = ifelse(all_month_m10>0, 1, 0),
-            bi_visit_m11 = ifelse(all_month_m11>0, 1, 0),
-            bi_visit_m12 = ifelse(all_month_m12>0, 1, 0)
+            bi_visit_m1 = ifelse(all_month_m1>0 & !is.na(all_month_m1), 1, 0),
+            bi_visit_m2 = ifelse(all_month_m2>0 & !is.na(all_month_m2), 1, 0),
+            bi_visit_m3 = ifelse(all_month_m3>0 & !is.na(all_month_m3), 1, 0),
+            bi_visit_m4 = ifelse(all_month_m4>0 & !is.na(all_month_m4), 1, 0),
+            bi_visit_m5 = ifelse(all_month_m5>0 & !is.na(all_month_m5), 1, 0),
+            bi_visit_m6 = ifelse(all_month_m6>0 & !is.na(all_month_m6), 1, 0),
+            bi_visit_m7 = ifelse(all_month_m7>0 & !is.na(all_month_m7), 1, 0),
+            bi_visit_m8 = ifelse(all_month_m8>0 & !is.na(all_month_m8), 1, 0),
+            bi_visit_m9 = ifelse(all_month_m9>0 & !is.na(all_month_m9), 1, 0),
+            bi_visit_m10 = ifelse(all_month_m10>0 & !is.na(all_month_m10), 1, 0),
+            bi_visit_m11 = ifelse(all_month_m11>0 & !is.na(all_month_m11), 1, 0),
+            bi_visit_m12 = ifelse(all_month_m12>0 & !is.na(all_month_m12), 1, 0)
       )
 
 
 com_matched <- com_matched %>% 
       mutate(
-            bi_cost_m1 = ifelse(total_cost_1>0, 1, 0),
-            bi_cost_m2 = ifelse(total_cost_2>0, 1, 0),
-            bi_cost_m3 = ifelse(total_cost_3>0, 1, 0),
-            bi_cost_m4 = ifelse(total_cost_4>0, 1, 0),
-            bi_cost_m5 = ifelse(total_cost_5>0, 1, 0),
-            bi_cost_m6 = ifelse(total_cost_6>0, 1, 0),
-            bi_cost_m7 = ifelse(total_cost_7>0, 1, 0),
-            bi_cost_m8 = ifelse(total_cost_8>0, 1, 0),
-            bi_cost_m9 = ifelse(total_cost_9>0, 1, 0),
-            bi_cost_m10 = ifelse(total_cost_10>0, 1, 0),
-            bi_cost_m11 = ifelse(total_cost_11>0, 1, 0),
-            bi_cost_m12 = ifelse(total_cost_12>0, 1, 0)
+            bi_cost_m1 = ifelse(total_cost_1>0 & !is.na(total_cost_1), 1, 0),
+            bi_cost_m2 = ifelse(total_cost_2>0 & !is.na(total_cost_2), 1, 0),
+            bi_cost_m3 = ifelse(total_cost_3>0 & !is.na(total_cost_3), 1, 0),
+            bi_cost_m4 = ifelse(total_cost_4>0 & !is.na(total_cost_4), 1, 0),
+            bi_cost_m5 = ifelse(total_cost_5>0 & !is.na(total_cost_5), 1, 0),
+            bi_cost_m6 = ifelse(total_cost_6>0 & !is.na(total_cost_6), 1, 0),
+            bi_cost_m7 = ifelse(total_cost_7>0 & !is.na(total_cost_7), 1, 0),
+            bi_cost_m8 = ifelse(total_cost_8>0 & !is.na(total_cost_8), 1, 0),
+            bi_cost_m9 = ifelse(total_cost_9>0 & !is.na(total_cost_9), 1, 0),
+            bi_cost_m10 = ifelse(total_cost_10>0 & !is.na(total_cost_10), 1, 0),
+            bi_cost_m11 = ifelse(total_cost_11>0 & !is.na(total_cost_11), 1, 0),
+            bi_cost_m12 = ifelse(total_cost_12>0 & !is.na(total_cost_12), 1, 0)
       )
 
 
@@ -162,17 +162,17 @@ com_total_compare <- bind_rows(com_total) %>% mutate(exposure = "Comparator")
 
 # Combine visits and const in 12 months
 # visits
-com_matched$visits_12m <- rowSums(com_matched[,visit_12m],na.rm = T) # add them together
-com_matched <-com_matched %>% mutate(visits_12m = ifelse(visits_12m>0, 1,0)) # recode
+com_matched$all_visit_12m <- rowSums(com_matched[,all_visit_12m],na.rm = T) # add them together
+com_matched <-com_matched %>% mutate(all_visit_12m = ifelse(all_visit_12m>0, 1,0)) # recode
 
 # costs
-com_matched$cost_12m <- rowSums(com_matched[,cost_12m],na.rm = T) 
-com_matched <- com_matched %>% mutate(cost_12m = ifelse(cost_12m>0, 1,0)) # recode
+com_matched$all_cost_12m <- rowSums(com_matched[,all_cost_12m],na.rm = T) 
+com_matched <- com_matched %>% mutate(all_cost_12m = ifelse(all_cost_12m>0, 1,0)) # recode
 
 
 com_12m_total <- compare_bi_visit_cost_fn(data = com_matched, 
-                                          visits_m = "visits_12m", 
-                                          cost_m = "cost_12m", 
+                                          visits_m = "all_visit_12m", 
+                                          cost_m = "all_cost_12m", 
                                           mont_n = "total 12 months") %>% 
       mutate(exposure = "Comparator")
 
@@ -222,35 +222,36 @@ ggsave(file = "output/qc09_non_zero_counts_comparison.png", width = 12, height =
 # create binomial outcomes in each months
 lc_exp_matched <- lc_exp_matched %>%
       mutate(
-            bi_gp_visit_m1 = ifelse(gp_visit_m1>0, 1, 0),
-            bi_gp_visit_m2 = ifelse(gp_visit_m2>0, 1, 0),
-            bi_gp_visit_m3 = ifelse(gp_visit_m3>0, 1, 0),
-            bi_gp_visit_m4 = ifelse(gp_visit_m4>0, 1, 0),
-            bi_gp_visit_m5 = ifelse(gp_visit_m5>0, 1, 0),
-            bi_gp_visit_m6 = ifelse(gp_visit_m6>0, 1, 0),
-            bi_gp_visit_m7 = ifelse(gp_visit_m7>0, 1, 0),
-            bi_gp_visit_m8 = ifelse(gp_visit_m8>0, 1, 0),
-            bi_gp_visit_m9 = ifelse(gp_visit_m9>0, 1, 0),
-            bi_gp_visit_m10 = ifelse(gp_visit_m10>0, 1, 0),
-            bi_gp_visit_m11 = ifelse(gp_visit_m11>0, 1, 0),
-            bi_gp_visit_m12 = ifelse(gp_visit_m12>0, 1, 0)
+            bi_gp_visit_m1 = ifelse(gp_visit_m1>0 & !is.na(gp_visit_m1), 1, 0),
+            bi_gp_visit_m2 = ifelse(gp_visit_m2>0 & !is.na(gp_visit_m2), 1, 0),
+            bi_gp_visit_m3 = ifelse(gp_visit_m3>0 & !is.na(gp_visit_m3), 1, 0),
+            bi_gp_visit_m4 = ifelse(gp_visit_m4>0 & !is.na(gp_visit_m4), 1, 0),
+            bi_gp_visit_m5 = ifelse(gp_visit_m5>0 & !is.na(gp_visit_m5), 1, 0),
+            bi_gp_visit_m6 = ifelse(gp_visit_m6>0 & !is.na(gp_visit_m6), 1, 0),
+            bi_gp_visit_m7 = ifelse(gp_visit_m7>0 & !is.na(gp_visit_m7), 1, 0),
+            bi_gp_visit_m8 = ifelse(gp_visit_m8>0 & !is.na(gp_visit_m8), 1, 0),
+            bi_gp_visit_m9 = ifelse(gp_visit_m9>0 & !is.na(gp_visit_m9), 1, 0),
+            bi_gp_visit_m10 = ifelse(gp_visit_m10>0 & !is.na(gp_visit_m10), 1, 0),
+            bi_gp_visit_m11 = ifelse(gp_visit_m11>0 & !is.na(gp_visit_m11), 1, 0),
+            bi_gp_visit_m12 = ifelse(gp_visit_m12>0 & !is.na(gp_visit_m12), 1, 0)
       )
 
 lc_exp_matched <- lc_exp_matched %>% 
       mutate(
-            bi_gp_cost_m1 = ifelse(primary_cost_1>0, 1, 0),
-            bi_gp_cost_m2 = ifelse(primary_cost_2>0, 1, 0),
-            bi_gp_cost_m3 = ifelse(primary_cost_3>0, 1, 0),
-            bi_gp_cost_m4 = ifelse(primary_cost_4>0, 1, 0),
-            bi_gp_cost_m5 = ifelse(primary_cost_5>0, 1, 0),
-            bi_gp_cost_m6 = ifelse(primary_cost_6>0, 1, 0),
-            bi_gp_cost_m7 = ifelse(primary_cost_7>0, 1, 0),
-            bi_gp_cost_m8 = ifelse(primary_cost_8>0, 1, 0),
-            bi_gp_cost_m9 = ifelse(primary_cost_9>0, 1, 0),
-            bi_gp_cost_m10 = ifelse(primary_cost_10>0, 1, 0),
-            bi_gp_cost_m11 = ifelse(primary_cost_11>0, 1, 0),
-            bi_gp_cost_m12 = ifelse(primary_cost_12>0, 1, 0)
+            bi_gp_cost_m1 = ifelse(primary_cost_1>0 & !is.na(primary_cost_1), 1, 0),
+            bi_gp_cost_m2 = ifelse(primary_cost_2>0 & !is.na(primary_cost_2), 1, 0),
+            bi_gp_cost_m3 = ifelse(primary_cost_3>0 & !is.na(primary_cost_3), 1, 0),
+            bi_gp_cost_m4 = ifelse(primary_cost_4>0 & !is.na(primary_cost_4), 1, 0),
+            bi_gp_cost_m5 = ifelse(primary_cost_5>0 & !is.na(primary_cost_5), 1, 0),
+            bi_gp_cost_m6 = ifelse(primary_cost_6>0 & !is.na(primary_cost_6), 1, 0),
+            bi_gp_cost_m7 = ifelse(primary_cost_7>0 & !is.na(primary_cost_7), 1, 0),
+            bi_gp_cost_m8 = ifelse(primary_cost_8>0 & !is.na(primary_cost_8), 1, 0),
+            bi_gp_cost_m9 = ifelse(primary_cost_9>0 & !is.na(primary_cost_9), 1, 0),
+            bi_gp_cost_m10 = ifelse(primary_cost_10>0 & !is.na(primary_cost_10), 1, 0),
+            bi_gp_cost_m11 = ifelse(primary_cost_11>0 & !is.na(primary_cost_11), 1, 0),
+            bi_gp_cost_m12 = ifelse(primary_cost_12>0 & !is.na(primary_cost_12), 1, 0)
       )
+
 
 # vectors of gp visits and costs
 
@@ -308,35 +309,36 @@ exp_gp_tabulate <- bind_rows(exp_gp_compare %>% mutate(month = as.character(mont
 # create binomial outcomes in each months
 com_matched <- com_matched %>%
       mutate(
-            bi_gp_visit_m1 = ifelse(gp_visit_m1>0, 1, 0),
-            bi_gp_visit_m2 = ifelse(gp_visit_m2>0, 1, 0),
-            bi_gp_visit_m3 = ifelse(gp_visit_m3>0, 1, 0),
-            bi_gp_visit_m4 = ifelse(gp_visit_m4>0, 1, 0),
-            bi_gp_visit_m5 = ifelse(gp_visit_m5>0, 1, 0),
-            bi_gp_visit_m6 = ifelse(gp_visit_m6>0, 1, 0),
-            bi_gp_visit_m7 = ifelse(gp_visit_m7>0, 1, 0),
-            bi_gp_visit_m8 = ifelse(gp_visit_m8>0, 1, 0),
-            bi_gp_visit_m9 = ifelse(gp_visit_m9>0, 1, 0),
-            bi_gp_visit_m10 = ifelse(gp_visit_m10>0, 1, 0),
-            bi_gp_visit_m11 = ifelse(gp_visit_m11>0, 1, 0),
-            bi_gp_visit_m12 = ifelse(gp_visit_m12>0, 1, 0)
+            bi_gp_visit_m1 = ifelse(gp_visit_m1>0 & !is.na(gp_visit_m1), 1, 0),
+            bi_gp_visit_m2 = ifelse(gp_visit_m2>0 & !is.na(gp_visit_m2), 1, 0),
+            bi_gp_visit_m3 = ifelse(gp_visit_m3>0 & !is.na(gp_visit_m3), 1, 0),
+            bi_gp_visit_m4 = ifelse(gp_visit_m4>0 & !is.na(gp_visit_m4), 1, 0),
+            bi_gp_visit_m5 = ifelse(gp_visit_m5>0 & !is.na(gp_visit_m5), 1, 0),
+            bi_gp_visit_m6 = ifelse(gp_visit_m6>0 & !is.na(gp_visit_m6), 1, 0),
+            bi_gp_visit_m7 = ifelse(gp_visit_m7>0 & !is.na(gp_visit_m7), 1, 0),
+            bi_gp_visit_m8 = ifelse(gp_visit_m8>0 & !is.na(gp_visit_m8), 1, 0),
+            bi_gp_visit_m9 = ifelse(gp_visit_m9>0 & !is.na(gp_visit_m9), 1, 0),
+            bi_gp_visit_m10 = ifelse(gp_visit_m10>0 & !is.na(gp_visit_m10), 1, 0),
+            bi_gp_visit_m11 = ifelse(gp_visit_m11>0 & !is.na(gp_visit_m11), 1, 0),
+            bi_gp_visit_m12 = ifelse(gp_visit_m12>0 & !is.na(gp_visit_m12), 1, 0)
       )
 
 com_matched <- com_matched %>% 
       mutate(
-            bi_gp_cost_m1 = ifelse(primary_cost_1>0, 1, 0),
-            bi_gp_cost_m2 = ifelse(primary_cost_2>0, 1, 0),
-            bi_gp_cost_m3 = ifelse(primary_cost_3>0, 1, 0),
-            bi_gp_cost_m4 = ifelse(primary_cost_4>0, 1, 0),
-            bi_gp_cost_m5 = ifelse(primary_cost_5>0, 1, 0),
-            bi_gp_cost_m6 = ifelse(primary_cost_6>0, 1, 0),
-            bi_gp_cost_m7 = ifelse(primary_cost_7>0, 1, 0),
-            bi_gp_cost_m8 = ifelse(primary_cost_8>0, 1, 0),
-            bi_gp_cost_m9 = ifelse(primary_cost_9>0, 1, 0),
-            bi_gp_cost_m10 = ifelse(primary_cost_10>0, 1, 0),
-            bi_gp_cost_m11 = ifelse(primary_cost_11>0, 1, 0),
-            bi_gp_cost_m12 = ifelse(primary_cost_12>0, 1, 0)
+            bi_gp_cost_m1 = ifelse(primary_cost_1>0 & !is.na(primary_cost_1), 1, 0),
+            bi_gp_cost_m2 = ifelse(primary_cost_2>0 & !is.na(primary_cost_2), 1, 0),
+            bi_gp_cost_m3 = ifelse(primary_cost_3>0 & !is.na(primary_cost_3), 1, 0),
+            bi_gp_cost_m4 = ifelse(primary_cost_4>0 & !is.na(primary_cost_4), 1, 0),
+            bi_gp_cost_m5 = ifelse(primary_cost_5>0 & !is.na(primary_cost_5), 1, 0),
+            bi_gp_cost_m6 = ifelse(primary_cost_6>0 & !is.na(primary_cost_6), 1, 0),
+            bi_gp_cost_m7 = ifelse(primary_cost_7>0 & !is.na(primary_cost_7), 1, 0),
+            bi_gp_cost_m8 = ifelse(primary_cost_8>0 & !is.na(primary_cost_8), 1, 0),
+            bi_gp_cost_m9 = ifelse(primary_cost_9>0 & !is.na(primary_cost_9), 1, 0),
+            bi_gp_cost_m10 = ifelse(primary_cost_10>0 & !is.na(primary_cost_10), 1, 0),
+            bi_gp_cost_m11 = ifelse(primary_cost_11>0 & !is.na(primary_cost_11), 1, 0),
+            bi_gp_cost_m12 = ifelse(primary_cost_12>0 & !is.na(primary_cost_12), 1, 0)
       )
+
 
 
 
@@ -421,35 +423,36 @@ ggsave(file = "output/qc09_gp_non_zero_counts_comparison.png", width = 12, heigh
 # create binomial outcomes in each months
 lc_exp_matched <- lc_exp_matched %>%
       mutate(
-            bi_hos_visit_m1 = ifelse(hos_visit_m1>0, 1, 0),
-            bi_hos_visit_m2 = ifelse(hos_visit_m2>0, 1, 0),
-            bi_hos_visit_m3 = ifelse(hos_visit_m3>0, 1, 0),
-            bi_hos_visit_m4 = ifelse(hos_visit_m4>0, 1, 0),
-            bi_hos_visit_m5 = ifelse(hos_visit_m5>0, 1, 0),
-            bi_hos_visit_m6 = ifelse(hos_visit_m6>0, 1, 0),
-            bi_hos_visit_m7 = ifelse(hos_visit_m7>0, 1, 0),
-            bi_hos_visit_m8 = ifelse(hos_visit_m8>0, 1, 0),
-            bi_hos_visit_m9 = ifelse(hos_visit_m9>0, 1, 0),
-            bi_hos_visit_m10 = ifelse(hos_visit_m10>0, 1, 0),
-            bi_hos_visit_m11 = ifelse(hos_visit_m11>0, 1, 0),
-            bi_hos_visit_m12 = ifelse(hos_visit_m12>0, 1, 0)
+            bi_hos_visit_m1 = ifelse(hos_visit_m1>0 & !is.na(hos_visit_m1), 1, 0),
+            bi_hos_visit_m2 = ifelse(hos_visit_m2>0 & !is.na(hos_visit_m2), 1, 0),
+            bi_hos_visit_m3 = ifelse(hos_visit_m3>0 & !is.na(hos_visit_m3), 1, 0),
+            bi_hos_visit_m4 = ifelse(hos_visit_m4>0 & !is.na(hos_visit_m4), 1, 0),
+            bi_hos_visit_m5 = ifelse(hos_visit_m5>0 & !is.na(hos_visit_m5), 1, 0),
+            bi_hos_visit_m6 = ifelse(hos_visit_m6>0 & !is.na(hos_visit_m6), 1, 0),
+            bi_hos_visit_m7 = ifelse(hos_visit_m7>0 & !is.na(hos_visit_m7), 1, 0),
+            bi_hos_visit_m8 = ifelse(hos_visit_m8>0 & !is.na(hos_visit_m8), 1, 0),
+            bi_hos_visit_m9 = ifelse(hos_visit_m9>0 & !is.na(hos_visit_m9), 1, 0),
+            bi_hos_visit_m10 = ifelse(hos_visit_m10>0 & !is.na(hos_visit_m10), 1, 0),
+            bi_hos_visit_m11 = ifelse(hos_visit_m11>0 & !is.na(hos_visit_m11), 1, 0),
+            bi_hos_visit_m12 = ifelse(hos_visit_m12>0 & !is.na(hos_visit_m12), 1, 0)
       )
 
 lc_exp_matched <- lc_exp_matched %>% 
       mutate(
-            bi_hos_cost_m1 = ifelse(apc_cost_m1>0, 1, 0),
-            bi_hos_cost_m2 = ifelse(apc_cost_m2>0, 1, 0),
-            bi_hos_cost_m3 = ifelse(apc_cost_m3>0, 1, 0),
-            bi_hos_cost_m4 = ifelse(apc_cost_m4>0, 1, 0),
-            bi_hos_cost_m5 = ifelse(apc_cost_m5>0, 1, 0),
-            bi_hos_cost_m6 = ifelse(apc_cost_m6>0, 1, 0),
-            bi_hos_cost_m7 = ifelse(apc_cost_m7>0, 1, 0),
-            bi_hos_cost_m8 = ifelse(apc_cost_m8>0, 1, 0),
-            bi_hos_cost_m9 = ifelse(apc_cost_m9>0, 1, 0),
-            bi_hos_cost_m10 = ifelse(apc_cost_m10>0, 1, 0),
-            bi_hos_cost_m11 = ifelse(apc_cost_m11>0, 1, 0),
-            bi_hos_cost_m12 = ifelse(apc_cost_m12>0, 1, 0)
+            bi_hos_cost_m1 = ifelse(apc_cost_m1>0 & !is.na(apc_cost_m1), 1, 0),
+            bi_hos_cost_m2 = ifelse(apc_cost_m2>0 & !is.na(apc_cost_m2), 1, 0),
+            bi_hos_cost_m3 = ifelse(apc_cost_m3>0 & !is.na(apc_cost_m3), 1, 0),
+            bi_hos_cost_m4 = ifelse(apc_cost_m4>0 & !is.na(apc_cost_m4), 1, 0),
+            bi_hos_cost_m5 = ifelse(apc_cost_m5>0 & !is.na(apc_cost_m5), 1, 0),
+            bi_hos_cost_m6 = ifelse(apc_cost_m6>0 & !is.na(apc_cost_m6), 1, 0),
+            bi_hos_cost_m7 = ifelse(apc_cost_m7>0 & !is.na(apc_cost_m7), 1, 0),
+            bi_hos_cost_m8 = ifelse(apc_cost_m8>0 & !is.na(apc_cost_m8), 1, 0),
+            bi_hos_cost_m9 = ifelse(apc_cost_m9>0 & !is.na(apc_cost_m9), 1, 0),
+            bi_hos_cost_m10 = ifelse(apc_cost_m10>0 & !is.na(apc_cost_m10), 1, 0),
+            bi_hos_cost_m11 = ifelse(apc_cost_m11>0 & !is.na(apc_cost_m11), 1, 0),
+            bi_hos_cost_m12 = ifelse(apc_cost_m12>0 & !is.na(apc_cost_m12), 1, 0)
       )
+
 
 # vectors of hos visits and costs
 
@@ -509,34 +512,35 @@ exp_hos_tabulate <- bind_rows(exp_hos_compare %>% mutate(month = as.character(mo
 # create binomial outcomes in each months
 com_matched <- com_matched %>%
       mutate(
-            bi_hos_visit_m1 = ifelse(hos_visit_m1>0, 1, 0),
-            bi_hos_visit_m2 = ifelse(hos_visit_m2>0, 1, 0),
-            bi_hos_visit_m3 = ifelse(hos_visit_m3>0, 1, 0),
-            bi_hos_visit_m4 = ifelse(hos_visit_m4>0, 1, 0),
-            bi_hos_visit_m5 = ifelse(hos_visit_m5>0, 1, 0),
-            bi_hos_visit_m6 = ifelse(hos_visit_m6>0, 1, 0),
-            bi_hos_visit_m7 = ifelse(hos_visit_m7>0, 1, 0),
-            bi_hos_visit_m8 = ifelse(hos_visit_m8>0, 1, 0),
-            bi_hos_visit_m9 = ifelse(hos_visit_m9>0, 1, 0),
-            bi_hos_visit_m10 = ifelse(hos_visit_m10>0, 1, 0),
-            bi_hos_visit_m11 = ifelse(hos_visit_m11>0, 1, 0),
-            bi_hos_visit_m12 = ifelse(hos_visit_m12>0, 1, 0)
+            bi_hos_visit_m1 = ifelse(hos_visit_m1>0 & !is.na(hos_visit_m1), 1, 0),
+            bi_hos_visit_m2 = ifelse(hos_visit_m2>0 & !is.na(hos_visit_m2), 1, 0),
+            bi_hos_visit_m3 = ifelse(hos_visit_m3>0 & !is.na(hos_visit_m3), 1, 0),
+            bi_hos_visit_m4 = ifelse(hos_visit_m4>0 & !is.na(hos_visit_m4), 1, 0),
+            bi_hos_visit_m5 = ifelse(hos_visit_m5>0 & !is.na(hos_visit_m5), 1, 0),
+            bi_hos_visit_m6 = ifelse(hos_visit_m6>0 & !is.na(hos_visit_m6), 1, 0),
+            bi_hos_visit_m7 = ifelse(hos_visit_m7>0 & !is.na(hos_visit_m7), 1, 0),
+            bi_hos_visit_m8 = ifelse(hos_visit_m8>0 & !is.na(hos_visit_m8), 1, 0),
+            bi_hos_visit_m9 = ifelse(hos_visit_m9>0 & !is.na(hos_visit_m9), 1, 0),
+            bi_hos_visit_m10 = ifelse(hos_visit_m10>0 & !is.na(hos_visit_m10), 1, 0),
+            bi_hos_visit_m11 = ifelse(hos_visit_m11>0 & !is.na(hos_visit_m11), 1, 0),
+            bi_hos_visit_m12 = ifelse(hos_visit_m12>0 & !is.na(hos_visit_m12), 1, 0)
       )
+
 
 com_matched <- com_matched %>% 
       mutate(
-            bi_hos_cost_m1 = ifelse(apc_cost_m1>0, 1, 0),
-            bi_hos_cost_m2 = ifelse(apc_cost_m2>0, 1, 0),
-            bi_hos_cost_m3 = ifelse(apc_cost_m3>0, 1, 0),
-            bi_hos_cost_m4 = ifelse(apc_cost_m4>0, 1, 0),
-            bi_hos_cost_m5 = ifelse(apc_cost_m5>0, 1, 0),
-            bi_hos_cost_m6 = ifelse(apc_cost_m6>0, 1, 0),
-            bi_hos_cost_m7 = ifelse(apc_cost_m7>0, 1, 0),
-            bi_hos_cost_m8 = ifelse(apc_cost_m8>0, 1, 0),
-            bi_hos_cost_m9 = ifelse(apc_cost_m9>0, 1, 0),
-            bi_hos_cost_m10 = ifelse(apc_cost_m10>0, 1, 0),
-            bi_hos_cost_m11 = ifelse(apc_cost_m11>0, 1, 0),
-            bi_hos_cost_m12 = ifelse(apc_cost_m12>0, 1, 0)
+            bi_hos_cost_m1 = ifelse(apc_cost_m1>0 & !is.na(apc_cost_m1), 1, 0),
+            bi_hos_cost_m2 = ifelse(apc_cost_m2>0 & !is.na(apc_cost_m2), 1, 0),
+            bi_hos_cost_m3 = ifelse(apc_cost_m3>0 & !is.na(apc_cost_m3), 1, 0),
+            bi_hos_cost_m4 = ifelse(apc_cost_m4>0 & !is.na(apc_cost_m4), 1, 0),
+            bi_hos_cost_m5 = ifelse(apc_cost_m5>0 & !is.na(apc_cost_m5), 1, 0),
+            bi_hos_cost_m6 = ifelse(apc_cost_m6>0 & !is.na(apc_cost_m6), 1, 0),
+            bi_hos_cost_m7 = ifelse(apc_cost_m7>0 & !is.na(apc_cost_m7), 1, 0),
+            bi_hos_cost_m8 = ifelse(apc_cost_m8>0 & !is.na(apc_cost_m8), 1, 0),
+            bi_hos_cost_m9 = ifelse(apc_cost_m9>0 & !is.na(apc_cost_m9), 1, 0),
+            bi_hos_cost_m10 = ifelse(apc_cost_m10>0 & !is.na(apc_cost_m10), 1, 0),
+            bi_hos_cost_m11 = ifelse(apc_cost_m11>0 & !is.na(apc_cost_m11), 1, 0),
+            bi_hos_cost_m12 = ifelse(apc_cost_m12>0 & !is.na(apc_cost_m12), 1, 0)
       )
 
 
@@ -622,34 +626,34 @@ ggsave(file = "output/qc09_hos_non_zero_counts_comparison.png", width = 12, heig
 # create binomial outcomes in each months
 lc_exp_matched <- lc_exp_matched %>%
       mutate(
-            bi_ae_visit_m1 = ifelse(ae_visit_m1>0, 1, 0),
-            bi_ae_visit_m2 = ifelse(ae_visit_m2>0, 1, 0),
-            bi_ae_visit_m3 = ifelse(ae_visit_m3>0, 1, 0),
-            bi_ae_visit_m4 = ifelse(ae_visit_m4>0, 1, 0),
-            bi_ae_visit_m5 = ifelse(ae_visit_m5>0, 1, 0),
-            bi_ae_visit_m6 = ifelse(ae_visit_m6>0, 1, 0),
-            bi_ae_visit_m7 = ifelse(ae_visit_m7>0, 1, 0),
-            bi_ae_visit_m8 = ifelse(ae_visit_m8>0, 1, 0),
-            bi_ae_visit_m9 = ifelse(ae_visit_m9>0, 1, 0),
-            bi_ae_visit_m10 = ifelse(ae_visit_m10>0, 1, 0),
-            bi_ae_visit_m11 = ifelse(ae_visit_m11>0, 1, 0),
-            bi_ae_visit_m12 = ifelse(ae_visit_m12>0, 1, 0)
+            bi_ae_visit_m1 = ifelse(ae_visit_m1>0 & !is.na(ae_visit_m1), 1, 0),
+            bi_ae_visit_m2 = ifelse(ae_visit_m2>0 & !is.na(ae_visit_m2), 1, 0),
+            bi_ae_visit_m3 = ifelse(ae_visit_m3>0 & !is.na(ae_visit_m3), 1, 0),
+            bi_ae_visit_m4 = ifelse(ae_visit_m4>0 & !is.na(ae_visit_m4), 1, 0),
+            bi_ae_visit_m5 = ifelse(ae_visit_m5>0 & !is.na(ae_visit_m5), 1, 0),
+            bi_ae_visit_m6 = ifelse(ae_visit_m6>0 & !is.na(ae_visit_m6), 1, 0),
+            bi_ae_visit_m7 = ifelse(ae_visit_m7>0 & !is.na(ae_visit_m7), 1, 0),
+            bi_ae_visit_m8 = ifelse(ae_visit_m8>0 & !is.na(ae_visit_m8), 1, 0),
+            bi_ae_visit_m9 = ifelse(ae_visit_m9>0 & !is.na(ae_visit_m9), 1, 0),
+            bi_ae_visit_m10 = ifelse(ae_visit_m10>0 & !is.na(ae_visit_m10), 1, 0),
+            bi_ae_visit_m11 = ifelse(ae_visit_m11>0 & !is.na(ae_visit_m11), 1, 0),
+            bi_ae_visit_m12 = ifelse(ae_visit_m12>0 & !is.na(ae_visit_m12), 1, 0)
       )
 
 lc_exp_matched <- lc_exp_matched %>% 
       mutate(
-            bi_ae_cost_m1 = ifelse(er_cost_m1>0, 1, 0),
-            bi_ae_cost_m2 = ifelse(er_cost_m2>0, 1, 0),
-            bi_ae_cost_m3 = ifelse(er_cost_m3>0, 1, 0),
-            bi_ae_cost_m4 = ifelse(er_cost_m4>0, 1, 0),
-            bi_ae_cost_m5 = ifelse(er_cost_m5>0, 1, 0),
-            bi_ae_cost_m6 = ifelse(er_cost_m6>0, 1, 0),
-            bi_ae_cost_m7 = ifelse(er_cost_m7>0, 1, 0),
-            bi_ae_cost_m8 = ifelse(er_cost_m8>0, 1, 0),
-            bi_ae_cost_m9 = ifelse(er_cost_m9>0, 1, 0),
-            bi_ae_cost_m10 = ifelse(er_cost_m10>0, 1, 0),
-            bi_ae_cost_m11 = ifelse(er_cost_m11>0, 1, 0),
-            bi_ae_cost_m12 = ifelse(er_cost_m12>0, 1, 0)
+            bi_ae_cost_m1 = ifelse(er_cost_m1>0 & !is.na(er_cost_m1), 1, 0),
+            bi_ae_cost_m2 = ifelse(er_cost_m2>0 & !is.na(er_cost_m2), 1, 0),
+            bi_ae_cost_m3 = ifelse(er_cost_m3>0 & !is.na(er_cost_m3), 1, 0),
+            bi_ae_cost_m4 = ifelse(er_cost_m4>0 & !is.na(er_cost_m4), 1, 0),
+            bi_ae_cost_m5 = ifelse(er_cost_m5>0 & !is.na(er_cost_m5), 1, 0),
+            bi_ae_cost_m6 = ifelse(er_cost_m6>0 & !is.na(er_cost_m6), 1, 0),
+            bi_ae_cost_m7 = ifelse(er_cost_m7>0 & !is.na(er_cost_m7), 1, 0),
+            bi_ae_cost_m8 = ifelse(er_cost_m8>0 & !is.na(er_cost_m8), 1, 0),
+            bi_ae_cost_m9 = ifelse(er_cost_m9>0 & !is.na(er_cost_m9), 1, 0),
+            bi_ae_cost_m10 = ifelse(er_cost_m10>0 & !is.na(er_cost_m10), 1, 0),
+            bi_ae_cost_m11 = ifelse(er_cost_m11>0 & !is.na(er_cost_m11), 1, 0),
+            bi_ae_cost_m12 = ifelse(er_cost_m12>0 & !is.na(er_cost_m12), 1, 0)
       )
 
 # vectors of ae visits and costs
@@ -710,35 +714,36 @@ exp_ae_tabulate <- bind_rows(exp_ae_compare %>% mutate(month = as.character(mont
 # create binomial outcomes in each months
 com_matched <- com_matched %>%
       mutate(
-            bi_ae_visit_m1 = ifelse(ae_visit_m1>0, 1, 0),
-            bi_ae_visit_m2 = ifelse(ae_visit_m2>0, 1, 0),
-            bi_ae_visit_m3 = ifelse(ae_visit_m3>0, 1, 0),
-            bi_ae_visit_m4 = ifelse(ae_visit_m4>0, 1, 0),
-            bi_ae_visit_m5 = ifelse(ae_visit_m5>0, 1, 0),
-            bi_ae_visit_m6 = ifelse(ae_visit_m6>0, 1, 0),
-            bi_ae_visit_m7 = ifelse(ae_visit_m7>0, 1, 0),
-            bi_ae_visit_m8 = ifelse(ae_visit_m8>0, 1, 0),
-            bi_ae_visit_m9 = ifelse(ae_visit_m9>0, 1, 0),
-            bi_ae_visit_m10 = ifelse(ae_visit_m10>0, 1, 0),
-            bi_ae_visit_m11 = ifelse(ae_visit_m11>0, 1, 0),
-            bi_ae_visit_m12 = ifelse(ae_visit_m12>0, 1, 0)
+            bi_ae_visit_m1 = ifelse(ae_visit_m1>0 & !is.na(ae_visit_m1), 1, 0),
+            bi_ae_visit_m2 = ifelse(ae_visit_m2>0 & !is.na(ae_visit_m2), 1, 0),
+            bi_ae_visit_m3 = ifelse(ae_visit_m3>0 & !is.na(ae_visit_m3), 1, 0),
+            bi_ae_visit_m4 = ifelse(ae_visit_m4>0 & !is.na(ae_visit_m4), 1, 0),
+            bi_ae_visit_m5 = ifelse(ae_visit_m5>0 & !is.na(ae_visit_m5), 1, 0),
+            bi_ae_visit_m6 = ifelse(ae_visit_m6>0 & !is.na(ae_visit_m6), 1, 0),
+            bi_ae_visit_m7 = ifelse(ae_visit_m7>0 & !is.na(ae_visit_m7), 1, 0),
+            bi_ae_visit_m8 = ifelse(ae_visit_m8>0 & !is.na(ae_visit_m8), 1, 0),
+            bi_ae_visit_m9 = ifelse(ae_visit_m9>0 & !is.na(ae_visit_m9), 1, 0),
+            bi_ae_visit_m10 = ifelse(ae_visit_m10>0 & !is.na(ae_visit_m10), 1, 0),
+            bi_ae_visit_m11 = ifelse(ae_visit_m11>0 & !is.na(ae_visit_m11), 1, 0),
+            bi_ae_visit_m12 = ifelse(ae_visit_m12>0 & !is.na(ae_visit_m12), 1, 0)
       )
 
 com_matched <- com_matched %>% 
       mutate(
-            bi_ae_cost_m1 = ifelse(er_cost_m1>0, 1, 0),
-            bi_ae_cost_m2 = ifelse(er_cost_m2>0, 1, 0),
-            bi_ae_cost_m3 = ifelse(er_cost_m3>0, 1, 0),
-            bi_ae_cost_m4 = ifelse(er_cost_m4>0, 1, 0),
-            bi_ae_cost_m5 = ifelse(er_cost_m5>0, 1, 0),
-            bi_ae_cost_m6 = ifelse(er_cost_m6>0, 1, 0),
-            bi_ae_cost_m7 = ifelse(er_cost_m7>0, 1, 0),
-            bi_ae_cost_m8 = ifelse(er_cost_m8>0, 1, 0),
-            bi_ae_cost_m9 = ifelse(er_cost_m9>0, 1, 0),
-            bi_ae_cost_m10 = ifelse(er_cost_m10>0, 1, 0),
-            bi_ae_cost_m11 = ifelse(er_cost_m11>0, 1, 0),
-            bi_ae_cost_m12 = ifelse(er_cost_m12>0, 1, 0)
+            bi_ae_cost_m1 = ifelse(er_cost_m1>0 & !is.na(er_cost_m1), 1, 0),
+            bi_ae_cost_m2 = ifelse(er_cost_m2>0 & !is.na(er_cost_m2), 1, 0),
+            bi_ae_cost_m3 = ifelse(er_cost_m3>0 & !is.na(er_cost_m3), 1, 0),
+            bi_ae_cost_m4 = ifelse(er_cost_m4>0 & !is.na(er_cost_m4), 1, 0),
+            bi_ae_cost_m5 = ifelse(er_cost_m5>0 & !is.na(er_cost_m5), 1, 0),
+            bi_ae_cost_m6 = ifelse(er_cost_m6>0 & !is.na(er_cost_m6), 1, 0),
+            bi_ae_cost_m7 = ifelse(er_cost_m7>0 & !is.na(er_cost_m7), 1, 0),
+            bi_ae_cost_m8 = ifelse(er_cost_m8>0 & !is.na(er_cost_m8), 1, 0),
+            bi_ae_cost_m9 = ifelse(er_cost_m9>0 & !is.na(er_cost_m9), 1, 0),
+            bi_ae_cost_m10 = ifelse(er_cost_m10>0 & !is.na(er_cost_m10), 1, 0),
+            bi_ae_cost_m11 = ifelse(er_cost_m11>0 & !is.na(er_cost_m11), 1, 0),
+            bi_ae_cost_m12 = ifelse(er_cost_m12>0 & !is.na(er_cost_m12), 1, 0)
       )
+
 
 
 # Initialize an empty list to store the results
@@ -820,35 +825,36 @@ ggsave(file = "output/qc09_ae_non_zero_counts_comparison.png", width = 12, heigh
 # create binomial outcomes in each months
 lc_exp_matched <- lc_exp_matched %>%
       mutate(
-            bi_opa_visit_m1 = ifelse(opa_visit_m1>0, 1, 0),
-            bi_opa_visit_m2 = ifelse(opa_visit_m2>0, 1, 0),
-            bi_opa_visit_m3 = ifelse(opa_visit_m3>0, 1, 0),
-            bi_opa_visit_m4 = ifelse(opa_visit_m4>0, 1, 0),
-            bi_opa_visit_m5 = ifelse(opa_visit_m5>0, 1, 0),
-            bi_opa_visit_m6 = ifelse(opa_visit_m6>0, 1, 0),
-            bi_opa_visit_m7 = ifelse(opa_visit_m7>0, 1, 0),
-            bi_opa_visit_m8 = ifelse(opa_visit_m8>0, 1, 0),
-            bi_opa_visit_m9 = ifelse(opa_visit_m9>0, 1, 0),
-            bi_opa_visit_m10 = ifelse(opa_visit_m10>0, 1, 0),
-            bi_opa_visit_m11 = ifelse(opa_visit_m11>0, 1, 0),
-            bi_opa_visit_m12 = ifelse(opa_visit_m12>0, 1, 0)
+            bi_opa_visit_m1 = ifelse(opa_visit_m1>0 & !is.na(opa_visit_m1), 1, 0),
+            bi_opa_visit_m2 = ifelse(opa_visit_m2>0 & !is.na(opa_visit_m2), 1, 0),
+            bi_opa_visit_m3 = ifelse(opa_visit_m3>0 & !is.na(opa_visit_m3), 1, 0),
+            bi_opa_visit_m4 = ifelse(opa_visit_m4>0 & !is.na(opa_visit_m4), 1, 0),
+            bi_opa_visit_m5 = ifelse(opa_visit_m5>0 & !is.na(opa_visit_m5), 1, 0),
+            bi_opa_visit_m6 = ifelse(opa_visit_m6>0 & !is.na(opa_visit_m6), 1, 0),
+            bi_opa_visit_m7 = ifelse(opa_visit_m7>0 & !is.na(opa_visit_m7), 1, 0),
+            bi_opa_visit_m8 = ifelse(opa_visit_m8>0 & !is.na(opa_visit_m8), 1, 0),
+            bi_opa_visit_m9 = ifelse(opa_visit_m9>0 & !is.na(opa_visit_m9), 1, 0),
+            bi_opa_visit_m10 = ifelse(opa_visit_m10>0 & !is.na(opa_visit_m10), 1, 0),
+            bi_opa_visit_m11 = ifelse(opa_visit_m11>0 & !is.na(opa_visit_m11), 1, 0),
+            bi_opa_visit_m12 = ifelse(opa_visit_m12>0 & !is.na(opa_visit_m12), 1, 0)
       )
 
 lc_exp_matched <- lc_exp_matched %>% 
       mutate(
-            bi_opa_cost_m1 = ifelse(opd_cost_m1>0, 1, 0),
-            bi_opa_cost_m2 = ifelse(opd_cost_m2>0, 1, 0),
-            bi_opa_cost_m3 = ifelse(opd_cost_m3>0, 1, 0),
-            bi_opa_cost_m4 = ifelse(opd_cost_m4>0, 1, 0),
-            bi_opa_cost_m5 = ifelse(opd_cost_m5>0, 1, 0),
-            bi_opa_cost_m6 = ifelse(opd_cost_m6>0, 1, 0),
-            bi_opa_cost_m7 = ifelse(opd_cost_m7>0, 1, 0),
-            bi_opa_cost_m8 = ifelse(opd_cost_m8>0, 1, 0),
-            bi_opa_cost_m9 = ifelse(opd_cost_m9>0, 1, 0),
-            bi_opa_cost_m10 = ifelse(opd_cost_m10>0, 1, 0),
-            bi_opa_cost_m11 = ifelse(opd_cost_m11>0, 1, 0),
-            bi_opa_cost_m12 = ifelse(opd_cost_m12>0, 1, 0)
+            bi_opa_cost_m1 = ifelse(opd_cost_m1>0 & !is.na(opd_cost_m1), 1, 0),
+            bi_opa_cost_m2 = ifelse(opd_cost_m2>0 & !is.na(opd_cost_m2), 1, 0),
+            bi_opa_cost_m3 = ifelse(opd_cost_m3>0 & !is.na(opd_cost_m3), 1, 0),
+            bi_opa_cost_m4 = ifelse(opd_cost_m4>0 & !is.na(opd_cost_m4), 1, 0),
+            bi_opa_cost_m5 = ifelse(opd_cost_m5>0 & !is.na(opd_cost_m5), 1, 0),
+            bi_opa_cost_m6 = ifelse(opd_cost_m6>0 & !is.na(opd_cost_m6), 1, 0),
+            bi_opa_cost_m7 = ifelse(opd_cost_m7>0 & !is.na(opd_cost_m7), 1, 0),
+            bi_opa_cost_m8 = ifelse(opd_cost_m8>0 & !is.na(opd_cost_m8), 1, 0),
+            bi_opa_cost_m9 = ifelse(opd_cost_m9>0 & !is.na(opd_cost_m9), 1, 0),
+            bi_opa_cost_m10 = ifelse(opd_cost_m10>0 & !is.na(opd_cost_m10), 1, 0),
+            bi_opa_cost_m11 = ifelse(opd_cost_m11>0 & !is.na(opd_cost_m11), 1, 0),
+            bi_opa_cost_m12 = ifelse(opd_cost_m12>0 & !is.na(opd_cost_m12), 1, 0)
       )
+
 
 # vectors of opa visits and costs
 
@@ -905,36 +911,35 @@ exp_opa_tabulate <- bind_rows(exp_opa_compare %>% mutate(month = as.character(mo
 # create binomial outcomes in each months
 com_matched <- com_matched %>%
       mutate(
-            bi_opa_visit_m1 = ifelse(opa_visit_m1>0, 1, 0),
-            bi_opa_visit_m2 = ifelse(opa_visit_m2>0, 1, 0),
-            bi_opa_visit_m3 = ifelse(opa_visit_m3>0, 1, 0),
-            bi_opa_visit_m4 = ifelse(opa_visit_m4>0, 1, 0),
-            bi_opa_visit_m5 = ifelse(opa_visit_m5>0, 1, 0),
-            bi_opa_visit_m6 = ifelse(opa_visit_m6>0, 1, 0),
-            bi_opa_visit_m7 = ifelse(opa_visit_m7>0, 1, 0),
-            bi_opa_visit_m8 = ifelse(opa_visit_m8>0, 1, 0),
-            bi_opa_visit_m9 = ifelse(opa_visit_m9>0, 1, 0),
-            bi_opa_visit_m10 = ifelse(opa_visit_m10>0, 1, 0),
-            bi_opa_visit_m11 = ifelse(opa_visit_m11>0, 1, 0),
-            bi_opa_visit_m12 = ifelse(opa_visit_m12>0, 1, 0)
+            bi_opa_visit_m1 = ifelse(opa_visit_m1>0 & !is.na(opa_visit_m1), 1, 0),
+            bi_opa_visit_m2 = ifelse(opa_visit_m2>0 & !is.na(opa_visit_m2), 1, 0),
+            bi_opa_visit_m3 = ifelse(opa_visit_m3>0 & !is.na(opa_visit_m3), 1, 0),
+            bi_opa_visit_m4 = ifelse(opa_visit_m4>0 & !is.na(opa_visit_m4), 1, 0),
+            bi_opa_visit_m5 = ifelse(opa_visit_m5>0 & !is.na(opa_visit_m5), 1, 0),
+            bi_opa_visit_m6 = ifelse(opa_visit_m6>0 & !is.na(opa_visit_m6), 1, 0),
+            bi_opa_visit_m7 = ifelse(opa_visit_m7>0 & !is.na(opa_visit_m7), 1, 0),
+            bi_opa_visit_m8 = ifelse(opa_visit_m8>0 & !is.na(opa_visit_m8), 1, 0),
+            bi_opa_visit_m9 = ifelse(opa_visit_m9>0 & !is.na(opa_visit_m9), 1, 0),
+            bi_opa_visit_m10 = ifelse(opa_visit_m10>0 & !is.na(opa_visit_m10), 1, 0),
+            bi_opa_visit_m11 = ifelse(opa_visit_m11>0 & !is.na(opa_visit_m11), 1, 0),
+            bi_opa_visit_m12 = ifelse(opa_visit_m12>0 & !is.na(opa_visit_m12), 1, 0)
       )
 
 com_matched <- com_matched %>% 
       mutate(
-            bi_opa_cost_m1 = ifelse(opd_cost_m1>0, 1, 0),
-            bi_opa_cost_m2 = ifelse(opd_cost_m2>0, 1, 0),
-            bi_opa_cost_m3 = ifelse(opd_cost_m3>0, 1, 0),
-            bi_opa_cost_m4 = ifelse(opd_cost_m4>0, 1, 0),
-            bi_opa_cost_m5 = ifelse(opd_cost_m5>0, 1, 0),
-            bi_opa_cost_m6 = ifelse(opd_cost_m6>0, 1, 0),
-            bi_opa_cost_m7 = ifelse(opd_cost_m7>0, 1, 0),
-            bi_opa_cost_m8 = ifelse(opd_cost_m8>0, 1, 0),
-            bi_opa_cost_m9 = ifelse(opd_cost_m9>0, 1, 0),
-            bi_opa_cost_m10 = ifelse(opd_cost_m10>0, 1, 0),
-            bi_opa_cost_m11 = ifelse(opd_cost_m11>0, 1, 0),
-            bi_opa_cost_m12 = ifelse(opd_cost_m12>0, 1, 0)
+            bi_opa_cost_m1 = ifelse(opd_cost_m1>0 & !is.na(opd_cost_m1), 1, 0),
+            bi_opa_cost_m2 = ifelse(opd_cost_m2>0 & !is.na(opd_cost_m2), 1, 0),
+            bi_opa_cost_m3 = ifelse(opd_cost_m3>0 & !is.na(opd_cost_m3), 1, 0),
+            bi_opa_cost_m4 = ifelse(opd_cost_m4>0 & !is.na(opd_cost_m4), 1, 0),
+            bi_opa_cost_m5 = ifelse(opd_cost_m5>0 & !is.na(opd_cost_m5), 1, 0),
+            bi_opa_cost_m6 = ifelse(opd_cost_m6>0 & !is.na(opd_cost_m6), 1, 0),
+            bi_opa_cost_m7 = ifelse(opd_cost_m7>0 & !is.na(opd_cost_m7), 1, 0),
+            bi_opa_cost_m8 = ifelse(opd_cost_m8>0 & !is.na(opd_cost_m8), 1, 0),
+            bi_opa_cost_m9 = ifelse(opd_cost_m9>0 & !is.na(opd_cost_m9), 1, 0),
+            bi_opa_cost_m10 = ifelse(opd_cost_m10>0 & !is.na(opd_cost_m10), 1, 0),
+            bi_opa_cost_m11 = ifelse(opd_cost_m11>0 & !is.na(opd_cost_m11), 1, 0),
+            bi_opa_cost_m12 = ifelse(opd_cost_m12>0 & !is.na(opd_cost_m12), 1, 0)
       )
-
 
 # Initialize an empty list to store the results
 com_opa <- list()
