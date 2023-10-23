@@ -347,8 +347,8 @@ actions:
         nolc_bi_or: output/st03_05_sub_nolc_binomial.csv
         nolc_hurdle_rr: output/st03_05_sub_nolc_hurdle.csv
         sub_predicted_visits_lc_nolc_all: output/st03_05_sub_predicted_visits.csv
-        sub_all_lc_no_model_count: output/st03_05_sub_lc_only_bi_model_counts.csv
-        sub_all_lc_no_hurdle_count: output/st03_05_sub_lc_only_hurdle_model_counts.csv
+        sub_all_lc_no_model_count: output/st03_05_sub_groups_bi_model_counts.csv
+        sub_all_lc_no_hurdle_count: output/st03_05_sub_lc_only_hurdle_model_counts.csv        
         
 # # visualise subgroup lc only outputs:
   visualise_sub_lc_only_factors:  
