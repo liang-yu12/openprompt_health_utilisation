@@ -1,5 +1,7 @@
 source("analysis/dm04_02_combine_costs.R")
 
+# Total healthcare visits vs total healthcare costs
+
 lc_exp_matched <- lc_exp_matched %>%
       mutate(
             bi_visit_m1 = ifelse(all_month_m1>0, 1, 0),
@@ -130,7 +132,9 @@ exp_inconsistent <- ggplot() +
                 aes(x = month, y = have_cost, color = visit)) +
       geom_line(data = (filter(exp_total_compare, visit =="Yes")),
                 aes(x = month, y = no_cost, color = visit)) +
-      ylab("Inconsistent pair counts") + xlab("Month") + theme_bw() +
+      ylab("Inconsistent pair counts") + xlab("Month") + theme_bw() + 
+      scale_colour_discrete(labels=c("No visit but have costs", "Visited without costs")) +
+      theme(legend.title = element_blank()) +
       scale_x_continuous(breaks = seq(1, 12))
 
 com_inconsistent <- ggplot() + 
@@ -139,10 +143,12 @@ com_inconsistent <- ggplot() +
       geom_line(data = (filter(com_total_compare, visit =="Yes")),
                 aes(x = month, y = no_cost, color = visit)) +
       ylab("Inconsistent pair counts") + xlab("Month") + theme_bw() +
+      scale_colour_discrete(labels=c("No visit but have costs", "Visited without costs")) +
+      theme(legend.title = element_blank()) +
       scale_x_continuous(breaks = seq(1, 12))
 
-ggarrange(exp_inconsistent, com_inconsistent, 
-          ncol = 2, common.legend = T, labels = c("Long COVID group", "Comparator group")
+ggarrange(exp_inconsistent, com_inconsistent, common.legend = T,
+          ncol = 2, labels = c("Long COVID group", "Comparator group")
           )
-
+# save outputs:
 ggsave(file = "output/qc09_non_zero_counts_comparison.png", width = 12, height = 4)
