@@ -71,7 +71,7 @@ for(i in 1:12) {
 }
 
 # Combine all data frames in the list
-exp_total_compare <- bind_rows(total) %>% mutate(exposure = "Long COVID exposure")
+exp_total_compare <- bind_rows(exp_total) %>% mutate(exposure = "Long COVID exposure")
 
 # combine all visits 
 visit_12m <- c()
