@@ -162,11 +162,11 @@ com_total_compare <- bind_rows(com_total) %>% mutate(exposure = "Comparator")
 
 # Combine visits and const in 12 months
 # visits
-com_matched$visits_12m <- rowSums(com_matched[,visit_12m]) # add them together
+com_matched$visits_12m <- rowSums(com_matched[,visit_12m],na.rm = T) # add them together
 com_matched <-com_matched %>% mutate(visits_12m = ifelse(visits_12m>0, 1,0)) # recode
 
 # costs
-com_matched$cost_12m <- rowSums(com_matched[,cost_12m]) 
+com_matched$cost_12m <- rowSums(com_matched[,cost_12m],na.rm = T) 
 com_matched <- com_matched %>% mutate(cost_12m = ifelse(cost_12m>0, 1,0)) # recode
 
 
