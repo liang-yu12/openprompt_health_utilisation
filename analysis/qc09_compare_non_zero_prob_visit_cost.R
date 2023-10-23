@@ -580,3 +580,237 @@ com_12m_hos <- compare_bi_visit_cost_fn(data = com_matched,
 
 com_hos_tabulate <- bind_rows(com_hos_compare %>% mutate(month = as.character(month)), 
                               com_12m_hos)
+
+
+# Combine and saving
+bind_rows(exp_hos_tabulate, com_hos_tabulate) %>% relocate(exposure) %>% 
+      write_csv(here("output", "qc09_hos_inconsistent_visit_cost.csv"))
+
+# # Line graph showing the trend of the inconsistent pair: -----
+exp_hos_inconsistent <- ggplot() + 
+      geom_line(data = (filter(exp_hos_compare, visit =="No")),
+                aes(x = month, y = have_cost, color = visit)) +
+      geom_line(data = (filter(exp_hos_compare, visit =="Yes")),
+                aes(x = month, y = no_cost, color = visit)) +
+      ylab("Inconsistent pair counts") + xlab("Month") + theme_bw() + 
+      scale_colour_discrete(labels=c("No visit but have costs", "Visited without costs")) +
+      theme(legend.title = element_blank()) +
+      scale_x_continuous(breaks = seq(1, 12))
+
+com_hos_inconsistent <- ggplot() + 
+      geom_line(data = (filter(com_hos_compare, visit =="No")),
+                aes(x = month, y = have_cost, color = visit)) +
+      geom_line(data = (filter(com_hos_compare, visit =="Yes")),
+                aes(x = month, y = no_cost, color = visit)) +
+      ylab("Inconsistent pair counts") + xlab("Month") + theme_bw() +
+      scale_colour_discrete(labels=c("No visit but have costs", "Visited without costs")) +
+      theme(legend.title = element_blank()) +
+      scale_x_continuous(breaks = seq(1, 12))
+
+ggarrange(exp_hos_inconsistent, com_hos_inconsistent, common.legend = T,
+          ncol = 2, labels = c("Long COVID group", "Comparator group")
+)
+# save outputs:
+ggsave(file = "output/qc09_hos_non_zero_counts_comparison.png", width = 12, height = 4)
+
+
+# 4. A&E visit/costs:
+
+
+# # Long COVID exposure group: -----
+
+# create binomial outcomes in each months
+lc_exp_matched <- lc_exp_matched %>%
+      mutate(
+            bi_ae_visit_m1 = ifelse(ae_visit_m1>0, 1, 0),
+            bi_ae_visit_m2 = ifelse(ae_visit_m2>0, 1, 0),
+            bi_ae_visit_m3 = ifelse(ae_visit_m3>0, 1, 0),
+            bi_ae_visit_m4 = ifelse(ae_visit_m4>0, 1, 0),
+            bi_ae_visit_m5 = ifelse(ae_visit_m5>0, 1, 0),
+            bi_ae_visit_m6 = ifelse(ae_visit_m6>0, 1, 0),
+            bi_ae_visit_m7 = ifelse(ae_visit_m7>0, 1, 0),
+            bi_ae_visit_m8 = ifelse(ae_visit_m8>0, 1, 0),
+            bi_ae_visit_m9 = ifelse(ae_visit_m9>0, 1, 0),
+            bi_ae_visit_m10 = ifelse(ae_visit_m10>0, 1, 0),
+            bi_ae_visit_m11 = ifelse(ae_visit_m11>0, 1, 0),
+            bi_ae_visit_m12 = ifelse(ae_visit_m12>0, 1, 0)
+      )
+
+lc_exp_matched <- lc_exp_matched %>% 
+      mutate(
+            bi_ae_cost_m1 = ifelse(er_cost_m1>0, 1, 0),
+            bi_ae_cost_m2 = ifelse(er_cost_m2>0, 1, 0),
+            bi_ae_cost_m3 = ifelse(er_cost_m3>0, 1, 0),
+            bi_ae_cost_m4 = ifelse(er_cost_m4>0, 1, 0),
+            bi_ae_cost_m5 = ifelse(er_cost_m5>0, 1, 0),
+            bi_ae_cost_m6 = ifelse(er_cost_m6>0, 1, 0),
+            bi_ae_cost_m7 = ifelse(er_cost_m7>0, 1, 0),
+            bi_ae_cost_m8 = ifelse(er_cost_m8>0, 1, 0),
+            bi_ae_cost_m9 = ifelse(er_cost_m9>0, 1, 0),
+            bi_ae_cost_m10 = ifelse(er_cost_m10>0, 1, 0),
+            bi_ae_cost_m11 = ifelse(er_cost_m11>0, 1, 0),
+            bi_ae_cost_m12 = ifelse(er_cost_m12>0, 1, 0)
+      )
+
+# vectors of ae visits and costs
+
+# Initialize an empty list to store the results
+exp_ae <- list()
+
+# Loop over the months
+for(i in 1:12) {
+      # Create the column names
+      ae_visits_m <- paste0("bi_ae_visit_m", i)
+      ae_cost_m <- paste0("bi_ae_cost_m", i)
+      
+      # Call the function and store the result in the list
+      exp_ae[[i]] <- compare_bi_visit_cost_fn(data = lc_exp_matched, 
+                                              visits_m = ae_visits_m, 
+                                              cost_m = ae_cost_m, 
+                                              mont_n = i)
+}
+
+# Combine all data frames in the list
+exp_ae_compare <- bind_rows(exp_ae) %>% mutate(exposure = "Long COVID exposure")
+
+
+# combine all ae visits in 12 months
+ae_visit_12m <- c()
+for(i in 1:12){
+      ae_visit_12m <- c(ae_visit_12m, paste0("bi_ae_visit_m", i))
+}
+
+lc_exp_matched$ae_visit_12m <- rowSums(lc_exp_matched[,ae_visit_12m]) # add them together
+lc_exp_matched <-lc_exp_matched %>% mutate(ae_visit_12m = ifelse(ae_visit_12m>0, 1,0)) # recode
+
+# combine all costs
+ae_cost_12m <- c()
+for(i in 1:12){
+      ae_cost_12m <- c(ae_cost_12m, paste0("bi_ae_cost_m", i))
+}
+lc_exp_matched$ae_cost_12m <- rowSums(lc_exp_matched[,ae_cost_12m]) 
+lc_exp_matched <- lc_exp_matched %>% mutate(ae_cost_12m = ifelse(ae_cost_12m>0, 1,0)) # recode
+
+
+exp_12m_ae <- compare_bi_visit_cost_fn(data = lc_exp_matched, 
+                                       visits_m = "ae_visit_12m", 
+                                       cost_m = "ae_cost_12m", 
+                                       mont_n = "total 12 months") %>% 
+      mutate(exposure = "Long COVID exposure")
+
+# Combine outputs for saving later: 
+
+exp_ae_tabulate <- bind_rows(exp_ae_compare %>% mutate(month = as.character(month)), 
+                             exp_12m_ae)
+
+
+
+
+# # Comparator: ----
+# create binomial outcomes in each months
+com_matched <- com_matched %>%
+      mutate(
+            bi_ae_visit_m1 = ifelse(ae_visit_m1>0, 1, 0),
+            bi_ae_visit_m2 = ifelse(ae_visit_m2>0, 1, 0),
+            bi_ae_visit_m3 = ifelse(ae_visit_m3>0, 1, 0),
+            bi_ae_visit_m4 = ifelse(ae_visit_m4>0, 1, 0),
+            bi_ae_visit_m5 = ifelse(ae_visit_m5>0, 1, 0),
+            bi_ae_visit_m6 = ifelse(ae_visit_m6>0, 1, 0),
+            bi_ae_visit_m7 = ifelse(ae_visit_m7>0, 1, 0),
+            bi_ae_visit_m8 = ifelse(ae_visit_m8>0, 1, 0),
+            bi_ae_visit_m9 = ifelse(ae_visit_m9>0, 1, 0),
+            bi_ae_visit_m10 = ifelse(ae_visit_m10>0, 1, 0),
+            bi_ae_visit_m11 = ifelse(ae_visit_m11>0, 1, 0),
+            bi_ae_visit_m12 = ifelse(ae_visit_m12>0, 1, 0)
+      )
+
+com_matched <- com_matched %>% 
+      mutate(
+            bi_ae_cost_m1 = ifelse(er_cost_m1>0, 1, 0),
+            bi_ae_cost_m2 = ifelse(er_cost_m2>0, 1, 0),
+            bi_ae_cost_m3 = ifelse(er_cost_m3>0, 1, 0),
+            bi_ae_cost_m4 = ifelse(er_cost_m4>0, 1, 0),
+            bi_ae_cost_m5 = ifelse(er_cost_m5>0, 1, 0),
+            bi_ae_cost_m6 = ifelse(er_cost_m6>0, 1, 0),
+            bi_ae_cost_m7 = ifelse(er_cost_m7>0, 1, 0),
+            bi_ae_cost_m8 = ifelse(er_cost_m8>0, 1, 0),
+            bi_ae_cost_m9 = ifelse(er_cost_m9>0, 1, 0),
+            bi_ae_cost_m10 = ifelse(er_cost_m10>0, 1, 0),
+            bi_ae_cost_m11 = ifelse(er_cost_m11>0, 1, 0),
+            bi_ae_cost_m12 = ifelse(er_cost_m12>0, 1, 0)
+      )
+
+
+# Initialize an empty list to store the results
+com_ae <- list()
+
+# Loop over the months
+for(i in 1:12) {
+      # Create the column names
+      ae_visits_m <- paste0("bi_ae_visit_m", i)
+      ae_cost_m <- paste0("bi_ae_cost_m", i)
+      
+      # Call the function and store the result in the list
+      com_ae[[i]] <- compare_bi_visit_cost_fn(data = com_matched, 
+                                              visits_m = ae_visits_m, 
+                                              cost_m = ae_cost_m, 
+                                              mont_n = i)
+}
+
+# Combine all data frames in the list
+com_ae_compare <- bind_rows(com_ae) %>% mutate(exposure = "Comparator")
+
+
+
+# combine all ae visits in 12 months
+com_matched$ae_visit_12m <- rowSums(com_matched[,ae_visit_12m]) # add them together
+com_matched <-com_matched %>% mutate(ae_visit_12m = ifelse(ae_visit_12m>0, 1,0)) # recode
+
+# combine all costs
+com_matched$ae_cost_12m <- rowSums(com_matched[,ae_cost_12m]) 
+com_matched <- com_matched %>% mutate(ae_cost_12m = ifelse(ae_cost_12m>0, 1,0)) # recode
+
+
+com_12m_ae <- compare_bi_visit_cost_fn(data = com_matched, 
+                                       visits_m = "ae_visit_12m", 
+                                       cost_m = "ae_cost_12m", 
+                                       mont_n = "total 12 months") %>% 
+      mutate(exposure = "Comparator")
+
+# Combine outputs for saving later: 
+
+com_ae_tabulate <- bind_rows(com_ae_compare %>% mutate(month = as.character(month)), 
+                             com_12m_ae)
+
+
+# Combine and saving
+bind_rows(exp_ae_tabulate, com_ae_tabulate) %>% relocate(exposure) %>% 
+      write_csv(here("output", "qc09_ae_inconsistent_visit_cost.csv"))
+
+# # Line graph showing the trend of the inconsistent pair: -----
+exp_ae_inconsistent <- ggplot() + 
+      geom_line(data = (filter(exp_ae_compare, visit =="No")),
+                aes(x = month, y = have_cost, color = visit)) +
+      geom_line(data = (filter(exp_ae_compare, visit =="Yes")),
+                aes(x = month, y = no_cost, color = visit)) +
+      ylab("Inconsistent pair counts") + xlab("Month") + theme_bw() + 
+      scale_colour_discrete(labels=c("No visit but have costs", "Visited without costs")) +
+      theme(legend.title = element_blank()) +
+      scale_x_continuous(breaks = seq(1, 12))
+
+com_ae_inconsistent <- ggplot() + 
+      geom_line(data = (filter(com_ae_compare, visit =="No")),
+                aes(x = month, y = have_cost, color = visit)) +
+      geom_line(data = (filter(com_ae_compare, visit =="Yes")),
+                aes(x = month, y = no_cost, color = visit)) +
+      ylab("Inconsistent pair counts") + xlab("Month") + theme_bw() +
+      scale_colour_discrete(labels=c("No visit but have costs", "Visited without costs")) +
+      theme(legend.title = element_blank()) +
+      scale_x_continuous(breaks = seq(1, 12))
+
+ggarrange(exp_ae_inconsistent, com_ae_inconsistent, common.legend = T,
+          ncol = 2, labels = c("Long COVID group", "Comparator group")
+)
+# save outputs:
+ggsave(file = "output/qc09_ae_non_zero_counts_comparison.png", width = 12, height = 4)
+
