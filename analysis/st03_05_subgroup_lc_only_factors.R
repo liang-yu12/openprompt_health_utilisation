@@ -65,7 +65,41 @@ positive_nb_tidy_fu <- function(vg_reg){
       return(results)
 }
 
-
+# Predict average outcome:
+predict_visit_fn <- function(dataset, part_1, part_2){
+      input <- dataset %>% mutate(follow_up = 360)
+      
+      input$non_zero_prob <- predict(part_1, 
+                                     newdata = input, 
+                                     type = "response")
+      
+      p2 <- predict(part_2, 
+                    newdata = input, 
+                    type = "link", 
+                    se.fit = T)
+      
+      input<- bind_cols(
+            input, 
+            (p2$fitted.values %>% as.data.frame() %>% 
+                   dplyr::select(`loglink(munb)`) %>% 
+                   rename(p_visits = `loglink(munb)`)),
+            (p2$se.fit %>% as.data.frame()%>% 
+                   dplyr::select(`loglink(munb)`) %>% 
+                   rename(p_se = `loglink(munb)`))
+      )
+      input_c <- input %>% 
+            mutate(c_visits = exp(p_visits)*non_zero_prob,
+                   c_lci = exp(p_visits - 1.96*p_se)*non_zero_prob,
+                   c_hci = exp(p_visits + 1.96*p_se)*non_zero_prob) %>% 
+            dplyr::select(exposure, c_visits, c_lci, c_hci)
+      
+      # summarise the results
+      results <- input_c %>% 
+            summarise(
+                  visits = mean(c_visits, na.rm =T),
+                  lci = mean(c_lci, na.rm =T),
+                  hci = mean(c_hci, na.rm = T)) 
+}
 
 # 1. All partricipants -------------------
 
@@ -87,7 +121,7 @@ matched_data_all_12m <- left_join(matched_data_all_12m, for_covariates,
 all_complete_12m <- matched_data_all_12m[complete.cases(matched_data_all_12m),] %>% 
       mutate(visits_binary = ifelse(visits>0, 1, 0))
 
-# Hurdle model: ----
+# Model:
 
 # 12 Months
 all_binomial_12m <- glm(visits_binary ~ offset(log(follow_up)) +
@@ -120,10 +154,16 @@ all_binomial_outputs %>% write_csv(here("output", "st03_05_sub_all_factors_binom
 all_hurdle_outputs %>% write_csv(here("output", "st03_05_sub_all_factors_hurdle.csv"))
 
 
+# Obtain results in absolute scale:
+
+average_visits_total <- predict_visit_fn(dataset = all_complete_12m,
+                                             part_1 = all_binomial_12m,
+                                             part_2 = all_nb_12m) %>% 
+      mutate(data_subset="All") %>% relocate(data_subset)
 
 # 2. LC only: ------
 
-# Data management for modeling:: --------
+# Data management for modeling:: 
 # Collapsing data by summarising the visits and follow-up time, and 
 # generate three datasets for follow-up 3m, 6m, and 12m
 
@@ -257,7 +297,15 @@ adj_binomial_outputs %>% write_csv(here("output", "st03_05_sub_lc_only_binomial.
 adj_hurdle_outputs %>% write_csv(here("output", "st03_05_sub_lc_only_hurdle.csv"))
 
 
-# 3. Non-LC group subset:
+# results in asolute scale: 
+average_visits_lc_only <- predict_visit_fn(dataset = adj_complete_12m,
+                                           part_1 = adj_binomial_12m,
+                                           part_2 = adj_nb_12m) %>% 
+      mutate(data_subset="LC only") %>% relocate(data_subset)
+
+
+
+# 3. Non-LC group subset:------
 
 # follow 12 months 
 matched_data_nolc_12m <- matched_data_ts %>% subset(exposure != "Long covid exposure") %>% 
@@ -315,6 +363,22 @@ nolc_binomial_outputs %>% write_csv(here("output", "st03_05_sub_nolc_binomial.cs
 nolc_hurdle_outputs %>% write_csv(here("output", "st03_05_sub_nolc_hurdle.csv"))
 
 
+# results in absolute scale:
+average_visits_nolc <- predict_visit_fn(dataset = nolc_complete_12m,
+                                        part_1 = nolc_binomial_12m,
+                                        part_2 = nolc_nb_12m) %>% 
+      mutate(data_subset="No LC") %>% relocate(data_subset)
+
+
+
+# 4. Combine the absolute scales outputs: -----
+bind_rows(
+      average_visits_total,
+      average_visits_lc_only,
+      average_visits_nolc) %>% 
+      write_csv(here("output", "st03_05_sub_predicted_visits.csv"))
+
+
 
 # Summarize the datasets for output checking: -----
 
@@ -359,6 +423,4 @@ bind_rows(
       hurdle_model_count_fn(adj_complete_12m) %>% mutate(time = "12m") %>% mutate(model = "LC only"),
       hurdle_model_count_fn(adj_complete_12m) %>% mutate(time = "12m") %>% mutate(model = "No LC only")) %>% 
       write_csv("output/st03_05_sub_lc_only_hurdle_model_counts.csv")
-
-
 
