@@ -5,10 +5,10 @@ source("analysis/dm04_02_01_combine_gp_costs_pivot.R")
 gp_cost_by_month <- matched_gp_cost_ts %>%
       group_by(month, exposure) %>% 
       summarise(
-            gp_cost_min = min(monthly_gp_cost),
+            gp_cost_min = min(monthly_gp_cost, na.rm = T),
             gp_cost_median = median(monthly_gp_cost),
             gp_cost_mean = mean(monthly_gp_cost, na.rm =T),
-            gp_cost_max = max(monthly_gp_cost),
+            gp_cost_max = max(monthly_gp_cost, na.rm = T),
             fu_time = mean(follow_up_time, na.rm =T),
             zero_count = sum(monthly_gp_cost==0),
             na_count = sum(is.na(monthly_gp_cost))) %>% 
@@ -26,13 +26,13 @@ gp_cost_total <-
       ungroup() %>% 
       group_by(exposure) %>% 
       summarise(
-            gp_cost_min = min(gp_costs),
-            gp_cost_median = median(gp_costs),
+            gp_cost_min = min(gp_costs, na.rm = T),
+            gp_cost_median = median(gp_costs, na.rm = T),
             gp_cost_mean = mean(gp_costs, na.rm =T),
-            gp_cost_max = max(gp_costs),
+            gp_cost_max = max(gp_costs, na.rm = T),
             fu_time = mean(follow_up, na.rm =T),
-            zero_count = sum(gp_costs==0),
-            na_count = sum(is.na(gp_costs))) %>% 
+            zero_count = sum(gp_costs==0, na.rm = T),
+            na_count = sum(is.na(gp_costs), na.rm = T)) %>% 
       as.data.frame() %>% mutate(month = "Total 12 months") %>% 
       relocate(month)
 
@@ -47,10 +47,10 @@ source("analysis/dm04_02_02_apc_costs_pivot.R")
 hos_cost_month <- matched_apc_cost_ts %>% 
       group_by(month, exposure) %>% 
       summarise(
-            apc_cost_min = min(monthly_apc_cost),
-            apc_cost_median = median(monthly_apc_cost),
+            apc_cost_min = min(monthly_apc_cost, na.rm = T),
+            apc_cost_median = median(monthly_apc_cost, na.rm = T),
             apc_cost_mean = mean(monthly_apc_cost, na.rm =T),
-            apc_cost_max = max(monthly_apc_cost),
+            apc_cost_max = max(monthly_apc_cost, na.rm = T),
             fu_time = mean(follow_up_time, na.rm =T),
             zero_count = sum(monthly_apc_cost==0),
             na_count = sum(is.na(monthly_apc_cost))) %>% 
@@ -66,13 +66,13 @@ hos_cost_total <- matched_apc_cost_ts %>%
       ungroup() %>% 
       group_by(exposure) %>% 
       summarise(
-            apc_cost_min = min(apc_costs),
-            apc_cost_median = median(apc_costs),
+            apc_cost_min = min(apc_costs, na.rm = T),
+            apc_cost_median = median(apc_costs, na.rm = T),
             apc_cost_mean = mean(apc_costs, na.rm =T),
-            apc_cost_max = max(apc_costs),
+            apc_cost_max = max(apc_costs, na.rm = T),
             fu_time = mean(follow_up, na.rm =T),
-            zero_count = sum(apc_costs==0),
-            na_count = sum(is.na(apc_costs))) %>% 
+            zero_count = sum(apc_costs==0, na.rm = T),
+            na_count = sum(is.na(apc_costs), na.rm = T)) %>% 
       as.data.frame() %>% mutate(month = "Total 12 months") %>% 
       relocate(month)
 
@@ -85,13 +85,13 @@ source("analysis/dm04_02_03_ane_costs_pivot.R")
 ane_cost_month <- matched_ane_cost_ts %>% 
       group_by(month, exposure) %>% 
       summarise(
-            ane_cost_min = min(monthly_ane_cost),
-            ane_cost_median = median(monthly_ane_cost),
+            ane_cost_min = min(monthly_ane_cost, na.rm = T),
+            ane_cost_median = median(monthly_ane_cost, na.rm = T),
             ane_cost_mean = mean(monthly_ane_cost, na.rm =T),
-            ane_cost_max = max(monthly_ane_cost),
+            ane_cost_max = max(monthly_ane_cost, na.rm = T),
             fu_time = mean(follow_up_time, na.rm =T),
-            zero_count = sum(monthly_ane_cost==0),
-            na_count = sum(is.na(monthly_ane_cost))) %>% 
+            zero_count = sum(monthly_ane_cost==0, na.rm = T),
+            na_count = sum(is.na(monthly_ane_cost), na.rm = T)) %>% 
       as.data.frame() %>% 
       mutate(month = as.character(month))
 
@@ -104,13 +104,13 @@ ane_cost_total <- matched_ane_cost_ts %>%
       ungroup() %>% 
       group_by(exposure) %>% 
       summarise(
-            ane_cost_min = min(ane_costs),
-            ane_cost_median = median(ane_costs),
+            ane_cost_min = min(ane_costs, na.rm = T),
+            ane_cost_median = median(ane_costs, na.rm = T),
             ane_cost_mean = mean(ane_costs, na.rm =T),
-            ane_cost_max = max(ane_costs),
+            ane_cost_max = max(ane_costs, na.rm = T),
             fu_time = mean(follow_up, na.rm =T),
-            zero_count = sum(ane_costs==0),
-            na_count = sum(is.na(ane_costs))) %>% 
+            zero_count = sum(ane_costs==0, na.rm = T),
+            na_count = sum(is.na(ane_costs), na.rm = T)) %>% 
       as.data.frame() %>% mutate(month = "Total 12 months") %>% 
       relocate(month)
 
@@ -123,13 +123,13 @@ source("analysis/dm04_02_04_opa_costs_pivot.R")
 opa_cost_month <- matched_opa_cost_ts %>% 
       group_by(month, exposure) %>% 
       summarise(
-            opa_cost_min = min(monthly_opa_cost),
-            opa_cost_median = median(monthly_opa_cost),
+            opa_cost_min = min(monthly_opa_cost, na.rm = T),
+            opa_cost_median = median(monthly_opa_cost, na.rm = T),
             opa_cost_mean = mean(monthly_opa_cost, na.rm =T),
-            opa_cost_max = max(monthly_opa_cost),
+            opa_cost_max = max(monthly_opa_cost, na.rm = T),
             fu_time = mean(follow_up_time, na.rm =T),
-            zero_count = sum(monthly_opa_cost==0),
-            na_count = sum(is.na(monthly_opa_cost))) %>% 
+            zero_count = sum(monthly_opa_cost==0, na.rm = T),
+            na_count = sum(is.na(monthly_opa_cost), na.rm = T)) %>% 
       as.data.frame() %>% 
       mutate(month = as.character(month))
 
@@ -142,13 +142,13 @@ opa_cost_total <- matched_opa_cost_ts %>%
       ungroup() %>% 
       group_by(exposure) %>% 
       summarise(
-            opa_cost_min = min(opa_costs),
-            opa_cost_median = median(opa_costs),
+            opa_cost_min = min(opa_costs, na.rm = T),
+            opa_cost_median = median(opa_costs, na.rm = T),
             opa_cost_mean = mean(opa_costs, na.rm =T),
-            opa_cost_max = max(opa_costs),
+            opa_cost_max = max(opa_costs, na.rm = T),
             fu_time = mean(follow_up, na.rm =T),
-            zero_count = sum(opa_costs==0),
-            na_count = sum(is.na(opa_costs))) %>% 
+            zero_count = sum(opa_costs==0, na.rm = T),
+            na_count = sum(is.na(opa_costs), na.rm = T)) %>% 
       as.data.frame() %>% mutate(month = "Total 12 months") %>% 
       relocate(month)
 
