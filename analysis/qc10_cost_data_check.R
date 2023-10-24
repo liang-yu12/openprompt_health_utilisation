@@ -116,7 +116,40 @@ ane_cost_total <- matched_ane_cost_ts %>%
 
 bind_rows(ane_cost_total, ane_cost_month) %>% write_csv(here("output", "qc10_ane_cost_distribution.csv"))
 
-# APC costs: ----
+# OPA costs: ----
 source("analysis/dm04_02_04_opa_costs_pivot.R")
 
 
+opa_cost_month <- matched_opa_cost_ts %>% 
+      group_by(month, exposure) %>% 
+      summarise(
+            opa_cost_min = min(monthly_opa_cost),
+            opa_cost_median = median(monthly_opa_cost),
+            opa_cost_mean = mean(monthly_opa_cost, na.rm =T),
+            opa_cost_max = max(monthly_opa_cost),
+            fu_time = mean(follow_up_time, na.rm =T),
+            zero_count = sum(monthly_opa_cost==0),
+            na_count = sum(is.na(monthly_opa_cost))) %>% 
+      as.data.frame() %>% 
+      mutate(month = as.character(month))
+
+opa_cost_total <- matched_opa_cost_ts %>% 
+      filter(!is.na(follow_up_time)) %>% 
+      group_by(patient_id, exposure) %>% 
+      summarise(
+            opa_costs = sum(monthly_opa_cost, na.rm = T),
+            follow_up = sum(follow_up_time, na.rm = T)) %>% 
+      ungroup() %>% 
+      group_by(exposure) %>% 
+      summarise(
+            opa_cost_min = min(opa_costs),
+            opa_cost_median = median(opa_costs),
+            opa_cost_mean = mean(opa_costs, na.rm =T),
+            opa_cost_max = max(opa_costs),
+            fu_time = mean(follow_up, na.rm =T),
+            zero_count = sum(opa_costs==0),
+            na_count = sum(is.na(opa_costs))) %>% 
+      as.data.frame() %>% mutate(month = "Total 12 months") %>% 
+      relocate(month)
+
+bind_rows(opa_cost_total, opa_cost_month) %>% write_csv(here("output", "qc10_opa_cost_distribution.csv"))
