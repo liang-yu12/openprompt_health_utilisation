@@ -2,8 +2,7 @@ source("analysis/dm04_02_combine_costs.R")
 
 # Data management of the A&E cost data for two part model
 lc_exp_matched %>% names
-# Combine APC costs
-# Pivot the apc cost ------
+# Combine A&E costs and pivot the A&E cost ------
 
 # set the columns to pivot
 total_ane_cost <- c()
@@ -20,7 +19,7 @@ exp_cost_ts <- lc_exp_matched %>%
             values_to = "monthly_ane_cost"
       )
 
-exp_cost_ts$month <- str_sub(exp_cost_ts$month, 11) # remove "apc_cost_m"
+exp_cost_ts$month <- str_sub(exp_cost_ts$month, 10) # remove "apc_cost_m"
 exp_cost_ts$month <- as.numeric(exp_cost_ts$month)
 
 # pivot exposure follow-up time
@@ -52,7 +51,7 @@ com_cost_ts <- com_matched %>%
             values_to = "monthly_ane_cost"
       )
 
-com_cost_ts$month <- str_sub(com_cost_ts$month, 11)
+com_cost_ts$month <- str_sub(com_cost_ts$month, 10)
 com_cost_ts$month <- as.numeric(com_cost_ts$month)
 
 # Pivot the comparator follow_up time: 
