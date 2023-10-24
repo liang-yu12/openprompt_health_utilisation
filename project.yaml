@@ -357,8 +357,11 @@ actions:
       r:latest analysis/st03_sub_visualise_lc_factors.R
     outputs: 
       moderately_sensitive:
+        all_factor_forest_plot: output/st03_sub_all_factors.png		
         lc_only_forest_plot: output/st03_sub_lc_factors.png
-
+        nolc_forest_plot: output/st03_sub_nolc_factors.png
+        predicted_subgroups_visits: output/st03_sub_all_lc_nolc_predicted_visits.png
+        
 # # QC step: check lc only analysis model assumption
   qc_08_lc_only_factors:  
     needs: [import_matched_exposure, import_matched_controls]
