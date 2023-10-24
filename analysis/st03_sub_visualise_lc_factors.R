@@ -374,11 +374,7 @@ lc_bi_plot_data <- lc_binomial_s1 %>%
               estimate = 1, lci =1, hci =1,
               Order = 0) %>% 
       add_row(Categories = "Underlying diseases", 
-              Factors = "No asthma",
-              estimate = 1, lci =1, hci =1,
-              Order = 0) %>% 
-      add_row(Categories = "Underlying diseases", 
-              Factors = "No mental health isses",
+              Factors = "No underlying diseases",
               estimate = 1, lci =1, hci =1,
               Order = 0) %>% 
       add_row(Categories = "COVID vaccine doses", 
