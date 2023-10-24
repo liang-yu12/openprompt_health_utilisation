@@ -481,6 +481,19 @@ actions:
         opa_inconsistence: output/qc09_opa_inconsistent_visit_cost.csv
         opa_inconsistence_monthly: output/qc09_opa_non_zero_counts_comparison.png
 
+# QC: check cost data disribution
+
+  qc10_cost_distribution:
+    needs: [import_matched_exposure, import_matched_controls, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+    run: 
+      r:latest analysis/qc10_cost_data_check.R
+    outputs: 
+      moderately_sensitive: 
+        gp_cost_distribution: output/qc10_gp_cost_distribution.csv
+        hos_cost_distribution: output/qc10_hos_cost_distribution.csv
+        ane_cost_distribution: output/qc10_ane_cost_distribution.csv
+        opa_cost_distribution: output/qc10_opa_cost_distribution.csv
+
 # Historical: data distribution
   report05_hx_matched_data_distribution:
     needs: [import_matched_historical_exposure, import_matched_historical_controls]
