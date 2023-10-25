@@ -202,12 +202,7 @@ actions:
       r:latest analysis/new_st01_report_cont_comparison_table1_new_cost.R
     outputs: 
       moderately_sensitive: 
-        matched_table: output/new_st01_matched_numbers_table.csv  # Table 1
-        explore_fu_time: output/new_st01_matched_numbers_check_fu.csv # check the incorrect follow-up time
-        explore_vax_fig: output/new_st1_exporing_vax_index_date.png # Check vax date
-        missing_table: output/new_missing_distribution_table.csv # Missing pattern tab
-        missing_pattern: output/new_missing_pattern_current.png # Missing patter plot
-
+        matched_table: output/new_st01_matched_numbers_table.csv  # new Table 1 with costs
 
 # Check follow-up time 
   qc_03_check_na:
