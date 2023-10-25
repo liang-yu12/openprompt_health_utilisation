@@ -171,7 +171,7 @@ actions:
         cohort: output/hx_matched_cases_with_ehr.csv.gz
 
   import_matched_historical_controls:
-    run: >
+    run: 
        databuilder:v0
         generate-dataset analysis/dataset_definition_hx_matched_comp.py
         --output output/hx_matched_control_with_ehr.csv.gz
@@ -194,6 +194,19 @@ actions:
         explore_vax_fig: output/st1_exporing_vax_index_date.png # Check vax date
         missing_table: output/missing_distribution_table.csv # Missing pattern tab
         missing_pattern: output/missing_pattern_current.png # Missing patter plot
+
+## run analyses using the new dataset:
+  report01_matched_datasets_new_costs:
+    needs: [import_matched_exposure_update, import_matched_control_updates]
+    run: 
+      r:latest analysis/new_st01_report_matched.R
+    outputs: 
+      moderately_sensitive: 
+        matched_table: output/new_st01_matched_numbers_table.csv  # Table 1
+        explore_fu_time: output/new_st01_matched_numbers_check_fu.csv # check the incorrect follow-up time
+        explore_vax_fig: output/new_st1_exporing_vax_index_date.png # Check vax date
+        missing_table: output/new_missing_distribution_table.csv # Missing pattern tab
+        missing_pattern: output/new_missing_pattern_current.png # Missing patter plot
 
 
 # Check follow-up time 
@@ -495,6 +508,24 @@ actions:
         opa_inconsistence: output/qc09_opa_inconsistent_visit_cost.csv
         opa_inconsistence_monthly: output/qc09_opa_non_zero_counts_comparison.png
 
+# check distribution using the new dataset
+  qc09_visit_cost_inconsistence_new_dataset:
+    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+    run: 
+      r:latest analysis/new_qc09_compare_non_zero_prob_visit_cost.R
+    outputs: 
+      moderately_sensitive: 
+        total_inconsistence: output/new_qc09_total_inconsistent_visit_cost.csv
+        total_inconcsistence_trend_month: output/new_qc09_non_zero_counts_comparison.png
+        gp_inconsistence: output/new_qc09_gp_inconsistent_visit_cost.csv
+        gp_inconsistence_monthly_trend: output/new_qc09_gp_non_zero_counts_comparison.png
+        hos_inconsistence: output/new_qc09_hos_inconsistent_visit_cost.csv
+        hos_inconsistence_trend: output/new_qc09_hos_non_zero_counts_comparison.png
+        ae_inconsistence: output/new_qc09_ae_inconsistent_visit_cost.csv
+        ae_inconsistence_monthly: output/new_qc09_ae_non_zero_counts_comparison.png
+        opa_inconsistence: output/new_qc09_opa_inconsistent_visit_cost.csv
+        opa_inconsistence_monthly: output/new_qc09_opa_non_zero_counts_comparison.png        
+
 # QC: check cost data disribution
 
   qc10_cost_distribution:
@@ -507,6 +538,18 @@ actions:
         hos_cost_distribution: output/qc10_hos_cost_distribution.csv
         ane_cost_distribution: output/qc10_ane_cost_distribution.csv
         opa_cost_distribution: output/qc10_opa_cost_distribution.csv
+        
+  qc10_cost_distribution_new_data:
+    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+    run: 
+      r:latest analysis/new_qc10_cost_data_check.R
+    outputs: 
+      moderately_sensitive: 
+        gp_cost_distribution: output/new_qc10_gp_cost_distribution.csv
+        hos_cost_distribution: output/new_qc10_hos_cost_distribution.csv
+        ane_cost_distribution: output/new_qc10_ane_cost_distribution.csv
+        opa_cost_distribution: output/new_qc10_opa_cost_distribution.csv
+        
 
 # Historical: data distribution
   report05_hx_matched_data_distribution:
