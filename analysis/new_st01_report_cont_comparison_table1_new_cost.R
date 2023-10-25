@@ -64,7 +64,7 @@ outcome_summary <- matched_data %>% summary_factorlist(dependent, outcomes,
                                                        cont = "mean",  cont_cut = 0)
 
 bind_rows(basic_demographic, outcome_summary) %>% 
-      write.csv(here("output", "st01_matched_numbers_table.csv"), row.names = F)
+      write.csv(here("output", "new_st01_matched_numbers_table.csv"), row.names = F)
 
 
 matched_data %>% group_by(exposure) %>% 
@@ -82,7 +82,7 @@ matched_data %>% group_by(exposure) %>%
             zero_count_m11 = sum(follow_up_m11 == 0, na.rm=T),
             zero_count_m12 = sum(follow_up_m12 == 0, na.rm=T)
       ) %>% 
-write.csv(here("output", "st01_matched_numbers_check_fu.csv"), row.names = F)
+write.csv(here("output", "new_st01_matched_numbers_check_fu.csv"), row.names = F)
 
 
 
@@ -111,7 +111,7 @@ c_2dose <- plot_vaccine_distribution("2 doses")
 d_3dose <- plot_vaccine_distribution("3 or more doses")
 
 # combine and save the outputs in a picture
-png(file=here("output", "st1_exporing_vax_index_date.png"),
+png(file=here("output", "new_st1_exporing_vax_index_date.png"),
     width=800, height=1200)
 ggarrange(a_0dose,b_1dose,c_2dose, d_3dose,
           ncol = 1, nrow = 4) 
@@ -121,11 +121,11 @@ dev.off()
 # check missing value distribution:------
 matched_data %>% 
       missing_glimpse(dependent, explanatory) %>% 
-      write.csv(here("output", "missing_distribution_table.csv"), row.names = F)
+      write.csv(here("output", "new_missing_distribution_table.csv"), row.names = F)
 
 
 # check missing pattern:
-png(file=here("output", "missing_pattern_current.png"),
+png(file=here("output", "new_missing_pattern_current.png"),
     width=600, height=600)
 matched_data %>% 
       missing_pattern(dependent, explanatory)
