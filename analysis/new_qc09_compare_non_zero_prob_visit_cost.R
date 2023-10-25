@@ -184,7 +184,7 @@ com_tabulate <- bind_rows(com_total_compare %>% mutate(month = as.character(mont
 
 # Combine and saving
 bind_rows(exp_tabulate, com_tabulate) %>% relocate(exposure) %>% 
-      write_csv(here("output", "qc09_total_inconsistent_visit_cost.csv"))
+      write_csv(here("output", "new_qc09_total_inconsistent_visit_cost.csv"))
 
 # # Line graph showing the trend of the inconsistent pair: -----
 
@@ -212,7 +212,7 @@ ggarrange(exp_inconsistent, com_inconsistent, common.legend = T,
           ncol = 2, labels = c("Long COVID group", "Comparator group")
           )%>% annotate_figure(top = text_grob("Total visits and costs comparison"))
 # save outputs:
-ggsave(file = "output/qc09_non_zero_counts_comparison.png", width = 12, height = 4)
+ggsave(file = "output/new_qc09_non_zero_counts_comparison.png", width = 12, height = 4)
 
 
 # 2. GP visits comparisons -----
@@ -385,7 +385,7 @@ com_gp_tabulate <- bind_rows(com_gp_compare %>% mutate(month = as.character(mont
 
 # Combine and saving
 bind_rows(exp_gp_tabulate, com_gp_tabulate) %>% relocate(exposure) %>% 
-      write_csv(here("output", "qc09_gp_inconsistent_visit_cost.csv"))
+      write_csv(here("output", "new_qc09_gp_inconsistent_visit_cost.csv"))
 
 # # Line graph showing the trend of the inconsistent pair: -----
 
@@ -413,7 +413,7 @@ ggarrange(exp_gp_inconsistent, com_gp_inconsistent, common.legend = T,
           ncol = 2, labels = c("Long COVID group", "Comparator group")
 )%>% annotate_figure(top = text_grob("GP visits and costs comparison"))
 # save outputs:
-ggsave(file = "output/qc09_gp_non_zero_counts_comparison.png", width = 12, height = 4)
+ggsave(file = "output/new_qc09_gp_non_zero_counts_comparison.png", width = 12, height = 4)
 
 
 # 3. Hospitalisation comparison: -------
@@ -588,7 +588,7 @@ com_hos_tabulate <- bind_rows(com_hos_compare %>% mutate(month = as.character(mo
 
 # Combine and saving
 bind_rows(exp_hos_tabulate, com_hos_tabulate) %>% relocate(exposure) %>% 
-      write_csv(here("output", "qc09_hos_inconsistent_visit_cost.csv"))
+      write_csv(here("output", "new_qc09_hos_inconsistent_visit_cost.csv"))
 
 # # Line graph showing the trend of the inconsistent pair: -----
 exp_hos_inconsistent <- ggplot() + 
@@ -615,7 +615,7 @@ ggarrange(exp_hos_inconsistent, com_hos_inconsistent, common.legend = T,
           ncol = 2, labels = c("Long COVID group", "Comparator group")
 )%>% annotate_figure(top = text_grob("Hospital admission and costs comparison"))
 # save outputs:
-ggsave(file = "output/qc09_hos_non_zero_counts_comparison.png", width = 12, height = 4)
+ggsave(file = "output/new_qc09_hos_non_zero_counts_comparison.png", width = 12, height = 4)
 
 
 # 4. A&E visit/costs: ----------
@@ -790,7 +790,7 @@ com_ae_tabulate <- bind_rows(com_ae_compare %>% mutate(month = as.character(mont
 
 # Combine and saving
 bind_rows(exp_ae_tabulate, com_ae_tabulate) %>% relocate(exposure) %>% 
-      write_csv(here("output", "qc09_ae_inconsistent_visit_cost.csv"))
+      write_csv(here("output", "new_qc09_ae_inconsistent_visit_cost.csv"))
 
 # # Line graph showing the trend of the inconsistent pair: -----
 exp_ae_inconsistent <- ggplot() + 
@@ -817,7 +817,7 @@ ggarrange(exp_ae_inconsistent, com_ae_inconsistent, common.legend = T,
           ncol = 2, labels = c("Long COVID group", "Comparator group")
 ) %>% annotate_figure(top = text_grob("A&E visits and costs comparison"))
 # save outputs:
-ggsave(file = "output/qc09_ae_non_zero_counts_comparison.png", width = 12, height = 4)
+ggsave(file = "output/new_qc09_ae_non_zero_counts_comparison.png", width = 12, height = 4)
 
 # 5. Outpatient clinic visit/costs -----
 # # Long COVID exposure group: -----
@@ -985,7 +985,7 @@ com_opa_tabulate <- bind_rows(com_opa_compare %>% mutate(month = as.character(mo
 
 # Combine and saving
 bind_rows(exp_opa_tabulate, com_opa_tabulate) %>% relocate(exposure) %>% 
-      write_csv(here("output", "qc09_opa_inconsistent_visit_cost.csv"))
+      write_csv(here("output", "new_qc09_opa_inconsistent_visit_cost.csv"))
 
 # # Line graph showing the trend of the inconsistent pair: -----
 exp_opa_inconsistent <- ggplot() + 
@@ -1012,4 +1012,4 @@ ggarrange(exp_opa_inconsistent, com_opa_inconsistent, common.legend = T,
           ncol = 2, labels = c("Long COVID group", "Comparator group")
 ) %>% annotate_figure(top = text_grob("Outpatient clinic visits and costs comparison"))
 # save outputs:
-ggsave(file = "output/qc09_opa_non_zero_counts_comparison.png", width = 12, height = 4)
+ggsave(file = "output/new_qc09_opa_non_zero_counts_comparison.png", width = 12, height = 4)
