@@ -52,6 +52,7 @@ basic_demographic <- matched_data %>% summary_factorlist(dependent, explanatory,
                                     row_totals_colname = "Total",
                                     cont_cut = 5) 
 
+basic_demographic %>% write_csv(here("output", "new_st01_demographic.csv"))
 
 # Summarising the outcomes by types:
 outcomes <- c(visit_cols, gp_visits, hos_visits, a_e_visits, opd_visits, opa_lc, fu_cols, costs)
@@ -62,8 +63,8 @@ outcome_summary <- matched_data %>% summary_factorlist(dependent, outcomes,
                                                        row_totals_colname = "Total",
                                                        cont = "mean",  cont_cut = 0)
 
-bind_rows(basic_demographic, outcome_summary) %>% 
-      write.csv(here("output", "new_st01_matched_numbers_table.csv"), row.names = F)
+outcome_summary %>% 
+      write.csv(here("output", "new_st01_outcome_summary.csv"), row.names = F)
 
 
 matched_data %>% group_by(exposure) %>% 
@@ -83,49 +84,3 @@ matched_data %>% group_by(exposure) %>%
       ) %>% 
 write.csv(here("output", "new_st01_matched_numbers_check_fu.csv"), row.names = F)
 
-
-
-# Exploring the distribution of vaccine number and index dates
-plot_vaccine_distribution <- function(x) {
-      # Filter the data by exposure.
-      bind_rows((matched_data %>% 
-            filter(cov_covid_vax_n_cat == x) %>% 
-            filter(exposure == "Comparator") %>% 
-            group_by(index_date) %>% count %>% 
-            mutate(exposure = "Comparator")),
-            (matched_data %>% 
-            filter(cov_covid_vax_n_cat == x) %>% 
-            filter(exposure == "Long covid exposure") %>% 
-            group_by(index_date) %>% count %>% 
-            mutate(exposure = "Long COVID exposure"))) %>% 
-            ggplot(aes(x=index_date, y=n, color = exposure)) +
-            geom_histogram(stat = "identity") +
-            ggtitle(x) +
-            xlab("Index dates") + ylab("Number") 
-}
-
-a_0dose <- plot_vaccine_distribution("0 dose")
-b_1dose <- plot_vaccine_distribution("1 dose")
-c_2dose <- plot_vaccine_distribution("2 doses")
-d_3dose <- plot_vaccine_distribution("3 or more doses")
-
-# combine and save the outputs in a picture
-png(file=here("output", "new_st1_exporing_vax_index_date.png"),
-    width=800, height=1200)
-ggarrange(a_0dose,b_1dose,c_2dose, d_3dose,
-          ncol = 1, nrow = 4) 
-dev.off()
-
-
-# check missing value distribution:------
-matched_data %>% 
-      missing_glimpse(dependent, explanatory) %>% 
-      write.csv(here("output", "new_missing_distribution_table.csv"), row.names = F)
-
-
-# check missing pattern:
-png(file=here("output", "new_missing_pattern_current.png"),
-    width=600, height=600)
-matched_data %>% 
-      missing_pattern(dependent, explanatory)
-dev.off()
