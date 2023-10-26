@@ -19,8 +19,7 @@ explanatory = c("sex", "age", "age_cat", "ethnicity_6", "bmi_cat", "imd_q5", "re
                 "previous_covid_hosp",
                 "cov_c19_vaccine_number", 
                 "cov_covid_vaccine_number", "cov_covid_vax_n_cat", 
-                "long_covid_dx", "covid_positive",
-                "reg_and_visit_gp_1y")
+                "long_covid_dx", "covid_positive")
 
 # Table 1 reporting numbers:  -----
 # basic demographic data
