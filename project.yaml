@@ -202,7 +202,9 @@ actions:
       r:latest analysis/new_st01_report_cont_comparison_table1_new_cost.R
     outputs: 
       moderately_sensitive: 
-        matched_table: output/new_st01_matched_numbers_table.csv  # new Table 1 with costs
+        new_demographic: output/new_st01_demographic.csv  # new Table 1 with costs
+        new_costs_outcomes: output/new_st01_outcome_summary.csv
+        new_follow_up: output/new_st01_matched_numbers_check_fu.csv
 
 # Check follow-up time 
   qc_03_check_na:
