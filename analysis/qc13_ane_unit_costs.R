@@ -18,7 +18,7 @@ ane_data_with_cost_counts <- left_join(ane_counts, ane_costs,
                                               "month" = "month")
 )
 
-unit_cost <- ane_data_with_cost_counts %>% 
+ane_unit_cost <- ane_data_with_cost_counts %>% 
       filter(!is.na(monthly_ae_visits) & 
                    monthly_ae_visits > 0 &
                    !is.na(monthly_ane_cost) & 
@@ -30,4 +30,4 @@ unit_cost <- ane_data_with_cost_counts %>%
       summarise(unit_cost = sum(costs, na.rm = T)/sum(visits, na.rm = T))
 
 # save outputs 
-unit_cost %>% write_csv(here("output", "st04_ane_unit_costs.csv"))
+ane_unit_cost %>% write_csv(here("output", "st04_ane_unit_costs.csv"))
