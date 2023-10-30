@@ -18,7 +18,7 @@ opa_data_with_cost_counts <- left_join(opa_counts, opa_costs,
                                               "month" = "month")
 )
 
-unit_cost <- opa_data_with_cost_counts %>% 
+opa_unit_cost <- opa_data_with_cost_counts %>% 
       filter(!is.na(monthly_opa_visits) & 
                    monthly_opa_visits > 0 &
                    !is.na(monthly_opa_cost) & 
@@ -30,4 +30,4 @@ unit_cost <- opa_data_with_cost_counts %>%
       summarise(unit_cost = sum(costs, na.rm = T)/sum(visits, na.rm = T))
 
 # save outputs 
-unit_cost %>% write_csv(here("output", "st04_opa_unit_costs.csv"))
+opa_unit_cost %>% write_csv(here("output", "st04_opa_unit_costs.csv"))
