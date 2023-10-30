@@ -25,7 +25,7 @@ apc_data_with_cost_counts <- left_join(apc_counts, apc_costs,
                  "month" = "month")
           )
 
-unit_cost <- apc_data_with_cost_counts %>% 
+apc_unit_cost <- apc_data_with_cost_counts %>% 
       filter(!is.na(monthly_hos_visits) & 
                    monthly_hos_visits > 0 &
                    !is.na(monthly_apc_cost) & 
@@ -37,4 +37,4 @@ unit_cost <- apc_data_with_cost_counts %>%
       summarise(unit_cost = sum(costs, na.rm = T)/sum(visits, na.rm = T))
 
 # save outputs 
-unit_cost %>% write_csv(here("output", "st04_apc_unit_costs.csv"))
+apc_unit_cost %>% write_csv(here("output", "st04_apc_unit_costs.csv"))
