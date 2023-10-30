@@ -406,7 +406,7 @@ actions:
 
 # QC: check unit costs:
   qc11_13_unit_cost_comparison:
-    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure, import_matched_controls, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
       r:latest analysis/new_st04_03_estimate_unit_costs.R
     outputs: 
