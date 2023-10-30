@@ -8,12 +8,12 @@
 
 # Goal: calculate ane unit cost 
 
-# read in opa visit count data
+# read in apc visit count data
 source("analysis/dm03_7_pivot_hos_long.R")
 # keep var needed
 apc_counts <- matched_data_hos_ts %>% dplyr::select("patient_id", "exposure", "month", "monthly_hos_visits")
 
-# read in opa cost data
+# read in apc cost data
 source("analysis/dm04_02_02_apc_costs_pivot.R")
 # keep var needed
 apc_costs <- matched_apc_cost_ts %>%  dplyr::select("patient_id", "exposure", "month", "monthly_apc_cost")
