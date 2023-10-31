@@ -416,9 +416,9 @@ actions:
         ane_unit_cost: output/st04_ane_unit_costs.csv
         
   qc13_new_unit_cost:
-    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+    needs: [import_matched_exposure_update, import_matched_control_updates,import_matched_exposure, import_matched_controls, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
-      r:latest analysis/new_st04_03_estimate_unit_costs.R
+      r:latest analysis/qc14_estimate_new_unit_costs.R
     outputs: 
       moderately_sensitive: 
         hos_new_unit_cost: output/st04_apc_new_unit_costs.csv
