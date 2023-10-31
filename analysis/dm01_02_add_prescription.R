@@ -1,5 +1,5 @@
 # Load previous data management
-source("analysis/dm01_matched_current_data.R")
+source("analysis/dm01_01_matched_current_data.R")
 
 # Import medication records ==========
 exp_drug_counts <- read_csv("output/matched_cases_with_drug_costs.csv.gz",
