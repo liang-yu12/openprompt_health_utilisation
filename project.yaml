@@ -405,20 +405,25 @@ actions:
         age_cat_stratum_results: output/st03_05_stratum_age_visits.png
 
 # QC: check unit costs:
-  qc11_13_unit_cost_comparison:
-    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure, import_matched_controls, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+  qc13_existing_unit_cost:
+    needs: [import_matched_exposure, import_matched_controls, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
-      r:latest analysis/new_st04_03_estimate_unit_costs.R
+      r:latest analysis/qc14_estimate_existing_unit_costs.R
     outputs: 
       moderately_sensitive: 
         hos_unit_cost: output/st04_apc_unit_costs.csv
         opa_unit_cost: output/st04_opa_unit_costs.csv
         ane_unit_cost: output/st04_ane_unit_costs.csv
+        
+  qc13_new_unit_cost:
+        needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+    run: 
+      r:latest analysis/new_st04_03_estimate_unit_costs.R
+    outputs: 
+      moderately_sensitive: 
         hos_new_unit_cost: output/st04_apc_new_unit_costs.csv
         opa_new_unit_cost: output/st04_opa_new_unit_costs.csv
         ane_new_unit_cost: output/st04_ane_new_unit_costs.csv
-        compare_unit_costs: output/output/st04_compare_unit_costs.csv
-        
 
 # Total Costs: twopart model
 
