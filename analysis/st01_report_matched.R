@@ -5,35 +5,68 @@ source("analysis/dm03_matched_define_monthly_follow_up_time.R")
 matched_data <- bind_rows(lc_exp_matched, com_matched)
 
 # define LC outpatient visits variables
-opa_lc_visit <- matched_data[92:103] %>% names() %>% as.vector()
-# define total visits variables
-visit_cols <- matched_data[grep("all_month_", names(matched_data))] %>% 
-      names() %>% as.vector() # summarise the healthcare visit counts
-# define gp visits vectors
-gp_visits <- matched_data[grep("gp_visit_m", names(matched_data))] %>% 
-      names %>% as.vector()
-# hostpital visits
-hos_visits <- matched_data[grep("hos_visit_m", names(matched_data))] %>% 
-      names %>% as.vector()
-# A&E visits
-a_e_visits <- matched_data[grep("ae_visit_m", names(matched_data))] %>% 
-      names %>% as.vector()
-# OPD visits
-opd_visits <- matched_data[grep("opa_visit_m", names(matched_data))] %>% 
-      names %>% as.vector()
+opa_lc_visit <- c()
+for (i in 1:12) {
+      opa_lc_visit <- c(opa_lc_visit, paste0("opa_lc_visit_m", i))
+}
 
+# define total visits variables
+visit_cols <- c()
+for (i in 1:12) {
+      visit_cols <- c(visit_cols, paste0("all_month_m", i))
+}
+      
+# define gp visits vectors
+gp_visits <- c()
+for (i in 1:12){
+      gp_visits <- c(gp_visits, paste0("gp_visit_m", i))
+}
+
+# hostpital visits
+hos_visits <- c()
+for (i in 1:12) {
+      hos_visits <- c(hos_visits, paste0("hos_visit_m", i))
+}
+
+# A&E visits
+a_e_visits <- c()
+for (i in 1:12) {
+      a_e_visits <- c(a_e_visits, paste0("ae_visit_m", i))
+}
+
+# OPD visits
+opd_visits <- c()
+for (i in 1:12) {
+      opd_visits <- c(opd_visits, paste0("opa_visit_m", i))
+}      
+
+# lc visits
 opa_lc <- c()
 for (i in 1:12){
       opa_lc <- c(opa_lc, paste0("opa_lc_visit_m", i))
 }
 
+# prescription counts:
+drugs <- c()
+for (i in 1:12) {
+      drugs <- c(drugs, paste0("prescription_", i))
+}
+
+# primary care resourse use
+primary_care_use <- c()
+for (i in 1:12) {
+      primary_care_use <- c(primary_care_use, paste0("primary_care_use_", i))
+}
+
 costs <- matched_data[grep("_cost_m", names(matched_data))] %>%  names
 
 # summarise follow-up period
-fu_cols <- matched_data[grep("follow_up_m", names(matched_data))] %>% 
-      names %>% as.vector()  # summarise follow-up time
-
-# define variables for table 1
+fu_cols <- c()
+for (i in 1:12) {
+      fu_cols <- c(fu_cols, paste0("follow_up_m", i))
+}      
+      
+# define variables for table 1 ----
 dependent = "exposure"
 explanatory = c("sex", "age", "age_cat", "ethnicity_6", "bmi_cat", "imd_q5", "region",
                 "cov_asthma",
@@ -55,7 +88,7 @@ basic_demographic <- matched_data %>% summary_factorlist(dependent, explanatory,
 
 
 # Summarising the outcomes by types:
-outcomes <- c(visit_cols, gp_visits, hos_visits, a_e_visits, opd_visits, opa_lc, fu_cols, costs)
+outcomes <- c(visit_cols, gp_visits, hos_visits, a_e_visits, opd_visits, opa_lc,drugs, primary_care_use, fu_cols, costs)
 
 outcome_summary <- matched_data %>% summary_factorlist(dependent, outcomes,
                                                        p = TRUE, p_cont_para = "aov",
