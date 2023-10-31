@@ -1,5 +1,5 @@
 # Load previous data management
-source("analysis/dm01_matched_current_data.R")
+source("analysis/dm01_02_add_prescription.R")
 
 # ============== Caclulate follow-up time by month ============== 
 # Explanation: people were followed from the index date, and we will estimate 
