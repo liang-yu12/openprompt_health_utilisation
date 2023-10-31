@@ -1,7 +1,5 @@
 # Load previous data management
 source("analysis/dm03_matched_define_monthly_follow_up_time.R")
-
-
 # concept: 
 # 1. Transpose the healthcare utilisation first, save it to an object;
 # 2. Transpose the follow-up time, save it to another object;
@@ -76,5 +74,4 @@ com_long$follow_up_time %>% summary
 
 # Combine two datasets: ----
 matched_data_ts <- bind_rows(exp_long, com_long)
-matched_data_ts$exposure %>% levels()
-matched_data_ts$exposure <- relevel(matched_data_ts$exposure, "Comparator")
+matched_data_ts$exposure <- factor(matched_data_ts$exposure, levels = c("Comparator", "Long covid exposure"))
