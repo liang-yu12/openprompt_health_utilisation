@@ -336,6 +336,23 @@ def cost_opa_fn(dataset, from_date, num_months, end_date):
     setattr(dataset, f"opd_cost_m{num_months}", mon_cost)    
 
 
+def hos_stay_long_fn(dataset, from_date, end_date):
+    hos_stay_long = hospital_admissions \
+        .where((hospital_admissions.admission_date >= from_date) &
+               ((hospital_admissions.discharge_date > (hospital_admissions.admission_date + days(14)))) &
+               ((hospital_admissions.admission_date + days(14)) <= end_date)) \
+        .count_for_patient()
+    setattr(dataset, "hos_stay_long_count", hos_stay_long)
+
+
+def hos_stay_short_fn(dataset, from_date, end_date):
+    hos_stay_short = hospital_admissions \
+        .where((hospital_admissions.admission_date >= from_date) &
+               ((hospital_admissions.discharge_date <= (hospital_admissions.admission_date + days(14)))) &
+               ((hospital_admissions.discharge_date <= end_date))) \
+        .count_for_patient()
+    setattr(dataset, "hos_stay_short_count", hos_stay_short)
+
 
 # Temp: test generate data
 dataset = Dataset()
@@ -367,3 +384,5 @@ dataset.define_population(age >= 18)
 # cost_apc_fn(dataset, from_date=lc_dx.date, num_months=4, end_date=study_end_date)
 # cost_er_fn(dataset, from_date=lc_dx.date, num_months=4, end_date=study_end_date)
 # cost_apc_fn(dataset, from_date=lc_dx.date, num_months=4, end_date=study_end_date)
+# hos_stay_long_fn(dataset, from_date=lc_dx.date, end_date=study_end_date)
+# hos_stay_short_fn(dataset, from_date=lc_dx.date, end_date=study_end_date)
