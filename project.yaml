@@ -56,8 +56,27 @@ actions:
       moderately_sensitive: 
         matching_report: output/matching_report_stp.txt
 # # After matching data management
+  import_matched_exposure:
+    run: 
+       databuilder:v0
+        generate-dataset analysis/dataset_definition_matched_cases.py
+        --output output/matched_cases_with_ehr.csv.gz
+    needs: [test_matching]
+    outputs: 
+      highly_sensitive:
+        cohort: output/matched_cases_with_ehr.csv.gz
 
-# Add medication visits and costs
+  import_matched_controls:
+    run: 
+       databuilder:v0
+        generate-dataset analysis/dataset_definition_matched_control.py
+        --output output/matched_control_with_ehr.csv.gz
+    needs: [test_matching]
+    outputs: 
+      highly_sensitive:
+        cohort: output/matched_control_with_ehr.csv.gz
+
+
   import_matched_exposure_drug_cost:
     run: 
        databuilder:v0
@@ -78,7 +97,7 @@ actions:
       highly_sensitive:
         cohort: output/matched_control_with_drug_costs.csv.gz
 
-# adding outcomes and other covariates (cost data new build)
+# # After matching data management: for new version of data
   import_matched_exposure_update:
     run: 
        databuilder:v0
