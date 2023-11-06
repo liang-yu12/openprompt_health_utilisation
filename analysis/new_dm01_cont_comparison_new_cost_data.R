@@ -353,3 +353,6 @@ com_drug_visits$exposure %>% table
 # add total prescription visits: 
 com_matched <- left_join(com_matched, com_drug_visits, by = c("patient_id" = "patient_id", 
                                                               "exposure" = "exposure"))
+
+# housekeeping
+rm(com_drug_visits, exp_drug_visits)
