@@ -1,5 +1,5 @@
 # Load previous data management:
-source("analysis/dm02_01_hx_variables.R")
+source("analysis/dm05_01_hx_read_munge_vars.R")
 
 # Data management for DID structure:----
 # Explanation: Need to create a long table specifying the time period and the exposure group, 
