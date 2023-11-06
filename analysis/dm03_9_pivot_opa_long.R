@@ -3,7 +3,7 @@
 # But need to reshape the data by different healthcare visits # opa_visit
 
 # Load previous data management
-source("analysis/dm03_matched_define_monthly_follow_up_time.R")
+source("analysis/dm01_02_now_monthly_follow_up.R")
 
 # opa vivists:
 opa_visit_cols <- lc_exp_matched[grep("opa_visit", names(lc_exp_matched))] %>% 
@@ -72,5 +72,6 @@ com_opa_long %>% names
 com_opa_long$follow_up_time %>% summary
 
 matched_data_opa_ts <- bind_rows(exp_opa_long, com_opa_long)
-matched_data_opa_ts$exposure %>% levels
-matched_data_opa_ts$exposure <- relevel(matched_data_opa_ts$exposure, "Comparator")
+
+matched_data_opa_ts$exposure <- factor(matched_data_opa_ts$exposure, levels = c("Comparator", "Long covid exposure"))
+matched_data_hos_ts$exposure %>% levels()
