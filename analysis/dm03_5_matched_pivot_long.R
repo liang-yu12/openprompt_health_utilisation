@@ -1,5 +1,5 @@
 # Load previous data management
-source("analysis/dm03_matched_define_monthly_follow_up_time.R")
+source("analysis/dm01_02_now_monthly_follow_up.R")
 # concept: 
 # 1. Transpose the healthcare utilisation first, save it to an object;
 # 2. Transpose the follow-up time, save it to another object;
@@ -8,8 +8,10 @@ source("analysis/dm03_matched_define_monthly_follow_up_time.R")
 # Pivot the exposure group: lc_exp_matched
 
 # Pivot the healthcare utilisation: ==============
-visit_cols <- lc_exp_matched[grep("all_month_", names(lc_exp_matched))] %>% 
-      names() %>% as.vector()
+visit_cols <- c()
+for (i in 1:12){
+      visit_cols <- c(visit_cols, paste0("all_month_m", i))
+}
 
 exp_visit_ts <- lc_exp_matched %>% 
       pivot_longer(
