@@ -1,4 +1,4 @@
-source("analysis/dm04_02_combine_costs.R")
+source("analysis/dm03_02_now_add_primary_sec_care_costs.R")
 
 # Data management of the GP cost data for two part model
 
@@ -107,5 +107,5 @@ com_cost_long <- left_join(com_cost_ts, com_fu_ts,
 # Combine two datasets: ---------
 matched_gp_cost_ts <- bind_rows(exp_cost_long, com_cost_long)
 # fix the exposure levels
-matched_gp_cost_ts$exposure <- relevel(matched_gp_cost_ts$exposure, ref = "Comparator")
-
+matched_gp_cost_ts$exposure <- factor(matched_gp_cost_ts$exposure, levels = c("Comparator", "Long covid exposure"))
+matched_gp_cost_ts$exposure %>% levels()
