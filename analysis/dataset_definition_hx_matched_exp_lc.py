@@ -66,6 +66,7 @@ dataset.end_death = matched_hx_cases.end_death
 dataset.end_deregist = matched_hx_cases.end_deregist
 dataset.end_lc_cure = matched_hx_cases.end_lc_cure
 dataset.end_date = minimum_of(dataset.end_death, dataset.end_deregist, dataset.end_lc_cure, study_end_date)
+dataset.total_hx_drug_visit = total_hx_drug_visit
 
 # Outcome visit
 # Historical GP visits: 2019-3-1 to 2020-3-1
