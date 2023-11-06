@@ -364,7 +364,6 @@ def total_drug_visit(dataset, from_date, end_date):
     num_pres = medications \
         .where((medications.date >= from_date) &              
                (medications.date  <= end_date)) \
-        .where((medications.dmd_code.is_in(total_drugs_dmd))) \
         .date.count_distinct_for_patient()
     setattr(dataset, "total_drug_visit", num_pres)
 
