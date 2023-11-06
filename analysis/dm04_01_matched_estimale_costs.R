@@ -37,7 +37,7 @@ exp_drug_counts <- read_csv("output/matched_cases_with_drug_costs.csv.gz",
                                   end_date = col_skip()
                             ))
 
-exp_drug_counts <- exp_drug_counts %>% mutate(exposure = ifelse(1, "Long covid exposure", "Comparator"))
+exp_drug_counts <- exp_drug_counts %>% mutate(exposure = ifelse(exposure==1, "Long covid exposure", "Comparator"))
 
 com_drug_counts <- read_csv("output/matched_control_with_drug_costs.csv.gz",
                             col_types = cols(
