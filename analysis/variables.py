@@ -356,15 +356,14 @@ def hos_stay_short_fn(dataset, from_date, end_date):
 
 # Function for adding all visit for medications. 
 # Count visits on the same day once:
-def total_drug_visit(dataset, from_date, num_months, end_date):
+def total_drug_visit(dataset, from_date, end_date):
     # Same date visits for prescriptions within `num_months` of `from_date`
     num_pres = medications \
-        .where((medications.date >= from_date + days((num_months-1)*30)) &
-              (medications.date  <  (from_date + days(num_months*30))) &
-              (medications.date  <= end_date)) \
+        .where((medications.date >= from_date) &              
+               (medications.date  <= end_date)) \
         .where((medications.dmd_code.is_in(total_drugs_dmd))) \
         .date.count_distinct_for_patient()
-    setattr(dataset, f"all_drug_visits_{num_months}", num_pres)
+    setattr(dataset, "total_drug_visit", num_pres)
 
 # Temp: test generate data
 dataset = Dataset()
@@ -383,7 +382,7 @@ dataset.define_population(age >= 18)
 # month12 = lc_dx.date + days(11*30)
 # hx_outpatient_visit(dataset, lc_dx.date, num_months=2)
 
-# total_drug_visit(dataset, from_date = lc_dx.date, end_date=study_end_date, num_months=6)
+total_drug_visit(dataset, from_date = lc_dx.date, end_date=study_end_date)
 # drug_12ent_number(dataset, lc_dx.date, num_months=2)
 # add_visits(dataset, lc_dx.date, num_months=1)
 # add_visits(dataset, lc_dx.date, num_months=2)
