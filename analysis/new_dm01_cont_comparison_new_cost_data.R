@@ -181,6 +181,25 @@ lc_exp_matched$all_month_m10 <- rowSums(lc_exp_matched[, m10, with = FALSE], na.
 lc_exp_matched$all_month_m11 <- rowSums(lc_exp_matched[, m11, with = FALSE], na.rm = TRUE)
 lc_exp_matched$all_month_m12 <- rowSums(lc_exp_matched[, m12, with = FALSE], na.rm = TRUE)
 
+# Add the total prescription visit data: 
+exp_drug_visits <- read_csv("output/matched_cases_with_drug_costs.csv.gz",
+                            col_types = cols(
+                                  age = col_skip(),
+                                  sex = col_skip(),
+                                  index_date = col_skip(),
+                                  end_death = col_skip(),
+                                  end_deregist = col_skip(),
+                                  end_lc_cure = col_skip(),
+                                  end_date = col_skip()
+                            )) %>% 
+      dplyr::select("patient_id" ,"exposure","total_drug_visit")
+exp_drug_visits <- exp_drug_visits %>% mutate(exposure = ifelse(exposure==1, "Long covid exposure", "Comparator"))
+
+
+lc_exp_matched <- left_join(lc_exp_matched, exp_drug_visits, by = c("patient_id" = "patient_id", 
+                                                                    "exposure" = "exposure"))
+
+
 # Data management of the comparator dataset --------------
 
 #  # Comparators:
@@ -312,3 +331,25 @@ com_matched$all_month_m9 <- rowSums(com_matched[, m9, with = FALSE], na.rm = TRU
 com_matched$all_month_m10 <- rowSums(com_matched[, m10, with = FALSE], na.rm = TRUE)
 com_matched$all_month_m11 <- rowSums(com_matched[, m11, with = FALSE], na.rm = TRUE)
 com_matched$all_month_m12 <- rowSums(com_matched[, m12, with = FALSE], na.rm = TRUE)
+
+
+# read in the total prescription visits
+com_drug_visits <- read_csv("output/matched_control_with_drug_costs.csv.gz",
+                            col_types = cols(
+                                  age = col_skip(),
+                                  sex = col_skip(),
+                                  index_date = col_skip(),
+                                  end_death = col_skip(),
+                                  end_deregist = col_skip(),
+                                  end_lc_cure = col_skip(),
+                                  end_date = col_skip()
+                            )) %>% 
+      dplyr::select("patient_id" ,"exposure","total_drug_visit")
+
+com_drug_visits <- com_drug_visits %>% mutate(exposure = ifelse(exposure==1, "Long covid exposure","Comparator"))
+
+com_drug_visits$exposure %>% table
+
+# add total prescription visits: 
+com_matched <- left_join(com_matched, com_drug_visits, by = c("patient_id" = "patient_id", 
+                                                              "exposure" = "exposure"))
