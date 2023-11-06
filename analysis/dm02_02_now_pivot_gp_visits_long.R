@@ -72,5 +72,6 @@ com_gp_long %>% names
 com_gp_long$follow_up_time %>% summary
 
 matched_data_gp_ts <- bind_rows(exp_gp_long, com_gp_long)
+
+matched_data_gp_ts$exposure <- factor(matched_data_gp_ts$exposure, levels = c("Comparator", "Long covid exposure"))
 matched_data_gp_ts$exposure %>% levels
-matched_data_gp_ts$exposure <- relevel(matched_data_gp_ts$exposure, "Comparator")
