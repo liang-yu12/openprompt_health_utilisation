@@ -3,7 +3,7 @@
 # But need to reshape the data by different healthcare visits # gp_visit
 
 # Load previous data management
-source("analysis/dm03_matched_define_monthly_follow_up_time.R")
+source("analysis/dm01_02_now_monthly_follow_up.R")
 
 # GP vivists:
 gp_visit_cols <- lc_exp_matched[grep("gp_visit", names(lc_exp_matched))] %>% 
