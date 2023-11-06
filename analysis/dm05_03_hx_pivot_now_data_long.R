@@ -1,5 +1,5 @@
 # Load previous data management:
-source("analysis/dm02_02_pivot_longer_hxdata.R")
+source("analysis/dm05_02_hx_pivot_hxdata_longer.R")
 
 # Exposure & Contemporary subset: ----
 now_exp <- hx_cases # subset for current group
