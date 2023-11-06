@@ -1,5 +1,5 @@
 # Load previous data management
-source("analysis/new_dm01_cont_comparison_new_cost_data.R")
+source("analysis/dm01_01_now_data_read_munge_vars.R")
 
 # ============== Caclulate follow-up time by month ============== 
 # Explanation: people were followed from the index date, and we will estimate 
