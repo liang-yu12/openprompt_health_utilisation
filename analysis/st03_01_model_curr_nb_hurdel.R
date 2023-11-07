@@ -51,45 +51,21 @@ positive_nb_tidy_fu <- function(vg_reg){
 }
 
 # Organise the first part outputs:
-crude_binomial_outputs <-bind_rows(
-      (binomial_tidy_fn(crude_binomial_3m) %>% mutate(time="3 months")),
-      (binomial_tidy_fn(crude_binomial_6m) %>% mutate(time="6 months")),
-      (binomial_tidy_fn(crude_binomial_12m) %>% mutate(time="12 months"))
-) %>% mutate(Adjustment = "Crude")
+crude_binomial_outputs <- binomial_tidy_fn(crude_binomial_12m) %>% 
+      mutate(time="12 months") %>% mutate(Adjustment = "Crude")
 
 # Organise the second part outputs:
-crude_hurdle_outputs <- bind_rows(
-      (positive_nb_tidy_fu(crude_nb_3m) %>% mutate(time="3 months")),
-      (positive_nb_tidy_fu(crude_nb_6m) %>% mutate(time="6 months")),
-      (positive_nb_tidy_fu(crude_nb_12m) %>% mutate(time="12 months"))
-) %>% mutate(Adjustment = "Crude")
+crude_hurdle_outputs <- positive_nb_tidy_fu(crude_nb_12m) %>% 
+      mutate(time="12 months") %>% mutate(Adjustment = "Crude")
 
 
 # Adjusted hurdle model: 
 # First need to clean the data by excluding obs with NA in variables:
-adj_complete_3m <- matched_data_3m[complete.cases(matched_data_3m),] %>% 
-      mutate(visits_binary = ifelse(visits>0, 1, 0))
-adj_complete_6m <- matched_data_6m[complete.cases(matched_data_6m),] %>% 
-      mutate(visits_binary = ifelse(visits>0, 1, 0))
 adj_complete_12m <- matched_data_12m[complete.cases(matched_data_12m),] %>% 
       mutate(visits_binary = ifelse(visits>0, 1, 0))
 
 
 # Hurdle model part 1: binomial model:
-# 3 Months
-adj_binomial_3m <- glm(visits_binary ~ exposure + offset(log(follow_up)) +
-                             age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
-                             previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
-                       data = adj_complete_3m,
-                       family=binomial(link="logit")) 
-
-# 6 Months
-adj_binomial_6m <- glm(visits_binary ~ exposure + offset(log(follow_up)) +
-                             age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
-                             previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
-                       data = adj_complete_6m,
-                       family=binomial(link="logit")) 
-
 # 12 Months
 adj_binomial_12m <- glm(visits_binary ~ exposure + offset(log(follow_up)) +
                               age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
@@ -98,22 +74,7 @@ adj_binomial_12m <- glm(visits_binary ~ exposure + offset(log(follow_up)) +
                         family=binomial(link="logit")) 
 
 # Hurdle model part 2: positive negative binomial model:
-
 # Positive negative binomial
-# 3 months
-adj_nb_3m <- vglm(visits ~ exposure + offset(log(follow_up))+
-                        age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
-                        previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
-                  family = posnegbinomial(),
-                  data = subset(adj_complete_3m, visits_binary > 0))
-
-# 6 months 
-adj_nb_6m <- vglm(visits ~ exposure + offset(log(follow_up))+
-                        age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
-                        previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
-                  family = posnegbinomial(),
-                  data = subset(adj_complete_6m, visits_binary > 0))
-
 # 12 months
 adj_nb_12m <- vglm(visits ~ exposure + offset(log(follow_up))+
                          age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
@@ -123,21 +84,15 @@ adj_nb_12m <- vglm(visits ~ exposure + offset(log(follow_up))+
 
 
 # Combine and organised regression outputs
-adj_binomial_outputs <-bind_rows(
-      (binomial_tidy_fn(adj_binomial_3m) %>% mutate(time="3 months")),
-      (binomial_tidy_fn(adj_binomial_6m) %>% mutate(time="6 months")),
-      (binomial_tidy_fn(adj_binomial_12m) %>% mutate(time="12 months"))
-) %>% mutate(Adjustment = "Adjusted")
+adj_binomial_outputs <-binomial_tidy_fn(adj_binomial_12m) %>% 
+      mutate(time="12 months") %>% mutate(Adjustment = "Adjusted")
 
 # Organise the second part outputs:
-adj_hurdle_outputs <- bind_rows(
-      (positive_nb_tidy_fu(adj_nb_3m) %>% mutate(time="3 months")),
-      (positive_nb_tidy_fu(adj_nb_6m) %>% mutate(time="6 months")),
-      (positive_nb_tidy_fu(adj_nb_12m) %>% mutate(time="12 months"))
-) %>% mutate(Adjustment = "Adjusted")
+adj_hurdle_outputs <- positive_nb_tidy_fu(adj_nb_12m) %>%
+      mutate(time="12 months") %>% mutate(Adjustment = "Adjusted")
 
 # Save the detailed outputs to a text file:
-sink(here("output", "st03_01_total_reg_summary.txt"))
+sink(here("output", "st02_01_total_reg_summary.txt"))
 print("# Crude binomial model output part 1 ---------")
 print(summary(crude_binomial_12m))
 print("# Crude hurdle model output part 2 ---------")
@@ -153,33 +108,40 @@ sink()
 
 # Combine total outputs and save:
 st03_01_total_binomial <- bind_rows(crude_binomial_outputs, adj_binomial_outputs)
-st03_01_total_binomial %>% write_csv(here("output", "st03_01_total_binomial.csv"))
+st03_01_total_binomial %>% write_csv(here("output", "st02_01_total_binomial.csv"))
 
 st03_01_total_hurdle <- bind_rows(crude_hurdle_outputs, adj_hurdle_outputs)
-st03_01_total_hurdle %>% write_csv(here("output", "st03_01_total_hurdle.csv"))
+st03_01_total_hurdle %>% write_csv(here("output", "st02_01_total_hurdle.csv"))
 
 
 # Predict the average healthcare visits in each group:  ----
 # function to predict the average adjusted visits: 
 # use the original dataset but change the offset to make it comparable
 
-avg_visit_predict_fn <- function(dataset, fu_time, reg_1st, reg_2nd){
+avg_visit_predict_fn <- function(dataset, reg_1st, reg_2nd){
       # first set up a input dataset:
       # i.exp = "Comparator" or "Long covid exposure" 
       
-      input <- dataset %>% mutate(follow_up = fu_time)
+      input <- dataset %>% mutate(follow_up = 360)
       
       # Part 1: predict the first part non-zero prob
       input$nonzero_prob <- predict(reg_1st, newdata = input,  type= "response")
       # Part 2: predict the second part visits
       p2 <- predictvglm(reg_2nd, newdata = input, type = "link", se.fit = T)
       
+      # the fitted value outcome is a matrix. Only need the mean value
+      p2_fit<- p2$fitted.values %>% as.data.frame() %>% 
+            dplyr::select(`loglink(munb)`) %>% rename(fitted = `loglink(munb)`) 
+      
+      p2_se <- p2$se.fit %>% as.data.frame()%>% 
+            dplyr::select(`loglink(munb)`)  %>% rename(se = `loglink(munb)`)
+      
       # Calculate the confidence interval of the part 2, then multiply by the first part:
       results <- input %>% 
             mutate(
-                  predict_visit = exp(p2$fitted.values),
-                  predict_lci = exp(p2$fitted.values - 1.96*p2$se.fit),
-                  predict_hci = exp(p2$fitted.values + 1.96*p2$se.fit)) %>% 
+                  predict_visit = exp(p2_fit$fitted),
+                  predict_lci = exp(p2_fit$fitted - 1.96*p2_se$se),
+                  predict_hci = exp(p2_fit$fitted + 1.96*p2_se$se)) %>% 
             mutate(c_visit = nonzero_prob*predict_visit,
                    c_lci = nonzero_prob*predict_lci,
                    c_hci = nonzero_prob*predict_hci) %>% 
@@ -192,39 +154,22 @@ avg_visit_predict_fn <- function(dataset, fu_time, reg_1st, reg_2nd){
       
       return(results)
 }
+
 # run the predict function and summarised the average vistis:
-crude_summarised_results <- bind_rows(
-  avg_visit_predict_fn(dataset = crude_complete_3m,
-                       fu_time=30*3,
-                       crude_binomial_3m,
-                       crude_nb_3m) %>% mutate(time = "3 months") %>% relocate(time),
-  avg_visit_predict_fn(dataset = crude_complete_6m,
-                       fu_time=30*6,
-                       crude_binomial_6m,
-                       crude_nb_6m) %>% mutate(time = "6 months") %>% relocate(time),
-  avg_visit_predict_fn(dataset = crude_complete_12m,
-                       fu_time=30*12,
-                       crude_binomial_12m,
-                       crude_nb_12m) %>% mutate(time = "12 months") %>% relocate(time)) %>% 
+crude_summarised_results <- avg_visit_predict_fn(dataset = crude_complete_12m,
+                                                 crude_binomial_12m,
+                                                 crude_nb_12m) %>% 
+      mutate(time = "12 months") %>% relocate(time) %>% 
       mutate(adjustment = "Crude")
 
-adj_summarised_results <- bind_rows(
-  avg_visit_predict_fn(dataset = adj_complete_3m,
-                       fu_time=30*3,
-                       adj_binomial_3m,
-                       adj_nb_3m) %>% mutate(time = "3 months") %>% relocate(time),
-  avg_visit_predict_fn(dataset = adj_complete_6m,
-                       fu_time=30*6,
-                       adj_binomial_6m,
-                       adj_nb_6m) %>% mutate(time = "6 months") %>% relocate(time),
-  avg_visit_predict_fn(dataset = adj_complete_12m,
-                       fu_time=30*12,
-                       adj_binomial_12m,
-                       adj_nb_12m) %>% mutate(time = "12 months") %>% relocate(time)) %>% 
+adj_summarised_results <- avg_visit_predict_fn(dataset = adj_complete_12m,
+                                               adj_binomial_12m,
+                                               adj_nb_12m) %>% 
+      mutate(time = "12 months") %>% relocate(time) %>% 
       mutate(adjustment = "Adjusted")
 
 bind_rows(crude_summarised_results, adj_summarised_results) %>% 
-  write_csv(here("output", "st03_01_total_predicted_counts.csv"))
+  write_csv(here("output", "st02_01_total_predicted_counts.csv"))
 
 
 # Summarize the datasets for output checking: -----
@@ -257,31 +202,15 @@ hurdle_model_count_fn <- function(data){
 
 # Summarise binomial model data:
 bind_rows(
-      bind_rows(
-            bi_model_count_fn(crude_complete_3m) %>% mutate(time = "3m"),
-            bi_model_count_fn(crude_complete_6m) %>% mutate(time = "6m"),
-            bi_model_count_fn(crude_complete_12m) %>% mutate(time = "12m")) %>% 
-            mutate(model = "Crude"),
-      bind_rows(
-            bi_model_count_fn(adj_complete_3m) %>% mutate(time = "3m"),
-            bi_model_count_fn(adj_complete_6m) %>% mutate(time = "6m"),
-            bi_model_count_fn(adj_complete_12m) %>% mutate(time = "12m")) %>% 
-            mutate(model = "Adjusted")) %>% 
-      write_csv("output/st03_01_total_binomial_model_counts.csv")
+         (bi_model_count_fn(crude_complete_12m) %>% mutate(time = "12m") %>% mutate(model = "Crude")),
+         (bi_model_count_fn(adj_complete_12m) %>% mutate(time = "12m") %>% mutate(model = "Adjusted"))) %>% 
+      write_csv("output/st02_01_total_binomial_model_counts.csv")
 
 
 bind_rows(
-      bind_rows(
-            hurdle_model_count_fn(crude_complete_3m) %>% mutate(time = "3m"),
-            hurdle_model_count_fn(crude_complete_6m) %>% mutate(time = "6m"),
-            hurdle_model_count_fn(crude_complete_12m) %>% mutate(time = "12m")) %>% 
-            mutate(model = "Crude"),
-      bind_rows(
-            hurdle_model_count_fn(adj_complete_3m) %>% mutate(time = "3m"),
-            hurdle_model_count_fn(adj_complete_6m) %>% mutate(time = "6m"),
-            hurdle_model_count_fn(adj_complete_12m) %>% mutate(time = "12m")) %>% 
-            mutate(model = "Adjusted")) %>% 
-      write_csv("output/st03_01_total_gamma_model_counts.csv")
+         (hurdle_model_count_fn(crude_complete_12m) %>% mutate(time = "12m") %>% mutate(model = "Crude")),
+         (hurdle_model_count_fn(adj_complete_12m) %>% mutate(time = "12m") %>% mutate(model = "Adjusted"))) %>% 
+      write_csv("output/st02_01_total_hurdle_model_counts.csv")
 
 
 
