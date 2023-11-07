@@ -117,34 +117,41 @@ all_gamma%>% write_csv(here("output", "st03_01_total_cost_gammaglm.csv"))
 
 # Predicting cost: ------
 
-adj_predict_cost_fn <- function(dataset, fu_time, reg_1st, reg_2nd ){
+predict_avg_cost_fn <- function(dataset, first_reg, sec_reg){
+      
       # change the dataset fullow up time for the prediction
-      input <- dataset %>% mutate(follow_up = fu_time)
+      input <- dataset %>% mutate(follow_up = 360)
       
-      # Part 1: predict the first part non-zero prob
-      input$nonzero_prob <- predict(reg_1st, newdata = input,  type= "response")
-
-      # Part 2: predict the second part visits
-      p2 <- predict(reg_2nd, newdata = input, type = "response")
+      # predict non-zero visit chance
+      input$nonzero_chance <- predict(first_reg, newdata = input, type = "response")
       
-      # Calculate the confidence interval of the part 2, then multiply by the first part:
-      results <- input %>% 
-            mutate(predicted_cost = p2) %>% 
-            mutate(c_cost = nonzero_prob*predicted_cost) %>% 
-            group_by(exposure) %>% 
-            summarise(costs = mean(c_cost) # summarised the results by exposure: 
+      # Predict the cost by using original data
+      tpm <- predict(sec_reg, newdata = input, type ="link", se.fit =T)
+      
+      # Calculate 95% CI
+      input <- input %>% mutate(
+            twopm_cost= exp(tpm$fit),
+            twopm_cost_lci = exp(tpm$fit - 1.96*tpm$se.fit),
+            twopm_cost_hci = exp(tpm$fit + 1.96*tpm$se.fit))
+      
+      # Multiply the non-zero chance and the predicted costs
+      input <- input %>% mutate(
+            c_cost = nonzero_chance*twopm_cost,
+            c_cost_lci =nonzero_chance*twopm_cost_lci,
+            c_cost_hci =nonzero_chance*twopm_cost_hci,)
+      
+      # Summarise the output:
+      results <- input %>% group_by(exposure) %>% 
+            summarise(cost=mean(c_cost, na.rm =T),
+                      lci=mean(c_cost_lci, na.rm =T),
+                      uci=mean(c_cost_hci, na.rm =T)
             )
-      
       return(results)
 }
-
-adj_predict_cost_fn(dataset = adj_cost_complete_12m,
-                    fu_time = 30*12,
-                    reg_1st = adj_binomial_12m,
-                    reg_2nd = adj_gamma_12m) %>% 
+predict_avg_cost_fn(dataset = adj_cost_complete_12m,
+                    first_reg = adj_binomial_12m,
+                    sec_reg = adj_gamma_12m) %>% 
       write_csv(here("output", "st03_01_total_cost_predicted_costs.csv"))
-
-
 
 
 # Summarize the datasets for output checking: -----
