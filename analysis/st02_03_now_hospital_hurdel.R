@@ -1,5 +1,5 @@
 # Load previous data management
-source("analysis/dm03_7_pivot_hos_long.R")
+source("analysis/dm02_03_now_pivot_hos_long.R")
 
 # Data management for modeling:: --------
 # Collapsing data by summarising the visits and follow-up time, and 
