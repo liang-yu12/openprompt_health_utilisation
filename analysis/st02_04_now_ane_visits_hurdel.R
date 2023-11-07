@@ -95,13 +95,13 @@ adj_hurdle_outputs <- bind_rows(
 # Combine outputs
 # Save both outputs: # Combine total outputs and save:
 st03_04_ane_binomial <- bind_rows(crude_binomial_outputs, adj_binomial_outputs)
-st03_04_ane_binomial %>% write_csv(here("output", "st03_04_ane_binomial.csv"))
+st03_04_ane_binomial %>% write_csv(here("output", "st02_04_ane_binomial.csv"))
 
 st03_04_ane_hurdle <- bind_rows(crude_hurdle_outputs, adj_hurdle_outputs)
-st03_04_ane_hurdle %>% write_csv(here("output", "st03_04_ane_hurdle.csv"))
+st03_04_ane_hurdle %>% write_csv(here("output", "st02_04_ane_hurdle.csv"))
 
 # Save the detailed outputs to a text file:
-sink(here("output", "ane_reg_summary.txt"))
+sink(here("output", "st02_04_ane_reg_summary.txt"))
 print("# Crude binomial model output part 1 ---------")
 print(summary(crude_binomial_12m))
 print("# Crude hurdle model output part 2 ---------")
@@ -153,7 +153,7 @@ summarised_results <- bind_rows(
                          reg_1st = adj_binomial_12m, 
                          reg_2nd = adj_nb_12m) %>% mutate(model = "Adjusted")))
 
-summarised_results %>% write_csv(here("output", "st03_04_ane_predicted_counts.csv"))
+summarised_results %>% write_csv(here("output", "st02_04_ane_predicted_counts.csv"))
 
 
 # Summarize the datasets for output checking: -----
@@ -189,7 +189,7 @@ bind_rows(
              mutate(model = "Crude")),
       (bi_model_count_fn(adj_ae_complete_12m) %>% mutate(time = "12m")) %>% 
             mutate(model = "Adjusted")) %>% 
-      write_csv("output/st03_04_ane_binomial_model_counts.csv")
+      write_csv("output/st02_04_ane_binomial_model_counts.csv")
 
 
 bind_rows(
@@ -197,4 +197,4 @@ bind_rows(
             mutate(model = "Crude"),
       (hurdle_model_count_fn(adj_ae_complete_12m) %>% mutate(time = "12m")) %>% 
             mutate(model = "Adjusted")) %>% 
-      write_csv("output/st03_04_ane_hurdle_model_counts.csv")
+      write_csv("output/st02_04_ane_hurdle_model_counts.csv")
