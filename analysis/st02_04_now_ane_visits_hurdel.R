@@ -1,54 +1,5 @@
 # Load previous data management
-source("analysis/dm03_8_pivot_ane_long.R")
-
-# Data management for modeling:: --------
-# Collapsing data by summarising the visits and follow-up time, and 
-# generate three datasets for follow-up  12m
-
-# follow 12 months 
-matched_data_ae_12m <- matched_data_ae_ts %>% 
-  filter(!is.na(follow_up_time)) %>% 
-  group_by(patient_id, exposure) %>% 
-  summarise(
-    visits = sum(monthly_ae_visits),
-    follow_up = sum(follow_up_time)) %>% 
-  ungroup()
-
-
-# # Add covariates for adjustment
-for_covariates <- matched_data_ae_ts %>% distinct(patient_id, exposure, .keep_all = T) %>% 
-      dplyr::select("patient_id",     
-                    "exposure",           
-                    "age", "age_cat",               
-                    "sex",                     
-                    "bmi_cat",
-                    "ethnicity_6",             
-                    "imd_q5",                  
-                    "region",      
-                    "cov_asthma",
-                    "cov_mental_health",   
-                    "previous_covid_hosp",     
-                    "cov_covid_vax_n_cat",     
-                    "number_comorbidities_cat")
-
-for_covariates$sex <- relevel(for_covariates$sex, ref = "male")
-for_covariates$bmi_cat <- relevel(for_covariates$bmi_cat, ref = "Normal Weight")
-for_covariates$ethnicity_6 <- relevel(for_covariates$ethnicity_6, ref = "White")
-for_covariates$imd_q5 <- relevel(for_covariates$imd_q5, ref = "least_deprived")
-for_covariates$region <- relevel(for_covariates$region, ref = "London" )
-for_covariates$cov_mental_health <- relevel(for_covariates$cov_mental_health, ref = "FALSE")
-for_covariates$previous_covid_hosp <- relevel(for_covariates$previous_covid_hosp, ref = "FALSE")
-for_covariates$previous_covid_hosp <- relevel(for_covariates$previous_covid_hosp, ref = "FALSE")
-for_covariates$cov_covid_vax_n_cat <- relevel(for_covariates$cov_covid_vax_n_cat, ref = "0 dose")
-for_covariates$number_comorbidities_cat <- relevel(for_covariates$number_comorbidities_cat, ref = "0")
-
-# # add covariates back to the summarised data frame
-matched_data_ae_12m <- left_join(matched_data_ae_12m, for_covariates,
-                                 by = c("patient_id" = "patient_id", "exposure" = "exposure"))
-
-# correct the level of exposure groups
-matched_data_ae_12m$exposure <- relevel(matched_data_ae_12m$exposure, ref = "Comparator")
-
+source("analysis/dm02_04_now_pivot_ane_long.R")
 
 # Stats: two part (Hurdle) model -----
 # first need to exclude rows with NA and create 1/0 outcomes:
