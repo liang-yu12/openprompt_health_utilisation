@@ -78,3 +78,55 @@ matched_ane_cost_ts <- bind_rows(exp_cost_long, com_cost_long)
 # fix the exposure levels
 matched_ane_cost_ts$exposure <- factor(matched_ane_cost_ts$exposure, levels = c("Comparator", "Long covid exposure"))
 matched_ane_cost_ts$exposure %>% levels
+
+
+# Data management: colllapsing data by different follow-up time. -------
+
+# 12 months
+matched_cost_12m <- matched_ane_cost_ts %>% 
+      filter(!is.na(follow_up_time)) %>% 
+      group_by(patient_id, exposure) %>% 
+      summarise(
+            ane_cost = sum(monthly_ane_cost, na.rm =T),
+            follow_up = sum(follow_up_time, na.rm = T)) %>% 
+      ungroup()
+
+
+# # Add covariates for adjustment
+for_covariates <- matched_ane_cost_ts %>% distinct(patient_id, exposure, .keep_all = T) %>% 
+      dplyr::select("patient_id",     
+                    "exposure",           
+                    "age", "age_cat",               
+                    "sex",                     
+                    "bmi_cat",
+                    "ethnicity_6",             
+                    "imd_q5",                  
+                    "region",      
+                    "cov_asthma",
+                    "cov_mental_health",   
+                    "previous_covid_hosp",     
+                    "cov_covid_vax_n_cat",     
+                    "number_comorbidities_cat")
+
+levels_check <- c("exposure", "age_cat", "sex", "bmi_cat", "ethnicity_6", "imd_q5",                  
+                  "region", "previous_covid_hosp", "cov_covid_vax_n_cat", "number_comorbidities_cat")
+
+lapply(for_covariates[levels_check], levels) # need to correct some levels
+
+for_covariates$sex <- relevel(for_covariates$sex, ref = "male")
+for_covariates$bmi_cat <- relevel(for_covariates$bmi_cat, ref = "Normal Weight")
+for_covariates$ethnicity_6 <- relevel(for_covariates$ethnicity_6, ref = "White")
+for_covariates$imd_q5 <- relevel(for_covariates$imd_q5, ref = "least_deprived")
+for_covariates$region <- relevel(for_covariates$region, ref = "London" )
+for_covariates$cov_mental_health <- relevel(for_covariates$cov_mental_health, ref = "FALSE")
+for_covariates$previous_covid_hosp <- relevel(for_covariates$previous_covid_hosp, ref = "FALSE")
+for_covariates$previous_covid_hosp <- relevel(for_covariates$previous_covid_hosp, ref = "FALSE")
+for_covariates$cov_covid_vax_n_cat <- relevel(for_covariates$cov_covid_vax_n_cat, ref = "0 dose")
+for_covariates$number_comorbidities_cat <- relevel(for_covariates$number_comorbidities_cat, ref = "0")
+
+# # add covariates back to the summarised data frame
+matched_cost_12m <- left_join(matched_cost_12m, for_covariates,
+                              by = c("patient_id" = "patient_id", "exposure" = "exposure"))
+
+# Make sure the exposure level is correct
+matched_cost_12m$exposure <- relevel(matched_cost_12m$exposure, ref = "Comparator")
