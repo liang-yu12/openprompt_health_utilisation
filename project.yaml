@@ -220,18 +220,18 @@ actions:
 # Two part hurdle model:
 # # All healthcare utilisation 
 
-  report_03_hurdle_01_all_visits:
-    needs: [import_matched_exposure, import_matched_controls]
+  report_02_hurdle_01_all_visits:
+    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
-      r:latest analysis/st03_01_model_curr_nb_hurdel.R
+      r:latest analysis/st02_01_nonw_total_visit_hurdel.R
     outputs: 
       moderately_sensitive:
-        total_reg_summary: output/st03_01_total_reg_summary.txt
-        binomial_visits: output/st03_01_total_binomial.csv
-        hurdle_all_visits: output/st03_01_total_hurdle.csv
-        predicted_visits: output/st03_01_total_predicted_counts.csv
-        total_visit_bi_model_count: output/st03_01_total_binomial_model_counts.csv
-        total_visit_hurdle_count: output/st03_01_total_gamma_model_counts.csv
+        total_reg_summary: output/st02_01_total_reg_summary.txt
+        binomial_visits: output/st02_01_total_binomial.csv
+        hurdle_all_visits: output/st02_01_total_hurdle.csv
+        predicted_visits: output/st02_01_total_predicted_counts.csv
+        total_visit_bi_model_count: output/st02_01_total_binomial_model_counts.csv
+        total_visit_hurdle_count: output/st02_01_total_hurdle_model_counts.csv
 
 # # GP utilisation  - hurdle
 
