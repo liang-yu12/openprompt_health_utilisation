@@ -197,7 +197,7 @@ actions:
 
 # # Total primary care utilisation  - hurdle
 
-  report_02_01_primary_care_visit_hurdle:
+  report_02_02_primary_care_visit_hurdle:
     needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
       r:latest analysis/st02_02_now_primarycare_visits_hurdel.R
@@ -212,18 +212,18 @@ actions:
 
 # # Hospital admission - hurdle
 
-  report_03_hurdle_03_hospital_admin:
-    needs: [import_matched_exposure, import_matched_controls]
+  report_02_03_now_hospital_admin_hurdle:
+    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
-      r:latest analysis/st03_03_model07_hos_hurdel.R
+      r:latest analysis/st02_03_now_hospital_hurdel.R
     outputs: 
       moderately_sensitive: 
-        hos_binomial: output/st03_03_hos_binomial.csv
-        hos_hurdle: output/st03_03_hos_hurdle.csv
-        hos_reg_summary: output/hos_reg_summary.txt
-        predicted_hos_admin_counts: output/st03_03_hos_predicted_counts.csv
-        hos_visit_bi_model_count: output/st03_03_hos_binomial_model_counts.csv
-        hos_visit_hurdle_model_count: output/st03_03_hos_hurdle_model_counts.csv
+        hos_binomial: output/st02_03_hos_binomial.csv
+        hos_hurdle: output/st02_03_hos_hurdle.csv
+        hos_reg_summary: output/st02_03_hos_reg_summary.txt
+        predicted_hos_admin_counts: output/st02_03_hos_predicted_counts.csv
+        hos_visit_bi_model_count: output/st02_03_hos_binomial_model_counts.csv
+        hos_visit_hurdle_model_count: output/st02_03_hos_hurdle_model_counts.csv
 
         
 # # A&E visits - hurdle
