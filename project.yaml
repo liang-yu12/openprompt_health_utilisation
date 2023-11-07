@@ -268,7 +268,7 @@ actions:
 
 # # Visulize different type of outcomes:
 
-  report_02_06_plot_main_visit_outcomes:
+  report_02_07_plot_different_type_outcomes:
     needs: [report_02_02_primary_care_visit_hurdle, report_02_03_now_hospital_admin_hurdle, report_02_04_now_ane_visits_hurdle, report_02_05_now_opa_visits_hurdle]
     run:
       r:latest analysis/st02_07_visualise_outcomes_by_types.R
