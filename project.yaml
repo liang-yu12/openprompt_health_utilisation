@@ -243,7 +243,7 @@ actions:
         
 # # OPA visits - hurdle
   report_02_05_now_opa_visits_hurdle:
-    needs: needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
       r:latest analysis/st02_05_now_opa_visits_hurdel.R
     outputs: 
