@@ -180,7 +180,7 @@ actions:
 # Contemporary comparison
 
 # Two part hurdle model:
-# # All healthcare utilisation 
+# # Main results: all healthcare utilisation 
 
   report_02_01_all_visits_hurdle:
     needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
@@ -194,6 +194,17 @@ actions:
         predicted_visits: output/st02_01_total_predicted_counts.csv
         total_visit_bi_model_count: output/st02_01_total_binomial_model_counts.csv
         total_visit_hurdle_count: output/st02_01_total_hurdle_model_counts.csv
+
+# # Visulize main outcome:
+
+  report_02_06_plot_main_visit_outcomes:
+    needs: [report_02_01_all_visits_hurdle]
+    run:
+      r:latest analysis/st02_06_visualise_total_outcome.R
+    outputs:
+      moderately_sensitive:
+        outcomes_plots: output/st02_06_total_healthcare_visits.png
+
 
 # # Total primary care utilisation  - hurdle
 
@@ -256,15 +267,6 @@ actions:
         opa_visit_hurdle_model_count: output/st02_05_opa_hurdle_model_counts.csv
 
 
-# # Visulize outcomes:
-
-  # visualise_visit_outcomes:
-  #   needs: [report_03_hurdle_01_all_visits, report_03_hurdle_02_gp_visits, report_03_hurdle_03_hospital_admin, report_03_hurdle_04_ane_visits,report_03_hurdle_05_opa_visits]
-  #   run: 
-  #     r:latest analysis/st03_visualise_outcomes.R
-  #   outputs: 
-  #     moderately_sensitive: 
-  #       outcomes_plots: output/st03_healthcare_visits.png
 
 # # Subgroup analyses 1: factors associated with high healthcare use among LC
   report_sub_lc_only_factors:  
