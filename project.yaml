@@ -228,18 +228,18 @@ actions:
         
 # # A&E visits - hurdle
         
-  report_03_hurdle_04_ane_visits:
-    needs: [import_matched_exposure, import_matched_controls]
+  report_02_04_now_ane_visits:
+    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
-      r:latest analysis/st03_04_model08_ane_hurdel.R
+      r:latest analysis/st02_04_now_ane_visits_hurdel.R
     outputs: 
       moderately_sensitive: 
-        ane_binomial: output/st03_04_ane_binomial.csv
-        ane_hurdle: output/st03_04_ane_hurdle.csv
-        ane_reg_summary: output/ane_reg_summary.txt
-        predicted_ane_visits: output/st03_04_ane_predicted_counts.csv
-        ane_visit_bi_model_count: output/st03_04_ane_binomial_model_counts.csv
-        ane_visit_hurdle_model_count: output/st03_04_ane_hurdle_model_counts.csv    
+        ane_binomial: output/st02_04_ane_binomial.csv
+        ane_hurdle: output/st02_04_ane_hurdle.csv
+        ane_reg_summary: output/st02_04_ane_reg_summary.txt
+        predicted_ane_visits: output/st02_04_ane_predicted_counts.csv
+        ane_visit_bi_model_count: output/st02_04_ane_binomial_model_counts.csv
+        ane_visit_hurdle_model_count: output/st02_04_ane_hurdle_model_counts.csv    
         
 # # OPA visits - hurdle
         
