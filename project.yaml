@@ -295,6 +295,18 @@ actions:
         total_cost_bi_model_check: output/st03_03_total_cost_binomial_model_counts.csv
         total_cost_gamma_model_check: output/st03_03_total_cost_gamma_model_counts.csv
 
+# # Visulize main cost outcome:
+
+  report_03_08_plot_main_cost_outcomes:
+    needs: [report_03_03_total_costs_twopart]
+    run:
+      r:latest analysis/st03_08_visualise_total_cost_outcomes.R
+    outputs:
+      moderately_sensitive:
+        total_cost_outcomes_plots: output/st03_08_total_cost.png
+
+
+
 #  GP costs: run two part model and predict costs
   report_04_02_predict_gp_cost_twopm:
     needs: [import_matched_exposure, import_matched_controls, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
