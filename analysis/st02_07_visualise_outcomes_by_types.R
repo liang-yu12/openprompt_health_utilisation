@@ -231,7 +231,57 @@ predicted_opa_visits <- read_csv("output/st02_05_opa_predicted_counts.csv") %>%
       filter(model == "Adjusted")
 
 # Forest plot 
-opa_forest <- forest_plot_function(opa_binomial, opa_hurdle)
+
+bi_total_visits <- opa_binomial
+
+bi_total_visits$`OR (95% CI)` <- sprintf("%.2f (%.2f - %.2f)",
+                                         bi_total_visits$estimate,  
+                                         bi_total_visits$lci,  
+                                         bi_total_visits$hci)
+bi_total_visits$`   First part      `  <- " "
+bi_total_visits <- relocate(bi_total_visits, `   First part      `  , .after = Group)
+bi_total_visits <- rename(bi_total_visits, `Healthcare utilisation type` = Group)
+
+
+
+# Hurdle models:
+# Read in results: 
+total_hurdle <- opa_hurdle
+
+total_hurdle$`Rate ratio (95% CI)` <- sprintf("%.2f (%.2f - %.2f)",
+                                              total_hurdle$estimate,  
+                                              total_hurdle$lci,  
+                                              total_hurdle$hci)
+# Create an empty column for plots
+total_hurdle$`   Second part      `  <- " "
+total_hurdle <- relocate(total_hurdle, `   Second part      ` , .after = Group)
+total_hurdle <- rename(total_hurdle, `Healthcare utilisation type` = Group)
+
+
+# Try combining two data
+part2 <- total_hurdle %>% rename(
+      estimate2 = estimate, 
+      lci2 = lci,
+      hci2 = hci
+)
+part1 <- bi_total_visits
+
+combine <- full_join(part1, part2)
+
+combine[,c(1,2,6,7,11)] %>% names
+
+tm <- forest_theme(core=list(bg_params=list(fill = c("#FFFFFF"))))
+
+opa_forest <- forest(
+      data = combine[,c(1,2,6,7,11)],
+      est = list(combine$estimate, combine$estimate2),
+      lower = list(combine$lci, combine$lci2),
+      upper = list(combine$hci,combine$hci2),
+      ci_column = c(2, 4),
+      ref_line = 1,
+      theme = tm)
+plot(opa_forest)
+
 # barplot
 opa_bar <- visit_bar_fc(predicted_opa_visits, "Average outpatient clinic visit frequencies")
 
