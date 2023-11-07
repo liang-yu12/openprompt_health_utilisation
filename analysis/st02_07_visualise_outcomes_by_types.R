@@ -204,5 +204,40 @@ ggsave(ane_plots, file = "output/st02_07_a_and_e_visits.png",
 
 
 # OPA clinic visits: ------
+# read in data
+opa_binomial <- read_csv("output/st02_05_opa_binomial.csv") %>% 
+      filter(time == "12 months" & Adjustment == "Adjusted OPA visits") %>% 
+      mutate(Group = "Long COVID group") %>% 
+      dplyr::select(Group, estimate, lci, hci) %>% 
+      add_row(
+            Group = "Comparator group",
+            estimate = 1,
+            lci = 1,
+            hci = 1) %>% 
+      arrange(Group)
 
+opa_hurdle<- read_csv("output/st02_05_opa_hurdle.csv") %>% 
+      filter(time == "12 months" & Adjustment == "Adjusted OPA visits") %>% 
+      mutate(Group = "Long COVID group") %>% 
+      dplyr::select(Group, estimate, lci, hci) %>% 
+      add_row(
+            Group = "Comparator group",
+            estimate = 1,
+            lci = 1,
+            hci = 1) %>% 
+      arrange(Group)
+
+predicted_opa_visits <- read_csv("output/st02_05_opa_predicted_counts.csv") %>% 
+      filter(model == "Adjusted")
+
+# Forest plot 
+opa_forest <- forest_plot_function(opa_binomial, opa_hurdle)
+# barplot
+opa_bar <- visit_bar_fc(predicted_opa_visits, "Average outpatient clinic visit frequencies")
+
+
+# combine and save outputs
+opa_plots <- ggarrange(opa_forest, opa_bar, ncol = 1)
+ggsave(opa_plots, file = "output/st02_07_opa_visits.png",
+       width=8, height=4, units = "in", dpi = 300)
 
