@@ -85,12 +85,12 @@ adj_nb_12m <- vglm(visits ~ exposure + offset(log(follow_up))+
 # Combine and organised regression outputs
 adj_binomial_outputs <-bind_rows(
       (binomial_tidy_fn(adj_binomial_12m) %>% mutate(time="12 months"))
-) %>% mutate(Adjustment = "Adjusted A&E visits")
+) %>% mutate(Adjustment = "Adjusted OPA visits")
 
 # Organise the second part outputs:
 adj_hurdle_outputs <- bind_rows(
       (positive_nb_tidy_fu(adj_nb_12m) %>% mutate(time="12 months"))
-) %>% mutate(Adjustment = "Adjusted A&E visits")
+) %>% mutate(Adjustment = "Adjusted OPA visits")
 
 # Combine outputs
 # Save both outputs: # Combine total outputs and save:
