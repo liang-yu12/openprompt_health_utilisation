@@ -126,25 +126,31 @@ st02_02_gp_hurdle %>% write_csv(here("output", "st02_02_gp_hurdle.csv"))
 # function to predict the average adjusted visits:
 average_visits_fn <- function(dataset, reg_1st, reg_2nd){
       
-      dataset <- dataset %>% mutate(follow_up = 30*12)
-      # part 1:
-      p1 <- predict(reg_1st, type= "response") # predict the first part non-zero prob
-      dataset$nonzero_prob <- p1 # add the probability to the original data
-      # part 2: 
-      p2 <- predictvglm(reg_2nd, newdata = dataset, type = "link", se.fit = T)
-      dataset <- dataset %>% mutate(
-            predict_visit = exp(p2$fitted.values),
-            predict_lci = exp(p2$fitted.values - 1.96*p2$se.fit),
-            predict_hci = exp(p2$fitted.values + 1.96*p2$se.fit)
-      )
-      # multiply p1 and p2
-      dataset <- dataset %>% mutate(
-            c_visit = nonzero_prob*predict_visit,
-            c_lci = nonzero_prob*predict_lci,
-            c_hci = nonzero_prob*predict_hci)
+      input <- dataset %>% mutate(follow_up = 360)
       
-      results <- dataset %>% group_by(exposure) %>% 
-            summarise(visits = mean(c_visit),
+      # Part 1: predict the first part non-zero prob
+      input$nonzero_prob <- predict(reg_1st, newdata = input,  type= "response")
+      # Part 2: predict the second part visits
+      p2 <- predictvglm(reg_2nd, newdata = input, type = "link", se.fit = T)
+      
+      # the fitted value outcome is a matrix. Only need the mean value
+      p2_fit<- p2$fitted.values %>% as.data.frame() %>% 
+            dplyr::select(`loglink(munb)`) %>% rename(fitted = `loglink(munb)`) 
+      
+      p2_se <- p2$se.fit %>% as.data.frame()%>% 
+            dplyr::select(`loglink(munb)`)  %>% rename(se = `loglink(munb)`)
+      
+      # Calculate the confidence interval of the part 2, then multiply by the first part:
+      results <- input %>% 
+            mutate(
+                  predict_visit = exp(p2_fit$fitted),
+                  predict_lci = exp(p2_fit$fitted - 1.96*p2_se$se),
+                  predict_hci = exp(p2_fit$fitted + 1.96*p2_se$se)) %>% 
+            mutate(c_visit = nonzero_prob*predict_visit,
+                   c_lci = nonzero_prob*predict_lci,
+                   c_hci = nonzero_prob*predict_hci) %>% 
+            group_by(exposure) %>% 
+            summarise(visits = mean(c_visit), # summarised the results by exposure: 
                       lci = mean(c_lci),
                       hci = mean(c_hci)
             )
@@ -160,7 +166,7 @@ summarised_results <- bind_rows(
                          reg_1st = adj_binomial_12m, 
                          reg_2nd = adj_nb_12m) %>% mutate(model = "Adjusted")))
 
-summarised_results %>% write_csv(here("output", "st03_02_gp_predicted_counts.csv"))
+summarised_results %>% write_csv(here("output", "st02_02_gp_predicted_counts.csv"))
 
 
 # Summarize the datasets for output checking: -----
@@ -197,7 +203,7 @@ bind_rows(
             mutate(model = "Crude")),
       (bi_model_count_fn(adj_gp_complete_12m) %>% mutate(time = "12m")) %>% 
             mutate(model = "Adjusted")) %>% 
-      write_csv("output/st03_02_gp_binomial_model_counts.csv")
+      write_csv("output/st02_02_gp_binomial_model_counts.csv")
 
 
 bind_rows(
@@ -205,4 +211,4 @@ bind_rows(
             mutate(model = "Crude"),
       (hurdle_model_count_fn(adj_gp_complete_12m) %>% mutate(time = "12m")) %>% 
             mutate(model = "Adjusted")) %>% 
-      write_csv("output/st03_02_gp_hurdle_model_counts.csv")
+      write_csv("output/st02_02_gp_hurdle_model_counts.csv")
