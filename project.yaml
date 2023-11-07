@@ -323,18 +323,18 @@ actions:
 
 
 # APC costs: run two part model and predict costs
-  report_04_03_predict_apc_cost_twopm:
-    needs: [import_matched_exposure, import_matched_controls, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+  report_03_05_apc_cost_twopm:
+    needs:  [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
-      r:latest analysis/st04_03_predict_apc_cost_twopart.R
+      r:latest analysis/st03_05_now_apc_cost_twopart.R
     outputs: 
       moderately_sensitive: 
-        apc_cost_binomial: output/st04_03_apc_cost_binomial_output.csv
-        apc_cost_twopm: output/st04_03_apc_cost_twopm_output.csv
-        apc_cost_reg_summary: output/st04_03_apc_cost_reg_summary.txt
-        apc_predicted_costs: output/st04_03_predict_apc_cost_tpm.csv
-        apc_cost_bi_model_check: output/st04_03_apc_binomial_model_counts.csv
-        apc_cost_gamma_model_check: output/st04_03_apc_gamma_model_counts.csv
+        apc_cost_binomial: output/st03_05_now_apc_cost_binomial_output.csv
+        apc_cost_twopm: output/st03_05_now_apc_cost_twopm_output.csv
+        apc_cost_reg_summary: output/st03_05_now_apc_cost_reg_summary.txt
+        apc_predicted_costs: output/st03_05_predict_apc_cost_tpm.csv
+        apc_cost_bi_model_check: output/st03_05_apc_binomial_model_counts.csv
+        apc_cost_gamma_model_check: output/st03_05_apc_gamma_model_counts.csv
 
 # A&E costs: run two part model and predict costs
   report_04_04_predict_ane_cost_twopm:
