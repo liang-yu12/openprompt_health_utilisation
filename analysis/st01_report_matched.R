@@ -1,14 +1,8 @@
 # Source data management
-source("analysis/dm03_matched_define_monthly_follow_up_time.R")
+source("analysis/dm01_02_now_monthly_follow_up.R")
 
 # manually combine data
 matched_data <- bind_rows(lc_exp_matched, com_matched)
-
-# define LC outpatient visits variables
-opa_lc_visit <- c()
-for (i in 1:12) {
-      opa_lc_visit <- c(opa_lc_visit, paste0("opa_lc_visit_m", i))
-}
 
 # define total visits variables
 visit_cols <- c()
@@ -40,24 +34,6 @@ for (i in 1:12) {
       opd_visits <- c(opd_visits, paste0("opa_visit_m", i))
 }      
 
-# lc visits
-opa_lc <- c()
-for (i in 1:12){
-      opa_lc <- c(opa_lc, paste0("opa_lc_visit_m", i))
-}
-
-# prescription counts:
-drugs <- c()
-for (i in 1:12) {
-      drugs <- c(drugs, paste0("prescription_", i))
-}
-
-# primary care resourse use
-primary_care_use <- c()
-for (i in 1:12) {
-      primary_care_use <- c(primary_care_use, paste0("primary_care_use_", i))
-}
-
 costs <- matched_data[grep("_cost_m", names(matched_data))] %>%  names
 
 # summarise follow-up period
@@ -88,7 +64,7 @@ basic_demographic <- matched_data %>% summary_factorlist(dependent, explanatory,
 
 
 # Summarising the outcomes by types:
-outcomes <- c(visit_cols, gp_visits, hos_visits, a_e_visits, opd_visits, opa_lc,drugs, primary_care_use, fu_cols, costs)
+outcomes <- c(visit_cols, gp_visits, "total_drug_visit", hos_visits, a_e_visits, opd_visits, costs, fu_cols)
 
 outcome_summary <- matched_data %>% summary_factorlist(dependent, outcomes,
                                                        p = TRUE, p_cont_para = "aov",
