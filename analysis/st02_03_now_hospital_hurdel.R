@@ -154,7 +154,7 @@ summarised_results <- bind_rows(
                          reg_1st = adj_binomial_12m, 
                          reg_2nd = adj_nb_12m) %>% mutate(model = "Adjusted")))
 
-summarised_results %>% write_csv(here("output", "st03_03_hos_predicted_counts.csv"))
+summarised_results %>% write_csv(here("output", "st02_03_hos_predicted_counts.csv"))
 
 # Summarize the datasets for output checking: -----
 
