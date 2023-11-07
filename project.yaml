@@ -33,16 +33,7 @@ actions:
     outputs:
       highly_sensitive:
         cohort: output/dataset_comparator_unmatched.csv
-        
-# # # QC step:         
-  qc_01examine_unmatched_data:
-    needs: [generate_dataset_comparator_exclude_gp_no_long_covid, generate_long_covid_exposure_dataset]  
-    run: 
-      r:latest analysis/qc01_unmatched_control.R
-    outputs:
-      moderately_sensitive:
-        cohort: output/qc01_check_unmatched.csv
-        
+
 # # OS matching
   test_matching:
     run:
@@ -136,16 +127,7 @@ actions:
     outputs:
       highly_sensitive:
         hx_cohort: output/hx_dataset_comp_unmatched.csv
-        
-# # # QC step:         
-  qc_02examine_historical_unmatched_data:
-    needs: [generate_historical_exp_data, generate_historical_comp_data_exclude_gp_no_long_covid]  
-    run: 
-      r:latest analysis/qc02_hx_unmatched_check.R
-    outputs:
-      moderately_sensitive:
-        cohort: output/qc02_hx_check_unmatched.csv
-        
+
 # # OS matching
   historical_matching:
     run:
@@ -184,7 +166,7 @@ actions:
 
 # Contemporary comparison: 
   report01_matched_datasets:
-    needs: [import_matched_exposure, import_matched_controls, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
       r:latest analysis/st01_report_matched.R
     outputs: 
@@ -194,26 +176,6 @@ actions:
         explore_vax_fig: output/st1_exporing_vax_index_date.png # Check vax date
         missing_table: output/missing_distribution_table.csv # Missing pattern tab
         missing_pattern: output/missing_pattern_current.png # Missing patter plot
-
-## run analyses using the new dataset:
-  report01_matched_datasets_new_costs:
-    needs: [import_matched_exposure, import_matched_controls, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
-    run: 
-      r:latest analysis/new_st01_report_cont_comparison_table1_new_cost.R
-    outputs: 
-      moderately_sensitive: 
-        new_demographic: output/new_st01_demographic.csv  # new Table 1 with costs
-        new_costs_outcomes: output/new_st01_outcome_summary.csv
-        new_follow_up: output/new_st01_matched_numbers_check_fu.csv
-
-# Check follow-up time 
-  qc_03_check_na:
-    needs: [import_matched_exposure, import_matched_controls]
-    run: 
-      r:latest analysis/qc03_now_check_followup.R
-    outputs: 
-      moderately_sensitive: 
-        check_na_in_data: output/st02_check_min.csv
 
 # Contemporary comparison
 
@@ -262,18 +224,7 @@ actions:
         predicted_hos_admin_counts: output/st03_03_hos_predicted_counts.csv
         hos_visit_bi_model_count: output/st03_03_hos_binomial_model_counts.csv
         hos_visit_hurdle_model_count: output/st03_03_hos_hurdle_model_counts.csv
-        
-# # QC 05: check hospital admission distribution:
 
-  qc_05_h_hospital_admin:
-    needs: [import_matched_exposure, import_matched_controls]
-    run: 
-      r:latest analysis/qc05_check_hos_distribution_models.R
-    outputs: 
-      moderately_sensitive: 
-        hos_distribution: output/qc05_hos_distribution_compare.png
-        hos_overdispersion: output/qc05_hos_vist_overdispersion_test.csv
-        hos_model_comparison: output/qc05_hos_vist_model_compare.csv
         
 # # A&E visits - hurdle
         
@@ -288,20 +239,7 @@ actions:
         ane_reg_summary: output/ane_reg_summary.txt
         predicted_ane_visits: output/st03_04_ane_predicted_counts.csv
         ane_visit_bi_model_count: output/st03_04_ane_binomial_model_counts.csv
-        ane_visit_hurdle_model_count: output/st03_04_ane_hurdle_model_counts.csv
-                
-# # QC 06: check A&E visits:
-
-  qc_06_a_and_e_visits:
-    needs: [import_matched_exposure, import_matched_controls]
-    run: 
-      r:latest analysis/qc06_check_ane_distribution_models.R
-    outputs: 
-      moderately_sensitive: 
-        ane_distribution: output/qc06_ane_distribution_compare.png
-        ane_overdispersion: output/qc06_ane_vist_overdispersion_test.csv
-        ane_model_comparison: output/qc06_ane_vist_model_compare.csv
-        
+        ane_visit_hurdle_model_count: output/st03_04_ane_hurdle_model_counts.csv    
         
 # # OPA visits - hurdle
         
@@ -317,18 +255,6 @@ actions:
         predicted_opa_visits: output/st03_05_opa_predicted_counts.csv
         opa_visit_bi_model_count: output/st03_05_opa_binomial_model_counts.csv
         opa_visit_hurdle_model_count: output/st03_05_opa_hurdle_model_counts.csv
-                
-# # QC07: check over dispersion of the rest outcomes:
-
-  qc_07_check_over_dispersion:
-    needs: [import_matched_exposure, import_matched_controls]
-    run: 
-      r:latest analysis/qc07_check_dispersion.R
-    outputs: 
-      moderately_sensitive: 
-        total_visit_dispersion: output/qc07_total_vist_overdispersion_test.csv
-        gp_visit_dispersion: output/qc07_gp_vist_overdispersion_test.csv
-        opa_visit_dispersion: output/qc07_opa_vist_overdispersion_test.csv
 
   report_03_hurdle_11_drug_visits:
     needs: [import_matched_exposure, import_matched_controls, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
@@ -345,15 +271,13 @@ actions:
 
 # # Visulize outcomes:
 
-  visualise_visit_outcomes:
-    needs: [report_03_hurdle_01_all_visits, report_03_hurdle_02_gp_visits, report_03_hurdle_03_hospital_admin, report_03_hurdle_04_ane_visits,report_03_hurdle_05_opa_visits]
-    run: 
-      r:latest analysis/st03_visualise_outcomes.R
-    outputs: 
-      moderately_sensitive: 
-        outcomes_plots: output/st03_healthcare_visits.png
-
-
+  # visualise_visit_outcomes:
+  #   needs: [report_03_hurdle_01_all_visits, report_03_hurdle_02_gp_visits, report_03_hurdle_03_hospital_admin, report_03_hurdle_04_ane_visits,report_03_hurdle_05_opa_visits]
+  #   run: 
+  #     r:latest analysis/st03_visualise_outcomes.R
+  #   outputs: 
+  #     moderately_sensitive: 
+  #       outcomes_plots: output/st03_healthcare_visits.png
 
 # # Subgroup analyses 1: factors associated with high healthcare use among LC
   report_sub_lc_only_factors:  
@@ -384,15 +308,7 @@ actions:
         lc_only_forest_plot: output/st03_sub_lc_factors.png
         nolc_forest_plot: output/st03_sub_nolc_factors.png
         predicted_subgroups_visits: output/st03_sub_all_lc_nolc_predicted_visits.png
-        
-# # QC step: check lc only analysis model assumption
-  qc_08_lc_only_factors:  
-    needs: [import_matched_exposure, import_matched_controls]
-    run: 
-      r:latest analysis/qc08_subgroup_lconly_check_dispersion.R
-    outputs: 
-      moderately_sensitive:
-        lc_only_model_check: output/qc08_lc_only_overdispersion_test.csv
+
 
 # # Stratified by hospitalisation, sex, age - hurdle
   report_03_hurdle_05_subgroup_visits:
@@ -417,26 +333,6 @@ actions:
         sex_stratum_results: output/st03_05_stratum_sex_visits.png
         age_cat_stratum_results: output/st03_05_stratum_age_visits.png
 
-# QC: check unit costs:
-  qc13_existing_unit_cost:
-    needs: [import_matched_exposure, import_matched_controls, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
-    run: 
-      r:latest analysis/qc14_estimate_existing_unit_costs.R
-    outputs: 
-      moderately_sensitive: 
-        hos_unit_cost: output/st04_apc_unit_costs.csv
-        opa_unit_cost: output/st04_opa_unit_costs.csv
-        ane_unit_cost: output/st04_ane_unit_costs.csv
-        
-  qc13_new_unit_cost:
-    needs: [import_matched_exposure_update, import_matched_control_updates,import_matched_exposure, import_matched_controls, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
-    run: 
-      r:latest analysis/qc14_estimate_new_unit_costs.R
-    outputs: 
-      moderately_sensitive: 
-        hos_new_unit_cost: output/st04_apc_new_unit_costs.csv
-        opa_new_unit_cost: output/st04_opa_new_unit_costs.csv
-        ane_new_unit_cost: output/st04_ane_new_unit_costs.csv
 
 # Total Costs: twopart model
 
@@ -520,6 +416,126 @@ actions:
       moderately_sensitive: 
         outcomes_plots: output/st04_healthcare_costs.png
 
+
+# Historical: data distribution
+  report05_hx_matched_data_distribution:
+    needs: [import_matched_historical_exposure, import_matched_historical_controls]
+    run: 
+      r:latest analysis/st05_report_matched_historical_records.R
+    outputs: 
+      moderately_sensitive: 
+        historical_table_1: output/st05_hx_matched_numbers_table.csv
+        crude_visits_distribution: output/st05_hx_crude_vistis_exp_time.csv
+        hx_now_smooth_line: output/st05_smooth_comparison.jpg
+
+# # Historical: difference-in-difference model with two-part model
+
+  report_05_did_tpm_model:      
+    needs: [import_matched_historical_exposure, import_matched_historical_controls]
+    run: 
+      r:latest analysis/st05_did_twopart.R
+    outputs: 
+      moderately_sensitive: 
+        did_crude_plot: output/st05_did_crude.png
+        did_adj_plot: output/st05_did_adj.png
+        did_reg_table: output/st05_did_tpm_predicted.csv
+        did_reg_summary: output/st05_did_reg_summary_output.txt
+
+# Supplementary materials
+
+  report_sup_exploring_outcome_dist:
+    needs: [import_matched_exposure, import_matched_controls]
+    run: 
+      r:latest analysis/st_sup_01_data_exploration.R
+    outputs: 
+      moderately_sensitive: 
+        zero_percent_fig: output/st_sup_1_5_explore_zero_percentage.png
+        monthly_oucome_tb: output/st_sup_1_5_monthly_outcome_distribution.csv
+        visit_explore: output/st_sup_1_5_cat_visits_summary.csv
+        
+  report_sup_model_selection:
+    needs: [import_matched_exposure, import_matched_controls]
+    run: 
+      r:latest analysis/st_sup_01_model_selection.R
+    outputs: 
+      moderately_sensitive: 
+        model_01_poisson: output/st_sup_model_selection.csv
+
+# QC steps: -----------
+        
+# # # QC step:         
+  qc_01examine_unmatched_data:
+    needs: [generate_dataset_comparator_exclude_gp_no_long_covid, generate_long_covid_exposure_dataset]  
+    run: 
+      r:latest analysis/qc01_unmatched_control.R
+    outputs:
+      moderately_sensitive:
+        cohort: output/qc01_check_unmatched.csv
+        
+# # # QC step:         
+  qc_02examine_historical_unmatched_data:
+    needs: [generate_historical_exp_data, generate_historical_comp_data_exclude_gp_no_long_covid]  
+    run: 
+      r:latest analysis/qc02_hx_unmatched_check.R
+    outputs:
+      moderately_sensitive:
+        cohort: output/qc02_hx_check_unmatched.csv
+
+        
+# # QC 05: check hospital admission distribution:
+
+  qc_05_h_hospital_admin:
+    needs: [import_matched_exposure, import_matched_controls]
+    run: 
+      r:latest analysis/qc05_check_hos_distribution_models.R
+    outputs: 
+      moderately_sensitive: 
+        hos_distribution: output/qc05_hos_distribution_compare.png
+        hos_overdispersion: output/qc05_hos_vist_overdispersion_test.csv
+        hos_model_comparison: output/qc05_hos_vist_model_compare.csv
+
+# Check follow-up time 
+  qc_03_check_na:
+    needs: [import_matched_exposure, import_matched_controls]
+    run: 
+      r:latest analysis/qc03_now_check_followup.R
+    outputs: 
+      moderately_sensitive: 
+        check_na_in_data: output/st02_check_min.csv
+                
+# # QC 06: check A&E visits:
+
+  qc_06_a_and_e_visits:
+    needs: [import_matched_exposure, import_matched_controls]
+    run: 
+      r:latest analysis/qc06_check_ane_distribution_models.R
+    outputs: 
+      moderately_sensitive: 
+        ane_distribution: output/qc06_ane_distribution_compare.png
+        ane_overdispersion: output/qc06_ane_vist_overdispersion_test.csv
+        ane_model_comparison: output/qc06_ane_vist_model_compare.csv        
+                
+# # QC07: check over dispersion of the rest outcomes:
+
+  qc_07_check_over_dispersion:
+    needs: [import_matched_exposure, import_matched_controls]
+    run: 
+      r:latest analysis/qc07_check_dispersion.R
+    outputs: 
+      moderately_sensitive: 
+        total_visit_dispersion: output/qc07_total_vist_overdispersion_test.csv
+        gp_visit_dispersion: output/qc07_gp_vist_overdispersion_test.csv
+        opa_visit_dispersion: output/qc07_opa_vist_overdispersion_test.csv
+
+# # QC step: check lc only analysis model assumption
+  qc_08_lc_only_factors:  
+    needs: [import_matched_exposure, import_matched_controls]
+    run: 
+      r:latest analysis/qc08_subgroup_lconly_check_dispersion.R
+    outputs: 
+      moderately_sensitive:
+        lc_only_model_check: output/qc08_lc_only_overdispersion_test.csv
+        
 # QC09: check the inconsistent pairs between visits and costs data:
 
   qc09_visit_cost_inconsistence:
@@ -581,46 +597,23 @@ actions:
         ane_cost_distribution: output/new_qc10_ane_cost_distribution.csv
         opa_cost_distribution: output/new_qc10_opa_cost_distribution.csv
 
-# Historical: data distribution
-  report05_hx_matched_data_distribution:
-    needs: [import_matched_historical_exposure, import_matched_historical_controls]
+# QC: check unit costs:
+  qc13_existing_unit_cost:
+    needs: [import_matched_exposure, import_matched_controls, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
-      r:latest analysis/st05_report_matched_historical_records.R
+      r:latest analysis/qc14_estimate_existing_unit_costs.R
     outputs: 
       moderately_sensitive: 
-        historical_table_1: output/st05_hx_matched_numbers_table.csv
-        crude_visits_distribution: output/st05_hx_crude_vistis_exp_time.csv
-        hx_now_smooth_line: output/st05_smooth_comparison.jpg
-
-# # Historical: difference-in-difference model with two-part model
-
-  report_05_did_tpm_model:      
-    needs: [import_matched_historical_exposure, import_matched_historical_controls]
-    run: 
-      r:latest analysis/st05_did_twopart.R
-    outputs: 
-      moderately_sensitive: 
-        did_crude_plot: output/st05_did_crude.png
-        did_adj_plot: output/st05_did_adj.png
-        did_reg_table: output/st05_did_tpm_predicted.csv
-        did_reg_summary: output/st05_did_reg_summary_output.txt
-
-# Supplementary materials
-
-  report_sup_exploring_outcome_dist:
-    needs: [import_matched_exposure, import_matched_controls]
-    run: 
-      r:latest analysis/st_sup_01_data_exploration.R
-    outputs: 
-      moderately_sensitive: 
-        zero_percent_fig: output/st_sup_1_5_explore_zero_percentage.png
-        monthly_oucome_tb: output/st_sup_1_5_monthly_outcome_distribution.csv
-        visit_explore: output/st_sup_1_5_cat_visits_summary.csv
+        hos_unit_cost: output/st04_apc_unit_costs.csv
+        opa_unit_cost: output/st04_opa_unit_costs.csv
+        ane_unit_cost: output/st04_ane_unit_costs.csv
         
-  report_sup_model_selection:
-    needs: [import_matched_exposure, import_matched_controls]
+  qc13_new_unit_cost:
+    needs: [import_matched_exposure_update, import_matched_control_updates,import_matched_exposure, import_matched_controls, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
-      r:latest analysis/st_sup_01_model_selection.R
+      r:latest analysis/qc14_estimate_new_unit_costs.R
     outputs: 
       moderately_sensitive: 
-        model_01_poisson: output/st_sup_model_selection.csv
+        hos_new_unit_cost: output/st04_apc_new_unit_costs.csv
+        opa_new_unit_cost: output/st04_opa_new_unit_costs.csv
+        ane_new_unit_cost: output/st04_ane_new_unit_costs.csv        
