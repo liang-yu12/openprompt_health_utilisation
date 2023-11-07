@@ -351,18 +351,18 @@ actions:
         ane_cost_gamma_model_check: output/st03_06_ane_gamma_model_counts.csv
 
 # OPA costs: run two part model and predict costs
-  report_04_05_predict_opa_cost_twopm:
-    needs: [import_matched_exposure, import_matched_controls, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+  report_st03_07_opa_cost_twopm:
+    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
-      r:latest analysis/st04_05_predict_opa_cost_twopart.R
+      r:latest analysis/st03_07_now_opa_cost_twopart.R
     outputs: 
       moderately_sensitive: 
-        opa_cost_binomial: output/st04_05_opa_cost_binomial_output.csv
-        opa_cost_twopm: output/st04_05_opa_cost_twopm_output.csv
-        opa_cost_reg_summary: output/st04_05_opa_reg_summary.txt
-        opa_predicted_costs: output/st04_05_predict_opa_cost_tpm.csv
-        opa_cost_bi_model_check: output/st04_05_opa_binomial_model_counts.csv
-        opa_cost_gamma_model_check: output/st04_05_opa_gamma_model_counts.csv
+        opa_cost_binomial: output/st03_07_opa_cost_binomial_output.csv
+        opa_cost_twopm: output/st03_07_opa_cost_twopm_output.csv
+        opa_cost_reg_summary: output/st03_07_opa_reg_summary.txt
+        opa_predicted_costs: output/st03_07_predict_opa_cost_tpm.csv
+        opa_cost_bi_model_check: output/st03_07_opa_binomial_model_counts.csv
+        opa_cost_gamma_model_check: output/st03_07_opa_gamma_model_counts.csv
 
 # # Visulize outcomes:
 
