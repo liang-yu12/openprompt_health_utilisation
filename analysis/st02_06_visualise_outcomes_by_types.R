@@ -246,6 +246,41 @@ ggsave(paimary_care_plots, file = "output/st02_06_parimary_care_visits.png",
 
 
 # 3. Visualise hospitalisation outcomes: -----
-hos_binomial <- 
+hos_binomial <- read_csv("output/st02_03_hos_binomial.csv") %>% 
+      filter(time == "12 months" & Adjustment == "Hospital Adjusted") %>% 
+      mutate(Group = "Long COVID group") %>% 
+      dplyr::select(Group, estimate, lci, hci) %>% 
+      add_row(
+            Group = "Comparator group",
+            estimate = 1,
+            lci = 1,
+            hci = 1) %>% 
+      arrange(Group)
+
+hos_hurdle<- read_csv("output/st02_03_hos_hurdle.csv")%>% 
+      filter(time == "12 months" & Adjustment == "Hospital Adjusted") %>% 
+      mutate(Group = "Long COVID group") %>% 
+      dplyr::select(Group, estimate, lci, hci) %>% 
+      add_row(
+            Group = "Comparator group",
+            estimate = 1,
+            lci = 1,
+            hci = 1) %>% 
+      arrange(Group)
+
+predicted_hos_admin_counts<- read_csv("output/st02_03_hos_predicted_counts.csv")%>% 
+      filter(model == "Adjusted")
+
+# hospitalisation forest plot:
+hos_forest <- forest_plot_function(hos_binomial, hos_hurdle)
+
+# Hospitalisation bar plot: 
+hos_bar <- visit_bar_fc(predicted_hos_admin_counts, "Average hospitalisation frequency")
+
+
+# combine and save outputs
+hos_plots <- ggarrange(hos_forest, hos_bar, ncol = 1)
+ggsave(hos_plots, file = "output/st02_06_hospitalisations.png",
+       width=8, height=4, units = "in", dpi = 300)
 
 
