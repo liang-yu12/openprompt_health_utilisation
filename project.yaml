@@ -354,13 +354,13 @@ actions:
 
 # # Visulize outcomes:
 
-  visualise_cost_outcomes:
-    needs: [report_04_total_costs_twopart, report_04_02_predict_gp_cost_twopm, report_04_03_predict_apc_cost_twopm, report_04_04_predict_ane_cost_twopm, report_04_05_predict_opa_cost_twopm]
-    run: 
-      r:latest analysis/st04_visualise_cost_outcomes.R
-    outputs: 
-      moderately_sensitive: 
-        outcomes_plots: output/st04_healthcare_costs.png
+  # visualise_cost_outcomes:
+  #   needs: [report_04_total_costs_twopart, report_04_02_predict_gp_cost_twopm, report_04_03_predict_apc_cost_twopm, report_04_04_predict_ane_cost_twopm, report_04_05_predict_opa_cost_twopm]
+  #   run: 
+  #     r:latest analysis/st04_visualise_cost_outcomes.R
+  #   outputs: 
+  #     moderately_sensitive: 
+  #       outcomes_plots: output/st04_healthcare_costs.png
 
 
 # Historical: data distribution
