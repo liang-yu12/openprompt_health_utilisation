@@ -34,7 +34,8 @@ exp_drug_counts <- read_csv("output/matched_cases_with_drug_costs.csv.gz",
                                   end_death = col_skip(),
                                   end_deregist = col_skip(),
                                   end_lc_cure = col_skip(),
-                                  end_date = col_skip()
+                                  end_date = col_skip(),
+                                  total_drug_visit = col_skip()
                             ))
 
 exp_drug_counts <- exp_drug_counts %>% mutate(exposure = ifelse(exposure == 1, "Long covid exposure", "Comparator"))
@@ -47,7 +48,8 @@ com_drug_counts <- read_csv("output/matched_control_with_drug_costs.csv.gz",
                                   end_death = col_skip(),
                                   end_deregist = col_skip(),
                                   end_lc_cure = col_skip(),
-                                  end_date = col_skip()
+                                  end_date = col_skip(),
+                                  total_drug_visit = col_skip()
                             ))
 
 com_drug_counts <- com_drug_counts %>% mutate(exposure = ifelse(exposure ==1, "Long covid exposure", "Comparator"))
