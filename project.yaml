@@ -185,7 +185,7 @@ actions:
   report_02_01_all_visits_hurdle:
     needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
-      r:latest analysis/st02_01_nonw_total_visit_hurdel.R
+      r:latest analysis/st02_01_now_total_visit_hurdel.R
     outputs: 
       moderately_sensitive:
         total_reg_summary: output/st02_01_total_reg_summary.txt
