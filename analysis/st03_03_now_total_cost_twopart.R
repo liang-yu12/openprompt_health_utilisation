@@ -95,7 +95,7 @@ adj_gamma <-gamma_output_fn(adj_gamma_12m) %>%
 
 
 # Save the detailed outputs to a text file:
-sink(here("output", "st03_01_total_reg_summary.txt"))
+sink(here("output", "st03_03_total_reg_summary.txt"))
 print("# Crude binomial model output part 1 ---------")
 print(summary(crude_binary))
 print("# Crude hurdle model output part 2 ---------")
@@ -112,8 +112,8 @@ sink()
 all_binary <- bind_rows(crude_binary, adj_binary)
 all_gamma <- bind_rows(crude_gamma, adj_gamma)
 
-all_binary %>% write_csv(here("output", "st03_01_total_cost_binary.csv"))
-all_gamma%>% write_csv(here("output", "st03_01_total_cost_gammaglm.csv"))
+all_binary %>% write_csv(here("output", "st03_03_total_cost_binary.csv"))
+all_gamma%>% write_csv(here("output", "st03_03_total_cost_gammaglm.csv"))
 
 # Predicting cost: ------
 
@@ -151,7 +151,7 @@ predict_avg_cost_fn <- function(dataset, first_reg, sec_reg){
 predict_avg_cost_fn(dataset = adj_cost_complete_12m,
                     first_reg = adj_binomial_12m,
                     sec_reg = adj_gamma_12m) %>% 
-      write_csv(here("output", "st03_01_total_cost_predicted_costs.csv"))
+      write_csv(here("output", "st03_03_total_cost_predicted_costs.csv"))
 
 
 # Summarize the datasets for output checking: -----
@@ -188,7 +188,7 @@ bind_rows(
       (bi_model_count_fn(adj_cost_complete_12m) %>% 
             mutate(time = "12m") %>% 
             mutate(model = "Adjusted"))) %>% 
-      write_csv("output/st03_01_total_cost_binomial_model_counts.csv")
+      write_csv("output/st03_03_total_cost_binomial_model_counts.csv")
 
 
 bind_rows(
@@ -198,4 +198,4 @@ bind_rows(
       gamma_model_count_fn(adj_cost_complete_12m) %>% 
             mutate(time = "12m") %>% 
             mutate(model = "Adjusted")) %>% 
-      write_csv("output/st03_01_total_cost_gamma_model_counts.csv")
+      write_csv("output/st03_03_total_cost_gamma_model_counts.csv")
