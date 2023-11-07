@@ -119,7 +119,7 @@ primary_care_bar <- visit_bar_fc(predicted_primary_visits, "Average parimary car
 
 # combine and save outputs
 paimary_care_plots <- ggarrange(primary_care_forest_plot, primary_care_bar, ncol = 1)
-ggsave(paimary_care_plots, file = "output/st02_06_parimary_care_visits.png",
+ggsave(paimary_care_plots, file = "output/st02_07_parimary_care_visits.png",
        width=8, height=4, units = "in", dpi = 300)
 
 
@@ -158,5 +158,51 @@ hos_bar <- visit_bar_fc(predicted_hos_admin_counts, "Average hospitalisation fre
 
 # combine and save outputs
 hos_plots <- ggarrange(hos_forest, hos_bar, ncol = 1)
-ggsave(hos_plots, file = "output/st02_06_hospitalisations.png",
+ggsave(hos_plots, file = "output/st02_07_hospitalisations.png",
        width=8, height=4, units = "in", dpi = 300)
+
+
+
+# A&E visits --------
+# Read in data
+ane_binomial<- read_csv("output/st02_04_ane_binomial.csv") %>% 
+      filter(time == "12 months" & Adjustment == "Adjusted A&E visits") %>% 
+      mutate(Group = "Long COVID group") %>% 
+      dplyr::select(Group, estimate, lci, hci) %>% 
+      add_row(
+            Group = "Comparator group",
+            estimate = 1,
+            lci = 1,
+            hci = 1) %>% 
+      arrange(Group)
+
+ane_hurdle<- read_csv("output/st02_04_ane_hurdle.csv") %>% 
+      filter(time == "12 months" & Adjustment == "Adjusted A&E visits") %>% 
+      mutate(Group = "Long COVID group") %>% 
+      dplyr::select(Group, estimate, lci, hci) %>% 
+      add_row(
+            Group = "Comparator group",
+            estimate = 1,
+            lci = 1,
+            hci = 1) %>% 
+      arrange(Group)
+
+predicted_ane_visits <- read_csv("output/st02_04_ane_predicted_counts.csv") %>% 
+      filter(model == "Adjusted")
+
+# Forest plot A&E: 
+ane_forest <- forest_plot_function(ane_binomial, ane_hurdle)
+
+# bar plot A&E:
+ane_bar  <- visit_bar_fc(predicted_ane_visits, "Average A&E visit frequencies")
+
+
+# combine and save outputs
+ane_plots <- ggarrange(ane_forest, ane_bar, ncol = 1)
+ggsave(ane_plots, file = "output/st02_07_a_and_e_visits.png",
+       width=8, height=4, units = "in", dpi = 300)
+
+
+# OPA clinic visits: ------
+
+
