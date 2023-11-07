@@ -12,7 +12,7 @@ bi_total_visits <- read_csv("output/st03_01_total_binomial.csv") %>%
       mutate(Type = "Total healthcare visits")
 
 bi_gp_visits <- read_csv("output/st03_02_gp_binomial.csv") %>% filter(Adjustment == "GP Adjusted") %>% 
-      mutate(Type = "GP visits")
+      mutate(Type = "Primary care resources utilisations")
 
 bi_opa_visits <- read_csv("output/st03_05_opa_binomial.csv") %>% filter(Adjustment == "Adjusted A&E visits") %>% 
       mutate(Type = "Outpatient clinic visits")
