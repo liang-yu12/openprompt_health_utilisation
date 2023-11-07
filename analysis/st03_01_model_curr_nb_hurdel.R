@@ -1,115 +1,15 @@
 # Load previous data management
-source("analysis/dm03_5_matched_pivot_long.R")
-
-# Data management for modeling:: --------
-# Collapsing data by summarising the visits and follow-up time, and 
-# generate three datasets for follow-up 3m, 6m, and 12m
-
-# # 3 months
-matched_data_3m <- matched_data_ts %>% 
-      filter(month %in% c(1,2,3)& !is.na(follow_up_time)) %>% 
-      group_by(patient_id, exposure) %>% 
-      summarise(
-            visits = sum(monthly_visits),
-            follow_up = sum(follow_up_time)) %>% 
-      ungroup()
-
-# # 6 months
-matched_data_6m <- matched_data_ts %>% 
-      filter(month %in% c(1,2,3,4,5,6)& !is.na(follow_up_time)) %>% 
-      group_by(patient_id, exposure) %>% 
-      summarise(
-            visits = sum(monthly_visits),
-            follow_up = sum(follow_up_time)) %>% 
-      ungroup()
-
-# follow 12 months 
-matched_data_12m <- matched_data_ts %>% 
-      filter(!is.na(follow_up_time)) %>% 
-      group_by(patient_id, exposure) %>% 
-      summarise(
-            visits = sum(monthly_visits),
-            follow_up = sum(follow_up_time)) %>% 
-      ungroup()
-
-
-# # Add covariates for adjustment
-for_covariates <- matched_data_ts %>% distinct(patient_id, exposure, .keep_all = T) %>% 
-      dplyr::select("patient_id",     
-                    "exposure",           
-                    "age", "age_cat",               
-                    "sex",                     
-                    "bmi_cat",
-                    "ethnicity_6",             
-                    "imd_q5",                  
-                    "region",      
-                    "cov_asthma",
-                    "cov_mental_health",   
-                    "previous_covid_hosp",     
-                    "cov_covid_vax_n_cat",     
-                    "number_comorbidities_cat")
-
-for_covariates$sex <- relevel(for_covariates$sex, ref = "male")
-for_covariates$bmi_cat <- relevel(for_covariates$bmi_cat, ref = "Normal Weight")
-for_covariates$ethnicity_6 <- relevel(for_covariates$ethnicity_6, ref = "White")
-for_covariates$imd_q5 <- relevel(for_covariates$imd_q5, ref = "least_deprived")
-for_covariates$region <- relevel(for_covariates$region, ref = "London" )
-for_covariates$cov_asthma <- relevel(for_covariates$cov_asthma, ref = "FALSE")
-for_covariates$cov_mental_health <- relevel(for_covariates$cov_mental_health, ref = "FALSE")
-for_covariates$previous_covid_hosp <- relevel(for_covariates$previous_covid_hosp, ref = "FALSE")
-for_covariates$cov_covid_vax_n_cat <- relevel(for_covariates$cov_covid_vax_n_cat, ref = "0 dose")
-for_covariates$number_comorbidities_cat <- relevel(for_covariates$number_comorbidities_cat, ref = "0")
-
-
-# # add covariates back to the summarised data frame
-matched_data_3m <- left_join(matched_data_3m, for_covariates,
-                               by = c("patient_id" = "patient_id", "exposure" = "exposure"))
-
-matched_data_6m <- left_join(matched_data_6m, for_covariates,
-                             by = c("patient_id" = "patient_id", "exposure" = "exposure"))
-
-matched_data_12m <- left_join(matched_data_12m, for_covariates,
-                             by = c("patient_id" = "patient_id", "exposure" = "exposure"))
-
-# correct the level of exposure groups
-matched_data_3m$exposure <- relevel(matched_data_3m$exposure, ref = "Comparator")
-matched_data_6m$exposure <- relevel(matched_data_6m$exposure, ref = "Comparator")
-matched_data_12m$exposure <- relevel(matched_data_12m$exposure, ref = "Comparator")
+source("analysis/dm02_01_now_pivot_total_visits_long.R")
 
 # Stats: two part (Hurdle) model -----
 
 # Crude data management: first need to exclude rows with NA and create 1/0 outcomes:
 crude_vars <- c("visits", "exposure", "follow_up")#for crude anaylsis
 
-crude_complete_3m <- matched_data_3m %>% drop_na(any_of(crude_vars)) %>% 
-      mutate(visits_binary = ifelse(visits>0, 1, 0))
-crude_complete_6m <- matched_data_6m %>% drop_na(any_of(crude_vars)) %>% 
-      mutate(visits_binary = ifelse(visits>0, 1, 0))
 crude_complete_12m <- matched_data_12m %>% drop_na(any_of(crude_vars)) %>% 
       mutate(visits_binary = ifelse(visits>0, 1, 0))
 
-
 # Crude hurdle model: ----
-# # 3 months
-# binomial model: 
-crude_binomial_3m <-  glm(visits_binary ~ exposure + offset(log(follow_up)), 
-                          data = crude_complete_3m,
-                          family=binomial(link="logit")) 
-# Positive negative binomial (truncated)
-crude_nb_3m <- vglm(visits ~ exposure + offset(log(follow_up)),
-                    family = posnegbinomial(),
-                    data = subset(crude_complete_3m, visits_binary > 0))
-
-# # 6 months:
-# binomial
-crude_binomial_6m <-  glm(visits_binary ~ exposure + offset(log(follow_up)), 
-                          data = crude_complete_6m,
-                          family=binomial(link="logit")) 
-# Positive negative binomial (truncated)
-crude_nb_6m <- vglm(visits ~ exposure + offset(log(follow_up)),
-                    family = posnegbinomial(),
-                    data = subset(crude_complete_6m, visits_binary > 0))
-
 # # 12 months
 # binomial
 crude_binomial_12m <-  glm(visits_binary ~ exposure + offset(log(follow_up)), 
