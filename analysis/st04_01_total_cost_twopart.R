@@ -8,7 +8,7 @@ source("analysis/dm03_03_now_pivot_total_long.R")
 # Data management: exclude rows with NA in the model: 
 crude_vars <- c("total_cost", "exposure", "follow_up")
 
-crude_cost_complete_12m <- matched_cost_3m %>% drop_na(any_of(crude_vars)) %>% 
+crude_cost_complete_12m <- matched_cost_12m %>% drop_na(any_of(crude_vars)) %>% 
       mutate(cost_binary = ifelse(total_cost>0, 1, 0)) 
 
 # Crude Two-part model: -----
@@ -42,14 +42,6 @@ crude_binary <- binary_output_fn(curde_binomial_12m) %>%
 
 
 # Gamma glm part: 
-crude_gamma_3m <-  glm(total_cost ~ exposure + offset(log(follow_up)),
-                       data = subset(crude_cost_complete_3m, cost_binary>0),
-                       family = Gamma(link="log"))
-
-crude_gamma_6m <-  glm(total_cost ~ exposure + offset(log(follow_up)),
-                       data = subset(crude_cost_complete_6m, cost_binary>0),
-                       family = Gamma(link="log"))
-
 crude_gamma_12m <-  glm(total_cost ~ exposure + offset(log(follow_up)),
                        data = subset(crude_cost_complete_12m, cost_binary>0),
                        family = Gamma(link="log"))
@@ -70,64 +62,27 @@ gamma_output_fn <- function(gamma_reg){
       
 }
 
-crude_gamma <- bind_rows(
-      gamma_output_fn(crude_gamma_3m) %>% mutate(time = "3m"),
-      gamma_output_fn(crude_gamma_6m) %>% mutate(time = "6m"),
-      gamma_output_fn(crude_gamma_12m) %>% mutate(time = "12m")
-) %>% mutate(model = "Crude")
+crude_gamma <-gamma_output_fn(crude_gamma_12m) %>% mutate(time = "12m") %>% mutate(model = "Crude")
 
 
 # Adjusted two-part model: ----------
 # Data management: keep complete data
-adj_cost_complete_3m <- matched_cost_3m[complete.cases(matched_cost_3m),] %>% 
-  mutate(cost_binary = ifelse(total_cost>0, 1, 0))
-adj_cost_complete_6m <- matched_cost_6m[complete.cases(matched_cost_6m),] %>% 
-  mutate(cost_binary = ifelse(total_cost>0, 1, 0))
 adj_cost_complete_12m <- matched_cost_12m[complete.cases(matched_cost_12m),] %>% 
   mutate(cost_binary = ifelse(total_cost>0, 1, 0))
 
 
 # First part: binomial model:
-
-adj_binomial_3m <- glm(cost_binary ~ exposure + offset(log(follow_up))+ age + sex  + cov_covid_vax_n_cat + 
-                             bmi_cat + imd_q5 + ethnicity_6 + region + cov_asthma + cov_mental_health +
-                             number_comorbidities_cat,
-                         data = adj_cost_complete_3m,
-                         family = binomial(link="logit"))
-
-adj_binomial_6m <- glm(cost_binary ~ exposure + offset(log(follow_up))+ age + sex  + cov_covid_vax_n_cat + 
-                             bmi_cat + imd_q5 + ethnicity_6 + region + cov_asthma + cov_mental_health +
-                             number_comorbidities_cat,
-                       data = adj_cost_complete_6m,
-                       family = binomial(link="logit"))
-
 adj_binomial_12m <- glm(cost_binary ~ exposure + offset(log(follow_up))+ age + sex  + cov_covid_vax_n_cat + 
                               bmi_cat + imd_q5 + ethnicity_6 + region + cov_asthma + cov_mental_health +
                               number_comorbidities_cat,
                        data = adj_cost_complete_12m,
                        family = binomial(link="logit"))
 
-adj_binary <- bind_rows(
-      binary_output_fn(adj_binomial_3m) %>% mutate(time = "3m"),
-      binary_output_fn(adj_binomial_6m) %>% mutate(time = "6m"),
-      binary_output_fn(adj_binomial_12m) %>% mutate(time = "12m")
-) %>% mutate(model = "Adjusted")
+adj_binary <- binary_output_fn(adj_binomial_12m) %>% 
+      mutate(time = "12m") %>% mutate(model = "Adjusted")
 
 
 # Second part: Gamma GLM
-
-adj_gamma_3m <-  glm(total_cost ~ exposure + offset(log(follow_up))+ age + sex  + cov_covid_vax_n_cat + 
-                           bmi_cat + imd_q5 + ethnicity_6 + region + cov_asthma + cov_mental_health +
-                           number_comorbidities_cat,
-                       data = subset(adj_cost_complete_3m, cost_binary>0),
-                       family = Gamma(link="log"))
-
-adj_gamma_6m <-  glm(total_cost ~ exposure + offset(log(follow_up))+ age + sex  + cov_covid_vax_n_cat + 
-                           bmi_cat + imd_q5 + ethnicity_6 + region + cov_asthma + cov_mental_health +
-                           number_comorbidities_cat,
-                     data = subset(adj_cost_complete_6m, cost_binary>0),
-                     family = Gamma(link="log"))
-
 adj_gamma_12m <-  glm(total_cost ~ exposure + offset(log(follow_up))+ age + sex  + cov_covid_vax_n_cat + 
                             bmi_cat + imd_q5 + ethnicity_6 + region + cov_asthma + cov_mental_health +
                             number_comorbidities_cat,
@@ -135,15 +90,12 @@ adj_gamma_12m <-  glm(total_cost ~ exposure + offset(log(follow_up))+ age + sex 
                      family = Gamma(link="log"))
 
 
-adj_gamma <- bind_rows(
-      gamma_output_fn(adj_gamma_3m) %>% mutate(time = "3m"),
-      gamma_output_fn(adj_gamma_6m) %>% mutate(time = "6m"),
-      gamma_output_fn(adj_gamma_12m) %>% mutate(time = "12m")
-) %>% mutate(model = "Adjusted")
+adj_gamma <-gamma_output_fn(adj_gamma_12m) %>% 
+      mutate(time = "12m") %>% mutate(model = "Adjusted")
 
 
 # Save the detailed outputs to a text file:
-sink(here("output", "st04_01_total_reg_summary.txt"))
+sink(here("output", "st03_01_total_reg_summary.txt"))
 print("# Crude binomial model output part 1 ---------")
 print(summary(crude_binary))
 print("# Crude hurdle model output part 2 ---------")
@@ -160,8 +112,8 @@ sink()
 all_binary <- bind_rows(crude_binary, adj_binary)
 all_gamma <- bind_rows(crude_gamma, adj_gamma)
 
-all_binary %>% write_csv(here("output", "st04_01_total_cost_binary.csv"))
-all_gamma%>% write_csv(here("output", "st04_01_total_cost_gammaglm.csv"))
+all_binary %>% write_csv(here("output", "st03_01_total_cost_binary.csv"))
+all_gamma%>% write_csv(here("output", "st03_01_total_cost_gammaglm.csv"))
 
 # Predicting cost: ------
 
@@ -190,7 +142,7 @@ adj_predict_cost_fn(dataset = adj_cost_complete_12m,
                     fu_time = 30*12,
                     reg_1st = adj_binomial_12m,
                     reg_2nd = adj_gamma_12m) %>% 
-      write_csv(here("output", "st04_01_total_cost_predicted_costs.csv"))
+      write_csv(here("output", "st03_01_total_cost_predicted_costs.csv"))
 
 
 
@@ -223,28 +175,20 @@ gamma_model_count_fn <- function(data){
 
 # Summarise binomial model data:
 bind_rows(
-      bind_rows(
-            bi_model_count_fn(crude_cost_complete_3m) %>% mutate(time = "3m"),
-            bi_model_count_fn(crude_cost_complete_6m) %>% mutate(time = "6m"),
-            bi_model_count_fn(crude_cost_complete_12m) %>% mutate(time = "12m")) %>% 
-            mutate(model = "Crude"),
-      bind_rows(
-            bi_model_count_fn(adj_cost_complete_3m) %>% mutate(time = "3m"),
-            bi_model_count_fn(adj_cost_complete_6m) %>% mutate(time = "6m"),
-            bi_model_count_fn(adj_cost_complete_12m) %>% mutate(time = "12m")) %>% 
-            mutate(model = "Adjusted")) %>% 
-      write_csv("output/st04_01_total_binomial_model_counts.csv")
+      (bi_model_count_fn(crude_cost_complete_12m) %>% 
+             mutate(time = "12m") %>% 
+             mutate(model = "Crude")),
+      (bi_model_count_fn(adj_cost_complete_12m) %>% 
+            mutate(time = "12m") %>% 
+            mutate(model = "Adjusted"))) %>% 
+      write_csv("output/st03_01_total_cost_binomial_model_counts.csv")
 
 
 bind_rows(
-      bind_rows(
-            gamma_model_count_fn(crude_cost_complete_3m) %>% mutate(time = "3m"),
-            gamma_model_count_fn(crude_cost_complete_6m) %>% mutate(time = "6m"),
-            gamma_model_count_fn(crude_cost_complete_12m) %>% mutate(time = "12m")) %>% 
+      gamma_model_count_fn(crude_cost_complete_12m) %>% 
+            mutate(time = "12m") %>% 
             mutate(model = "Crude"),
-      bind_rows(
-            gamma_model_count_fn(adj_cost_complete_3m) %>% mutate(time = "3m"),
-            gamma_model_count_fn(adj_cost_complete_6m) %>% mutate(time = "6m"),
-            gamma_model_count_fn(adj_cost_complete_12m) %>% mutate(time = "12m")) %>% 
+      gamma_model_count_fn(adj_cost_complete_12m) %>% 
+            mutate(time = "12m") %>% 
             mutate(model = "Adjusted")) %>% 
-      write_csv("output/st04_01_total_gamma_model_counts.csv")
+      write_csv("output/st03_01_total_cost_gamma_model_counts.csv")
