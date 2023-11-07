@@ -1,93 +1,12 @@
-source("analysis/dm04_02_01_combine_gp_costs_pivot.R")
+source("analysis/dm03_04_now_pivot_gp_costs_pivot.R")
 
 # Goal: analysing long COVID exposure and the cost outcomes
 # Model: two-part model 
-
-# Data management: colllapsing data by different follow-up time. -------
-# 3 months 
-matched_cost_3m <- matched_gp_cost_ts %>% 
-      filter(month %in% c(1,2,3)& !is.na(follow_up_time)) %>% 
-      group_by(patient_id, exposure) %>% 
-      summarise(
-            gp_cost = sum(monthly_gp_cost, na.rm =T),
-            follow_up = sum(follow_up_time, na.rm = T)) %>% 
-      ungroup()
-
-# 6 months
-matched_cost_6m <- matched_gp_cost_ts %>% 
-      filter(month %in% c(1,2,3,4,5,6)& !is.na(follow_up_time)) %>% 
-      group_by(patient_id, exposure) %>% 
-      summarise(
-            gp_cost = sum(monthly_gp_cost, na.rm =T),
-            follow_up = sum(follow_up_time, na.rm = T)) %>% 
-      ungroup()
-
-# 12 months
-matched_cost_12m <- matched_gp_cost_ts %>% 
-      filter(!is.na(follow_up_time)) %>% 
-      group_by(patient_id, exposure) %>% 
-      summarise(
-            gp_cost = sum(monthly_gp_cost, na.rm =T),
-            follow_up = sum(follow_up_time, na.rm = T)) %>% 
-      ungroup()
-
-
-# # Add covariates for adjustment
-for_covariates <- matched_gp_cost_ts %>% distinct(patient_id, exposure, .keep_all = T) %>% 
-      dplyr::select("patient_id",     
-                    "exposure",           
-                    "age", "age_cat",               
-                    "sex",                     
-                    "bmi_cat",
-                    "ethnicity_6",             
-                    "imd_q5",                  
-                    "region",      
-                    "cov_asthma",
-                    "cov_mental_health",   
-                    "previous_covid_hosp",     
-                    "cov_covid_vax_n_cat",     
-                    "number_comorbidities_cat")
-
-levels_check <- c("exposure", "age_cat", "sex", "bmi_cat", "ethnicity_6", "imd_q5",                  
-                  "region", "previous_covid_hosp", "cov_covid_vax_n_cat", "number_comorbidities_cat")
-
-
-for_covariates$sex <- relevel(for_covariates$sex, ref = "male")
-for_covariates$bmi_cat <- relevel(for_covariates$bmi_cat, ref = "Normal Weight")
-for_covariates$ethnicity_6 <- relevel(for_covariates$ethnicity_6, ref = "White")
-for_covariates$imd_q5 <- relevel(for_covariates$imd_q5, ref = "least_deprived")
-for_covariates$region <- relevel(for_covariates$region, ref = "London" )
-for_covariates$cov_mental_health <- relevel(for_covariates$cov_mental_health, ref = "FALSE")
-for_covariates$previous_covid_hosp <- relevel(for_covariates$previous_covid_hosp, ref = "FALSE")
-for_covariates$previous_covid_hosp <- relevel(for_covariates$previous_covid_hosp, ref = "FALSE")
-for_covariates$cov_covid_vax_n_cat <- relevel(for_covariates$cov_covid_vax_n_cat, ref = "0 dose")
-for_covariates$number_comorbidities_cat <- relevel(for_covariates$number_comorbidities_cat, ref = "0")
-
-lapply(for_covariates[levels_check], levels) # need to correct some levels
-
-# # add covariates back to the summarised data frame
-matched_cost_3m <- left_join(matched_cost_3m, for_covariates,
-                             by = c("patient_id" = "patient_id", "exposure" = "exposure"))
-
-matched_cost_6m <- left_join(matched_cost_6m, for_covariates,
-                             by = c("patient_id" = "patient_id", "exposure" = "exposure"))
-
-matched_cost_12m <- left_join(matched_cost_12m, for_covariates,
-                              by = c("patient_id" = "patient_id", "exposure" = "exposure"))
-
-# Make sure the exposure level is correct
-matched_cost_3m$exposure <- relevel(matched_cost_3m$exposure, ref = "Comparator")
-matched_cost_6m$exposure <- relevel(matched_cost_6m$exposure, ref = "Comparator")
-matched_cost_12m$exposure <- relevel(matched_cost_12m$exposure, ref = "Comparator")
 
 # Crude model data management: -----
 # exclude rows with NA in the model: 
 crude_vars <- c("gp_cost", "exposure", "follow_up")
 
-crude_gp_cost_complete_3m <- matched_cost_3m %>% drop_na(any_of(crude_vars)) %>% 
-      mutate(cost_binary = ifelse(gp_cost>0, 1, 0))
-crude_gp_cost_complete_6m <- matched_cost_6m %>% drop_na(any_of(crude_vars)) %>% 
-      mutate(cost_binary = ifelse(gp_cost>0, 1, 0))
 crude_gp_cost_complete_12m <- matched_cost_12m %>% drop_na(any_of(crude_vars)) %>% 
       mutate(cost_binary = ifelse(gp_cost>0, 1, 0)) 
 
@@ -99,9 +18,7 @@ crude_bi_fn <- function(dataset){
           family = binomial(link="logit")) 
 }
 
-# Run crude binomial regression 
-crude_bi_3m <- crude_bi_fn(crude_gp_cost_complete_3m)
-crude_bi_6m <- crude_bi_fn(crude_gp_cost_complete_6m)      
+# Run crude binomial regression       
 crude_bi_12m <- crude_bi_fn(crude_gp_cost_complete_12m)
 
 # Function for tidying the binomial reg results:
@@ -116,10 +33,8 @@ tidy_binomial_fn <- function(logit_reg){
       return(part_binomial)
 }
 
-crude_binomial_gp <- bind_rows(
-      tidy_binomial_fn(crude_bi_3m) %>% mutate(time = "3 months"),
-      tidy_binomial_fn(crude_bi_6m) %>% mutate(time = "6 months"),      
-      tidy_binomial_fn(crude_bi_12m) %>% mutate(time = "12 months")) %>% 
+crude_binomial_gp <- tidy_binomial_fn(crude_bi_12m) %>% 
+      mutate(time = "12 months") %>% 
       mutate(adjustment = "Crude") %>% 
       arrange(desc(term =="exposureLong covid exposure"))# combine the binomial outputs
 
@@ -132,8 +47,6 @@ crude_gamma_fn <- function(dataset){
 }
 
 # run crude gamma GLM 
-crude_gamma_3m <- crude_gamma_fn(crude_gp_cost_complete_3m)
-crude_gamma_6m <- crude_gamma_fn(crude_gp_cost_complete_6m)
 crude_gamma_12m <- crude_gamma_fn(crude_gp_cost_complete_12m)
 
 # Organise the gamma GLM outputs
@@ -149,20 +62,14 @@ tidy_gamma_glm_fn <- function(gamma_glm){
       return(part_gaama)
 }
 
-crude_gamma_glm_gp <- bind_rows(
-      tidy_gamma_glm_fn(crude_gamma_3m) %>% mutate(time = "3 months"),
-      tidy_gamma_glm_fn(crude_gamma_6m) %>% mutate(time = "6 months"),
-      tidy_gamma_glm_fn(crude_gamma_12m) %>% mutate(time = "12 months")) %>%
+crude_gamma_glm_gp <- tidy_gamma_glm_fn(crude_gamma_12m) %>% 
+      mutate(time = "12 months") %>%
       mutate(adjustment = "Crude") %>% 
       arrange(desc(term == "exposureLong covid exposure"))
 
 # Adjusted models:
 
 # Data management: keep complete data
-adj_gp_cost_complete_3m <- matched_cost_3m[complete.cases(matched_cost_3m),] %>% 
-      mutate(cost_binary = ifelse(gp_cost>0, 1, 0))
-adj_gp_cost_complete_6m <- matched_cost_6m[complete.cases(matched_cost_6m),] %>% 
-      mutate(cost_binary = ifelse(gp_cost>0, 1, 0))
 adj_gp_cost_complete_12m <- matched_cost_12m[complete.cases(matched_cost_12m),] %>% 
       mutate(cost_binary = ifelse(gp_cost>0, 1, 0))
 
@@ -177,15 +84,11 @@ adj_bi_fn <- function(dataset){
 }
 
 # run model:
-adj_bi_3m <- adj_bi_fn(adj_gp_cost_complete_3m)
-adj_bi_6m <- adj_bi_fn(adj_gp_cost_complete_6m)
 adj_bi_12m <- adj_bi_fn(adj_gp_cost_complete_12m)
 
 # Organise binomial outputs 
-adj_binomial_gp <- bind_rows(
-      tidy_binomial_fn(adj_bi_3m) %>% mutate(time = "3 months"),
-      tidy_binomial_fn(adj_bi_6m) %>% mutate(time = "6 months"),
-      tidy_binomial_fn(adj_bi_12m) %>% mutate(time = "12 months")) %>% 
+adj_binomial_gp <- tidy_binomial_fn(adj_bi_12m) %>% 
+      mutate(time = "12 months") %>% 
       mutate(adjustment = "Adjusted") %>% 
       arrange(desc(term == "exposureLong covid exposure"))
 
@@ -199,31 +102,26 @@ adj_gamma_fn <- function(dataset){
           family = Gamma(link="log")) 
 }
 
-adj_gamma_3m <- adj_gamma_fn(adj_gp_cost_complete_3m)
-adj_gamma_6m <- adj_gamma_fn(adj_gp_cost_complete_6m)
 adj_gamma_12m <- adj_gamma_fn(adj_gp_cost_complete_12m)
 
 
 # Organise the output:
-adj_gamma_glm_gp <- bind_rows(
-      tidy_gamma_glm_fn(adj_gamma_3m) %>% mutate(time = "3 months"),       
-      tidy_gamma_glm_fn(adj_gamma_6m) %>% mutate(time = "6 months"),       
-      tidy_gamma_glm_fn(adj_gamma_12m) %>% mutate(time = "12 months")) %>% 
+adj_gamma_glm_gp <- tidy_gamma_glm_fn(adj_gamma_12m) %>% mutate(time = "12 months") %>% 
       mutate(adjustment = "Adjusted") %>% 
       arrange(desc(term == "exposureLong covid exposure"))
 
 # save the output:
 bind_rows(crude_binomial_gp,
           adj_binomial_gp) %>% 
-      write_csv(here("output", "st04_02_gp_cost_binomial_output.csv"))
+      write_csv(here("output", "st03_04_now_gp_cost_binomial_output.csv"))
 
 
 bind_rows(crude_gamma_glm_gp, adj_gamma_glm_gp) %>% 
-      write_csv(here("output", "st04_02_gp_cost_twopm_output.csv"))
+      write_csv(here("output", "st03_04_now_gp_cost_twopm_output.csv"))
 
 
 # Save the detailed outputs to a text file:
-sink(here("output", "st04_02_gp_reg_summary.txt"))
+sink(here("output", "st03_04_now_gp_reg_summary.txt"))
 print("# Crude binomial model output part 1 ---------")
 print(summary(crude_binomial_gp))
 print("# Crude hurdle model output part 2 ---------")
@@ -233,8 +131,6 @@ print(summary(adj_binomial_gp))
 print("# Adjusted hurdle model output part 2 ---------")
 print(summary(adj_gamma_glm_gp))
 sink()
-
-
 
 
 # Crude prediction: -----
@@ -275,42 +171,26 @@ predict_avg_gp_cost_fn <- function(dataset, fu_time, first_reg, sec_reg){
 
 # run the prediction model and combine outcomes:
 # Crude costs: ----
-crude_gp_costs <- bind_rows(
-      predict_avg_gp_cost_fn(dataset = matched_cost_3m, 
-                             fu_time = 30*3,
-                             first_reg = crude_bi_3m, 
-                             sec_reg = crude_gamma_3m) %>% mutate(time="3 months"),
-      predict_avg_gp_cost_fn(dataset = matched_cost_3m, 
-                             fu_time = 30*6,
-                             first_reg = crude_bi_6m, 
-                             sec_reg = crude_gamma_6m) %>% mutate(time="6 months"),
-      predict_avg_gp_cost_fn(dataset = matched_cost_3m, 
+crude_gp_costs <- predict_avg_gp_cost_fn(dataset = matched_cost_12m, 
                              fu_time = 30*12,
                              first_reg = crude_bi_12m, 
-                             sec_reg = crude_gamma_12m) %>% mutate(time="12 months")) %>% 
+                             sec_reg = crude_gamma_12m) %>% 
+      mutate(time="12 months") %>% 
       mutate(adjustment = "Crude") %>% relocate(adjustment)
 
 # Adjusted costs: ----
 # combine outputs
-adj_gp_costs <- bind_rows(
-      predict_avg_gp_cost_fn(dataset = matched_cost_3m, 
-                             fu_time = 30*3,
-                             first_reg = adj_bi_3m, 
-                             sec_reg = adj_gamma_3m) %>% mutate(time="3 months"),
-      predict_avg_gp_cost_fn(dataset = matched_cost_6m, 
-                             fu_time = 30*6,
-                             first_reg = adj_bi_6m, 
-                             sec_reg = adj_gamma_6m) %>% mutate(time="6 months"),
-      predict_avg_gp_cost_fn(dataset = matched_cost_12m, 
+adj_gp_costs <- predict_avg_gp_cost_fn(dataset = matched_cost_12m, 
                              fu_time = 30*12,
                              first_reg = adj_bi_12m, 
-                             sec_reg = adj_gamma_12m) %>% mutate(time="12 months")) %>% 
+                             sec_reg = adj_gamma_12m) %>% 
+      mutate(time="12 months") %>% 
       mutate(adjustment = "Adjusted") %>% relocate(adjustment)
 
 
 total_gp_costs <- bind_rows(crude_gp_costs, adj_gp_costs) 
 
-total_gp_costs %>% write_csv(here("output","st04_02_predict_gp_cost_tpm.csv"))
+total_gp_costs %>% write_csv(here("output","st03_04_predict_gp_cost_tpm.csv"))
 
 
 
@@ -342,29 +222,15 @@ gamma_model_count_fn <- function(data){
 
 
 # Summarise binomial model data:
-bind_rows(
-      bind_rows(
-            bi_model_count_fn(crude_gp_cost_complete_3m) %>% mutate(time = "3m"),
-            bi_model_count_fn(crude_gp_cost_complete_6m) %>% mutate(time = "6m"),
-            bi_model_count_fn(crude_gp_cost_complete_12m) %>% mutate(time = "12m")) %>% 
+bind_rows(bi_model_count_fn(crude_gp_cost_complete_12m) %>% mutate(time = "12m") %>% 
             mutate(model = "Crude"),
-      bind_rows(
-            bi_model_count_fn(adj_gp_cost_complete_3m) %>% mutate(time = "3m"),
-            bi_model_count_fn(adj_gp_cost_complete_6m) %>% mutate(time = "6m"),
-            bi_model_count_fn(adj_gp_cost_complete_12m) %>% mutate(time = "12m")) %>% 
+            bi_model_count_fn(adj_gp_cost_complete_12m) %>% mutate(time = "12m") %>% 
             mutate(model = "Adjusted")) %>% 
-      write_csv("output/st04_02_gp_binomial_model_counts.csv")
+      write_csv("output/st03_04_gp_binomial_model_counts.csv")
 
 
-bind_rows(
-      bind_rows(
-            gamma_model_count_fn(crude_gp_cost_complete_3m) %>% mutate(time = "3m"),
-            gamma_model_count_fn(crude_gp_cost_complete_6m) %>% mutate(time = "6m"),
-            gamma_model_count_fn(crude_gp_cost_complete_12m) %>% mutate(time = "12m")) %>% 
+bind_rows(gamma_model_count_fn(crude_gp_cost_complete_12m) %>% mutate(time = "12m") %>% 
             mutate(model = "Crude"),
-      bind_rows(
-            gamma_model_count_fn(adj_gp_cost_complete_3m) %>% mutate(time = "3m"),
-            gamma_model_count_fn(adj_gp_cost_complete_6m) %>% mutate(time = "6m"),
-            gamma_model_count_fn(adj_gp_cost_complete_12m) %>% mutate(time = "12m")) %>% 
+          gamma_model_count_fn(adj_gp_cost_complete_12m) %>% mutate(time = "12m") %>% 
             mutate(model = "Adjusted")) %>% 
-      write_csv("output/st04_02_gp_gamma_model_counts.csv")
+      write_csv("output/st03_04_gp_gamma_model_counts.csv")
