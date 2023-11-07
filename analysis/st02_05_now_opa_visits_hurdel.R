@@ -1,53 +1,5 @@
 # Load previous data management
-source("analysis/dm03_9_pivot_opa_long.R")
-
-# Data management for modeling:: --------
-# Collapsing data by summarising the visits and follow-up time, and 
-# generate three datasets for follow-up  12m
-# follow 12 months 
-matched_data_opa_12m <- matched_data_opa_ts %>% 
-  filter(!is.na(follow_up_time)) %>% 
-  group_by(patient_id, exposure) %>% 
-  summarise(
-    visits = sum(monthly_opa_visits),
-    follow_up = sum(follow_up_time)) %>% 
-  ungroup()
-
-
-# # Add covariates for adjustment
-for_covariates <- matched_data_opa_ts %>% distinct(patient_id, exposure, .keep_all = T) %>% 
-      dplyr::select("patient_id",     
-                    "exposure",           
-                    "age", "age_cat",               
-                    "sex",                     
-                    "bmi_cat",
-                    "ethnicity_6",             
-                    "imd_q5",                  
-                    "region",      
-                    "cov_asthma",
-                    "cov_mental_health",   
-                    "previous_covid_hosp",     
-                    "cov_covid_vax_n_cat",     
-                    "number_comorbidities_cat")
-
-for_covariates$sex <- relevel(for_covariates$sex, ref = "male")
-for_covariates$bmi_cat <- relevel(for_covariates$bmi_cat, ref = "Normal Weight")
-for_covariates$ethnicity_6 <- relevel(for_covariates$ethnicity_6, ref = "White")
-for_covariates$imd_q5 <- relevel(for_covariates$imd_q5, ref = "least_deprived")
-for_covariates$region <- relevel(for_covariates$region, ref = "London" )
-for_covariates$cov_mental_health <- relevel(for_covariates$cov_mental_health, ref = "FALSE")
-for_covariates$previous_covid_hosp <- relevel(for_covariates$previous_covid_hosp, ref = "FALSE")
-for_covariates$previous_covid_hosp <- relevel(for_covariates$previous_covid_hosp, ref = "FALSE")
-for_covariates$cov_covid_vax_n_cat <- relevel(for_covariates$cov_covid_vax_n_cat, ref = "0 dose")
-for_covariates$number_comorbidities_cat <- relevel(for_covariates$number_comorbidities_cat, ref = "0")
-
-# # add covariates back to the summarised data frame
-matched_data_opa_12m <- left_join(matched_data_opa_12m, for_covariates,
-                                 by = c("patient_id" = "patient_id", "exposure" = "exposure"))
-
-# correct the level of exposure groups
-matched_data_opa_12m$exposure <- relevel(matched_data_opa_12m$exposure, ref = "Comparator")
-
+source("analysis/dm02_05_now_pivot_opa_long.R")
 
 # Stats: two part (Hurdle) model -----
 # first need to exclude rows with NA and create 1/0 outcomes:
@@ -143,13 +95,13 @@ adj_hurdle_outputs <- bind_rows(
 # Combine outputs
 # Save both outputs: # Combine total outputs and save:
 st03_05_opa_binomial <- bind_rows(crude_binomial_outputs, adj_binomial_outputs)
-st03_05_opa_binomial %>% write_csv(here("output", "st03_05_opa_binomial.csv"))
+st03_05_opa_binomial %>% write_csv(here("output", "st02_05_opa_binomial.csv"))
 
 st03_05_opa_hurdle <- bind_rows(crude_hurdle_outputs, adj_hurdle_outputs)
-st03_05_opa_hurdle %>% write_csv(here("output", "st03_05_opa_hurdle.csv"))
+st03_05_opa_hurdle %>% write_csv(here("output", "st02_05_opa_hurdle.csv"))
 
 # Save the detailed outputs to a text file:
-sink(here("output", "st03_05_opa_reg_summary.txt"))
+sink(here("output", "st02_05_opa_reg_summary.txt"))
 print("# Crude binomial model output part 1 ---------")
 print(summary(crude_binomial_12m))
 print("# Crude hurdle model output part 2 ---------")
@@ -162,33 +114,40 @@ sink()
 
 # Predict the average healthcare visits:  ----
 # function to predict the average adjusted visits:
+# function to predict the average adjusted visits:
 average_visits_fn <- function(dataset, reg_1st, reg_2nd){
       
-      dataset <- dataset %>% mutate(follow_up = 30*12)
+      input <- dataset %>% mutate(follow_up = 360)
       
-      # part 1:
-      p1 <- predict(reg_1st, type= "response") # predict the first part non-zero prob
-      dataset$nonzero_prob <- p1 # add the probability to the original data
-      # part 2: 
-      p2 <- predictvglm(reg_2nd, newdata = dataset, type = "link", se.fit = T)
-      dataset <- dataset %>% mutate(
-            predict_visit = exp(p2$fitted.values),
-            predict_lci = exp(p2$fitted.values - 1.96*p2$se.fit),
-            predict_hci = exp(p2$fitted.values + 1.96*p2$se.fit)
-      )
-      # multiply p1 and p2
-      dataset <- dataset %>% mutate(
-            c_visit = nonzero_prob*predict_visit,
-            c_lci = nonzero_prob*predict_lci,
-            c_hci = nonzero_prob*predict_hci)
+      # Part 1: predict the first part non-zero prob
+      input$nonzero_prob <- predict(reg_1st, newdata = input,  type= "response")
+      # Part 2: predict the second part visits
+      p2 <- predictvglm(reg_2nd, newdata = input, type = "link", se.fit = T)
       
-      results <- dataset %>% group_by(exposure) %>% 
-            summarise(visits = mean(c_visit),
+      # the fitted value outcome is a matrix. Only need the mean value
+      p2_fit<- p2$fitted.values %>% as.data.frame() %>% 
+            dplyr::select(`loglink(munb)`) %>% rename(fitted = `loglink(munb)`) 
+      
+      p2_se <- p2$se.fit %>% as.data.frame()%>% 
+            dplyr::select(`loglink(munb)`)  %>% rename(se = `loglink(munb)`)
+      
+      # Calculate the confidence interval of the part 2, then multiply by the first part:
+      results <- input %>% 
+            mutate(
+                  predict_visit = exp(p2_fit$fitted),
+                  predict_lci = exp(p2_fit$fitted - 1.96*p2_se$se),
+                  predict_hci = exp(p2_fit$fitted + 1.96*p2_se$se)) %>% 
+            mutate(c_visit = nonzero_prob*predict_visit,
+                   c_lci = nonzero_prob*predict_lci,
+                   c_hci = nonzero_prob*predict_hci) %>% 
+            group_by(exposure) %>% 
+            summarise(visits = mean(c_visit), # summarised the results by exposure: 
                       lci = mean(c_lci),
                       hci = mean(c_hci)
             )
       return(results)
 }
+
 
 
 # run the predict function and summarised the average vistis:
@@ -200,7 +159,7 @@ summarised_results <- bind_rows(
                          reg_1st = adj_binomial_12m, 
                          reg_2nd = adj_nb_12m) %>% mutate(model = "Adjusted")))
 
-summarised_results %>% write_csv(here("output", "st03_05_opa_predicted_counts.csv"))
+summarised_results %>% write_csv(here("output", "st02_05_opa_predicted_counts.csv"))
 
 
 # Summarize the datasets for output checking: -----
@@ -236,7 +195,7 @@ bind_rows(
              mutate(model = "Crude")),
       (bi_model_count_fn(adj_opa_complete_12m) %>% mutate(time = "12m")) %>% 
             mutate(model = "Adjusted")) %>% 
-      write_csv("output/st03_05_opa_binomial_model_counts.csv")
+      write_csv("output/st02_05_opa_binomial_model_counts.csv")
 
 
 bind_rows(
@@ -244,4 +203,5 @@ bind_rows(
             mutate(model = "Crude"),
       (hurdle_model_count_fn(adj_opa_complete_12m) %>% mutate(time = "12m")) %>% 
             mutate(model = "Adjusted")) %>% 
-      write_csv("output/st03_05_opa_hurdle_model_counts.csv")
+      write_csv("output/st02_05_opa_hurdle_model_counts.csv")
+
