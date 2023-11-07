@@ -74,7 +74,7 @@ com_ae_long$follow_up_time %>% summary
 matched_data_ae_ts <- bind_rows(exp_ae_long, com_ae_long)
 matched_data_ae_ts$exposure %>% levels
 matched_data_ae_ts$exposure <- factor(matched_data_ae_ts$exposure, levels = c("Comparator", "Long covid exposure"))
-matched_data_hos_ts$exposure %>% levels()
+matched_data_ae_ts$exposure %>% levels()
 
 
 
