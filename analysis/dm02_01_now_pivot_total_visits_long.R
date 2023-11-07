@@ -127,9 +127,9 @@ for_covariates$number_comorbidities_cat <- relevel(for_covariates$number_comorbi
 matched_data_12m <- left_join(matched_data_12m, for_covariates,
                               by = c("patient_id" = "patient_id", "exposure" = "exposure"))
 
+
+# add the total_drug_visit to the outcomes: 
+matched_data_12m <- matched_data_12m %>% mutate(visits = visits + total_drug_visit)
+
 # correct the level of exposure groups
 matched_data_12m$exposure <- relevel(matched_data_12m$exposure, ref = "Comparator")
-
-
-
-
