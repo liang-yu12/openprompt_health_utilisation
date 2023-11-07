@@ -182,7 +182,7 @@ actions:
 # Two part hurdle model:
 # # All healthcare utilisation 
 
-  report_02_hurdle_01_all_visits:
+  report_02_01_all_visits_hurdle:
     needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
       r:latest analysis/st02_01_nonw_total_visit_hurdel.R
@@ -197,7 +197,7 @@ actions:
 
 # # Total primary care utilisation  - hurdle
 
-  report_03_hurdle_02_gp_visits:
+  report_02_01_primary_care_visit_hurdle:
     needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
       r:latest analysis/st02_02_now_primarycare_visits_hurdel.R
