@@ -266,6 +266,19 @@ actions:
         opa_visit_bi_model_count: output/st02_05_opa_binomial_model_counts.csv
         opa_visit_hurdle_model_count: output/st02_05_opa_hurdle_model_counts.csv
 
+# # Visulize different type of outcomes:
+
+  report_02_06_plot_main_visit_outcomes:
+    needs: [report_02_02_primary_care_visit_hurdle, report_02_03_now_hospital_admin_hurdle, report_02_04_now_ane_visits_hurdle, report_02_05_now_opa_visits_hurdle]
+    run:
+      r:latest analysis/st02_07_visualise_outcomes_by_types.R
+    outputs:
+      moderately_sensitive:
+        primary_care_plots: output/st02_07_parimary_care_visits.png
+        hos_admin_plots: output/st02_07_hospitalisations.png
+        a_and_e_visit_plots: output/st02_07_a_and_e_visits.png
+        opa_visit_plots: output/st02_07_opa_visits.png
+
 
 
 # # Subgroup analyses 1: factors associated with high healthcare use among LC
