@@ -443,16 +443,16 @@ actions:
         # age_cat_stratum: output/st04_04_stratum_age.csv
         predict_subgoups_visits: output/st04_04_stratum_predicted_value.csv
 
-# # Visualise the stratum specific outcomes:
-  # report_03_05_stratification_results:
-  #   needs: [report_03_hurdle_05_subgroup_visits]
-  #   run: 
-  #     r:latest analysis/st03_05_visualise_stratum.R
-  #   outputs: 
-  #     moderately_sensitive: 
-  #       hospital_stratum_results: output/st03_05_stratum_hos_visits.png
-  #       sex_stratum_results: output/st03_05_stratum_sex_visits.png
-  #       age_cat_stratum_results: output/st03_05_stratum_age_visits.png
+# Visualise the stratum specific outcomes:
+  report_04_04_visualise_stratum:
+    needs: [report_04_03_stratified_by_cov]
+    run: 
+      r:latest analysis/st04_05_stratified_visualisation.R
+    outputs: 
+      moderately_sensitive: 
+        previous_hos_stratum_plot: output/st04_05_stratum_hos_visits.png
+        # sex_stratum_plot: output/st04_05_stratum_sex_visits.png
+        # age_stratum_plot: output/st04_05_stratum_age_visits.png
 
 # Supplementary materials
 
