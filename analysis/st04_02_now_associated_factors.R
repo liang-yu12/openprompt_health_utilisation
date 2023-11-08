@@ -1,5 +1,5 @@
 # Load previous data management
-source("analysis/dm03_5_matched_pivot_long.R")
+source("analysis/dm02_01_now_pivot_total_visits_long.R")
 
 
 # Show the factors associated with increased outcomes among:
@@ -22,7 +22,8 @@ for_covariates <- matched_data_ts %>% distinct(patient_id, exposure, .keep_all =
                     "cov_mental_health",   
                     "previous_covid_hosp",     
                     "cov_covid_vax_n_cat",     
-                    "number_comorbidities_cat")
+                    "number_comorbidities_cat", 
+                    "total_drug_visit")
 
 for_covariates$sex <- relevel(for_covariates$sex, ref = "male")
 for_covariates$bmi_cat <- relevel(for_covariates$bmi_cat, ref = "Normal Weight")
