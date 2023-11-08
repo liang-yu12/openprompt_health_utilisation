@@ -6,7 +6,7 @@ options(digits = 2, scipen = 999)
 source("analysis/settings_packages.R")
 
 # 1. Total forest plot: -----
-all_binomial <- read_csv(here("output", "st03_05_sub_all_factors_binomial.csv")) %>% 
+all_binomial <- read_csv(here("output", "st04_02_all_factors_binomial.csv")) %>% 
       filter(term != "(Intercept)") %>% 
       dplyr::select(term, estimate, lci, hci, p.value) 
 
@@ -136,7 +136,7 @@ all_binomial <- relocate(all_binomial, `OR (95% CI)` , .after = `   First part  
 ))
 
 # Second part hurdle: 
-all_hurdle <- read_csv("output/st03_05_sub_all_factors_hurdle.csv") %>% 
+all_hurdle <- read_csv("output/st04_02_all_factors_hurdle.csv") %>% 
       filter(term != "(Intercept):2" & term != "(Intercept):1") %>% 
       dplyr::select(term, estimate, lci, hci, p.value) %>% 
       mutate(
@@ -292,7 +292,7 @@ all_two_forest <- forest(
 plot(all_two_forest)
 
 
-ggsave(all_two_forest, file = "output/st03_sub_all_factors.png",
+ggsave(all_two_forest, file = "output/st04_03_all_factors.png",
        width=20, height=14, units = "in", dpi = 300)
 
 
@@ -300,7 +300,7 @@ ggsave(all_two_forest, file = "output/st03_sub_all_factors.png",
 
 # Data management for the forest plot:
 
-lc_binomial <- read_csv(here("output", "st03_05_sub_lc_only_binomial.csv")) %>% 
+lc_binomial <- read_csv(here("output", "st04_02_lc_only_factor_binomial.csv")) %>% 
       filter(time =="12 months" & term != "(Intercept)") %>% 
       dplyr::select(term, estimate, lci, hci, p.value) 
 
@@ -432,7 +432,7 @@ lc_bi_plot_data <- relocate(lc_bi_plot_data, `OR (95% CI)` , .after = `   First 
 # Second part Hurdle
 
 
-lc_hurdle <- read_csv("output/st03_05_sub_lc_only_hurdle.csv") %>% 
+lc_hurdle <- read_csv("output/st04_02_lc_only_factor_hurdle.csv") %>% 
       filter(time =="12 months" & term != "(Intercept):2" & term != "(Intercept):1") %>% 
       dplyr::select(term, estimate, lci, hci, p.value) %>% 
       mutate(
@@ -581,13 +581,13 @@ two_forest <- forest(
 plot(two_forest)
 
 
-ggsave(two_forest, file = "output/st03_sub_lc_factors.png",
+ggsave(two_forest, file = "output/st04_03_lc_factors.png",
        width=20, height=14, units = "in", dpi = 300)
 
 
 
 # 3. No LC subgroup -----
-nolc_binomial <- read_csv("output/st03_05_sub_nolc_binomial.csv") %>% 
+nolc_binomial <- read_csv("output/st04_02_nolc_factor_binomial.csv") %>% 
       filter(term != "(Intercept)") %>% 
       dplyr::select(term, estimate, lci, hci, p.value) %>% 
       mutate(
@@ -710,7 +710,7 @@ nolc_binomial <- relocate(nolc_binomial, `OR (95% CI)` , .after = `   First part
 ))
 
 # Second part hurdle: 
-nolc_hurdle <- read_csv("output/st03_05_sub_nolc_hurdle.csv") %>% 
+nolc_hurdle <- read_csv("output/st04_02_nolc_factor_hurdle.csv") %>% 
       filter(term != "(Intercept):2" & term != "(Intercept):1") %>% 
       dplyr::select(term, estimate, lci, hci, p.value) %>% 
       mutate(
@@ -857,7 +857,7 @@ nolc_two_forest <- forest(
 plot(nolc_two_forest)
 
 
-ggsave(nolc_two_forest, file = "output/st03_sub_nolc_factors.png",
+ggsave(nolc_two_forest, file = "output/st04_03_nolc_factors.png",
        width=20, height=14, units = "in", dpi = 300)
 
 
@@ -876,5 +876,5 @@ subgroup_visit_bar <- ggplot(data = subgroup_visits,
       scale_x_discrete(labels = c("All participants", "Long COVID only subgroup", "No long COVID subgroup"))
 
 
-ggsave(subgroup_visit_bar, file = "output/st03_sub_all_lc_nolc_predicted_visits.png",
+ggsave(subgroup_visit_bar, file = "output/st04_03_sub_all_subset_predicted_visits.png",
        width=8, height=6, units = "in", dpi = 300)
