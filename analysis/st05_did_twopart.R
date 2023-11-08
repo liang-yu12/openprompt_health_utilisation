@@ -100,10 +100,12 @@ predicted_crude_value$time <- factor(predicted_crude_value$time, levels = time_o
 ggplot(predicted_crude_value, aes(x= time,
                                   y= visits,
                                   color = exposure)) +
-      geom_point() + geom_errorbar(aes(ymin=lci, ymax=hci), width=0.2) +
-      geom_line(aes(group = exposure))  + theme_bw() +
+      geom_point() + geom_errorbar(aes(ymin=lci, ymax=hci), width=0.5) +
+      geom_line(aes(group = exposure), size = 1)  + theme_bw() +
       xlab("Time period") + ylab("Average healthcare visits") +
+      scale_color_manual(values=c("#E1BE6A", "#40B0A6")) +
       guides(color=guide_legend(title="Exposure group")) 
+
 
 ggsave("output/st05_did_crude.png", width = 9, height = 4, units = "in")
 
@@ -184,10 +186,11 @@ predicted_adj_value$time <- factor(predicted_adj_value$time, levels = time_order
 # Visualize the results
 
 ggplot(predicted_adj_value, aes(x= time, y= visits, color = exposure)) +
-      geom_point() + geom_errorbar(aes(ymin=lci, ymax=hci), width=0.2) +
-      geom_line(aes(group = exposure))  + theme_bw() +
-  xlab("Time period") + ylab("Average healthcare visits") +
-  guides(color=guide_legend(title="Exposure group")) 
+      geom_point() + geom_errorbar(aes(ymin=lci, ymax=hci), width=0.5) +
+      geom_line(aes(group = exposure), size = 1)  + theme_bw() +
+      xlab("Time period") + ylab("Average healthcare visits") +
+      scale_color_manual(values=c("#E1BE6A", "#40B0A6")) +
+      guides(color=guide_legend(title="Exposure group")) 
 
 ggsave("output/st05_did_adj.png", width = 9, height = 4, units = "in")
 
