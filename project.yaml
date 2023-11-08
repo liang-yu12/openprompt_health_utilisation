@@ -401,10 +401,8 @@ actions:
         did_reg_summary: output/st05_did_reg_summary_output.txt
 
 
-
-
-# # Subgroup analyses 1: factors associated with high healthcare use among LC
-  report_04_associated_factors:  
+# # Supplementary analyses 2: factors associated with high healthcare use among LC
+  report_04_02_associated_factors:  
     needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
       r:latest analysis/st04_02_now_associated_factors.R
