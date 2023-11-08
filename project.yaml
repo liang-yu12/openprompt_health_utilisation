@@ -456,15 +456,16 @@ actions:
 
 # Supplementary materials
 
-  report_sup_exploring_outcome_dist:
-    needs: [import_matched_exposure, import_matched_controls]
+  report_04_01_supp1_outcome_dist:
+    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
-      r:latest analysis/st_sup_01_data_exploration.R
+      r:latest analysis/st04_01_outcome_distribution_plots.R
     outputs: 
       moderately_sensitive: 
-        zero_percent_fig: output/st_sup_1_5_explore_zero_percentage.png
-        monthly_oucome_tb: output/st_sup_1_5_monthly_outcome_distribution.csv
-        visit_explore: output/st_sup_1_5_cat_visits_summary.csv
+        outcome_distribution_plot: output/st04_01_total_outcome_distribution.png
+        zero_percent_fig: output/st04_01_explore_zero_percentage.png
+        monthly_oucome_tb: output/st04_01_monthly_outcome_distribution.csv
+        visit_explore: output/st04_01_cat_visits_summary.csv
         
   report_sup_model_selection:
     needs: [import_matched_exposure, import_matched_controls]
