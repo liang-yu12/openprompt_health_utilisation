@@ -432,27 +432,27 @@ actions:
         predicted_subgroups_visits: output/st04_03_sub_all_subset_predicted_visits.png
 
 # # Stratified by hospitalisation, sex, age - hurdle
-  report_03_hurdle_05_subgroup_visits:
-    needs: [import_matched_exposure, import_matched_controls]
+  report_04_03_stratified_by_cov:
+    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
-      r:latest analysis/st03_05_subgroups_model_hurdle.R
+      r:latest analysis/st04_04_stratum_by_cov_hurdle.R
     outputs: 
       moderately_sensitive: 
-        previous_hospitalisation_stratum: output/st03_05_subgroup_hospitalisation.csv
-        sex_stratum: output/st03_05_subgroup_sex.csv
-        age_cat_stratum: output/st03_05_subgroup_age.csv
-        predict_subgoups_visits: output/st03_05_subgroup_predicted_value.csv
+        previous_hospitalisation_stratum: output/st04_04_stratum_hospitalisation.csv
+        # sex_stratum: output/st04_04_stratum_sex.csv
+        # age_cat_stratum: output/st04_04_stratum_age.csv
+        predict_subgoups_visits: output/st04_04_stratum_predicted_value.csv
 
 # # Visualise the stratum specific outcomes:
-  report_03_05_stratification_results:
-    needs: [report_03_hurdle_05_subgroup_visits]
-    run: 
-      r:latest analysis/st03_05_visualise_stratum.R
-    outputs: 
-      moderately_sensitive: 
-        hospital_stratum_results: output/st03_05_stratum_hos_visits.png
-        sex_stratum_results: output/st03_05_stratum_sex_visits.png
-        age_cat_stratum_results: output/st03_05_stratum_age_visits.png
+  # report_03_05_stratification_results:
+  #   needs: [report_03_hurdle_05_subgroup_visits]
+  #   run: 
+  #     r:latest analysis/st03_05_visualise_stratum.R
+  #   outputs: 
+  #     moderately_sensitive: 
+  #       hospital_stratum_results: output/st03_05_stratum_hos_visits.png
+  #       sex_stratum_results: output/st03_05_stratum_sex_visits.png
+  #       age_cat_stratum_results: output/st03_05_stratum_age_visits.png
 
 # Supplementary materials
 
