@@ -166,14 +166,6 @@ adj_binomial_outputs <-binomial_tidy_fn(adj_binomial_12m) %>%
 adj_hurdle_outputs <- positive_nb_tidy_fu(adj_nb_12m) %>% 
       mutate(time="12 months") %>% mutate(Adjustment = "Adjusted")
 
-# Save the detailed outputs to a text file:
-sink(here("output", "st04_02_lc_only_factor_reg_summary.txt"))
-print("# Adjusted binomial model output part 1 ---------")
-print(summary(adj_binomial_12m))
-print("# Adjusted hurdle model output part 2 ---------")
-print(summary(adj_nb_12m))
-sink()
-
 # Combine total outputs and save:
 adj_binomial_outputs %>% write_csv(here("output", "st04_02_lc_only_factor_binomial.csv"))
 adj_hurdle_outputs %>% write_csv(here("output", "st04_02_lc_only_factor_hurdle.csv"))
@@ -248,6 +240,17 @@ bind_rows(
       average_visits_nolc) %>% 
       write_csv(here("output", "st04_02_factors_predicted_visits.csv"))
 
+# Save the detailed outputs to a text file:
+sink(here("output", "st04_02_associated_factor_reg_summary.txt"))
+print("# Adjusted binomial model output part 1 ---------")
+print(summary(all_binomial_12m))
+print(summary(adj_binomial_12m))
+print(summary(nolc_binomial_12m))
+print("# Adjusted hurdle model output part 2 ---------")
+print(summary(all_nb_12m))
+print(summary(adj_nb_12m))
+print(summary(nolc_nb_12m))
+sink()
 
 
 # Summarize the datasets for output checking: -----
