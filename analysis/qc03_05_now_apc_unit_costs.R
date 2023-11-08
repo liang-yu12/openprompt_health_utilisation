@@ -34,4 +34,4 @@ unit_apc_costs <- matched_combine %>%
 
 
 # save outputs 
-apc_unit_cost %>% write_csv(here("output", "st03_05_apc_unit_costs.csv"))
+unit_apc_costs %>% write_csv(here("output", "st03_05_apc_unit_costs.csv"))
