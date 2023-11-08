@@ -29,3 +29,9 @@ did_data_12m <- did_data %>% distinct(patient_id, exposure, time, .keep_all = T)
                         "exposure" = "exposure",
                         "time" = "time"))
 
+# Add the drug bisits to the total visits, according to time
+did_data_12m <- did_data_12m %>% 
+      mutate(visits = case_when(
+      time == "Historical" ~ visits + total_hx_drug_visit, 
+      time == "Contemporary" ~ visits + total_drug_visit)
+      )
