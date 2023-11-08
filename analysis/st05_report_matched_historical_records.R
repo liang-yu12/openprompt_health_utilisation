@@ -1,5 +1,5 @@
 # Load data management files
-source("analysis/dm02_04_combine_long_data_for_did.R")
+source("analysis/dm05_04_hx_combine_long_data_for_did.R")
 
 # report numbers: -------------
 did_data_12m %>% summary_factorlist(
@@ -21,10 +21,7 @@ did_data_12m %>% group_by(exposure, time) %>%
 # choose the pre-pandemic data: 
 did_plot_interrupt <- did_data %>% dplyr::select(exposure, time, month, monthly_visits) %>% 
       filter(time == "Historical") %>% 
-      mutate(month = case_when(
-            time == "Historical" ~ as.numeric(month), 
-            time == "Contemporary" ~ (as.numeric(month) + 19))
-      ) %>% dplyr::select(exposure, time, month, monthly_visits) 
+      mutate(month = as.numeric(month)) %>% dplyr::select(exposure, time, month, monthly_visits) 
 
 
 # Plot the trend before and after long COVID using LOESS smooth:
@@ -39,12 +36,9 @@ ggplot() +
       scale_x_continuous(breaks = seq(1, 12),
                          labels = c("2019 March", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "2020 March")) + 
       theme_bw() + 
-      theme(axis.text.x = element_text(size=10)) +
-      annotate("text", x = 5, y=0.35, label = "Historical records",hjust = 0.2) 
+      theme(axis.text.x = element_text(size=12)) +
+      annotate("text", x = 5, y=0.35, label = "Historical healthcare utilisation",hjust = 0.2) 
 
 
-ggsave(file = "output/st05_historical_smooth.jpg", width = 8, height = 4)
-
-
-ggsave(file = "output/st05_smooth_comparison.jpg", width = 12, height = 4)
+ggsave(file = "output/st05_historical_smooth.jpg", width = 8, height = 6)
 
