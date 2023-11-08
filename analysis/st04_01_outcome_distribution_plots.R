@@ -1,14 +1,40 @@
-source("analysis/dm03_5_matched_pivot_long.R")
+# Outcome distribution plots -----
+# Healthcare visits:
+source("analysis/dm02_01_now_pivot_total_visits_long.R")
 
-# Explore the data:
-# - The percentage of zero
-# - Outcome distribution by time 
-# - Crude rate 
+matched_data_12m <- matched_data_12m %>% dplyr::select(-total_drug_visit)
 
+visit_distribution_his <- matched_data_12m %>% 
+      ggplot(aes(x=visits, fill = exposure)) + 
+      geom_histogram(position = "dodge") + 
+      ggtitle("Total healthcare utilisation distribution") + theme(legend.position = "none") + 
+      xlab("Total healthcare visits") + ylab("Counts") + theme_bw()+ 
+      guides(fill=guide_legend(title="Exposure group")) +
+      scale_fill_manual(values = c("#FFC20A", "#0C7BDC"))
+
+
+# Healthcare costs:
+source("analysis/dm03_03_now_pivot_total_long.R")
+
+cost_distribution_his <- matched_cost_12m %>% 
+      ggplot(aes(x=total_cost, fill = exposure)) + 
+      geom_histogram(position = "dodge") + 
+      ggtitle("Total healthcare cost distribution") + theme(legend.position = "none") + 
+      xlab("Total healthcare costs") + ylab("Counts") + theme_bw()+ 
+      guides(fill=guide_legend(title="Exposure group")) +
+      scale_fill_manual(values = c("#E66100", "#5D3A9B"))
+
+
+# Combine two graphs and label
+both_distribution_plot <- ggarrange(visit_distribution_his, cost_distribution_his, 
+          ncol = 1, labels = c("a", "b")) 
+
+ggsave(both_distribution_plot, file = "output/st04_01_total_outcome_distribution.png",
+       width=9, height=12, units = "in", dpi = 300)
 
 # Showing the percentage of zero ----
 
-png(file=here("output", "st_sup_1_5_explore_zero_percentage.png"),
+png(file=here("output", "st04_01_explore_zero_percentage.png"),
     width=1200, height=600)
 # plots
 matched_data_ts %>% mutate(month=as.numeric(month)) %>% 
@@ -23,6 +49,11 @@ ggplot(aes(x = month, fill = exposure, y = zero_percentage, color = exposure)) +
 
 dev.off()
 
+
+# Explore the data:
+# - The percentage of zero
+# - Outcome distribution by time 
+# - Crude rate 
 
 # Outcome distribution by time -----
 matched_data_ts %>% 
@@ -43,12 +74,11 @@ matched_data_ts %>%
                 wrong_deregister = sum(end_deregist <= index_date, na.rm = T),
                 wrong_lc_cure = sum(end_lc_cure <= index_date, na.rm = T),
                 min_enddate = sum(end_date <= index_date, na.rm = T)) %>% 
-      write_csv(here("output", "st_sup_1_5_monthly_outcome_distribution.csv"))
+      write_csv(here("output", "st04_01_monthly_outcome_distribution.csv"))
 
-rm(list = ls())
 # check the outcomes extreme values by months:
 
-source("analysis/dm03_matched_define_monthly_follow_up_time.R")
+source("analysis/dm01_02_now_monthly_follow_up.R")
 
 matched_data <- bind_rows(lc_exp_matched, com_matched)
 matched_data %>% names()
@@ -69,5 +99,5 @@ test <- matched_data %>% summary_factorlist(dependent, explanatory,
                                     add_row_totals = TRUE,
                                     row_totals_colname = "Total",
 ) 
-test %>% write.csv(here("output", "st_sup_1_5_cat_visits_summary.csv"), row.names = F)
+test %>% write.csv(here("output", "st04_01_cat_visits_summary.csv"), row.names = F)
 
