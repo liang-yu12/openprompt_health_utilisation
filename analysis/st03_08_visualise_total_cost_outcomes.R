@@ -110,7 +110,7 @@ total_predicted_cost$exposure <- factor(total_predicted_cost$exposure,
 
 
 # Colour blind friendly:
-cbp1 <- c("#FFC20A", "#0C7BDC")
+cbp1 <- c("#E66100", "#5D3A9B")
 
 
 (cost_barplot <- ggplot(total_predicted_cost, aes(fill=exposure, y=cost, x=exposure)) + 
