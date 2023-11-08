@@ -5,36 +5,33 @@
 # 4. Collapse the rows by visits and costs
 # 5. use the summary counts and costs to sstimate the unit costs (costs/unit)
 
+source("analysis/dm01_02_now_monthly_follow_up.R")
+matched_combine <- bind_rows(com_matched, lc_exp_matched)
 
-# Goal: calculate ane unit cost 
+# define admin cols
+all_admission <- c()
+for (i in 1:12){
+      all_admission <-c(all_admission, paste0("hos_visit_m", i))      
+}
 
-# read in apc visit count data
-source("analysis/dm03_7_pivot_hos_long.R")
-# keep var needed
-apc_counts <- matched_data_hos_ts %>% dplyr::select("patient_id", "exposure", "month", "monthly_hos_visits")
+# define cost cols
+all_apc_cost <- c()
+for(i in 1:12){
+      all_apc_cost <- c(all_apc_cost, paste0("apc_cost_m", i))
+}
 
-# read in apc cost data
-source("analysis/dm04_02_02_apc_costs_pivot.R")
-# keep var needed
-apc_costs <- matched_apc_cost_ts %>%  dplyr::select("patient_id", "exposure", "month", "monthly_apc_cost")
+# add up total admission counts
+matched_combine$total_admission_counts <- rowSums(matched_combine[,all_admission], na.rm = T)
 
-# Join them together
-apc_data_with_cost_counts <- left_join(apc_counts, apc_costs,
-          by = c("patient_id" = "patient_id", 
-                 "exposure" = "exposure",
-                 "month" = "month")
-          )
+# add up total costs
+matched_combine$total_admission_costs <- rowSums(matched_combine[,all_apc_cost], na.rm = T)
 
-apc_unit_cost <- apc_data_with_cost_counts %>% 
-      filter(!is.na(monthly_hos_visits) & 
-                   monthly_hos_visits > 0 &
-                   !is.na(monthly_apc_cost) & 
-                   monthly_apc_cost > 0) %>%  # keep people with both data
-      group_by(patient_id, exposure) %>% 
-      summarise(
-            visits = sum(monthly_hos_visits, na.rm = T),
-            costs = sum(monthly_apc_cost, na.rm = T)) %>% ungroup() %>% 
-      summarise(unit_cost = sum(costs, na.rm = T)/sum(visits, na.rm = T))
+
+# Keep people with both records for inputation
+unit_apc_costs <- matched_combine %>% 
+      filter(total_admission_counts > 0 & total_admission_costs > 0) %>% 
+      summarise(unit_cost = sum(total_admission_costs, na.rm = T)/sum(total_admission_counts, na.rm = T))
+
 
 # save outputs 
 apc_unit_cost %>% write_csv(here("output", "st04_apc_unit_costs.csv"))
