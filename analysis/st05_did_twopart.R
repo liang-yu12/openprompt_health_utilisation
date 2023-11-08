@@ -1,7 +1,7 @@
 # Run difference in difference model:
 
 # Load previous data management
-source("analysis/dm02_04_combine_long_data_for_did.R")
+source("analysis/dm05_04_hx_combine_long_data_for_did.R")
 did_data_12m %>% names()
 
 # Create binary visits in two time periods:
