@@ -20,6 +20,12 @@ add_ref_fn <- function(input){
       return(data)
 }
 
+select_and_relevel_for_plot_fn <- function(input){
+      data <- input %>% filter(adjustment == "Adjusted" & time == "12 months") %>% 
+            mutate(exposure = factor(exposure, levels = new_level))
+}
+
+
 # Function to run a forest plot:
 cost_forest_fn <- function(bi_data, tpm_data){
       # read in datasets for plotting:
@@ -97,6 +103,16 @@ cost_forest_fn <- function(bi_data, tpm_data){
       return(two_forest)
 }
 
+# Bar plot function
+barplot_fn <- function(data, title){
+      cost_barplot <- ggplot(data, aes(fill=exposure, y=cost, x=exposure)) + 
+            geom_bar(position="dodge", stat="identity", width = 0.5) +  coord_flip() +
+            geom_errorbar(position=position_dodge(0.5), aes(ymin = lci, ymax = uci), width = 0.2) + 
+            guides(fill=guide_legend(title="   ")) +
+            ylab(title) + xlab(" ") + theme_bw() +
+            scale_fill_manual(values = cbp1)
+      return(cost_barplot)
+}
 
 
 # read in datasets for plotting:
@@ -155,35 +171,49 @@ opa_forest <- cost_forest_fn(bi_opa_costs, opa_tpm)
 
 
 # Barplot: -----------
+
+new_level <- c("Long covid exposure", "Comparator")  # for changing the plot order
+
 # Read in outcome data:
 gp_predicted_cost <- read_csv("output/st03_04_predict_gp_cost_tpm.csv") %>% 
-      filter(adjustment == "Adjusted" & time == "12 months")
+      select_and_relevel_for_plot_fn()
 
-opa_predicted_cost <- read_csv("output/st04_05_predict_opa_cost_tpm.csv") %>% 
-      filter(adjustment == "Adjusted" & time == "12 months") %>% 
-      mutate(Type = "Outpatient clinic costs")
+hos_predicted_cost <- read_csv("output/st03_05_predict_apc_cost_tpm.csv") %>% 
+      select_and_relevel_for_plot_fn()
 
-ane_predicted_cost <- read_csv("output/st04_04_predict_ane_cost_tpm.csv") %>% 
-      filter(adjustment == "Adjusted" & time == "12 months") %>% 
-      mutate(Type = "A&E costs")
+ane_predicted_cost <- read_csv("output/st03_06_predict_ane_cost_tpm.csv") %>% 
+      select_and_relevel_for_plot_fn()
 
-hos_predicted_cost <- read_csv("output/st04_03_predict_apc_cost_tpm.csv") %>% 
-      filter(adjustment == "Adjusted" & time == "12 months") %>% 
-      mutate(Type = "Hospital admission")
+opa_predicted_cost <- read_csv("output/st03_07_predict_opa_cost_tpm.csv") %>% 
+      select_and_relevel_for_plot_fn()
 
 
 # Colour blind friendly:
 cbp1 <- c("#E66100", "#5D3A9B")
 
+# Plot bar plots:
+gp_cost_plot <- barplot_fn(gp_predicted_cost, "Average primary care cost in 12 months")
+hos_cost_plot <- barplot_fn(hos_predicted_cost, "Average hospital admission cost in 12 months")
+ane_cost_plot <- barplot_fn(ane_predicted_cost, "Average A&E visits cost in 12 months")
+ops_cost_plot <- barplot_fn(opa_predicted_cost, "Average outpatient clinic visits cost in 12 months")
 
-(costs_barplot <- ggplot(gp_predicted_cost, aes(fill=exposure, y=cost, x=exposure)) + 
-      geom_bar(position="stack", stat="identity") +  coord_flip() +
-      guides(fill=guide_legend(title="Healthcare type")) +
-      ylab("Average healthcare costs") + xlab(" ") + theme_bw() +
-      scale_fill_manual(values = cbp1))
+# Combine plots together and save : ----------
+# GP plots
+gp_all_plots <- ggarrange(gp_forest, gp_cost_plot, ncol = 1)
+ggsave(gp_all_plots, file = "output/st03_09_gp_costs.png",
+       width=12, height=5, units = "in", dpi = 300)
 
-# Combine plots together : ----------
+# hospital admission plot:
+hos_all_plots <- ggarrange(apc_forest,hos_cost_plot, ncol = 1)
+ggsave(hos_all_plots, file = "output/st03_09_apc_costs.png",
+       width=12, height=5, units = "in", dpi = 300)
 
-costs_all_plots <- ggarrange(two_forest, costs_barplot, ncol = 1)
-ggsave(costs_all_plots, file = "output/st04_healthcare_costs.png",
+# A&E plot:
+ane_plots <- ggarrange(ane_forest, ane_cost_plot, ncol = 1)
+ggsave(ane_plots, file = "output/st03_09_ane_costs.png",
+       width=12, height=5, units = "in", dpi = 300)
+
+# opa plots: 
+opa_plots <- ggarrange(opa_forest, ops_cost_plot, ncol = 1)
+ggsave(opa_plots, file = "output/st03_09_opa_costs.png",
        width=12, height=5, units = "in", dpi = 300)
