@@ -419,18 +419,17 @@ actions:
         sub_all_lc_no_model_count: output/st04_02_factors_bi_model_counts.csv
         sub_all_lc_no_hurdle_count: output/st04_02_factors_hurdle_model_counts.csv     
         
-# # # visualise subgroup lc only outputs:
-#   visualise_sub_lc_only_factors:  
-#     needs: [report_sub_lc_only_factors]
-#     run: 
-#       r:latest analysis/st03_sub_visualise_lc_factors.R
-#     outputs: 
-#       moderately_sensitive:
-#         all_factor_forest_plot: output/st03_sub_all_factors.png
-#         lc_only_forest_plot: output/st03_sub_lc_factors.png
-#         nolc_forest_plot: output/st03_sub_nolc_factors.png
-#         predicted_subgroups_visits: output/st03_sub_all_lc_nolc_predicted_visits.png
-
+# # visualise subgroup lc only outputs:
+  report_04_03_visualise_associated_factors:
+    needs: [report_04_02_associated_factors]
+    run:
+      r:latest analysis/st04_03_now_visualise_associated_factors.R
+    outputs:
+      moderately_sensitive:
+        all_factor_forest_plot: output/st04_03_all_factors.png
+        lc_only_forest_plot: output/st04_03_lc_factors.png
+        nolc_forest_plot: output/st04_03_nolc_factors.png
+        predicted_subgroups_visits: output/st04_03_sub_all_subset_predicted_visits.png
 
 # # Stratified by hospitalisation, sex, age - hurdle
   report_03_hurdle_05_subgroup_visits:
