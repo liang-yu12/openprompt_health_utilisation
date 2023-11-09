@@ -120,7 +120,7 @@ primary_care_bar <- visit_bar_fc(predicted_primary_visits, "Average parimary car
 # combine and save outputs
 paimary_care_plots <- ggarrange(primary_care_forest_plot, primary_care_bar, ncol = 1)
 ggsave(paimary_care_plots, file = "output/st02_07_parimary_care_visits.png",
-       width=9, height=5, units = "in", dpi = 300)
+       width=12, height=5, units = "in", dpi = 300)
 
 
 # 3. Visualise hospitalisation outcomes: -----
