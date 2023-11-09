@@ -324,7 +324,7 @@ actions:
 
 
 # # Visulize the inputed main cost outcome:
-  report_03_08_plot_main_cost_outcomes:
+  report_03_08_v2_plot_main_inputed_cost_outcomes:
     needs: [report_03_03_v2_total_costs_twopart]
     run:
       r:latest analysis/st03_08_v2_visualise_inputed_total_cost_outcomes.R
