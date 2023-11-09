@@ -319,7 +319,7 @@ actions:
       r:latest analysis/st03_03_v2_now_inputed_total_cost_twopart.R
     outputs: 
       moderately_sensitive:
-        inpute_total_cost_reg_summary: output/st03_03_v2_inputed_total_reg_summary.txt
+        inpute_total_cost_reg_summary: output/st03_03_v2_total_inputed_cost_reg_summary.txt
         inpute_total_cost_binary: output/st03_03_v2_inputed_total_cost_binary.csv
         inpute_total_cost_tpm: output/st03_03_v2_inputed_total_cost_gammaglm.csv
         inpute_inpute_predicted_total_costs: output/st03_03_v2_inputed_total_cost_predicted_costs.csv
