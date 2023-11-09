@@ -500,8 +500,8 @@ actions:
     outputs: 
       moderately_sensitive: 
         previous_hospitalisation_stratum: output/st04_04_stratum_hospitalisation.csv
-        # sex_stratum: output/st04_04_stratum_sex.csv
-        # age_cat_stratum: output/st04_04_stratum_age.csv
+        sex_stratum: output/st04_04_stratum_sex.csv
+        age_cat_stratum: output/st04_04_stratum_age.csv
         predict_subgoups_visits: output/st04_04_stratum_predicted_value.csv
 
 # Visualise the stratum specific outcomes:
@@ -512,8 +512,8 @@ actions:
     outputs: 
       moderately_sensitive: 
         previous_hos_stratum_plot: output/st04_05_stratum_hos_visits.png
-        # sex_stratum_plot: output/st04_05_stratum_sex_visits.png
-        # age_stratum_plot: output/st04_05_stratum_age_visits.png
+        sex_stratum_plot: output/st04_05_stratum_sex_visits.png
+        age_stratum_plot: output/st04_05_stratum_age_visits.png
 
 # Supplementary materials
 
