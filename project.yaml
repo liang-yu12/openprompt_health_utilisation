@@ -295,6 +295,22 @@ actions:
         total_cost_bi_model_check: output/st03_03_total_cost_binomial_model_counts.csv
         total_cost_gamma_model_check: output/st03_03_total_cost_gamma_model_counts.csv
 
+# Inputed cost outcomes:
+  report_03_03_v2_total_costs_twopart:
+    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+    run: 
+      r:latest analysis/st03_03_v2_now_inputed_total_cost_twopart.R
+    outputs: 
+      moderately_sensitive:
+        inpute_total_cost_reg_summary: output/st03_03_v2_inputed_total_reg_summary.txt
+        inpute_total_cost_binary: output/st03_03_v2_inputed_total_cost_binary.csv
+        inpute_total_cost_tpm: output/st03_03_v2_inputed_total_cost_gammaglm.csv
+        inpute_inpute_predicted_total_costs: output/st03_03_v2_inputed_total_cost_predicted_costs.csv
+        inpute_total_cost_bi_model_check: output/st03_03_v2_inputed_total_cost_binomial_model_counts.csv
+        inpute_total_cost_gamma_model_check: output/st03_03_v2_inputed_total_cost_gamma_model_counts.csv
+
+
+
 # # Visulize main cost outcome:
 
   report_03_08_plot_main_cost_outcomes:
@@ -304,6 +320,18 @@ actions:
     outputs:
       moderately_sensitive:
         total_cost_outcomes_plots: output/st03_08_total_cost.png
+
+
+
+# # Visulize the inputed main cost outcome:
+  report_03_08_plot_main_cost_outcomes:
+    needs: [report_03_03_v2_total_costs_twopart]
+    run:
+      r:latest analysis/st03_08_v2_visualise_inputed_total_cost_outcomes.R
+    outputs:
+      moderately_sensitive:
+        total_cost_outcomes_plots: output/st03_08_v2_inputed_total_cost.png
+
 
 
 
