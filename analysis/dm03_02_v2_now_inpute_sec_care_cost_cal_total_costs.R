@@ -3,7 +3,7 @@ source("analysis/dm03_01_v2_now_read_cal_gp_cost_and_unit_costs.R")
 # Data management of the cost data: combing costs
 # 1. GP costs + GP prescription costs
 # 2. Combining monthly costs
-# 3. Pivot to long dataset by month
+# 3. Combine the total cost in 12 months
 
 # 1. GP costs: combine monthy GP visit cost + GP prescription ----
 # Combine the cost vectors in the same month period in a vector
@@ -55,6 +55,15 @@ com_matched$primary_cost_10 <- rowSums(com_matched[p_10], na.rm = T)
 com_matched$primary_cost_11 <- rowSums(com_matched[p_11], na.rm = T)
 com_matched$primary_cost_12 <- rowSums(com_matched[p_12], na.rm = T)
 
+
+parimary_cost <- c()
+for (i in 1:12){
+      parimary_cost <- c(parimary_cost, paste0("primary_cost_", i))
+}
+
+# Add them together
+lc_exp_matched$total_primary_cost <- rowSums(lc_exp_matched[,parimary_cost], na.rm = T)
+com_matched$total_primary_cost <- rowSums(com_matched[,parimary_cost], na.rm = T)
 
 # 2. merge different secondary healthcare together ----
 source()
