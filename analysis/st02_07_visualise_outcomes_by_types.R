@@ -120,7 +120,7 @@ primary_care_bar <- visit_bar_fc(predicted_primary_visits, "Average parimary car
 # combine and save outputs
 paimary_care_plots <- ggarrange(primary_care_forest_plot, primary_care_bar, ncol = 1)
 ggsave(paimary_care_plots, file = "output/st02_07_parimary_care_visits.png",
-       width=8, height=4, units = "in", dpi = 300)
+       width=9, height=5, units = "in", dpi = 300)
 
 
 # 3. Visualise hospitalisation outcomes: -----
@@ -159,7 +159,7 @@ hos_bar <- visit_bar_fc(predicted_hos_admin_counts, "Average hospitalisation fre
 # combine and save outputs
 hos_plots <- ggarrange(hos_forest, hos_bar, ncol = 1)
 ggsave(hos_plots, file = "output/st02_07_hospitalisations.png",
-       width=8, height=4, units = "in", dpi = 300)
+       width=9, height=5, units = "in", dpi = 300)
 
 
 
@@ -200,7 +200,7 @@ ane_bar  <- visit_bar_fc(predicted_ane_visits, "Average A&E visit frequencies")
 # combine and save outputs
 ane_plots <- ggarrange(ane_forest, ane_bar, ncol = 1)
 ggsave(ane_plots, file = "output/st02_07_a_and_e_visits.png",
-       width=8, height=4, units = "in", dpi = 300)
+       width=9, height=5, units = "in", dpi = 300)
 
 
 # OPA clinic visits: ------
@@ -289,5 +289,5 @@ opa_bar <- visit_bar_fc(predicted_opa_visits, "Average outpatient clinic visit f
 # combine and save outputs
 opa_plots <- ggarrange(opa_forest, opa_bar, ncol = 1)
 ggsave(opa_plots, file = "output/st02_07_opa_visits.png",
-       width=8, height=4, units = "in", dpi = 300)
+       width=9, height=5, units = "in", dpi = 300)
 
