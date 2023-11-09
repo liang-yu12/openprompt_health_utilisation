@@ -124,7 +124,7 @@ cbp1 <- c("#FFC20A", "#0C7BDC")
 
 visits_all_plots <- ggarrange(two_forest, visits_barplot, ncol = 1)
 ggsave(visits_all_plots, file = "output/st02_06_total_healthcare_visits.png",
-       width=9, height=5, units = "in", dpi = 300)
+       width=12, height=5, units = "in", dpi = 300)
 
 
 
