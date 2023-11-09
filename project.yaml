@@ -162,6 +162,17 @@ actions:
       highly_sensitive:
         cohort: output/hx_matched_control_with_ehr.csv.gz
 
+  checking_cost_data_distribution:
+    run: 
+       databuilder:v0
+        generate-dataset analysis/dataset_definition_cost_data_description.py
+        --output output/qc_cost_by_year.csv.gz
+    outputs: 
+      highly_sensitive:
+        huge_cost_data: output/qc_cost_by_year.csv.gz
+
+
+
 # Reporting: demographic distribution 
 
 # Contemporary comparison: 
