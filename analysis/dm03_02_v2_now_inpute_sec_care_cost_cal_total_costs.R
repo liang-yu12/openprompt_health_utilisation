@@ -1,4 +1,4 @@
-source("analysis/dm03_01_now_read_cal_gp_cost.R")
+source("analysis/dm03_01_v2_now_read_cal_gp_cost_and_unit_costs.R")
 
 # Data management of the cost data: combing costs
 # 1. GP costs + GP prescription costs
@@ -56,7 +56,13 @@ com_matched$primary_cost_11 <- rowSums(com_matched[p_11], na.rm = T)
 com_matched$primary_cost_12 <- rowSums(com_matched[p_12], na.rm = T)
 
 
-# 2. Combine secondary care -----
+# 2. merge different secondary healthcare together ----
+source()
+# hospitalization: 
+
+
+
+
 # Secondary care: apc_cost_m, er_cost_m, opd_cost_m
 s_1 <- lc_exp_matched[grepl("_cost_m1$", names(lc_exp_matched))] %>% 
       names %>% as.vector()
