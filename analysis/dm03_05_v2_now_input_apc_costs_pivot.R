@@ -142,7 +142,7 @@ matched_cost_12m$exposure <- relevel(matched_cost_12m$exposure, ref = "Comparato
 
 # Input the unmatched visits and costs: ----
 
-source("analysis/dm03_05_v1_now_apc_unit_costs.R")
+source("analysis/dm03_05_qc1_now_apc_unit_costs.R")
 
 matched_cost_12m$admin_counts <- rowSums(matched_cost_12m[,all_admission], na.rm = T)
 matched_cost_12m <- matched_cost_12m %>% mutate(apc_cost2 = case_when(
