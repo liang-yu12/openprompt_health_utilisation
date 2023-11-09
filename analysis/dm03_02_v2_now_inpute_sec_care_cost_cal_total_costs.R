@@ -66,107 +66,57 @@ lc_exp_matched$total_primary_cost <- rowSums(lc_exp_matched[,parimary_cost], na.
 com_matched$total_primary_cost <- rowSums(com_matched[,parimary_cost], na.rm = T)
 
 # 2. merge different secondary healthcare together ----
-source()
-# hospitalization: 
+# hospitalization in exposure group:
+lc_exp_matched$total_admission_counts <- rowSums(lc_exp_matched[,all_admission], na.rm = T) # add admission counts
+lc_exp_matched$total_admission_costs <- rowSums(lc_exp_matched[,all_apc_cost], na.rm = T)# add admission costs 
+lc_exp_matched <- lc_exp_matched %>% mutate(apc_costs_inputed = ifelse(
+      total_admission_counts > 0 & total_admission_costs==0, total_admission_counts*(unit_apc_costs$unit_cost), total_admission_costs))
+
+# Hospitalization in the comparator group: 
+com_matched$total_admission_counts <- rowSums(com_matched[,all_admission], na.rm = T) # add admission counts
+com_matched$total_admission_costs <- rowSums(com_matched[,all_apc_cost], na.rm = T)# add admission costs 
+com_matched <- com_matched %>% mutate(apc_costs_inputed = ifelse(
+      total_admission_counts > 0 & total_admission_costs==0, total_admission_counts*(unit_apc_costs$unit_cost), total_admission_costs))
 
 
+# A&E costs in exposure group: 
+lc_exp_matched$total_ane_costs <- rowSums(lc_exp_matched[, ane_cost], na.rm = T)
+lc_exp_matched$total_ane_visits <- rowSums(lc_exp_matched[, ane_visit], na.rm = T)
+lc_exp_matched <- lc_exp_matched %>% mutate(ane_costs_inputed = ifelse(
+      total_ane_visits > 0 & total_ane_costs==0, total_ane_visits*(unit_ane_cost$unit_cost), total_ane_costs))
+
+# A&E cost in comparator group:
+com_matched$total_ane_costs <- rowSums(com_matched[, ane_cost], na.rm = T)
+com_matched$total_ane_visits <- rowSums(com_matched[, ane_visit], na.rm = T)
+com_matched <- com_matched %>% mutate(ane_costs_inputed = ifelse(
+      total_ane_visits > 0 & total_ane_costs==0, total_ane_visits*(unit_ane_cost$unit_cost), total_ane_costs))
 
 
-# Secondary care: apc_cost_m, er_cost_m, opd_cost_m
-s_1 <- lc_exp_matched[grepl("_cost_m1$", names(lc_exp_matched))] %>% 
-      names %>% as.vector()
+# OPA costs in exposure group:
+lc_exp_matched$total_opa_cost <- rowSums(lc_exp_matched[,opa_cost], na.rm = T)
+lc_exp_matched$total_opa_visit <- rowSums(lc_exp_matched[,opa_visit], na.rm = T)
+lc_exp_matched <- lc_exp_matched %>% mutate(opa_costs_inputed = ifelse(
+      total_opa_visit > 0 & total_opa_cost==0, total_opa_visit*(unit_opa_cost$unit_cost), total_opa_cost))
 
-s_2 <- lc_exp_matched[grepl("_cost_m2$", names(lc_exp_matched))] %>% 
-      names %>% as.vector()
-
-s_3 <- lc_exp_matched[grepl("_cost_m3$", names(lc_exp_matched))] %>% 
-      names %>% as.vector()
-
-s_4 <- lc_exp_matched[grepl("_cost_m4$", names(lc_exp_matched))] %>% 
-      names %>% as.vector()
-
-s_5 <- lc_exp_matched[grepl("_cost_m5$", names(lc_exp_matched))] %>% 
-      names %>% as.vector()
-
-s_6 <- lc_exp_matched[grepl("_cost_m6$", names(lc_exp_matched))] %>% 
-      names %>% as.vector()
-
-s_7 <- lc_exp_matched[grepl("_cost_m7$", names(lc_exp_matched))] %>% 
-      names %>% as.vector()
-
-s_8 <- lc_exp_matched[grepl("_cost_m8$", names(lc_exp_matched))] %>% 
-      names %>% as.vector()
-
-s_9 <- lc_exp_matched[grepl("_cost_m9$", names(lc_exp_matched))] %>% 
-      names %>% as.vector()
-
-s_10 <- lc_exp_matched[grepl("_cost_m10$", names(lc_exp_matched))] %>% 
-      names %>% as.vector()
-
-s_11 <- lc_exp_matched[grepl("_cost_m11$", names(lc_exp_matched))] %>% 
-      names %>% as.vector()
-
-s_12 <- lc_exp_matched[grepl("_cost_m12$", names(lc_exp_matched))] %>% 
-      names %>% as.vector()
+# OPA costs in comparator group:
+com_matched$total_opa_cost <- rowSums(com_matched[,opa_cost], na.rm = T)
+com_matched$total_opa_visit <- rowSums(com_matched[,opa_visit], na.rm = T)
+com_matched <- com_matched %>% mutate(opa_costs_inputed = ifelse(
+      total_opa_visit > 0 & total_opa_cost==0, total_opa_visit*(unit_opa_cost$unit_cost), total_opa_cost))
 
 
-# Then calculate the rowSums
-# Exposure group:
-lc_exp_matched$secondary_cost_1 <- rowSums(lc_exp_matched[s_1], na.rm = TRUE)
-lc_exp_matched$secondary_cost_2 <- rowSums(lc_exp_matched[s_2], na.rm = TRUE)
-lc_exp_matched$secondary_cost_3 <- rowSums(lc_exp_matched[s_3], na.rm = TRUE)
-lc_exp_matched$secondary_cost_4 <- rowSums(lc_exp_matched[s_4], na.rm = TRUE)
-lc_exp_matched$secondary_cost_5 <- rowSums(lc_exp_matched[s_5], na.rm = TRUE)
-lc_exp_matched$secondary_cost_6 <- rowSums(lc_exp_matched[s_6], na.rm = TRUE)
-lc_exp_matched$secondary_cost_7 <- rowSums(lc_exp_matched[s_7], na.rm = TRUE)
-lc_exp_matched$secondary_cost_8 <- rowSums(lc_exp_matched[s_8], na.rm = TRUE)
-lc_exp_matched$secondary_cost_9 <- rowSums(lc_exp_matched[s_9], na.rm = TRUE)
-lc_exp_matched$secondary_cost_10 <- rowSums(lc_exp_matched[s_10], na.rm = TRUE)
-lc_exp_matched$secondary_cost_11 <- rowSums(lc_exp_matched[s_11], na.rm = TRUE)
-lc_exp_matched$secondary_cost_12 <- rowSums(lc_exp_matched[s_12], na.rm = TRUE)
+# Combine the inputed secondary care: 
+secondary_care <- c("apc_costs_inputed", "ane_costs_inputed", "opa_costs_inputed")
+# exposure group:
+lc_exp_matched$secondary_care_cost <- rowSums(lc_exp_matched[,secondary_care], na.rm = T)
+# exposure group:
+com_matched$secondary_care_cost <- rowSums(com_matched[,secondary_care], na.rm = T)
 
-# comparator group:
-com_matched$secondary_cost_1 <- rowSums(com_matched[s_1], na.rm = TRUE)
-com_matched$secondary_cost_2 <- rowSums(com_matched[s_2], na.rm = TRUE)
-com_matched$secondary_cost_3 <- rowSums(com_matched[s_3], na.rm = TRUE)
-com_matched$secondary_cost_4 <- rowSums(com_matched[s_4], na.rm = TRUE)
-com_matched$secondary_cost_5 <- rowSums(com_matched[s_5], na.rm = TRUE)
-com_matched$secondary_cost_6 <- rowSums(com_matched[s_6], na.rm = TRUE)
-com_matched$secondary_cost_7 <- rowSums(com_matched[s_7], na.rm = TRUE)
-com_matched$secondary_cost_8 <- rowSums(com_matched[s_8], na.rm = TRUE)
-com_matched$secondary_cost_9 <- rowSums(com_matched[s_9], na.rm = TRUE)
-com_matched$secondary_cost_10 <- rowSums(com_matched[s_10], na.rm = TRUE)
-com_matched$secondary_cost_11 <- rowSums(com_matched[s_11], na.rm = TRUE)
-com_matched$secondary_cost_12 <- rowSums(com_matched[s_12], na.rm = TRUE)
 
 
 # 3. Combine total care costs: ----
 # primary + secondary
-
 # Exposure group
-lc_exp_matched$total_cost_1 <- rowSums(lc_exp_matched[,c("primary_cost_1", "secondary_cost_1")])
-lc_exp_matched$total_cost_2 <- rowSums(lc_exp_matched[,c("primary_cost_2", "secondary_cost_2")])
-lc_exp_matched$total_cost_3 <- rowSums(lc_exp_matched[,c("primary_cost_3", "secondary_cost_3")])
-lc_exp_matched$total_cost_4 <- rowSums(lc_exp_matched[, c("primary_cost_4", "secondary_cost_4")])
-lc_exp_matched$total_cost_5 <- rowSums(lc_exp_matched[, c("primary_cost_5", "secondary_cost_5")])
-lc_exp_matched$total_cost_6 <- rowSums(lc_exp_matched[, c("primary_cost_6", "secondary_cost_6")])
-lc_exp_matched$total_cost_7 <- rowSums(lc_exp_matched[, c("primary_cost_7", "secondary_cost_7")])
-lc_exp_matched$total_cost_8 <- rowSums(lc_exp_matched[, c("primary_cost_8", "secondary_cost_8")])
-lc_exp_matched$total_cost_9 <- rowSums(lc_exp_matched[, c("primary_cost_9", "secondary_cost_9")])
-lc_exp_matched$total_cost_10 <- rowSums(lc_exp_matched[, c("primary_cost_10", "secondary_cost_10")])
-lc_exp_matched$total_cost_11 <- rowSums(lc_exp_matched[, c("primary_cost_11", "secondary_cost_11")])
-lc_exp_matched$total_cost_12 <- rowSums(lc_exp_matched[, c("primary_cost_12", "secondary_cost_12")])
-
+lc_exp_matched <- lc_exp_matched %>% mutate(total_cost = total_primary_cost+secondary_care_cost)
 # Comparator group:
-com_matched$total_cost_1 <- rowSums(com_matched[,c("primary_cost_1", "secondary_cost_1")])
-com_matched$total_cost_2 <- rowSums(com_matched[,c("primary_cost_2", "secondary_cost_2")])
-com_matched$total_cost_3 <- rowSums(com_matched[,c("primary_cost_3", "secondary_cost_3")])
-com_matched$total_cost_4 <- rowSums(com_matched[, c("primary_cost_4", "secondary_cost_4")])
-com_matched$total_cost_5 <- rowSums(com_matched[, c("primary_cost_5", "secondary_cost_5")])
-com_matched$total_cost_6 <- rowSums(com_matched[, c("primary_cost_6", "secondary_cost_6")])
-com_matched$total_cost_7 <- rowSums(com_matched[, c("primary_cost_7", "secondary_cost_7")])
-com_matched$total_cost_8 <- rowSums(com_matched[, c("primary_cost_8", "secondary_cost_8")])
-com_matched$total_cost_9 <- rowSums(com_matched[, c("primary_cost_9", "secondary_cost_9")])
-com_matched$total_cost_10 <- rowSums(com_matched[, c("primary_cost_10", "secondary_cost_10")])
-com_matched$total_cost_11 <- rowSums(com_matched[, c("primary_cost_11", "secondary_cost_11")])
-com_matched$total_cost_12 <- rowSums(com_matched[, c("primary_cost_12", "secondary_cost_12")])
+com_matched <- com_matched %>% mutate(total_cost = total_primary_cost+secondary_care_cost)
