@@ -171,7 +171,13 @@ actions:
       highly_sensitive:
         huge_cost_data: output/qc_cost_by_year.csv.gz
 
-
+  qc_check_all_cost_data:
+    needs: [checking_cost_data_distribution]
+    run: 
+      r:latest analysis/qc_03_00_check_cost_distribution.R
+    outputs: 
+      moderately_sensitive: 
+        summarised_all_cost_data: output/qc_03_00_cost_data_desc_stat.csv
 
 # Reporting: demographic distribution 
 
