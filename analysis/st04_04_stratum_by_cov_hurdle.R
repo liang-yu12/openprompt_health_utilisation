@@ -184,241 +184,241 @@ predicted_by_hos <- bind_rows(
                     part_1 = hos_t_binomial_12m, part_2 = hos_t_hurdle_12m)) %>% 
       mutate(group = "Previous hospitalisation") %>% relocate(group)
 
-# ## By sex:-----
-# # Ref: female 
-# adj_complete_12m$sex %>% levels  #"female" "male"  
-# adj_complete_12m$sex_f <- adj_complete_12m$sex
-# # Ref: male 
-# adj_complete_12m$sex_m <- factor(adj_complete_12m$sex, levels = c("male","female"))
-# 
-# # Part 1: Binomial model: 
-# 
-# # No interaction:
-# sex_no_binomial_12m <- glm(visits_binary ~ exposure + sex_f + offset(log(follow_up)) +
-#                                  age + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
-#                                  previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
-#                               data = adj_complete_12m,
-#                               family=binomial(link="logit")) 
-# 
-# # Female stratum:
-# sex_f_binomial <- glm(visits_binary ~ exposure*sex_f + offset(log(follow_up)) +
-#                             age + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
-#                             previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
-#                       data = adj_complete_12m,
-#                       family=binomial(link="logit")) 
-# 
-# # Male stratum:
-# sex_m_binomial <- glm(visits_binary ~ exposure*sex_m + offset(log(follow_up)) +
-#                             age + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
-#                             previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
-#                       data = adj_complete_12m,
-#                       family=binomial(link="logit")) 
-# 
-# # LR test: 
-# lrt_sex_bi <- lmtest::lrtest(sex_f_binomial, sex_no_binomial_12m) %>% 
-#       dplyr::select(`Pr(>Chisq)`) 
-# 
-# # Organise binomial outcomes:
-# sex_bi_sub <- bind_rows(
-#       binomial_tidy_fn(sex_f_binomial) %>% mutate(stratum = "Female"),
-#       binomial_tidy_fn(sex_m_binomial) %>% mutate(stratum = "Male")) %>% 
-#       bind_cols(lrt_sex_bi)
-# 
-# # Part 2: Truncated negative binomial reg
-# 
-# # No interaction:
-# sex_no_hurdle_12m <- vglm(visits ~ exposure + sex_f + offset(log(follow_up)) +
-#                                 age + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
-#                                 previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
-#                           family = posnegbinomial(),
-#                           data = subset(adj_complete_12m, visits_binary > 0))
-# 
-# # Female stratum:
-# sex_f_hurdle_12m <- vglm(visits ~ exposure*sex_f + offset(log(follow_up)) +
-#                                 age + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
-#                                 previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
-#                           family = posnegbinomial(),
-#                           data = subset(adj_complete_12m, visits_binary > 0))
-# 
-# # Male stratum:
-# sex_m_hurdle_12m <- vglm(visits ~ exposure*sex_m + offset(log(follow_up)) +
-#                                age + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
-#                                previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
-#                          family = posnegbinomial(),
-#                          data = subset(adj_complete_12m, visits_binary > 0))
-# 
-# # LR test 
-# sex_hurdle_lrt <- lrt_hurdle(sex_f_hurdle_12m, sex_no_hurdle_12m)
-# 
-# # organise_hurdle_outcomes
-# sex_hudle_sub <- bind_rows(
-#       positive_nb_tidy_fu(sex_f_hurdle_12m) %>% mutate(stratum = "Female"),
-#       positive_nb_tidy_fu(sex_m_hurdle_12m) %>% mutate(stratum = "Male")) %>% 
-#       bind_cols(sex_hurdle_lrt)
-# 
-# # save outputs
-# bind_rows(sex_bi_sub, sex_hudle_sub) %>% write_csv(here("output", "st04_04_stratum_sex.csv"))
-# 
-# 
-# # Predicted the outcomes:
-# predicted_by_sex <- bind_rows(
-#       adj_predic_fn(factor = adj_complete_12m$sex, value = "female",
-#                     part_1 = sex_f_binomial, part_2 = sex_f_hurdle_12m),
-#       adj_predic_fn(factor = adj_complete_12m$sex, value = "male",
-#                     part_1 = sex_m_binomial, part_2 = sex_m_hurdle_12m)) %>% 
-#       mutate(group = "Sex") %>% relocate(group)
-# 
-# 
-# 
-# # By age groups-----
-# # set ref for each stratum
-# adj_complete_12m$age_cat %>% levels #"18-29" "30-39" "40-49" "50-59" "60-69" "70+"  
-# # ref: 18-29
-# adj_complete_12m$age_cat_18 <- relevel(adj_complete_12m$age_cat, ref = "18-29")
-# # ref: "30-39"
-# adj_complete_12m$age_cat_30 <- relevel(adj_complete_12m$age_cat, ref = "30-39")
-# # ref: "40-49"
-# adj_complete_12m$age_cat_40 <- relevel(adj_complete_12m$age_cat, ref = "40-49")
-# # ref: "50-59"
-# adj_complete_12m$age_cat_50 <- relevel(adj_complete_12m$age_cat, ref = "50-59")
-# # ref: "60-69"
-# adj_complete_12m$age_cat_60 <- relevel(adj_complete_12m$age_cat, ref = "60-69")
-# # ref: "70+"  
-# adj_complete_12m$age_cat_70 <- relevel(adj_complete_12m$age_cat, ref = "70+"  )
-# 
-# 
-# 
-# # Part 1: Binomial model: 
-# 
-# # No interaction:
-# age_no_binomial_12m <- glm(visits_binary ~ exposure + sex + offset(log(follow_up)) +
-#                                  age_cat_18 + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
-#                                  previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
-#                            data = adj_complete_12m,
-#                            family=binomial(link="logit")) 
-# # set up a function to shorten the codes:
-# age_bi_interaction_fn <- function(cat){
-#       glm(visits_binary ~ exposure*cat + sex + offset(log(follow_up)) +
-#                 bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
-#                 previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
-#           data = adj_complete_12m,
-#           family=binomial(link="logit")) 
-# }
-# 
-# # Age 18 group (same as default)
-# age_18_bi <- age_bi_interaction_fn(adj_complete_12m$age_cat_18)
-# # Age 30 group
-# age_30_bi <- age_bi_interaction_fn(adj_complete_12m$age_cat_30)
-# # Age 40:
-# age_40_bi <- age_bi_interaction_fn(adj_complete_12m$age_cat_40)
-# # Age 50: 
-# age_50_bi <- age_bi_interaction_fn(adj_complete_12m$age_cat_50)
-# # Age 60: 
-# age_60_bi <- age_bi_interaction_fn(adj_complete_12m$age_cat_60)
-# # Age 70: 
-# age_70_bi <- age_bi_interaction_fn(adj_complete_12m$age_cat_70)
-# 
-# # LR test 
-# lr_age_bi <- lmtest::lrtest(age_18_bi, age_no_binomial_12m) %>% 
-#       dplyr::select(`Pr(>Chisq)`) %>% 
-#       add_row(`Pr(>Chisq)` = c(NA,NA,NA,NA)) # add rows for combining results
-# 
-# # Organise binomial regression outputs
-# age_bi_sub <- bind_rows( binomial_tidy_fn(age_18_bi) %>% mutate(stratum = "18-29"),
-#                          binomial_tidy_fn(age_30_bi) %>% mutate(stratum = "30-39"),
-#                          binomial_tidy_fn(age_40_bi) %>% mutate(stratum = "40-49"),
-#                          binomial_tidy_fn(age_50_bi) %>% mutate(stratum = "50-59"),
-#                          binomial_tidy_fn(age_60_bi) %>% mutate(stratum = "60-69"),
-#                          binomial_tidy_fn(age_70_bi) %>% mutate(stratum = "70+")) %>% 
-#       add_column(lr_age_bi)
-# 
-# 
-# # Part 2: positive negative binomial
-# 
-# # No interaction
-# age_no_hurdle_12m <- vglm(visits ~ exposure + age_cat_18 + offset(log(follow_up)) +
-#                                 sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
-#                                 previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
-#                           family = posnegbinomial(),
-#                           data = subset(adj_complete_12m, visits_binary > 0))
-# 
-# # ref: 18 
-# age_18_hurdle <- vglm(visits ~ exposure*age_cat_18 + offset(log(follow_up)) +
-#            sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
-#            previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
-#      family = posnegbinomial(),
-#      data = subset(adj_complete_12m, visits_binary > 0))     
-# 
-# # ref: 30 
-# age_30_hurdle <- vglm(visits ~ exposure*age_cat_30 + offset(log(follow_up)) +
-#                             sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
-#                             previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
-#                       family = posnegbinomial(),
-#                       data = subset(adj_complete_12m, visits_binary > 0))     
-# 
-# # ref: 40
-# age_40_hurdle <- vglm(visits ~ exposure*age_cat_40 + offset(log(follow_up)) +
-#                             sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
-#                             previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
-#                       family = posnegbinomial(),
-#                       data = subset(adj_complete_12m, visits_binary > 0))     
-# 
-# # ref: 50
-# age_50_hurdle <- vglm(visits ~ exposure*age_cat_50 + offset(log(follow_up)) +
-#                             sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
-#                             previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
-#                       family = posnegbinomial(),
-#                       data = subset(adj_complete_12m, visits_binary > 0))     
-# 
-# # ref: 60
-# age_60_hurdle <- vglm(visits ~ exposure*age_cat_60 + offset(log(follow_up)) +
-#                             sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
-#                             previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
-#                       family = posnegbinomial(),
-#                       data = subset(adj_complete_12m, visits_binary > 0))     
-# 
-# # ref: 70
-# age_70_hurdle <- vglm(visits ~ exposure*age_cat_70 + offset(log(follow_up)) +
-#                             sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
-#                             previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
-#                       family = posnegbinomial(),
-#                       data = subset(adj_complete_12m, visits_binary > 0))     
-# 
-# # LR test: 
-# age_cat_hurdle_lrt <- lrt_hurdle(age_18_hurdle, age_no_hurdle_12m) %>% 
-#       add_row(`Pr(>Chisq)` = c(NA,NA,NA,NA)) 
-# 
-# 
-# # organise age outputs
-# age_hurdle_sub <- bind_rows(
-#       positive_nb_tidy_fu(age_18_hurdle) %>% mutate(stratum = "18-29"),
-#       positive_nb_tidy_fu(age_30_hurdle) %>% mutate(stratum = "30-39"),
-#       positive_nb_tidy_fu(age_40_hurdle) %>% mutate(stratum = "40-49"),
-#       positive_nb_tidy_fu(age_50_hurdle) %>% mutate(stratum = "50-59"),
-#       positive_nb_tidy_fu(age_60_hurdle) %>% mutate(stratum = "60-69"),
-#       positive_nb_tidy_fu(age_70_hurdle) %>% mutate(stratum = "70+")) %>% 
-#       add_column(age_cat_hurdle_lrt)
-# 
-# 
-# # Save outputs:
-# bind_rows(age_bi_sub, age_hurdle_sub) %>% write_csv(here("output", "st04_04_stratum_age.csv"))
-# 
-# 
-# # Predict by age groups:
-# predicted_by_agegroup <- bind_rows(
-#       adj_predic_fn(factor = adj_complete_12m$age_cat, value = "18-29",
-#                     part_1 = age_18_bi, part_2 = age_18_hurdle),
-#       adj_predic_fn(factor = adj_complete_12m$age_cat, value = "30-39",
-#                     part_1 = age_30_bi, part_2 = age_30_hurdle),
-#       adj_predic_fn(factor = adj_complete_12m$age_cat, value = "40-49",
-#                     part_1 = age_40_bi, part_2 = age_40_hurdle),
-#       adj_predic_fn(factor = adj_complete_12m$age_cat, value = "50-59",
-#                     part_1 = age_50_bi, part_2 = age_50_hurdle),
-#       adj_predic_fn(factor = adj_complete_12m$age_cat, value = "60-69",
-#                     part_1 = age_60_bi, part_2 = age_60_hurdle),
-#       adj_predic_fn(factor = adj_complete_12m$age_cat, value = "70+",
-#                     part_1 = age_70_bi, part_2 = age_70_hurdle)) %>% 
-#       mutate(group = "Age group") %>% relocate(group)
+## By sex:-----
+# Ref: female
+adj_complete_12m$sex %>% levels  #"female" "male"
+adj_complete_12m$sex_f <- adj_complete_12m$sex
+# Ref: male
+adj_complete_12m$sex_m <- factor(adj_complete_12m$sex, levels = c("male","female"))
+
+# Part 1: Binomial model:
+
+# No interaction:
+sex_no_binomial_12m <- glm(visits_binary ~ exposure + sex_f + offset(log(follow_up)) +
+                                 age + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                                 previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat,
+                              data = adj_complete_12m,
+                              family=binomial(link="logit"))
+
+# Female stratum:
+sex_f_binomial <- glm(visits_binary ~ exposure*sex_f + offset(log(follow_up)) +
+                            age + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                            previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat,
+                      data = adj_complete_12m,
+                      family=binomial(link="logit"))
+
+# Male stratum:
+sex_m_binomial <- glm(visits_binary ~ exposure*sex_m + offset(log(follow_up)) +
+                            age + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                            previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat,
+                      data = adj_complete_12m,
+                      family=binomial(link="logit"))
+
+# LR test:
+lrt_sex_bi <- lmtest::lrtest(sex_f_binomial, sex_no_binomial_12m) %>%
+      dplyr::select(`Pr(>Chisq)`)
+
+# Organise binomial outcomes:
+sex_bi_sub <- bind_rows(
+      binomial_tidy_fn(sex_f_binomial) %>% mutate(stratum = "Female"),
+      binomial_tidy_fn(sex_m_binomial) %>% mutate(stratum = "Male")) %>%
+      bind_cols(lrt_sex_bi)
+
+# Part 2: Truncated negative binomial reg
+
+# No interaction:
+sex_no_hurdle_12m <- vglm(visits ~ exposure + sex_f + offset(log(follow_up)) +
+                                age + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                                previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat,
+                          family = posnegbinomial(),
+                          data = subset(adj_complete_12m, visits_binary > 0))
+
+# Female stratum:
+sex_f_hurdle_12m <- vglm(visits ~ exposure*sex_f + offset(log(follow_up)) +
+                                age + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                                previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat,
+                          family = posnegbinomial(),
+                          data = subset(adj_complete_12m, visits_binary > 0))
+
+# Male stratum:
+sex_m_hurdle_12m <- vglm(visits ~ exposure*sex_m + offset(log(follow_up)) +
+                               age + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                               previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat,
+                         family = posnegbinomial(),
+                         data = subset(adj_complete_12m, visits_binary > 0))
+
+# LR test
+sex_hurdle_lrt <- lrt_hurdle(sex_f_hurdle_12m, sex_no_hurdle_12m)
+
+# organise_hurdle_outcomes
+sex_hudle_sub <- bind_rows(
+      positive_nb_tidy_fu(sex_f_hurdle_12m) %>% mutate(stratum = "Female"),
+      positive_nb_tidy_fu(sex_m_hurdle_12m) %>% mutate(stratum = "Male")) %>%
+      bind_cols(sex_hurdle_lrt)
+
+# save outputs
+bind_rows(sex_bi_sub, sex_hudle_sub) %>% write_csv(here("output", "st04_04_stratum_sex.csv"))
+
+
+# Predicted the outcomes:
+predicted_by_sex <- bind_rows(
+      adj_predic_fn(factor = adj_complete_12m$sex, value = "female",
+                    part_1 = sex_f_binomial, part_2 = sex_f_hurdle_12m),
+      adj_predic_fn(factor = adj_complete_12m$sex, value = "male",
+                    part_1 = sex_m_binomial, part_2 = sex_m_hurdle_12m)) %>%
+      mutate(group = "Sex") %>% relocate(group)
+
+
+
+# By age groups-----
+# set ref for each stratum
+adj_complete_12m$age_cat %>% levels #"18-29" "30-39" "40-49" "50-59" "60-69" "70+"
+# ref: 18-29
+adj_complete_12m$age_cat_18 <- relevel(adj_complete_12m$age_cat, ref = "18-29")
+# ref: "30-39"
+adj_complete_12m$age_cat_30 <- relevel(adj_complete_12m$age_cat, ref = "30-39")
+# ref: "40-49"
+adj_complete_12m$age_cat_40 <- relevel(adj_complete_12m$age_cat, ref = "40-49")
+# ref: "50-59"
+adj_complete_12m$age_cat_50 <- relevel(adj_complete_12m$age_cat, ref = "50-59")
+# ref: "60-69"
+adj_complete_12m$age_cat_60 <- relevel(adj_complete_12m$age_cat, ref = "60-69")
+# ref: "70+"
+adj_complete_12m$age_cat_70 <- relevel(adj_complete_12m$age_cat, ref = "70+"  )
+
+
+
+# Part 1: Binomial model:
+
+# No interaction:
+age_no_binomial_12m <- glm(visits_binary ~ exposure + sex + offset(log(follow_up)) +
+                                 age_cat_18 + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                                 previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat,
+                           data = adj_complete_12m,
+                           family=binomial(link="logit"))
+# set up a function to shorten the codes:
+age_bi_interaction_fn <- function(cat){
+      glm(visits_binary ~ exposure*cat + sex + offset(log(follow_up)) +
+                bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat,
+          data = adj_complete_12m,
+          family=binomial(link="logit"))
+}
+
+# Age 18 group (same as default)
+age_18_bi <- age_bi_interaction_fn(adj_complete_12m$age_cat_18)
+# Age 30 group
+age_30_bi <- age_bi_interaction_fn(adj_complete_12m$age_cat_30)
+# Age 40:
+age_40_bi <- age_bi_interaction_fn(adj_complete_12m$age_cat_40)
+# Age 50:
+age_50_bi <- age_bi_interaction_fn(adj_complete_12m$age_cat_50)
+# Age 60:
+age_60_bi <- age_bi_interaction_fn(adj_complete_12m$age_cat_60)
+# Age 70:
+age_70_bi <- age_bi_interaction_fn(adj_complete_12m$age_cat_70)
+
+# LR test
+lr_age_bi <- lmtest::lrtest(age_18_bi, age_no_binomial_12m) %>%
+      dplyr::select(`Pr(>Chisq)`) %>%
+      add_row(`Pr(>Chisq)` = c(NA,NA,NA,NA)) # add rows for combining results
+
+# Organise binomial regression outputs
+age_bi_sub <- bind_rows( binomial_tidy_fn(age_18_bi) %>% mutate(stratum = "18-29"),
+                         binomial_tidy_fn(age_30_bi) %>% mutate(stratum = "30-39"),
+                         binomial_tidy_fn(age_40_bi) %>% mutate(stratum = "40-49"),
+                         binomial_tidy_fn(age_50_bi) %>% mutate(stratum = "50-59"),
+                         binomial_tidy_fn(age_60_bi) %>% mutate(stratum = "60-69"),
+                         binomial_tidy_fn(age_70_bi) %>% mutate(stratum = "70+")) %>%
+      add_column(lr_age_bi)
+
+
+# Part 2: positive negative binomial
+
+# No interaction
+age_no_hurdle_12m <- vglm(visits ~ exposure + age_cat_18 + offset(log(follow_up)) +
+                                sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                                previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat,
+                          family = posnegbinomial(),
+                          data = subset(adj_complete_12m, visits_binary > 0))
+
+# ref: 18
+age_18_hurdle <- vglm(visits ~ exposure*age_cat_18 + offset(log(follow_up)) +
+           sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+           previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat,
+     family = posnegbinomial(),
+     data = subset(adj_complete_12m, visits_binary > 0))
+
+# ref: 30
+age_30_hurdle <- vglm(visits ~ exposure*age_cat_30 + offset(log(follow_up)) +
+                            sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                            previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat,
+                      family = posnegbinomial(),
+                      data = subset(adj_complete_12m, visits_binary > 0))
+
+# ref: 40
+age_40_hurdle <- vglm(visits ~ exposure*age_cat_40 + offset(log(follow_up)) +
+                            sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                            previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat,
+                      family = posnegbinomial(),
+                      data = subset(adj_complete_12m, visits_binary > 0))
+
+# ref: 50
+age_50_hurdle <- vglm(visits ~ exposure*age_cat_50 + offset(log(follow_up)) +
+                            sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                            previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat,
+                      family = posnegbinomial(),
+                      data = subset(adj_complete_12m, visits_binary > 0))
+
+# ref: 60
+age_60_hurdle <- vglm(visits ~ exposure*age_cat_60 + offset(log(follow_up)) +
+                            sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                            previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat,
+                      family = posnegbinomial(),
+                      data = subset(adj_complete_12m, visits_binary > 0))
+
+# ref: 70
+age_70_hurdle <- vglm(visits ~ exposure*age_cat_70 + offset(log(follow_up)) +
+                            sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                            previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat,
+                      family = posnegbinomial(),
+                      data = subset(adj_complete_12m, visits_binary > 0))
+
+# LR test:
+age_cat_hurdle_lrt <- lrt_hurdle(age_18_hurdle, age_no_hurdle_12m) %>%
+      add_row(`Pr(>Chisq)` = c(NA,NA,NA,NA))
+
+
+# organise age outputs
+age_hurdle_sub <- bind_rows(
+      positive_nb_tidy_fu(age_18_hurdle) %>% mutate(stratum = "18-29"),
+      positive_nb_tidy_fu(age_30_hurdle) %>% mutate(stratum = "30-39"),
+      positive_nb_tidy_fu(age_40_hurdle) %>% mutate(stratum = "40-49"),
+      positive_nb_tidy_fu(age_50_hurdle) %>% mutate(stratum = "50-59"),
+      positive_nb_tidy_fu(age_60_hurdle) %>% mutate(stratum = "60-69"),
+      positive_nb_tidy_fu(age_70_hurdle) %>% mutate(stratum = "70+")) %>%
+      add_column(age_cat_hurdle_lrt)
+
+
+# Save outputs:
+bind_rows(age_bi_sub, age_hurdle_sub) %>% write_csv(here("output", "st04_04_stratum_age.csv"))
+
+
+# Predict by age groups:
+predicted_by_agegroup <- bind_rows(
+      adj_predic_fn(factor = adj_complete_12m$age_cat, value = "18-29",
+                    part_1 = age_18_bi, part_2 = age_18_hurdle),
+      adj_predic_fn(factor = adj_complete_12m$age_cat, value = "30-39",
+                    part_1 = age_30_bi, part_2 = age_30_hurdle),
+      adj_predic_fn(factor = adj_complete_12m$age_cat, value = "40-49",
+                    part_1 = age_40_bi, part_2 = age_40_hurdle),
+      adj_predic_fn(factor = adj_complete_12m$age_cat, value = "50-59",
+                    part_1 = age_50_bi, part_2 = age_50_hurdle),
+      adj_predic_fn(factor = adj_complete_12m$age_cat, value = "60-69",
+                    part_1 = age_60_bi, part_2 = age_60_hurdle),
+      adj_predic_fn(factor = adj_complete_12m$age_cat, value = "70+",
+                    part_1 = age_70_bi, part_2 = age_70_hurdle)) %>%
+      mutate(group = "Age group") %>% relocate(group)
 
 
 # combine the prediction outputs:
