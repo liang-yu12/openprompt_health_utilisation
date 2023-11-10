@@ -177,7 +177,7 @@ actions:
       r:latest analysis/qc03_00_check_cost_distribution.R
     outputs: 
       moderately_sensitive: 
-        summarised_all_cost_data: output/qc_03_00_cost_data_desc_stat.csv
+        summarised_all_cost_data: output/qc03_00_cost_data_desc_stat.csv
 
 # Reporting: demographic distribution 
 
