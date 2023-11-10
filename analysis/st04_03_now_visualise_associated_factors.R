@@ -41,7 +41,8 @@ all_binomial <- all_binomial%>% mutate(
             term == "cov_covid_vax_n_cat3 or more doses"~ "Received three or more doses",
             term == "number_comorbidities_cat1" ~ "One comorbidities",
             term == "number_comorbidities_cat2" ~ "Two comorbidities",
-            term == "number_comorbidities_cat3" ~ "Three or more comorbidities")) %>% 
+            term == "number_comorbidities_cat3" ~ "Three or more comorbidities",
+            term == "exposureLong covid exposure" ~ "Long COVID")) %>% 
       mutate(Categories = case_when(
             str_detect(term, "age") ~ "Age",
             str_detect(term, "sex") ~ "Sex",
@@ -52,7 +53,8 @@ all_binomial <- all_binomial%>% mutate(
             str_detect(term, "previous_covid_") ~ "Hospitalisation",
             str_detect(term, "cov_covid_vax_n_") ~ "COVID vaccine doses",
             (str_detect(term, "cov_asthma") | str_detect(term, "cov_mental_health")) ~ "Underlying diseases",
-            str_detect(term, "number_comorbidities_cat") ~ "Comorbidities")) %>% 
+            str_detect(term, "number_comorbidities_cat") ~ "Comorbidities",
+            Factors == "Long COVID" ~ "Exposure")) %>% 
       dplyr::select(Categories, Factors, estimate, lci, hci) 
 
 
@@ -60,6 +62,10 @@ all_binomial <- all_binomial %>%
       group_by(Categories) %>% 
       mutate(Order = row_number()) %>% 
       ungroup %>% 
+      add_row(Categories = "Exposure",
+              Factors = "Comparator",
+              estimate = 1, lci =1, hci =1,
+              Order = 0) %>% 
       add_row(Categories = "Sex",
               Factors = "Male",
               estimate = 1, lci =1, hci =1,
@@ -170,7 +176,8 @@ all_hurdle <- read_csv("output/st04_02_all_factors_hurdle.csv") %>%
                   term == "cov_covid_vax_n_cat3 or more doses"~ "Received three or more doses",
                   term == "number_comorbidities_cat1" ~ "One comorbidities",
                   term == "number_comorbidities_cat2" ~ "Two comorbidities",
-                  term == "number_comorbidities_cat3" ~ "Three or more comorbidities")) %>% 
+                  term == "number_comorbidities_cat3" ~ "Three or more comorbidities",
+                  term == "exposureLong covid exposure" ~ "Long COVID")) %>% 
       mutate(Categories = case_when(
             str_detect(term, "age") ~ "Age",
             str_detect(term, "sex") ~ "Sex",
@@ -181,7 +188,8 @@ all_hurdle <- read_csv("output/st04_02_all_factors_hurdle.csv") %>%
             str_detect(term, "previous_covid_") ~ "Hospitalisation",
             str_detect(term, "cov_covid_vax_n_") ~ "COVID vaccine doses",
             (str_detect(term, "cov_asthma") | str_detect(term, "cov_mental_health")) ~ "Underlying diseases",
-            str_detect(term, "number_comorbidities_cat") ~ "Comorbidities")) %>% 
+            str_detect(term, "number_comorbidities_cat") ~ "Comorbidities",
+            Factors == "Long COVID" ~ "Exposure")) %>% 
       dplyr::select(Categories, Factors, estimate, lci, hci) 
 
 
@@ -190,6 +198,10 @@ all_hurdle <- all_hurdle %>%
       group_by(Categories) %>% 
       mutate(Order = row_number()) %>% 
       ungroup %>% 
+      add_row(Categories = "Exposure",
+              Factors = "Comparator",
+              estimate = 1, lci =1, hci =1,
+              Order = 0) %>% 
       add_row(Categories = "Sex",
               Factors = "Male",
               estimate = 1, lci =1, hci =1,
