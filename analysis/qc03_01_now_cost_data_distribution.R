@@ -36,12 +36,12 @@ bind_rows(
       description_fn(combine$total_admission_costs, "APC"),
       description_fn(combine$total_ane_costs, "EC (A&E)"),
       description_fn(combine$total_opa_cost, "OPA"),
-) %>% write_csv(here("output", "qc03_01_study_all_cost_distribution.csv)"))
+) %>% write_csv(here("output", "qc03_01_study_all_cost_distribution.csv"))
 
 
 bind_rows(
       description_group_fn(combine$total_admission_costs, "APC"),
       description_group_fn(combine$total_ane_costs, "EC (A&E)"),
       description_group_fn(combine$total_opa_cost, "OPA"),
-) %>% write_csv(here("output", "qc03_01_study_by_exp_cost_distribution.csv)"))
+) %>% write_csv(here("output", "qc03_01_study_by_exp_cost_distribution.csv"))
 

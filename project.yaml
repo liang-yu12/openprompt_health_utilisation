@@ -162,6 +162,8 @@ actions:
       highly_sensitive:
         cohort: output/hx_matched_control_with_ehr.csv.gz
 
+# Checking the secondary cost data distribution
+
   checking_cost_data_distribution:
     run: 
        databuilder:v0
@@ -178,6 +180,15 @@ actions:
     outputs: 
       moderately_sensitive: 
         summarised_all_cost_data: output/qc03_00_cost_data_desc_stat.csv
+
+  qc_check_queried_cost_data_dist:
+    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+    run: 
+      r:latest analysis/qc03_now_cost_data_distribution.R
+    outputs: 
+      moderately_sensitive: 
+        summarised_queried_all_cost_data: output/qc03_01_study_all_cost_distribution.csv
+        summarised_queried_exp_cost_data: output/qc03_01_study_by_exp_cost_distribution.csv
 
 # Reporting: demographic distribution 
 
