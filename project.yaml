@@ -189,6 +189,15 @@ actions:
       moderately_sensitive: 
         summarised_queried_all_cost_data: output/qc03_01_study_all_cost_distribution.csv
 
+  qc_check_old_build_cost_data_dist:
+    needs: [import_matched_exposure, import_matched_controls]
+    run: 
+      r:latest analysis/qc03_02_old_build_cost_data_distribution.R
+    outputs: 
+      moderately_sensitive: 
+        summarised_old_build_all_cost_data: output/qc03_02_v0_oldbuild_all_cost_distribution.csv
+
+
 
 # Reporting: demographic distribution 
 
