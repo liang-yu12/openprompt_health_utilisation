@@ -184,7 +184,7 @@ actions:
   qc_check_queried_cost_data_dist:
     needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
-      r:latest analysis/qc03_now_cost_data_distribution.R
+      r:latest analysis/qc03_01_now_cost_data_distribution.R.R
     outputs: 
       moderately_sensitive: 
         summarised_queried_all_cost_data: output/qc03_01_study_all_cost_distribution.csv
