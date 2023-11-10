@@ -11,6 +11,7 @@ cost_data <- read_csv("output/qc_cost_by_year.csv.gz")
 # write a function to summarise the results
 description_fn <- function(var, cost_table, time){
       results <- cost_data %>% 
+            filter(var > 0 & !is.na(var)) %>% 
             summarise(
                   minimal = min(var, na.rm = T),
                   median = median(var, na.rm = T),
