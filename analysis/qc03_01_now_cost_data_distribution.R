@@ -8,7 +8,7 @@ combine <- bind_rows(lc_exp_matched, com_matched)
 hos <- combine %>% filter(total_admission_costs > 0 & !is.na(total_admission_costs)) %>% 
       summarise(
             minimal = min(total_admission_costs, na.rm = T),
-            median = median(total_admission_costs),
+            median = median(total_admission_costs, na.rm = T),
             mean = mean(total_admission_costs, na.rm = T),
             max = max(total_admission_costs, na.rm = T)) %>% 
       mutate(Table = "APC") %>% relocate(Table)
@@ -23,7 +23,7 @@ hos_count <-  combine  %>% summarise(
 ec <- combine %>% filter(total_ane_costs > 0 & !is.na(total_ane_costs)) %>% 
       summarise(
             minimal = min(total_ane_costs, na.rm = T),
-            median = median(total_ane_costs),
+            median = median(total_ane_costs, na.rm = T),
             mean = mean(total_ane_costs, na.rm = T),
             max = max(total_ane_costs, na.rm = T)) %>% 
       mutate(Table = "EC") %>% 
@@ -39,7 +39,7 @@ ec_count <-  combine  %>% summarise(
 opa <- combine %>% filter(total_opa_cost > 0 & !is.na(total_opa_cost)) %>% 
       summarise(
             minimal = min(total_opa_cost, na.rm = T),
-            median = median(total_opa_cost),
+            median = median(total_opa_cost, na.rm = T),
             mean = mean(total_opa_cost, na.rm = T),
             max = max(total_opa_cost, na.rm = T)) %>% 
       mutate(Table = "OPA") %>% 
