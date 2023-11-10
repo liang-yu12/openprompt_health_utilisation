@@ -12,10 +12,10 @@ cost_data <- read_csv("output/qc_cost_by_year.csv.gz")
 description_fn <- function(var, cost_table, time){
       results <- cost_data %>% 
             summarise(
-                  minimal = min(apc_cost_1y, na.rm = T),
-                  median = median(apc_cost_1y, na.rm = T),
-                  mean = mean(apc_cost_1y, na.rm = T),
-                  max = max(apc_cost_1y, na.rm = T)
+                  minimal = min(var, na.rm = T),
+                  median = median(var, na.rm = T),
+                  mean = mean(var, na.rm = T),
+                  max = max(var, na.rm = T)
             ) %>% mutate(Table = cost_table,
                          Time = time) %>% 
             relocate(Table, Time)
