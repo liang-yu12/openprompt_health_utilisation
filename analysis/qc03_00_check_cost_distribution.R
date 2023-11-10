@@ -34,4 +34,4 @@ bind_rows(
       description_fn(cost_data$opa_cost_1y, "OPA", "1 year"),
       description_fn(cost_data$opa_cost_2y, "OPA", "2 year"),
       description_fn(cost_data$opa_cost_total, "OPA", "total")
-) %>% write_csv("output/qc_03_00_cost_data_desc_stat.csv")
+) %>% write_csv("output/qc03_00_cost_data_desc_stat.csv")
