@@ -9,7 +9,9 @@ source("analysis/settings_packages.R")
 cost_data <- read_csv("output/qc_cost_by_year.csv.gz")
 
 # APC
-apc_cost_1y <- cost_data %>% filter(apc_cost_1y> 0 & !is.na(apc_cost_1y)) %>% 
+apc_cost_1y <- cost_data %>% 
+      filter(apc_cost_1y> 0) %>% 
+      filter(!is.na(apc_cost_1y)) %>% 
       summarise(
             minimal = min(apc_cost_1y, na.rm = T),
             median = median(apc_cost_1y, na.rm = T),
@@ -24,7 +26,8 @@ apc_cost_1y_count <- cost_data %>%
                 missing_count = sum(is.na(apc_cost_1y), na.rm = T),
                 total_n = n())
 
-apc_cost_2y <-  cost_data %>% filter(apc_cost_2y> 0 & !is.na(apc_cost_2y)) %>% 
+apc_cost_2y <-  cost_data %>% filter(apc_cost_2y> 0) %>% 
+      filter(!is.na(apc_cost_2y)) %>% 
       summarise(
             minimal = min(apc_cost_2y, na.rm = T),
             median = median(apc_cost_2y, na.rm = T),
@@ -39,7 +42,8 @@ apc_cost_2y_count <- cost_data %>%
                 missing_count = sum(is.na(apc_cost_2y), na.rm = T),
                 total_n = n())
 
-apc_cost_total <-  cost_data %>% filter(apc_cost_total> 0 & !is.na(apc_cost_total)) %>% 
+apc_cost_total <-  cost_data %>% filter(apc_cost_total> 0) %>% 
+      filter(!is.na(apc_cost_total)) %>% 
       summarise(
             minimal = min(apc_cost_total, na.rm = T),
             median = median(apc_cost_total, na.rm = T),
@@ -55,7 +59,8 @@ apc_cost_total_count <- cost_data %>%
                 total_n = n())
 
 # A&E
-ec_cost_1y <- cost_data %>% filter(ec_cost_1y> 0 & !is.na(ec_cost_1y)) %>% 
+ec_cost_1y <- cost_data %>% filter(ec_cost_1y> 0) %>% 
+      filter(!is.na(ec_cost_1y)) %>% 
       summarise(
             minimal = min(ec_cost_1y, na.rm = T),
             median = median(ec_cost_1y, na.rm = T),
@@ -70,7 +75,8 @@ ec_cost_1y_count <- cost_data %>%
                 missing_count = sum(is.na(ec_cost_1y), na.rm = T),
                 total_n = n())
 
-ec_cost_2y <-  cost_data %>% filter(ec_cost_2y> 0 & !is.na(ec_cost_2y)) %>% 
+ec_cost_2y <-  cost_data %>% filter(ec_cost_2y> 0) %>% 
+      filter(!is.na(ec_cost_2y)) %>% 
       summarise(
             minimal = min(ec_cost_2y, na.rm = T),
             median = median(ec_cost_2y, na.rm = T),
@@ -85,7 +91,8 @@ ec_cost_2y_count <- cost_data %>%
                 missing_count = sum(is.na(ec_cost_2y), na.rm = T),
                 total_n = n())
 
-ec_cost_total <-  cost_data %>% filter(ec_cost_total> 0 & !is.na(ec_cost_total)) %>% 
+ec_cost_total <-  cost_data %>% filter(ec_cost_total> 0) %>% 
+      filter(!is.na(ec_cost_total)) %>% 
       summarise(
             minimal = min(ec_cost_total, na.rm = T),
             median = median(ec_cost_total, na.rm = T),
@@ -101,7 +108,8 @@ ec_cost_total_count <- cost_data %>%
                 total_n = n())
 
 # OPA: 
-opa_cost_1y <- cost_data %>% filter(opa_cost_1y> 0 & !is.na(opa_cost_1y)) %>% 
+opa_cost_1y <- cost_data %>% filter(opa_cost_1y> 0) %>% 
+      filter(!is.na(opa_cost_1y)) %>% 
       summarise(
             minimal = min(opa_cost_1y, na.rm = T),
             median = median(opa_cost_1y, na.rm = T),
@@ -116,7 +124,8 @@ opa_cost_1y_count <- cost_data %>%
                 missing_count = sum(is.na(opa_cost_1y), na.rm = T),
                 total_n = n())
 
-opa_cost_2y <-  cost_data %>% filter(opa_cost_2y> 0 & !is.na(opa_cost_2y)) %>% 
+opa_cost_2y <-  cost_data %>% filter(opa_cost_2y> 0) %>% 
+      filter( !is.na(opa_cost_2y)) %>% 
       summarise(
             minimal = min(opa_cost_2y, na.rm = T),
             median = median(opa_cost_2y, na.rm = T),
@@ -131,7 +140,8 @@ opa_cost_2y_count <- cost_data %>%
                 missing_count = sum(is.na(opa_cost_2y), na.rm = T),
                 total_n = n())
 
-opa_cost_total <-  cost_data %>% filter(opa_cost_total> 0 & !is.na(opa_cost_total)) %>% 
+opa_cost_total <-  cost_data %>% filter(opa_cost_total> 0) %>% 
+      filter(!is.na(opa_cost_total)) %>% 
       summarise(
             minimal = min(opa_cost_total, na.rm = T),
             median = median(opa_cost_total, na.rm = T),
