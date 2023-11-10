@@ -188,7 +188,7 @@ actions:
     outputs: 
       moderately_sensitive: 
         summarised_queried_all_cost_data: output/qc03_01_study_all_cost_distribution.csv
-        summarised_queried_exp_cost_data: output/qc03_01_study_by_exp_cost_distribution.csv
+
 
 # Reporting: demographic distribution 
 
