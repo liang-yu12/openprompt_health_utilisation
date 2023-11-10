@@ -21,9 +21,16 @@ description_fn <- function(var, cost_table, time){
             ) %>% mutate(Table = cost_table,
                          Time = time) %>% 
             relocate(Table, Time)
-      return(results)
-}
 
+      reault_all <- cost_data %>% summarise(
+            zero_count = sum(var==0, na.rm = T),
+            missing_count = sum(is.na(var), na.rm = T),
+            total_n = n()
+      )
+      
+      output <- bind_cols(results, reault_all)
+      return(output)
+}
 
 # Summarise and combine the results
 bind_rows(
