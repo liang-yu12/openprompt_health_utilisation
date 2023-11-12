@@ -606,7 +606,15 @@ actions:
       moderately_sensitive:
         cohort: output/qc02_hx_check_unmatched.csv
 
-        
+# Check 2nd care inputation 
+  qc03_03_compare_2nd_care_inputation:
+    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs] 
+    run: 
+      r:latest analysis/qc03_03_compare_2nd_care_inputation.R
+    outputs:
+      moderately_sensitive:
+        inputation_summary: output/qc03_03_compare_2nd_care_inputation.csv
+
 # # QC 05: check hospital admission distribution:
 
   qc_05_h_hospital_admin:
