@@ -71,7 +71,11 @@ for_covariates <- bind_rows(lc_exp_matched, com_matched) %>%
                     "total_cost", 
                     "apc_costs_inputed",
                     "ane_costs_inputed", 
-                    "opa_costs_inputed")
+                    "opa_costs_inputed",
+                    "total_admission_counts","total_admission_costs",
+                    "total_ane_costs", "total_ane_visits",
+                    "total_opa_cost", "total_opa_visit",
+                    "total_primary_cost", "secondary_care_cost")
 
 levels_check <- c("exposure", "sex", "bmi_cat", "ethnicity_6", "imd_q5",                  
                   "region", "previous_covid_hosp", "cov_covid_vax_n_cat", "number_comorbidities_cat")
