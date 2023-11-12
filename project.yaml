@@ -472,7 +472,7 @@ actions:
         inpute_opa_cost_reg_summary: output/st03_07_v2_inputed_opa_reg_summary.txt
         inpute_opa_predicted_costs: output/st03_07_v2_inputed_predict_opa_cost_tpm.csv
         inpute_opa_cost_bi_model_check: output/st03_07_v2_inputed_opa_binomial_model_counts.csv
-        inpute_opa_cost_gamma_model_check: output/st03_07_v2_inputed_opa_gamma_model_counts.csv.csv
+        inpute_opa_cost_gamma_model_check: output/st03_07_v2_inputed_opa_gamma_model_counts.csv
 
 
 # # Visulize different types of cost outcome:
