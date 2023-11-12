@@ -459,6 +459,22 @@ actions:
         opa_cost_bi_model_check: output/st03_07_opa_binomial_model_counts.csv
         opa_cost_gamma_model_check: output/st03_07_opa_gamma_model_counts.csv
 
+
+# OPA: inputed_version
+  report_st03_07_v2_inputed_opa_cost_twopm:
+    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+    run: 
+      r:latest analysis/st03_07_v2_now_inputed_opa_cost_twopart.R
+    outputs: 
+      moderately_sensitive: 
+        inpute_opa_cost_binomial: output/st03_07_v2_inputed_opa_cost_binomial_output.csv
+        inpute_opa_cost_twopm: output/st03_07_v2_inputed_opa_cost_twopm_output.csv
+        inpute_opa_cost_reg_summary: output/st03_07_v2_inputed_opa_reg_summary.txt
+        inpute_opa_predicted_costs: output/st03_07_v2_inputed_predict_opa_cost_tpm.csv
+        inpute_opa_cost_bi_model_check: output/st03_07_v2_inputed_opa_binomial_model_counts.csv
+        inpute_opa_cost_gamma_model_check: output/st03_07_v2_inputed_opa_gamma_model_counts.csv.csv
+
+
 # # Visulize different types of cost outcome:
   report_03_09_plot_types_cost_outcomes:
     needs: [report_03_04_gp_cost_twopm, report_03_05_apc_cost_twopm, report_03_06_a_and_e_cost_twopm, report_st03_07_opa_cost_twopm]
