@@ -108,7 +108,8 @@ for_covariates <- matched_data_ts %>% distinct(patient_id, exposure, .keep_all =
                     "previous_covid_hosp",     
                     "cov_covid_vax_n_cat",     
                     "number_comorbidities_cat",
-                    "total_drug_visit")
+                    "total_drug_visit",
+                    "reg_and_visit_gp_1y")
 
 for_covariates$sex <- relevel(for_covariates$sex, ref = "male")
 for_covariates$bmi_cat <- relevel(for_covariates$bmi_cat, ref = "Normal Weight")
