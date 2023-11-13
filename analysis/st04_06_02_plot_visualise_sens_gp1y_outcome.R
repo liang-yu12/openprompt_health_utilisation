@@ -8,7 +8,7 @@ source("analysis/settings_packages.R")
 # 1. Main outcomes: total healthcare utilisation ----------
 # read in datasets for plotting:
 # Binomial models: ---------------
-bi_total_visits <- read_csv("output/st02_01_total_binomial.csv") %>% 
+bi_total_visits <- read_csv("output/st04_06_sens_gp1y_total_binomial.csv") %>% 
       filter(time == "12 months" & Adjustment == "Adjusted") %>% 
       mutate(Group = "Long COVID group") %>% 
       dplyr::select(Group, estimate, lci, hci) %>% 
@@ -40,7 +40,7 @@ bi_total_visits <- rename(bi_total_visits, `Healthcare utilisation type` = Group
 
 # Hurdle models: -------------
 # Read in results: 
-total_hurdle <- read_csv("output/st02_01_total_hurdle.csv") %>% 
+total_hurdle <- read_csv("output/st04_06_sens_gp1y_total_hurdle.csv") %>% 
       filter(time == "12 months" & Adjustment == "Adjusted") %>% 
       mutate(Group = "Long COVID group") %>% 
       dplyr::select(Group, estimate, lci, hci) %>% 
@@ -101,7 +101,7 @@ plot(two_forest)
 
 # Barplot: -----------
 # Read in outcome data:
-total_predicted_counts <- read_csv("output/st02_01_total_predicted_counts.csv") %>% 
+total_predicted_counts <- read_csv("output/st04_06_sens_gp1y_total_predicted_counts.csv") %>% 
             filter(adjustment == "Adjusted")
 
 # change order by assigning the order of the factor
@@ -123,7 +123,7 @@ cbp1 <- c("#FFC20A", "#0C7BDC")
 # Combine plots together : ----------
 
 visits_all_plots <- ggarrange(two_forest, visits_barplot, ncol = 1)
-ggsave(visits_all_plots, file = "output/st02_06_total_healthcare_visits.png",
+ggsave(visits_all_plots, file = "output/st06_02_plot_sens_total_healthcare_visits.png",
        width=12, height=5, units = "in", dpi = 300)
 
 
