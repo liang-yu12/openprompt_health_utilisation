@@ -500,7 +500,7 @@ actions:
         sens_gp1y_total_visit_bi_model_count: output/st04_06_sens_gp1y_total_binomial_model_counts.csv
         sens_gp1y_total_visit_hurdle_count: output/st04_06_sens_gp1y_total_hurdle_model_counts.csv
 
-
+# Visualise sensitivity analyses outcomes: registered subgroup
   report04_06_plot_sens_gp1y_all_visits:
     needs: [report04_06_sens_gp1y_all_visits_hurdle]
     run: 
@@ -523,7 +523,15 @@ actions:
         sens_covid_p_total_visit_bi_model_count: output/st04_07_sens_covid_pos_total_binomial_model_counts.csv
         sens_covid_p_total_visit_hurdle_count: output/st04_07_sens_covid_pos_hurdle_model_counts.csv
 
-
+# Visualise sensitivity analyses outcomes: covid positive group
+  report04_07_plot_sens_covid_positive_all_visits:
+    needs: [report04_07_sens_covid_positive_all_visits_hurdle]
+    run: 
+      r:latest analysis/st04_07_02_plot_visualise_cov_positive_outcome.R
+    outputs: 
+      moderately_sensitive: 
+        sens_gp1y_plot: output/st04_07_plot_sens_covid_plus_total_healthcare_visits.png
+        
 # Sensitivity analyses: inpute missing costs
 
 # Inputed total cost outcomes:
