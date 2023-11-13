@@ -14,13 +14,15 @@ study_end_date = date(2023, 1, 31)
 age = (study_start_date - patients.date_of_birth).years
 
 # Query total apc costs:
-apc_cost_1y = apcs_cost_historical.where((apcs_cost_historical.admission_date >= study_start_date) &
-                              (apcs_cost_historical.admission_date < study_one_year)) \
-                        .grand_total_payment_mff.sum_for_patient()
+apc_cost_1y = apcs_cost_historical \
+    .where((apcs_cost_historical.admission_date >= study_start_date) &
+           (apcs_cost_historical.admission_date < study_one_year)) \
+    .grand_total_payment_mff.sum_for_patient()
 
-apc_cost_2y = apcs_cost_historical.where((apcs_cost_historical.admission_date >= study_one_year) &
-                              (apcs_cost_historical.admission_date < study_two_year)) \
-                        .grand_total_payment_mff.sum_for_patient()
+apc_cost_2y = apcs_cost_historical \
+    .where((apcs_cost_historical.admission_date >= study_one_year) &
+           (apcs_cost_historical.admission_date < study_two_year)) \
+    .grand_total_payment_mff.sum_for_patient()
 
 apc_cost_total = apcs_cost_historical \
     .where((apcs_cost_historical.admission_date >= study_start_date) &
