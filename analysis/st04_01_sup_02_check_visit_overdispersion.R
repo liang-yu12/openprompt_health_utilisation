@@ -88,5 +88,5 @@ opa_visit <-  with(ane_crude, cbind(res.deviance = deviance,
 
 bind_rows(
       total_healthcare_visits, gp_visits, hos_admin, ane_visit, opa_visit
-) %>% write_csv("output/st02_01_qc_01_model_checking.csv")
+) %>% write_csv("output/st04_02_supp_02_checking_dispersion.csv")
 
