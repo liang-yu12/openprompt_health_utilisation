@@ -424,5 +424,5 @@ predicted_by_agegroup <- bind_rows(
 # combine the prediction outputs:
 bind_rows(
       predicted_by_hos,
-      # predicted_by_sex,predicted_by_agegroup
+      predicted_by_sex,predicted_by_agegroup
       ) %>% write_csv(here("output", "st04_04_stratum_predicted_value.csv"))
