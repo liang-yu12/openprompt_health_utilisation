@@ -578,13 +578,13 @@ actions:
         monthly_oucome_tb: output/st04_01_monthly_outcome_distribution.csv
         visit_explore: output/st04_01_cat_visits_summary.csv
         
-  report_sup_model_selection:
-    needs: [import_matched_exposure, import_matched_controls]
+  report_04_02_supp2_dispersion_checking:
+    needs:  [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
-      r:latest analysis/st_sup_01_model_selection.R
+      r:latest analysis/st04_01_sup_02_check_visit_overdispersion.R
     outputs: 
       moderately_sensitive: 
-        model_01_poisson: output/st_sup_model_selection.csv
+        model_dispersion: output/st04_02_supp_02_checking_dispersion.csv
 
 # QC steps: -----------
         
