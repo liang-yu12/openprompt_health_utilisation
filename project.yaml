@@ -501,6 +501,14 @@ actions:
         sens_gp1y_total_visit_hurdle_count: output/st04_06_sens_gp1y_total_hurdle_model_counts.csv
 
 
+  report04_06_plot_sens_gp1y_all_visits:
+    needs: [report04_06_sens_gp1y_all_visits_hurdle]
+    run: 
+      r:latest analysis/st04_06_02_plot_visualise_sens_gp1y_outcome.R
+    outputs: 
+      moderately_sensitive: 
+        sens_gp1y_plot: output/st06_02_plot_sens_total_healthcare_visits.png
+
 # # Sensitivity analyses: main analyses among people who had positive covid before follow-up
   report04_07_sens_covid_positive_all_visits_hurdle:
     needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
