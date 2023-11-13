@@ -124,6 +124,6 @@ cbp1 <- c("#E66100", "#5D3A9B")
 
 all_cost_plots <- ggarrange(two_forest, cost_barplot, ncol = 1)
 ggsave(all_cost_plots, file = "output/st03_08_total_cost.png",
-       width=12, height=5,  units = "in", dpi = 300)
+       width=14, height=5,  units = "in", dpi = 300)
 
 
