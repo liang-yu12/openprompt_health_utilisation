@@ -8,7 +8,7 @@ actions:
 # # Before matching data management:
   generate_long_covid_exposure_dataset:
     run: 
-      databuilder:v0 generate-dataset
+      ehrql:v0 generate-dataset
         analysis/dataset_definition_unmatched_exp_lc.py
         --output output/dataset_exp_lc_unmatched.csv
     outputs:
@@ -17,7 +17,7 @@ actions:
 
   generate_list_gp_use_long_covid_dx:
     run: 
-      databuilder:v0 generate-dataset
+      ehrql:v0 generate-dataset
         analysis/dataset_definition_lc_gp_list.py
         --output output/dataset_lc_gp_list.csv
     outputs:
@@ -27,7 +27,7 @@ actions:
   generate_dataset_comparator_exclude_gp_no_long_covid:
     needs: [generate_list_gp_use_long_covid_dx]
     run: 
-      databuilder:v0 generate-dataset
+      ehrql:v0 generate-dataset
         analysis/dataset_definition_unmatched_comparator.py
         --output output/dataset_comparator_unmatched.csv
     outputs:
@@ -49,7 +49,7 @@ actions:
 # # After matching data management
   import_matched_exposure:
     run: 
-       databuilder:v0
+       ehrql:v0
         generate-dataset analysis/dataset_definition_matched_cases.py
         --output output/matched_cases_with_ehr.csv.gz
     needs: [test_matching]
@@ -59,7 +59,7 @@ actions:
 
   import_matched_controls:
     run: 
-       databuilder:v0
+       ehrql:v0
         generate-dataset analysis/dataset_definition_matched_control.py
         --output output/matched_control_with_ehr.csv.gz
     needs: [test_matching]
@@ -70,7 +70,7 @@ actions:
 
   import_matched_exposure_drug_cost:
     run: 
-       databuilder:v0
+       ehrql:v0
         generate-dataset analysis/dataset_definition_matched_cases_drug_costs.py
         --output output/matched_cases_with_drug_costs.csv.gz
     needs: [test_matching]
@@ -80,7 +80,7 @@ actions:
 
   import_matched_controls_drug_costs:
     run: 
-       databuilder:v0
+       ehrql:v0
         generate-dataset analysis/dataset_definition_matched_control_drug_costs.py
         --output output/matched_control_with_drug_costs.csv.gz
     needs: [test_matching]
@@ -91,7 +91,7 @@ actions:
 # # After matching data management: for new version of data
   import_matched_exposure_update:
     run: 
-       databuilder:v0
+       ehrql:v0
         generate-dataset analysis/dataset_definition_matched_cases_updated.py
         --output output/matched_cases_with_ehr_update.csv.gz
     needs: [test_matching]
@@ -101,7 +101,7 @@ actions:
 
   import_matched_control_updates:
     run: 
-       databuilder:v0
+       ehrql:v0
         generate-dataset analysis/dataset_definition_matched_control_updated.py
         --output output/matched_control_with_ehr_update.csv.gz
     needs: [test_matching]
@@ -113,7 +113,7 @@ actions:
 # # Before matching data management:
   generate_historical_exp_data:
     run: 
-      databuilder:v0 generate-dataset analysis/dataset_definition_hx_unmatched_exp_lc.py
+      ehrql:v0 generate-dataset analysis/dataset_definition_hx_unmatched_exp_lc.py
         --output output/hx_unmatched_exp.csv
     outputs:
       highly_sensitive:
@@ -122,7 +122,7 @@ actions:
   generate_historical_comp_data_exclude_gp_no_long_covid:
     needs: [generate_list_gp_use_long_covid_dx]
     run: 
-      databuilder:v0 generate-dataset analysis/dataset_definition_hx_unmatched_com_no_lc.py
+      ehrql:v0 generate-dataset analysis/dataset_definition_hx_unmatched_com_no_lc.py
         --output output/hx_dataset_comp_unmatched.csv
     outputs:
       highly_sensitive:
@@ -144,7 +144,7 @@ actions:
 # # After matching data management
   import_matched_historical_exposure:
     run: 
-       databuilder:v0
+       ehrql:v0
         generate-dataset analysis/dataset_definition_hx_matched_exp_lc.py
         --output output/hx_matched_cases_with_ehr.csv.gz
     needs: [historical_matching]
@@ -154,7 +154,7 @@ actions:
 
   import_matched_historical_controls:
     run: 
-       databuilder:v0
+       ehrql:v0
         generate-dataset analysis/dataset_definition_hx_matched_comp.py
         --output output/hx_matched_control_with_ehr.csv.gz
     needs: [historical_matching]
@@ -166,7 +166,7 @@ actions:
 
   checking_cost_data_distribution:
     run: 
-       databuilder:v0
+       ehrql:v0
         generate-dataset analysis/dataset_definition_cost_data_description.py
         --output output/qc_cost_by_year.csv.gz
     outputs: 
