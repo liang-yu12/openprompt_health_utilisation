@@ -579,7 +579,7 @@ actions:
 
 # Visualise the stratum specific outcomes:
   report_04_05_visualise_stratum:
-    needs: [report_04_03_stratified_by_cov]
+    needs: [report_04_04_stratified_by_cov]
     run: 
       r:latest analysis/st04_05_stratified_visualisation.R
     outputs: 
@@ -596,14 +596,12 @@ actions:
       r:latest analysis/st04_06_sens_reg_gp1y_total_visit_hurdel.R
     outputs: 
       moderately_sensitive:
-        sens_gp1y_total_reg_summary: output/st04_06_sens_gp1y_total_reg_summary.txt.txt
-        sens_gp1y_binomial_visits: output/st04_06_sens_gp1y_ttotal_binomial.csv
-        sens_gp1y_hurdle_all_visits: output/st04_06_sens_gp1y_ttotal_hurdle.csv
-        sens_gp1y_predicted_visits: output/st04_06_sens_gp1y_ttotal_predicted_counts.csv
-        sens_gp1y_total_visit_bi_model_count: output/st04_06_sens_gp1y_ttotal_binomial_model_counts.csv
-        sens_gp1y_total_visit_hurdle_count: output/st04_06_sens_gp1y_ttotal_hurdle_model_counts.csv
-
-
+        sens_gp1y_total_reg_summary: output/st04_06_sens_gp1y_total_reg_summary.txt
+        sens_gp1y_binomial_visits: output/st04_06_sens_gp1y_total_binomial.csv
+        sens_gp1y_hurdle_all_visits: output/st04_06_sens_gp1y_total_hurdle.csv
+        sens_gp1y_predicted_visits: output/st04_06_sens_gp1y_total_predicted_counts.csv
+        sens_gp1y_total_visit_bi_model_count: output/st04_06_sens_gp1y_total_binomial_model_counts.csv
+        sens_gp1y_total_visit_hurdle_count: output/st04_06_sens_gp1y_total_hurdle_model_counts.csv
 
 
 
