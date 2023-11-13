@@ -332,21 +332,6 @@ actions:
         total_cost_bi_model_check: output/st03_03_total_cost_binomial_model_counts.csv
         total_cost_gamma_model_check: output/st03_03_total_cost_gamma_model_counts.csv
 
-# Inputed cost outcomes:
-  report_03_03_v2_total_costs_twopart:
-    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
-    run: 
-      r:latest analysis/st03_03_v2_now_inputed_total_cost_twopart.R
-    outputs: 
-      moderately_sensitive:
-        inpute_total_cost_reg_summary: output/st03_03_v2_total_inputed_cost_reg_summary.txt
-        inpute_total_cost_binary: output/st03_03_v2_inputed_total_cost_binary.csv
-        inpute_total_cost_tpm: output/st03_03_v2_inputed_total_cost_gammaglm.csv
-        inpute_inpute_predicted_total_costs: output/st03_03_v2_inputed_total_cost_predicted_costs.csv
-        inpute_total_cost_bi_model_check: output/st03_03_v2_inputed_total_cost_binomial_model_counts.csv
-        inpute_total_cost_gamma_model_check: output/st03_03_v2_inputed_total_cost_gamma_model_counts.csv
-
-
 
 # # Visulize main cost outcome:
 
@@ -357,19 +342,6 @@ actions:
     outputs:
       moderately_sensitive:
         total_cost_outcomes_plots: output/st03_08_total_cost.png
-
-
-
-# # Visulize the inputed main cost outcome:
-  report_03_08_v2_plot_main_inputed_cost_outcomes:
-    needs: [report_03_03_v2_total_costs_twopart]
-    run:
-      r:latest analysis/st03_08_v2_visualise_inputed_total_cost_outcomes.R
-    outputs:
-      moderately_sensitive:
-        total_cost_outcomes_plots: output/st03_08_v2_inputed_total_cost.png
-
-
 
 
 #  GP costs: run two part model and predict costs
@@ -401,20 +373,6 @@ actions:
         apc_cost_bi_model_check: output/st03_05_apc_binomial_model_counts.csv
         apc_cost_gamma_model_check: output/st03_05_apc_gamma_model_counts.csv
 
-# inputed version
-  report_03_05_v2_input_apc_cost_twopm:
-    needs:  [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
-    run: 
-      r:latest analysis/st03_05_v2_now_inpute_apc_cost_twopart.R
-    outputs: 
-      moderately_sensitive: 
-        input_apc_cost_binomial: output/st03_05_v2_now_inputed_apc_cost_binomial_output.csv
-        input_apc_cost_twopm: output/st03_05_v2_now_inputed_apc_cost_twopm_output.csv
-        input_apc_cost_reg_summary: output/st03_05_v2_now_inputed_apc_cost_reg_summary.txt
-        input_apc_predicted_costs: output/st03_05_v2_inputed_predict_apc_cost_tpm.csv
-        input_apc_cost_bi_model_check: output/st03_05_inputed_apc_binomial_model_counts.csv
-        input_apc_cost_gamma_model_check: output/st03_05_inputed_apc_gamma_model_counts.csv
-
 
 # A&E costs: run two part model and predict costs
   report_03_06_a_and_e_cost_twopm:
@@ -430,21 +388,6 @@ actions:
         ane_cost_bi_model_check: output/st03_06_ane_binomial_model_counts.csv
         ane_cost_gamma_model_check: output/st03_06_ane_gamma_model_counts.csv
 
-# Inputed version
-  report_03_06_v2_inpute_a_and_e_cost_twopm:
-    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
-    run: 
-      r:latest analysis/st03_06_v2_now_inputed_ane_cost_twopart.R
-    outputs: 
-      moderately_sensitive: 
-        inpute_ane_cost_binomial: output/st03_06_v2_inputed_ane_cost_binomial_output.csv
-        inpute_ane_cost_twopm: output/st03_06_v2_inputed_ane_cost_twopm_output.csv
-        inpute_ane_cost_reg_summary: output/st03_06_v2_inputed_ane_reg_summary.txt
-        inpute_ane_predicted_costs: output/st03_06_v2_inputed_predict_ane_cost_tpm.csv
-        inpute_ane_cost_bi_model_check: output/st03_06_v2_inputed_ane_binomial_model_counts.csv
-        inpute_ane_cost_gamma_model_check: output/st03_06_v2_inputed_ane_gamma_model_counts.csv
-
-
 # OPA costs: run two part model and predict costs
   report_st03_07_opa_cost_twopm:
     needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
@@ -458,22 +401,6 @@ actions:
         opa_predicted_costs: output/st03_07_predict_opa_cost_tpm.csv
         opa_cost_bi_model_check: output/st03_07_opa_binomial_model_counts.csv
         opa_cost_gamma_model_check: output/st03_07_opa_gamma_model_counts.csv
-
-
-# OPA: inputed_version
-  report_st03_07_v2_inputed_opa_cost_twopm:
-    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
-    run: 
-      r:latest analysis/st03_07_v2_now_inputed_opa_cost_twopart.R
-    outputs: 
-      moderately_sensitive: 
-        inpute_opa_cost_binomial: output/st03_07_v2_inputed_opa_cost_binomial_output.csv
-        inpute_opa_cost_twopm: output/st03_07_v2_inputed_opa_cost_twopm_output.csv
-        inpute_opa_cost_reg_summary: output/st03_07_v2_inputed_opa_reg_summary.txt
-        inpute_opa_predicted_costs: output/st03_07_v2_inputed_predict_opa_cost_tpm.csv
-        inpute_opa_cost_bi_model_check: output/st03_07_v2_inputed_opa_binomial_model_counts.csv
-        inpute_opa_cost_gamma_model_check: output/st03_07_v2_inputed_opa_gamma_model_counts.csv
-
 
 # # Visulize different types of cost outcome:
   report_03_09_plot_types_cost_outcomes:
@@ -510,7 +437,6 @@ actions:
         did_adj_plot: output/st05_did_adj.png
         did_reg_table: output/st05_did_tpm_predicted.csv
         did_reg_summary: output/st05_did_reg_summary_output.txt
-
 
 
 # Supplementary materials ===========================
@@ -619,6 +545,75 @@ actions:
         sens_covid_p_total_visit_hurdle_count: output/st04_07_sens_covid_pos_hurdle_model_counts.csv
 
 
+# Sensitivity analyses: inpute missing costs
+
+# Inputed total cost outcomes:
+  report_03_03_v2_total_costs_twopart:
+    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+    run: 
+      r:latest analysis/st03_03_v2_now_inputed_total_cost_twopart.R
+    outputs: 
+      moderately_sensitive:
+        inpute_total_cost_reg_summary: output/st03_03_v2_total_inputed_cost_reg_summary.txt
+        inpute_total_cost_binary: output/st03_03_v2_inputed_total_cost_binary.csv
+        inpute_total_cost_tpm: output/st03_03_v2_inputed_total_cost_gammaglm.csv
+        inpute_inpute_predicted_total_costs: output/st03_03_v2_inputed_total_cost_predicted_costs.csv
+        inpute_total_cost_bi_model_check: output/st03_03_v2_inputed_total_cost_binomial_model_counts.csv
+        inpute_total_cost_gamma_model_check: output/st03_03_v2_inputed_total_cost_gamma_model_counts.csv
+
+# # Visulize the inputed main cost outcome:
+  report_03_08_v2_plot_main_inputed_cost_outcomes:
+    needs: [report_03_03_v2_total_costs_twopart]
+    run:
+      r:latest analysis/st03_08_v2_visualise_inputed_total_cost_outcomes.R
+    outputs:
+      moderately_sensitive:
+        total_cost_outcomes_plots: output/st03_08_v2_inputed_total_cost.png
+
+
+# inpute APC cost 
+  report_03_05_v2_input_apc_cost_twopm:
+    needs:  [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+    run: 
+      r:latest analysis/st03_05_v2_now_inpute_apc_cost_twopart.R
+    outputs: 
+      moderately_sensitive: 
+        input_apc_cost_binomial: output/st03_05_v2_now_inputed_apc_cost_binomial_output.csv
+        input_apc_cost_twopm: output/st03_05_v2_now_inputed_apc_cost_twopm_output.csv
+        input_apc_cost_reg_summary: output/st03_05_v2_now_inputed_apc_cost_reg_summary.txt
+        input_apc_predicted_costs: output/st03_05_v2_inputed_predict_apc_cost_tpm.csv
+        input_apc_cost_bi_model_check: output/st03_05_inputed_apc_binomial_model_counts.csv
+        input_apc_cost_gamma_model_check: output/st03_05_inputed_apc_gamma_model_counts.csv
+
+
+# Inpute A&E version
+  report_03_06_v2_inpute_a_and_e_cost_twopm:
+    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+    run: 
+      r:latest analysis/st03_06_v2_now_inputed_ane_cost_twopart.R
+    outputs: 
+      moderately_sensitive: 
+        inpute_ane_cost_binomial: output/st03_06_v2_inputed_ane_cost_binomial_output.csv
+        inpute_ane_cost_twopm: output/st03_06_v2_inputed_ane_cost_twopm_output.csv
+        inpute_ane_cost_reg_summary: output/st03_06_v2_inputed_ane_reg_summary.txt
+        inpute_ane_predicted_costs: output/st03_06_v2_inputed_predict_ane_cost_tpm.csv
+        inpute_ane_cost_bi_model_check: output/st03_06_v2_inputed_ane_binomial_model_counts.csv
+        inpute_ane_cost_gamma_model_check: output/st03_06_v2_inputed_ane_gamma_model_counts.csv
+
+
+# Inpute OPA version
+  report_st03_07_v2_inputed_opa_cost_twopm:
+    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+    run: 
+      r:latest analysis/st03_07_v2_now_inputed_opa_cost_twopart.R
+    outputs: 
+      moderately_sensitive: 
+        inpute_opa_cost_binomial: output/st03_07_v2_inputed_opa_cost_binomial_output.csv
+        inpute_opa_cost_twopm: output/st03_07_v2_inputed_opa_cost_twopm_output.csv
+        inpute_opa_cost_reg_summary: output/st03_07_v2_inputed_opa_reg_summary.txt
+        inpute_opa_predicted_costs: output/st03_07_v2_inputed_predict_opa_cost_tpm.csv
+        inpute_opa_cost_bi_model_check: output/st03_07_v2_inputed_opa_binomial_model_counts.csv
+        inpute_opa_cost_gamma_model_check: output/st03_07_v2_inputed_opa_gamma_model_counts.csv
 
 
 
