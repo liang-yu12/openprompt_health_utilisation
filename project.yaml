@@ -168,14 +168,6 @@ actions:
       moderately_sensitive: 
         summarised_queried_all_cost_data: output/qc03_01_study_all_cost_distribution.csv
 
-  qc_check_old_build_cost_data_dist:
-    needs: [import_matched_exposure, import_matched_controls]
-    run: 
-      r:latest analysis/qc03_02_old_build_cost_data_distribution.R
-    outputs: 
-      moderately_sensitive: 
-        summarised_old_build_all_cost_data: output/qc03_02_v0_oldbuild_all_cost_distribution.csv
-
 
 
 # Reporting: demographic distribution 
@@ -626,25 +618,3 @@ actions:
       moderately_sensitive:
         inputation_summary: output/qc03_03_compare_2nd_care_inputation.csv
 
-# # QC 05: check hospital admission distribution:
-
-  qc_05_h_hospital_admin:
-    needs: [import_matched_exposure, import_matched_controls]
-    run: 
-      r:latest analysis/qc05_check_hos_distribution_models.R
-    outputs: 
-      moderately_sensitive: 
-        hos_distribution: output/qc05_hos_distribution_compare.png
-        hos_overdispersion: output/qc05_hos_vist_overdispersion_test.csv
-        hos_model_comparison: output/qc05_hos_vist_model_compare.csv
-
-
-# # QC step: check lc only analysis model assumption
-  qc_08_lc_only_factors:  
-    needs: [import_matched_exposure, import_matched_controls]
-    run: 
-      r:latest analysis/qc08_subgroup_lconly_check_dispersion.R
-    outputs: 
-      moderately_sensitive:
-        lc_only_model_check: output/qc08_lc_only_overdispersion_test.csv
-  
