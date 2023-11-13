@@ -512,7 +512,30 @@ actions:
         did_reg_summary: output/st05_did_reg_summary_output.txt
 
 
-# # Supplementary analyses 2: factors associated with high healthcare use among LC
+
+# Supplementary materials ===========================
+# Supplementary 1-1 fig: outcome distribution
+  report_04_01_supp1_outcome_dist:
+    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+    run: 
+      r:latest analysis/st04_01_outcome_distribution_plots.R
+    outputs: 
+      moderately_sensitive: 
+        outcome_distribution_plot: output/st04_01_total_outcome_distribution.png
+        zero_percent_fig: output/st04_01_explore_zero_percentage.png
+        monthly_oucome_tb: output/st04_01_monthly_outcome_distribution.csv
+        visit_explore: output/st04_01_cat_visits_summary.csv
+
+# Supplementary 1-2 table: checking data dispersion
+  report_04_02_supp2_dispersion_checking:
+    needs:  [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+    run: 
+      r:latest analysis/st04_01_sup_02_check_visit_overdispersion.R
+    outputs: 
+      moderately_sensitive: 
+        model_dispersion: output/st04_02_supp_02_checking_dispersion.csv
+
+# # Supplementary 2: factors associated with high healthcare use among LC
   report_04_02_associated_factors:  
     needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
@@ -542,8 +565,8 @@ actions:
         nolc_forest_plot: output/st04_03_nolc_factors.png
         predicted_subgroups_visits: output/st04_03_sub_all_subset_predicted_visits.png
 
-# # Stratified by hospitalisation, sex, age - hurdle
-  report_04_03_stratified_by_cov:
+# # Supplementary 3: stratified by hospitalisation, sex, age - hurdle
+  report_04_04_stratified_by_cov:
     needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
       r:latest analysis/st04_04_stratum_by_cov_hurdle.R
@@ -555,7 +578,7 @@ actions:
         predict_subgoups_visits: output/st04_04_stratum_predicted_value.csv
 
 # Visualise the stratum specific outcomes:
-  report_04_04_visualise_stratum:
+  report_04_05_visualise_stratum:
     needs: [report_04_03_stratified_by_cov]
     run: 
       r:latest analysis/st04_05_stratified_visualisation.R
@@ -565,26 +588,24 @@ actions:
         sex_stratum_plot: output/st04_05_stratum_sex_visits.png
         age_stratum_plot: output/st04_05_stratum_age_visits.png
 
-# Supplementary materials
-
-  report_04_01_supp1_outcome_dist:
+# # Sensitivity analyses: main analyses among people who had GP registeration and visits 
+# 1 year before study started.
+  report04_06_sens_gp1y_all_visits_hurdle:
     needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
-      r:latest analysis/st04_01_outcome_distribution_plots.R
+      r:latest analysis/st04_06_sens_reg_gp1y_total_visit_hurdel.R
     outputs: 
-      moderately_sensitive: 
-        outcome_distribution_plot: output/st04_01_total_outcome_distribution.png
-        zero_percent_fig: output/st04_01_explore_zero_percentage.png
-        monthly_oucome_tb: output/st04_01_monthly_outcome_distribution.csv
-        visit_explore: output/st04_01_cat_visits_summary.csv
-        
-  report_04_02_supp2_dispersion_checking:
-    needs:  [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
-    run: 
-      r:latest analysis/st04_01_sup_02_check_visit_overdispersion.R
-    outputs: 
-      moderately_sensitive: 
-        model_dispersion: output/st04_02_supp_02_checking_dispersion.csv
+      moderately_sensitive:
+        sens_gp1y_total_reg_summary: output/st04_06_sens_gp1y_total_reg_summary.txt.txt
+        sens_gp1y_binomial_visits: output/st04_06_sens_gp1y_ttotal_binomial.csv
+        sens_gp1y_hurdle_all_visits: output/st04_06_sens_gp1y_ttotal_hurdle.csv
+        sens_gp1y_predicted_visits: output/st04_06_sens_gp1y_ttotal_predicted_counts.csv
+        sens_gp1y_total_visit_bi_model_count: output/st04_06_sens_gp1y_ttotal_binomial_model_counts.csv
+        sens_gp1y_total_visit_hurdle_count: output/st04_06_sens_gp1y_ttotal_hurdle_model_counts.csv
+
+
+
+
 
 # QC steps: -----------
         
