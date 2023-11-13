@@ -604,6 +604,24 @@ actions:
         sens_gp1y_total_visit_hurdle_count: output/st04_06_sens_gp1y_total_hurdle_model_counts.csv
 
 
+# # Sensitivity analyses: main analyses among people who had positive covid before follow-up
+  report04_07_sens_covid_positive_all_visits_hurdle:
+    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+    run: 
+      r:latest analysis/st04_07_sens_covid_pos_now_total_visit_hurdel.R
+    outputs: 
+      moderately_sensitive:
+        sens_covid_p_total_reg_summary: output/st04_07_sens_covid_pos_total_reg_summary.txt
+        sens_covid_p_binomial_visits: output/st04_07_sens_covid_pos_total_binomial.csv
+        sens_covid_p_hurdle_all_visits: output/st04_07_sens_covid_pos_total_hurdle.csv
+        sens_covid_p_predicted_visits: output/st04_07_sens_covid_pos_total_predicted_counts.csv
+        sens_covid_p_total_visit_bi_model_count: output/st04_07_sens_covid_pos_total_binomial_model_counts.csv
+        sens_covid_p_total_visit_hurdle_count: output/st04_07_sens_covid_pos_hurdle_model_counts.csv
+
+
+
+
+
 
 # QC steps: -----------
         
