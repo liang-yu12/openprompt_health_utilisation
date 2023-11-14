@@ -92,7 +92,7 @@ two_forest <- forest(
       lower = list(combine$lci, combine$lci2),
       upper = list(combine$hci,combine$hci2),
       ci_column = c(2, 4),
-      xlim = list(c(0, 4), c(0, 3)),
+      xlim = list(c(0, 8.5), c(0, 2)),
       ref_line = 1,
       theme = tm)
 plot(two_forest)
@@ -122,7 +122,7 @@ cbp1 <- c("#FFC20A", "#0C7BDC")
 
 # Combine plots together : ----------
 
-visits_all_plots <- ggarrange(two_forest, visits_barplot, ncol = 1)
+visits_all_plots <- ggarrange(two_forest, visits_barplot, ncol = 1, labels = c("a", "b"))
 ggsave(visits_all_plots, file = "output/st02_06_total_healthcare_visits.png",
        width=12, height=5, units = "in", dpi = 300)
 
