@@ -244,9 +244,18 @@ actions:
         drug_visit_hurdle_model_count: output/st02_02_01_drug_hurdle_model_counts.csv
 
 # gp visits: 
-
-
-
+  report_02_02_02_gp_only_visit_hurdle:
+    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+    run: 
+      r:latest analysis/st02_02_02_now_gp_only_visits_hurdel.R
+    outputs: 
+      moderately_sensitive: 
+        drug_reg_summary: output/st02_02_02_gponly_reg_summary.txt
+        drug_binomial: output/st02_02_02_gponly_binomial.csv
+        drug_hurdle: output/st02_02_02_gponly_hurdle.csv
+        predicted_drug_visits: output/st02_02_02_gponly_predicted_counts.csv
+        drug_visit_bi_model_count: output/st02_02_02_gponly_binomial_model_counts.csv
+        drug_visit_hurdle_model_count: output/st02_02_02_gponly_hurdle_model_counts.csv
 
 
 # # Hospital admission - hurdle
