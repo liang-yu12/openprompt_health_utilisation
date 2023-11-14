@@ -257,6 +257,16 @@ actions:
         drug_visit_bi_model_count: output/st02_02_02_gponly_binomial_model_counts.csv
         drug_visit_hurdle_model_count: output/st02_02_02_gponly_hurdle_model_counts.csv
 
+# Visualise gp and prescription visits separately:
+  report_02_02_03_visualise_gp_and_prescription_visits:
+    needs: [report_02_02_01_prescription_visit_hurdle, report_02_02_02_gp_only_visit_hurdle]
+    run: 
+      r:latest analysis/st02_02_03_visualise_gp_drug_visits.R
+    outputs: 
+      moderately_sensitive: 
+        gp_only_visits: output/st02_02_03_gp_only_visits.png
+        prescription_visits: output/st02_02_03_prescription_visits.png
+
 
 # # Hospital admission - hurdle
 
