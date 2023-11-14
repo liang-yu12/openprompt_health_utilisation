@@ -53,7 +53,7 @@ forest_plot_function <- function(binomial_file, hurdle_file, predicted_file){
             lower = list(combine$lci, combine$lci2),
             upper = list(combine$hci,combine$hci2),
             ci_column = c(2, 4),
-            xlim = list(c(0, 10), c(0, 2)),
+            xlim = list(c(0, 8.5), c(0, 2)),
             ref_line = 1,
             theme = tm)
       plot(two_forest)
@@ -119,7 +119,7 @@ predicted_gp_visits<- read_csv("output/st02_02_02_gponly_predicted_counts.csv") 
 gp_bar <- visit_bar_fc(predicted_gp_visits, "Average GP consultation frequency")
 
 # combine and save outputs
-gp_plots <- ggarrange(gp_only_forest_plot, gp_bar, ncol = 1)
+gp_plots <- ggarrange(gp_only_forest_plot, gp_bar, ncol = 1, labels = c("a", "b"))
 ggsave(gp_plots, file = "output/st02_02_03_gp_only_visits.png",
        width=14, height=5, units = "in", dpi = 300)
 
@@ -163,6 +163,6 @@ predicted_drug_visits<- read_csv("output/st02_02_01_drug_predicted_counts.csv") 
 drug_bar <- visit_bar_fc(predicted_drug_visits, "Average prescription visit frequency")
 
 # combine and save outputs
-drug_visit_plots <- ggarrange(drug_visit_forest_plot, drug_bar, ncol = 1)
+drug_visit_plots <- ggarrange(drug_visit_forest_plot, drug_bar, ncol = 1, labels = c("a", "b"))
 ggsave(drug_visit_plots, file = "output/st02_02_03_prescription_visits.png",
        width=14, height=5, units = "in", dpi = 300)
