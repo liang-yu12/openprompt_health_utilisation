@@ -95,6 +95,7 @@ two_forest <- forest(
       lower = list(combine$lci, combine$lci2),
       upper = list(combine$hci,combine$hci2),
       ci_column = c(2, 4),
+      xlim = list(c(0, 9), c(0, 2)),
       ref_line = 1,
       theme = tm)
 plot(two_forest)
@@ -122,7 +123,7 @@ cbp1 <- c("#E66100", "#5D3A9B")
 
 # Combine plots together : ----------
 
-all_cost_plots <- ggarrange(two_forest, cost_barplot, ncol = 1)
+all_cost_plots <- ggarrange(two_forest, cost_barplot, ncol = 1, labels = c("a", "b"))
 ggsave(all_cost_plots, file = "output/st03_08_v2_inputed_total_cost.png",
        width=14, height=5, units = "in", dpi = 300)
 
