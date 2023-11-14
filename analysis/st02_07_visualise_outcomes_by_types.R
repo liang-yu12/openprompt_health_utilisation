@@ -53,6 +53,7 @@ forest_plot_function <- function(binomial_file, hurdle_file, predicted_file){
             lower = list(combine$lci, combine$lci2),
             upper = list(combine$hci,combine$hci2),
             ci_column = c(2, 4),
+            xlim = list(c(0, 2), c(0, 1.5)),
             ref_line = 1,
             theme = tm)
       plot(two_forest)
@@ -157,7 +158,7 @@ hos_bar <- visit_bar_fc(predicted_hos_admin_counts, "Average hospitalisation fre
 
 
 # combine and save outputs
-hos_plots <- ggarrange(hos_forest, hos_bar, ncol = 1)
+hos_plots <- ggarrange(hos_forest, hos_bar, ncol = 1, labels = c("a", "b"))
 ggsave(hos_plots, file = "output/st02_07_hospitalisations.png",
        width=12, height=5, units = "in", dpi = 300)
 
@@ -198,7 +199,7 @@ ane_bar  <- visit_bar_fc(predicted_ane_visits, "Average A&E visit frequencies")
 
 
 # combine and save outputs
-ane_plots <- ggarrange(ane_forest, ane_bar, ncol = 1)
+ane_plots <- ggarrange(ane_forest, ane_bar, ncol = 1, labels = c("a", "b"))
 ggsave(ane_plots, file = "output/st02_07_a_and_e_visits.png",
        width=12, height=5,  units = "in", dpi = 300)
 
@@ -287,7 +288,7 @@ opa_bar <- visit_bar_fc(predicted_opa_visits, "Average outpatient clinic visit f
 
 
 # combine and save outputs
-opa_plots <- ggarrange(opa_forest, opa_bar, ncol = 1)
+opa_plots <- ggarrange(opa_forest, opa_bar, ncol = 1, labels = c("a", "b"))
 ggsave(opa_plots, file = "output/st02_07_opa_visits.png",
        width=12, height=5, units = "in", dpi = 300)
 
