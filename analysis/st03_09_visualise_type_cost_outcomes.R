@@ -97,11 +97,91 @@ cost_forest_fn <- function(bi_data, tpm_data){
             lower = list(combine$lci, combine$lci2),
             upper = list(combine$hci,combine$hci2),
             ci_column = c(2, 4),
+            xlim = list(c(0, 2.5), c(0, 2)),
             ref_line = 1,
             theme = tm)
       
       return(two_forest)
 }
+
+
+gp_cost_forest_fn <- function(bi_data, tpm_data){
+      # read in datasets for plotting:
+      # Binomial models: ---------------
+      total_binomial <- bi_data
+      
+      # Decrease decimal points
+      
+      
+      total_binomial$`OR (95% CI)` <- sprintf("%.2f (%.2f - %.2f)",
+                                              total_binomial$estimate,  
+                                              total_binomial$lci,  
+                                              total_binomial$hci)
+      total_binomial$`   First part      `  <- " "
+      total_binomial <- relocate(total_binomial, `   First part      `  , .after = Group)
+      total_binomial <- rename(total_binomial, `Healthcare utilisation type` = Group)
+      
+      # Create a forest plot object
+      (bi_forestplot <- forest(
+            data = total_binomial[,c(1,2,6)],
+            est = total_binomial$estimate,
+            lower = total_binomial$lci,
+            upper = total_binomial$hci,
+            ci_column = 2,
+            ref_line = 1
+      ))
+      
+      # tpm models: -------------
+      # Read in results: 
+      combine_tpm <- tpm_data
+      
+      combine_tpm$`Cost ratio (95% CI)` <- sprintf("%.2f (%.2f - %.2f)",
+                                                   combine_tpm$estimate,  
+                                                   combine_tpm$lci,  
+                                                   combine_tpm$hci)
+      # Create an empty column for plots
+      combine_tpm$`   Second part      `  <- " "
+      combine_tpm <- relocate(combine_tpm, `   Second part      ` , .after = Group)
+      combine_tpm <- rename(combine_tpm, `Healthcare utilisation type` = Group)
+      
+      # Create a forest plot object
+      (tpm_forestplot <- forest(
+            data = combine_tpm[,c(1,2,6)],
+            est = combine_tpm$estimate,
+            lower = combine_tpm$lci,
+            upper = combine_tpm$hci,
+            ci_column = 2,
+            xlim = c(0, 4),
+            ref_line = 1
+      ))
+      
+      # Try combining two data---------
+      part2 <- combine_tpm %>% rename(
+            estimate2 = estimate, 
+            lci2 = lci,
+            hci2 = hci
+      )
+      part1 <- total_binomial
+      combine <- full_join(part1, part2)
+      
+      combine[,c(1,2,6,7,11)] %>% names
+      
+      
+      tm <- forest_theme(core=list(bg_params=list(fill = c("#FFFFFF"))))
+      
+      two_forest <- forest(
+            data = combine[,c(1,2,6,7,11)],
+            est = list(combine$estimate, combine$estimate2),
+            lower = list(combine$lci, combine$lci2),
+            upper = list(combine$hci,combine$hci2),
+            ci_column = c(2, 4),
+            xlim = list(c(0, 8.5), c(0, 2)),
+            ref_line = 1,
+            theme = tm)
+      
+      return(two_forest)
+}
+
 
 # Bar plot function
 barplot_fn <- function(data, title){
@@ -156,7 +236,7 @@ opa_tpm <- read_csv("output/st03_07_opa_cost_twopm_output.csv") %>%
 
 # Run forest plots functions: 
 # GP
-gp_forest <- cost_forest_fn(bi_gp_costs, gp_tpm)
+gp_forest <- gp_cost_forest_fn(bi_gp_costs, gp_tpm)
 
 # Hospital APC:
 apc_forest <- cost_forest_fn(bi_apc_admin, apc_tpm)
@@ -199,21 +279,21 @@ ops_cost_plot <- barplot_fn(opa_predicted_cost, "Average outpatient clinic visit
 
 # Combine plots together and save : ----------
 # GP plots
-gp_all_plots <- ggarrange(gp_forest, gp_cost_plot, ncol = 1)
+gp_all_plots <- ggarrange(gp_forest, gp_cost_plot, ncol = 1, labels = c("a", "b"))
 ggsave(gp_all_plots, file = "output/st03_09_gp_costs.png",
        width=12, height=5, units = "in", dpi = 300)
 
 # hospital admission plot:
-hos_all_plots <- ggarrange(apc_forest,hos_cost_plot, ncol = 1)
+hos_all_plots <- ggarrange(apc_forest,hos_cost_plot, ncol = 1, labels = c("a", "b"))
 ggsave(hos_all_plots, file = "output/st03_09_apc_costs.png",
        width=12, height=5, units = "in", dpi = 300)
 
 # A&E plot:
-ane_plots <- ggarrange(ane_forest, ane_cost_plot, ncol = 1)
+ane_plots <- ggarrange(ane_forest, ane_cost_plot, ncol = 1, labels = c("a", "b"))
 ggsave(ane_plots, file = "output/st03_09_ane_costs.png",
        width=12, height=5, units = "in", dpi = 300)
 
 # opa plots: 
-opa_plots <- ggarrange(opa_forest, ops_cost_plot, ncol = 1)
+opa_plots <- ggarrange(opa_forest, ops_cost_plot, ncol = 1, labels = c("a", "b"))
 ggsave(opa_plots, file = "output/st03_09_opa_costs.png",
        width=12, height=5, units = "in", dpi = 300)
