@@ -229,6 +229,26 @@ actions:
         gp_visit_bi_model_count: output/st02_02_gp_binomial_model_counts.csv
         gp_visit_hurdle_model_count: output/st02_02_gp_hurdle_model_counts.csv
 
+# Prescription visits:
+  report_02_02_01_prescription_visit_hurdle:
+    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+    run: 
+      r:latest analysis/st02_02_01_now_durg_visits_hurdel.R
+    outputs: 
+      moderately_sensitive: 
+        drug_reg_summary: output/st02_02_01_drug_reg_summary.txt
+        drug_binomial: output/st02_02_01_drug_binomial.csv
+        drug_hurdle: output/st02_02_01_drug_hurdle.csv
+        predicted_drug_visits: output/st02_02_01_drug_predicted_counts.csv
+        drug_visit_bi_model_count: output/st02_02_01_drug_binomial_model_counts.csv
+        drug_visit_hurdle_model_count: output/st02_02_01_drug_hurdle_model_counts.csv
+
+# gp visits: 
+
+
+
+
+
 # # Hospital admission - hurdle
 
   report_02_03_now_hospital_admin_hurdle:
@@ -315,7 +335,7 @@ actions:
         total_cost_outcomes_plots: output/st03_08_total_cost.png
 
 
-#  GP costs: run two part model and predict costs
+#  Total primary care costs: run two part model and predict costs
   report_03_04_gp_cost_twopm:
     needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
