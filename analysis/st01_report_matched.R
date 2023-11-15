@@ -16,6 +16,12 @@ for (i in 1:12){
       gp_visits <- c(gp_visits, paste0("gp_visit_m", i))
 }
 
+# Prescription counts
+drug_visits <- c()
+for (i in 1:12){
+      drug_visits <- c(drug_visits, paste0("drug_visit_m", i))
+}
+
 # hostpital visits
 hos_visits <- c()
 for (i in 1:12) {
@@ -64,7 +70,7 @@ basic_demographic <- matched_data %>% summary_factorlist(dependent, explanatory,
 
 
 # Summarising the outcomes by types:
-outcomes <- c(visit_cols, gp_visits, "total_drug_visit", hos_visits, a_e_visits, opd_visits, costs, fu_cols)
+outcomes <- c(visit_cols, gp_visits, drug_visits, hos_visits, a_e_visits, opd_visits, costs, fu_cols)
 
 outcome_summary <- matched_data %>% summary_factorlist(dependent, outcomes,
                                                        p = TRUE, p_cont_para = "aov",
