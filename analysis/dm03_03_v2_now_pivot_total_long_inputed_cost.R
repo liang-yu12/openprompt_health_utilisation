@@ -236,53 +236,258 @@ exp_ane_cost_12m <- exp_ane_impute %>%
             ane_cost_impute_12m = sum(ane_costs_impute, na.rm = T)) %>% 
       ungroup()
 
+# Comparator group:
+# A&E visits::
+com_ane_visit <- com_matched %>% 
+      dplyr::select(patient_id, exposure, all_of(ane_visit_cols)) %>% 
+      pivot_longer(
+            cols = all_of(ane_visit_cols),
+            names_to = c("month"),
+            values_to = "ane_visit"
+      ) %>% 
+      mutate(month = as.numeric(str_sub(month, 11))) 
+
+# A&E cost: 
+com_ane_cost <-  com_matched %>% 
+      dplyr::select(patient_id, exposure, all_of(ane_cost_cols)) %>% 
+      pivot_longer(
+            cols = all_of(ane_cost_cols),
+            names_to = c("month"),
+            values_to = "ane_cost"
+      ) %>% 
+      mutate(month = as.numeric(str_sub(month, 10))) %>% 
+      mutate(ane_cost = ifelse(!is.na(ane_cost), ane_cost, 0)) # change NA to 0
+
+
+# c. Merge two data together by id, exp, month------
+# join visit and cost
+com_ane_impute <- left_join(com_ane_visit, com_ane_cost, 
+                            by = c("patient_id" = "patient_id", 
+                                   "exposure" = "exposure",
+                                   "month" = "month"))
+# Join follow up
+com_ane_impute <- left_join(com_fu_ts, com_ane_impute,
+                            by = c("patient_id" = "patient_id", 
+                                   "exposure" = "exposure",
+                                   "month_fu" = "month"))
+
+
+# d. filter non-NA follow-up -----
+# e. Mutate a new cost_var if visit != 0 & cost_var ==0, -----
+#    impute by visit*unit cost
+com_ane_impute <- com_ane_impute %>% 
+      filter(!is.na(follow_up_time)) %>% 
+      mutate(ane_costs_impute=case_when(
+            ane_visit!=0 & ane_cost!=0 ~ ane_cost,
+            ane_visit!=0 & ane_cost==0 ~ ane_visit*unit_ane_cost$unit_cost,
+            ane_visit==0 & ane_cost!=0 ~ 0,
+            ane_visit==0 & ane_cost==0 ~ 0
+      ))
+
+com_ane_cost_12m <- com_ane_impute %>% 
+      group_by(patient_id, exposure) %>% 
+      summarise(
+            ane_cost_impute_12m = sum(ane_costs_impute, na.rm = T)) %>% 
+      ungroup()
+
+
+
+# Impute APC costs:  -------
+# opa_visit_m
+opa_visit_cols <- c()
+for (i in 1:12){
+      opa_visit_cols <- c(opa_visit_cols, paste0("opa_visit_m", i))      
+}
+
+# opd_cost_m
+opd_cost_cols <- c()
+for (i in 1:12){
+      opd_cost_cols <- c(opd_cost_cols, paste0("opd_cost_m", i))
+}
+
+# Exposure group:
+# OPA visits::
+exp_opa_visit <- lc_exp_matched %>% 
+      dplyr::select(patient_id, exposure, all_of(opa_visit_cols)) %>% 
+      pivot_longer(
+            cols = all_of(opa_visit_cols),
+            names_to = c("month"),
+            values_to = "opa_visit"
+      ) %>% 
+      mutate(month = as.numeric(str_sub(month, 12))) 
+
+# OPA cost: 
+exp_opa_cost <-  lc_exp_matched %>% 
+      dplyr::select(patient_id, exposure, all_of(opd_cost_cols)) %>% 
+      pivot_longer(
+            cols = all_of(opd_cost_cols),
+            names_to = c("month"),
+            values_to = "opa_cost"
+      ) %>% 
+      mutate(month = as.numeric(str_sub(month, 11))) %>% 
+      mutate(opa_cost = ifelse(!is.na(opa_cost), opa_cost, 0)) # change NA to 0
+
+
+# c. Merge two data together by id, exp, month------
+# join visit and cost
+exp_opa_impute <- left_join(exp_opa_visit, exp_opa_cost, 
+                            by = c("patient_id" = "patient_id", 
+                                   "exposure" = "exposure",
+                                   "month" = "month"))
+# Join follow up
+exp_opa_impute <- left_join(exp_fu_ts, exp_opa_impute,
+                            by = c("patient_id" = "patient_id", 
+                                   "exposure" = "exposure",
+                                   "month_fu" = "month"))
+
+
+# d. filter non-NA follow-up -----
+# e. Mutate a new cost_var if visit != 0 & cost_var ==0, -----
+#    impute by visit*unit cost
+exp_opa_impute <- exp_opa_impute %>% 
+      filter(!is.na(follow_up_time)) %>% 
+      mutate(opa_costs_impute=case_when(
+            opa_visit!=0 & opa_cost!=0 ~ opa_cost,
+            opa_visit!=0 & opa_cost==0 ~ opa_visit*unit_opa_cost$unit_cost,
+            opa_visit==0 & opa_cost!=0 ~ 0,
+            opa_visit==0 & opa_cost==0 ~ 0
+      ))
+
+exp_opa_cost_12m <- exp_opa_impute %>% 
+      group_by(patient_id, exposure) %>% 
+      summarise(
+            opa_cost_impute_12m = sum(opa_costs_impute, na.rm = T)) %>% 
+      ungroup()
+
+
+# Comparator groups:
+# OPA visits::
+com_opa_visit <- com_matched %>% 
+      dplyr::select(patient_id, exposure, all_of(opa_visit_cols)) %>% 
+      pivot_longer(
+            cols = all_of(opa_visit_cols),
+            names_to = c("month"),
+            values_to = "opa_visit"
+      ) %>% 
+      mutate(month = as.numeric(str_sub(month, 12))) 
+
+# OPA cost: 
+com_opa_cost <-  com_matched %>% 
+      dplyr::select(patient_id, exposure, all_of(opd_cost_cols)) %>% 
+      pivot_longer(
+            cols = all_of(opd_cost_cols),
+            names_to = c("month"),
+            values_to = "opa_cost"
+      ) %>% 
+      mutate(month = as.numeric(str_sub(month, 11))) %>% 
+      mutate(opa_cost = ifelse(!is.na(opa_cost), opa_cost, 0)) # change NA to 0
+
+
+# c. Merge two data together by id, exp, month------
+# join visit and cost
+com_opa_impute <- left_join(com_opa_visit, com_opa_cost, 
+                            by = c("patient_id" = "patient_id", 
+                                   "exposure" = "exposure",
+                                   "month" = "month"))
+# Join follow up
+com_opa_impute <- left_join(com_fu_ts, com_opa_impute,
+                            by = c("patient_id" = "patient_id", 
+                                   "exposure" = "exposure",
+                                   "month_fu" = "month"))
+
+
+# d. filter non-NA follow-up -----
+# e. Mutate a new cost_var if visit != 0 & cost_var ==0, -----
+#    impute by visit*unit cost
+com_opa_impute <- com_opa_impute %>% 
+      filter(!is.na(follow_up_time)) %>% 
+      mutate(opa_costs_impute=case_when(
+            opa_visit!=0 & opa_cost!=0 ~ opa_cost,
+            opa_visit!=0 & opa_cost==0 ~ opa_visit*unit_opa_cost$unit_cost,
+            opa_visit==0 & opa_cost!=0 ~ 0,
+            opa_visit==0 & opa_cost==0 ~ 0
+      ))
+
+com_opa_cost_12m <- com_opa_impute %>% 
+      group_by(patient_id, exposure) %>% 
+      summarise(
+            opa_cost_impute_12m = sum(opa_costs_impute, na.rm = T)) %>% 
+      ungroup()
 
 
 
 
+# Add the imputed total costs back to the main data ---------
+# Exposure:
+
+lc_exp_matched_imputed <- left_join(lc_exp_matched, exp_hos_cost_12m,
+                                    by = c("patient_id", "exposure")) # Add hospital costs
+lc_exp_matched_imputed <- left_join(lc_exp_matched_imputed, exp_ane_cost_12m,
+                                    by = c("patient_id", "exposure")) # Add ane costs
+lc_exp_matched_imputed <- left_join(lc_exp_matched_imputed, exp_opa_cost_12m,
+                                    by = c("patient_id", "exposure")) # Add opa costs 
+
+# Comparator
+com_matched_imputed <- left_join(com_matched, com_hos_cost_12m,
+                                 by = c("patient_id", "exposure")) # Add hospital costs
+com_matched_imputed <- left_join(com_matched_imputed, com_ane_cost_12m,
+                                 by = c("patient_id", "exposure")) # Add ane costs
+com_matched_imputed <- left_join(com_matched_imputed, com_opa_cost_12m,
+                                 by = c("patient_id", "exposure")) # Add opa costs
+
+# Combine them
+matched_imputed_sec <- bind_rows(lc_exp_matched_imputed, com_matched_imputed)
 
 
 
+# Pivot primary care costs:  -----
 
+# Primary care 
+p_care <- c()
+for (i in 1:12){
+      p_care <- c(p_care, paste0("primary_cost_", i) )
+}
+# Exposure
+exp_primary_ts <- lc_exp_matched %>% dplyr::select(patient_id, exposure, all_of(p_care)) %>% 
+      pivot_longer(
+            cols = all_of(p_care),
+            names_to = c("month"),
+            values_to = "primary_care_cost"
+      ) %>% 
+      mutate(month = as.numeric(str_sub(month, 14)))
 
+com_primary_ts <- com_matched %>% dplyr::select(patient_id, exposure, all_of(p_care)) %>% 
+      pivot_longer(
+            cols = all_of(p_care),
+            names_to = c("month"),
+            values_to = "primary_care_cost"
+      ) %>% 
+      mutate(month = as.numeric(str_sub(month, 14)))
 
+# Add follow-up back
+exp_primary_ts <- left_join(exp_primary_ts, exp_fu_ts, 
+                            by = c("patient_id" ="patient_id",
+                                   "exposure"="exposure", 
+                                   "month" = "month_fu"))
 
+com_primary_ts <- left_join(com_primary_ts, com_fu_ts, 
+                             by = c("patient_id" ="patient_id",
+                                    "exposure"="exposure", 
+                                    "month" = "month_fu"))
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Combine two datasets: 
-matched_cost_ts <- bind_rows(exp_fu_ts, com_fu_ts)
-# fix the exposure levels
-matched_cost_ts$exposure <- factor(matched_cost_ts$exposure, levels = c("Comparator", "Long covid exposure"))
-matched_cost_ts$exposure  %>% levels()
-
+matched_cost_ts <- bind_rows(exp_primary_ts,com_primary_ts)
 # Data management: colllapsing data by different follow-up time. -------
 # 12 months
 matched_cost_12m <- matched_cost_ts %>% 
       filter(!is.na(follow_up_time)) %>% 
       group_by(patient_id, exposure) %>% 
       summarise(
+            primary_care_cost = sum(primary_care_cost, na.rm = T),
             follow_up = sum(follow_up_time, na.rm = T)) %>% 
       ungroup()
 
-matched_cost_ts %>% names
 # # Add covariates for adjustment
-for_covariates <- bind_rows(lc_exp_matched, com_matched) %>% 
+for_covariates <- matched_imputed_sec %>% 
       distinct(patient_id, exposure, .keep_all = T) %>% 
       dplyr::select("patient_id",     
                     "exposure",           
@@ -296,7 +501,8 @@ for_covariates <- bind_rows(lc_exp_matched, com_matched) %>%
                     "cov_mental_health",   
                     "previous_covid_hosp",     
                     "cov_covid_vax_n_cat",     
-                    "number_comorbidities_cat")
+                    "number_comorbidities_cat",
+                    "apc_cost_impute_12m", "ane_cost_impute_12m", "opa_cost_impute_12m")
 
 levels_check <- c("exposure", "sex", "bmi_cat", "ethnicity_6", "imd_q5",                  
                   "region", "previous_covid_hosp", "cov_covid_vax_n_cat", "number_comorbidities_cat")
@@ -318,6 +524,13 @@ lapply(for_covariates[levels_check], levels) # need to correct some levels
 # # add covariates back to the summarised data frame
 matched_cost_12m <- left_join(matched_cost_12m, for_covariates,
                               by = c("patient_id" = "patient_id", "exposure" = "exposure"))
+
+
+# Adding costs together:
+total_cost <- c("primary_care_cost", "apc_cost_impute_12m", 
+                 "ane_cost_impute_12m", "opa_cost_impute_12m")
+
+matched_cost_12m$total_cost <- rowSums(matched_cost_12m[,total_cost], na.rm = T)
 
 # Make sure the exposure level is correct
 matched_cost_12m$exposure <- factor(matched_cost_12m$exposure, levels = c("Comparator", "Long covid exposure"))
