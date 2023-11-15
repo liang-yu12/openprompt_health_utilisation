@@ -106,8 +106,7 @@ for_covariates <- matched_data_gp_ts %>% distinct(patient_id, exposure, .keep_al
                     "cov_mental_health",   
                     "previous_covid_hosp",     
                     "cov_covid_vax_n_cat",     
-                    "number_comorbidities_cat",
-                    "total_drug_visit")
+                    "number_comorbidities_cat")
 for_covariates$sex <- relevel(for_covariates$sex, ref = "male")
 for_covariates$bmi_cat <- relevel(for_covariates$bmi_cat, ref = "Normal Weight")
 for_covariates$ethnicity_6 <- relevel(for_covariates$ethnicity_6, ref = "White")
@@ -124,9 +123,6 @@ for_covariates$number_comorbidities_cat <- relevel(for_covariates$number_comorbi
 matched_data_gp_12m <- left_join(matched_data_gp_12m, for_covariates,
                                  by = c("patient_id" = "patient_id", "exposure" = "exposure"))
 
-
-# Add prescription to GP visits:
-matched_data_gp_12m <- matched_data_gp_12m %>% mutate(visits = visits+total_drug_visit)
 
 # correct the level of exposure groups
 matched_data_gp_12m$exposure <- relevel(matched_data_gp_12m$exposure, ref = "Comparator")
