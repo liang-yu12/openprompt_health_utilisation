@@ -1,11 +1,11 @@
 # Load previous data management
-source("analysis/dm02_02_now_pivot_gp_visits_long.R")
+source("analysis/dm02_02_00_now_pivot_primarycare_visits_long.R")
 
 
 # Stats: two part (Hurdle) model -----
 # first need to exclude rows with NA and create 1/0 outcomes:
 crude_vars <- c("visits", "exposure", "follow_up")#for crude anaylsis
-crude_complete_gp_12m <- matched_data_gp_12m %>% drop_na(any_of(crude_vars)) %>% 
+crude_complete_parimarycare_12m <- matched_data_parimarycare_12m %>% drop_na(any_of(crude_vars)) %>% 
       mutate(visits_binary = ifelse(visits>0, 1, 0))
 
 # Crude Hurdle model: ------
@@ -13,12 +13,12 @@ crude_complete_gp_12m <- matched_data_gp_12m %>% drop_na(any_of(crude_vars)) %>%
 # Crude hurdle model: ----
 # # 12 months
 # binomial
-crude_binomial_12m <-  glm(visits_binary ~ exposure + offset(log(follow_up)), data = crude_complete_gp_12m,
+crude_binomial_12m <-  glm(visits_binary ~ exposure + offset(log(follow_up)), data = crude_complete_parimarycare_12m,
                            family=binomial(link="logit")) 
 # Positive negative binomial (truncated)
 crude_nb_12m <- vglm(visits ~ exposure + offset(log(follow_up)),
                      family = posnegbinomial(),
-                     data = subset(crude_complete_gp_12m, visits_binary > 0))
+                     data = subset(crude_complete_parimarycare_12m, visits_binary > 0))
 
 
 # Use a function to organised the regression outputs to get RR and CI:
@@ -55,17 +55,17 @@ positive_nb_tidy_fu <- function(vg_reg){
 # Organise the first part outputs:
 crude_binomial_outputs <-bind_rows(
        (binomial_tidy_fn(crude_binomial_12m) %>% mutate(time="12 months"))
-) %>% mutate(Adjustment = "Crude GP")
+) %>% mutate(Adjustment = "Crude parimarycare")
 
 # Organise the second part outputs:
 crude_hurdle_outputs <- bind_rows(
       (positive_nb_tidy_fu(crude_nb_12m) %>% mutate(time="12 months"))
-) %>% mutate(Adjustment = "Crude GP")
+) %>% mutate(Adjustment = "Crude parimarycare")
 
 
 # Adjusted hurdle model: 
 # First need to clean the data by excluding obs with NA in variables:
-adj_gp_complete_12m <- matched_data_gp_12m[complete.cases(matched_data_gp_12m),] %>% 
+adj_parimarycare_complete_12m <- matched_data_parimarycare_12m[complete.cases(matched_data_parimarycare_12m),] %>% 
       mutate(visits_binary = ifelse(visits>0, 1, 0))
 
 # Run the adjusted model using the complete data:
@@ -76,7 +76,7 @@ adj_gp_complete_12m <- matched_data_gp_12m[complete.cases(matched_data_gp_12m),]
 adj_binomial_12m <- glm(visits_binary ~ exposure + offset(log(follow_up)) +
                               age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
                               previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
-                        data = adj_gp_complete_12m,
+                        data = adj_parimarycare_complete_12m,
                         family=binomial(link="logit")) 
 
 # Hurdle model part 2: positive negative binomial model:
@@ -87,20 +87,20 @@ adj_nb_12m <- vglm(visits ~ exposure + offset(log(follow_up))+
                          age + sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
                          previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat, 
                    family = posnegbinomial(),
-                   data = subset(adj_gp_complete_12m, visits_binary > 0))
+                   data = subset(adj_parimarycare_complete_12m, visits_binary > 0))
 
 # Combine and organised regression outputs
 adj_binomial_outputs <-bind_rows(
       (binomial_tidy_fn(adj_binomial_12m) %>% mutate(time="12 months"))
-) %>% mutate(Adjustment = "GP Adjusted")
+) %>% mutate(Adjustment = "parimarycare Adjusted")
 
 # Organise the second part outputs:
 adj_hurdle_outputs <- bind_rows(
       (positive_nb_tidy_fu(adj_nb_12m) %>% mutate(time="12 months"))
-) %>% mutate(Adjustment = "GP Adjusted")
+) %>% mutate(Adjustment = "parimarycare Adjusted")
 
 # Save the detailed outputs to a text file:
-sink(here("output", "st02_02_gp_reg_summary.txt"))
+sink(here("output", "st02_02_parimarycare_reg_summary.txt"))
 print("# Crude binomial model output part 1 ---------")
 print(summary(crude_binomial_12m))
 print("# Crude hurdle model output part 2 ---------")
@@ -112,11 +112,11 @@ print(summary(adj_nb_12m))
 sink()
 
 # Save both outputs: # Combine total outputs and save:
-st02_02_gp_binomial <- bind_rows(crude_binomial_outputs, adj_binomial_outputs)
-st02_02_gp_binomial %>% write_csv(here("output", "st02_02_gp_binomial.csv"))
+st02_02_parimarycare_binomial <- bind_rows(crude_binomial_outputs, adj_binomial_outputs)
+st02_02_parimarycare_binomial %>% write_csv(here("output", "st02_02_parimarycare_binomial.csv"))
 
-st02_02_gp_hurdle <- bind_rows(crude_hurdle_outputs, adj_hurdle_outputs)
-st02_02_gp_hurdle %>% write_csv(here("output", "st02_02_gp_hurdle.csv"))
+st02_02_parimarycare_hurdle <- bind_rows(crude_hurdle_outputs, adj_hurdle_outputs)
+st02_02_parimarycare_hurdle %>% write_csv(here("output", "st02_02_parimarycare_hurdle.csv"))
 
 
 
@@ -159,14 +159,14 @@ average_visits_fn <- function(dataset, reg_1st, reg_2nd){
 
 # run the predict function and summarised the average vistis:
 summarised_results <- bind_rows(
-      (average_visits_fn(dataset = crude_complete_gp_12m, 
+      (average_visits_fn(dataset = crude_complete_parimarycare_12m, 
                          reg_1st = crude_binomial_12m, 
                          reg_2nd = crude_nb_12m) %>% mutate(model = "Crude")),
-      (average_visits_fn(dataset = adj_gp_complete_12m, 
+      (average_visits_fn(dataset = adj_parimarycare_complete_12m, 
                          reg_1st = adj_binomial_12m, 
                          reg_2nd = adj_nb_12m) %>% mutate(model = "Adjusted")))
 
-summarised_results %>% write_csv(here("output", "st02_02_gp_predicted_counts.csv"))
+summarised_results %>% write_csv(here("output", "st02_02_parimarycare_predicted_counts.csv"))
 
 
 # Summarize the datasets for output checking: -----
@@ -199,16 +199,17 @@ hurdle_model_count_fn <- function(data){
 
 # Summarise binomial model data:
 bind_rows(
-      (bi_model_count_fn(crude_complete_gp_12m) %>% mutate(time = "12m") %>% 
+      (bi_model_count_fn(crude_complete_parimarycare_12m) %>% mutate(time = "12m") %>% 
             mutate(model = "Crude")),
-      (bi_model_count_fn(adj_gp_complete_12m) %>% mutate(time = "12m")) %>% 
+      (bi_model_count_fn(adj_parimarycare_complete_12m) %>% mutate(time = "12m")) %>% 
             mutate(model = "Adjusted")) %>% 
-      write_csv("output/st02_02_gp_binomial_model_counts.csv")
+      write_csv("output/st02_02_parimarycare_binomial_model_counts.csv")
 
 
 bind_rows(
-      (hurdle_model_count_fn(crude_complete_gp_12m) %>% mutate(time = "12m")) %>% 
+      (hurdle_model_count_fn(crude_complete_parimarycare_12m) %>% mutate(time = "12m")) %>% 
             mutate(model = "Crude"),
-      (hurdle_model_count_fn(adj_gp_complete_12m) %>% mutate(time = "12m")) %>% 
+      (hurdle_model_count_fn(adj_parimarycare_complete_12m) %>% mutate(time = "12m")) %>% 
             mutate(model = "Adjusted")) %>% 
-      write_csv("output/st02_02_gp_hurdle_model_counts.csv")
+      write_csv("output/st02_02_parimarycare_hurdle_model_counts.csv")
+
