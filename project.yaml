@@ -216,18 +216,18 @@ actions:
 
 # # Total primary care utilisation  - hurdle
 
-  report_02_02_primary_care_visit_hurdle:
+  report_02_02_00_primary_care_visit_hurdle:
     needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
-      r:latest analysis/st02_02_now_primarycare_visits_hurdel.R
+      r:latest analysis/dm02_02_00_now_pivot_primarycare_visits_long.R
     outputs: 
       moderately_sensitive: 
-        gp_reg_summary: output/st02_02_gp_reg_summary.txt
-        gp_binomial: output/st02_02_gp_binomial.csv
-        gp_hurdle: output/st02_02_gp_hurdle.csv
-        predicted_gp_visits: output/st02_02_gp_predicted_counts.csv
-        gp_visit_bi_model_count: output/st02_02_gp_binomial_model_counts.csv
-        gp_visit_hurdle_model_count: output/st02_02_gp_hurdle_model_counts.csv
+        pc_reg_summary: output/st02_02_parimarycare_reg_summary.txt
+        pc_binomial: output/st02_02_parimarycare_binomial.csv
+        pc_hurdle: output/st02_02_parimarycare_hurdle.csv
+        predicted_pc_visits: output/st02_02_parimarycare_predicted_counts.csv
+        pc_visit_bi_model_count: output/st02_02_parimarycare_binomial_model_counts.csv
+        pc_visit_hurdle_model_count: output/st02_02_parimarycare_hurdle_model_counts.csv
 
 # Prescription visits:
   report_02_02_01_prescription_visit_hurdle:
