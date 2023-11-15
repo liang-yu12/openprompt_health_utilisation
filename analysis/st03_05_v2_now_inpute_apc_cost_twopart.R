@@ -1,7 +1,7 @@
-source("analysis/dm03_03_v2_now_pivot_total_long_inputed_cost.R")
+source("analysis/st03_03_v2_now_inputed_total_cost_twopart.R")
 
 # Data management: change file names and variable names for stats
-matched_cost_12m <- matched_cost_12m %>% mutate(apc_cost = apc_costs_inputed)
+matched_cost_12m <- matched_cost_12m %>% mutate(apc_cost = apc_cost_impute_12m)
 
 # Goal: analysing long COVID exposure and the APC cost outcomes
 # Model: two-part model 
