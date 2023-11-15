@@ -1,5 +1,5 @@
 # Load previous data management
-source("analysis/dm02_02_now_pivot_gp_visits_long.R")
+source("analysis/dm02_02_02_now_pivot_gp_visits_long.R")
 
 # Data management: outcome: gp visits only
 
