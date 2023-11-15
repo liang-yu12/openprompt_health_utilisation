@@ -167,6 +167,7 @@ m11 <- lc_exp_matched[, grepl("visit_m11$", names(lc_exp_matched)), with = FALSE
 m12 <- lc_exp_matched[, grepl("visit_m12$", names(lc_exp_matched)), with = FALSE] %>% names() %>% as.vector()
 
 
+
 # combine them
 lc_exp_matched$all_month_m1 <- rowSums(lc_exp_matched[, m1, with = FALSE], na.rm = TRUE)
 lc_exp_matched$all_month_m2 <- rowSums(lc_exp_matched[, m2, with = FALSE], na.rm = TRUE)
@@ -181,24 +182,26 @@ lc_exp_matched$all_month_m10 <- rowSums(lc_exp_matched[, m10, with = FALSE], na.
 lc_exp_matched$all_month_m11 <- rowSums(lc_exp_matched[, m11, with = FALSE], na.rm = TRUE)
 lc_exp_matched$all_month_m12 <- rowSums(lc_exp_matched[, m12, with = FALSE], na.rm = TRUE)
 
-# Add the total prescription visit data: 
-exp_drug_visits <- read_csv("output/matched_cases_with_drug_costs.csv.gz",
-                            col_types = cols(
-                                  age = col_skip(),
-                                  sex = col_skip(),
-                                  index_date = col_skip(),
-                                  end_death = col_skip(),
-                                  end_deregist = col_skip(),
-                                  end_lc_cure = col_skip(),
-                                  end_date = col_skip()
-                            )) %>% 
-      dplyr::select("patient_id" ,"exposure","total_drug_visit")
-exp_drug_visits <- exp_drug_visits %>% mutate(exposure = ifelse(exposure==1, "Long covid exposure", "Comparator"))
 
-
-lc_exp_matched <- left_join(lc_exp_matched, exp_drug_visits, by = c("patient_id" = "patient_id", 
-                                                                    "exposure" = "exposure"))
-
+# Define primary care contact:
+for(i in 1:12) {
+      # Create the vector for each month
+      vec <- c(paste("drug_visit_m", i, sep=""), paste("gp_visit_m", i, sep=""))
+      assign(paste("p", i, sep=""), vec)
+}
+# Combine gp and drug visits
+lc_exp_matched$primary_care_visit_m1 <- rowSums(lc_exp_matched[, p1, with = FALSE], na.rm = TRUE)
+lc_exp_matched$primary_care_visit_m2 <- rowSums(lc_exp_matched[, p2, with = FALSE], na.rm = TRUE)
+lc_exp_matched$primary_care_visit_m3 <- rowSums(lc_exp_matched[, p3, with = FALSE], na.rm = TRUE)
+lc_exp_matched$primary_care_visit_m4 <- rowSums(lc_exp_matched[, p4, with = FALSE], na.rm = TRUE)
+lc_exp_matched$primary_care_visit_m5 <- rowSums(lc_exp_matched[, p5, with = FALSE], na.rm = TRUE)
+lc_exp_matched$primary_care_visit_m6 <- rowSums(lc_exp_matched[, p6, with = FALSE], na.rm = TRUE)
+lc_exp_matched$primary_care_visit_m7 <- rowSums(lc_exp_matched[, p7, with = FALSE], na.rm = TRUE)
+lc_exp_matched$primary_care_visit_m8 <- rowSums(lc_exp_matched[, p8, with = FALSE], na.rm = TRUE)
+lc_exp_matched$primary_care_visit_m9 <- rowSums(lc_exp_matched[, p9, with = FALSE], na.rm = TRUE)
+lc_exp_matched$primary_care_visit_m10 <- rowSums(lc_exp_matched[, p10, with = FALSE], na.rm = TRUE)
+lc_exp_matched$primary_care_visit_m11 <- rowSums(lc_exp_matched[, p11, with = FALSE], na.rm = TRUE)
+lc_exp_matched$primary_care_visit_m12 <- rowSums(lc_exp_matched[, p12, with = FALSE], na.rm = TRUE)
 
 # Data management of the comparator dataset --------------
 
@@ -332,3 +335,16 @@ com_matched$all_month_m10 <- rowSums(com_matched[, m10, with = FALSE], na.rm = T
 com_matched$all_month_m11 <- rowSums(com_matched[, m11, with = FALSE], na.rm = TRUE)
 com_matched$all_month_m12 <- rowSums(com_matched[, m12, with = FALSE], na.rm = TRUE)
 
+# combine primary care visits
+com_matched$primary_care_visit_m1 <- rowSums(com_matched[, p1, with = FALSE], na.rm = TRUE)
+com_matched$primary_care_visit_m2 <- rowSums(com_matched[, p2, with = FALSE], na.rm = TRUE)
+com_matched$primary_care_visit_m3 <- rowSums(com_matched[, p3, with = FALSE], na.rm = TRUE)
+com_matched$primary_care_visit_m4 <- rowSums(com_matched[, p4, with = FALSE], na.rm = TRUE)
+com_matched$primary_care_visit_m5 <- rowSums(com_matched[, p5, with = FALSE], na.rm = TRUE)
+com_matched$primary_care_visit_m6 <- rowSums(com_matched[, p6, with = FALSE], na.rm = TRUE)
+com_matched$primary_care_visit_m7 <- rowSums(com_matched[, p7, with = FALSE], na.rm = TRUE)
+com_matched$primary_care_visit_m8 <- rowSums(com_matched[, p8, with = FALSE], na.rm = TRUE)
+com_matched$primary_care_visit_m9 <- rowSums(com_matched[, p9, with = FALSE], na.rm = TRUE)
+com_matched$primary_care_visit_m10 <- rowSums(com_matched[, p10, with = FALSE], na.rm = TRUE)
+com_matched$primary_care_visit_m11 <- rowSums(com_matched[, p11, with = FALSE], na.rm = TRUE)
+com_matched$primary_care_visit_m12 <- rowSums(com_matched[, p12, with = FALSE], na.rm = TRUE)
