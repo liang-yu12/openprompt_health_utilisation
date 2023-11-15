@@ -573,7 +573,7 @@ actions:
         
 # Sensitivity analyses: inpute missing costs
 
-# Inputed total cost outcomes:
+# Imputed total cost outcomes:
   report_03_03_v2_total_costs_twopart:
     needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
@@ -597,7 +597,7 @@ actions:
         total_cost_outcomes_plots: output/st03_08_v2_inputed_total_cost.png
 
 
-# inpute APC cost 
+# Impute APC cost 
   report_03_05_v2_input_apc_cost_twopm:
     needs:  [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
@@ -612,7 +612,7 @@ actions:
         input_apc_cost_gamma_model_check: output/st03_05_inputed_apc_gamma_model_counts.csv
 
 
-# Inpute A&E version
+# Impute A&E version
   report_03_06_v2_inpute_a_and_e_cost_twopm:
     needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
@@ -627,7 +627,7 @@ actions:
         inpute_ane_cost_gamma_model_check: output/st03_06_v2_inputed_ane_gamma_model_counts.csv
 
 
-# Inpute OPA version
+# Impute OPA version
   report_st03_07_v2_inputed_opa_cost_twopm:
     needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
