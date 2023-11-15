@@ -1,7 +1,7 @@
 source("analysis/dm03_03_v2_now_pivot_total_long_inputed_cost.R")
 
 # Data management:
-matched_cost_12m <- matched_cost_12m %>% mutate(opa_cost = opa_costs_inputed)
+matched_cost_12m <- matched_cost_12m %>% mutate(opa_cost = opa_cost_impute_12m)
 
 
 # Goal: analysing long COVID exposure and the OPA cost outcomes
