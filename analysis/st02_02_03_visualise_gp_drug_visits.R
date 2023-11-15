@@ -129,7 +129,7 @@ ggsave(gp_plots, file = "output/st02_02_03_gp_only_visits.png",
 
 # 2. Visualise prescription visit results: ---------
 drug_binomial <- read_csv("output/st02_02_01_drug_binomial.csv")  %>% 
-      filter(time == "12 months" & Adjustment == "GP Adjusted") %>% 
+      filter(time == "12 months" & Adjustment == "drug Adjusted") %>% 
       mutate(Group = "Long COVID group") %>% 
       dplyr::select(Group, estimate, lci, hci) %>% 
       add_row(
@@ -140,7 +140,7 @@ drug_binomial <- read_csv("output/st02_02_01_drug_binomial.csv")  %>%
       arrange(Group)
 
 drug_hurdle <- read_csv("output/st02_02_01_drug_hurdle.csv") %>% 
-      filter(time == "12 months" & Adjustment == "GP Adjusted") %>% 
+      filter(time == "12 months" & Adjustment == "drug Adjusted") %>% 
       mutate(Group = "Long COVID group") %>% 
       dplyr::select(Group, estimate, lci, hci) %>% 
       add_row(
