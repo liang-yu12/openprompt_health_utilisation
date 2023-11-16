@@ -76,3 +76,37 @@ all_binomial_outputs %>% write_csv(here("output", "st04_02_all_factors_binomial.
 all_hurdle_outputs %>% write_csv(here("output", "st04_02_all_factors_hurdle.csv"))
 
 
+# Summarize the datasets for output checking: -----
+
+# Logit model count:
+bi_model_count_fn <- function(data){
+      
+      data %>% group_by(exposure) %>% 
+            summarise(
+                  non_zero_count = sum(visits_binary > 0),
+                  zero_count = sum(visits_binary == 0),
+                  n = n()
+            )
+}
+
+# Hurdle model count:
+hurdle_model_count_fn <- function(data){
+      
+      data %>% filter(visits_binary>0) %>% 
+            group_by(exposure) %>% 
+            summarise(
+                  mean_visit = mean(visits),
+                  min_visit = min(visits),
+                  max_visit = max(visits),
+                  n = n(),
+                  demonimator = sum(follow_up))
+}
+
+
+bi_model_count_fn(all_complete_12m) %>% 
+      mutate(model = "Binomial model") %>% relocate(model) %>% 
+      write_csv("output/st04_02_all_factors_bi_model_counts.csv")
+    
+hurdle_model_count_fn(all_complete_12m) %>% 
+      mutate(model = "Hurdle model") %>% relocate(model) %>% 
+      write_csv("output/st04_02_all_factors_hurdle_model_counts.csv")

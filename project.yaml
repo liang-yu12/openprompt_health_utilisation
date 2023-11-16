@@ -480,14 +480,8 @@ actions:
       moderately_sensitive:
         all_factors_bi_or: output/st04_02_all_factors_binomial.csv
         all_factors_hurdle_rr: output/st04_02_all_factors_hurdle.csv
-        lc_only_bi_visits: output/st04_02_lc_only_factor_binomial.csv
-        lc_only_hurdle_visits: output/st04_02_lc_only_factor_hurdle.csv
-        nolc_bi_or: output/st04_02_nolc_factor_binomial.csv
-        nolc_hurdle_rr: output/st04_02_nolc_factor_hurdle.csv
-        sub_predicted_visits_lc_nolc_all: output/st04_02_factors_predicted_visits.csv
-        sub_reg_summary: output/st04_02_associated_factor_reg_summary.txt
-        sub_all_lc_no_model_count: output/st04_02_factors_bi_model_counts.csv
-        sub_all_lc_no_hurdle_count: output/st04_02_factors_hurdle_model_counts.csv     
+        all_bi_model_count: output/st04_02_all_factors_bi_model_counts.csv
+        all_hurdle_model_count: output/st04_02_all_factors_hurdle_model_counts.csv
         
 # # visualise subgroup lc only outputs:
   report_04_03_visualise_associated_factors:
@@ -497,10 +491,7 @@ actions:
     outputs:
       moderately_sensitive:
         all_factor_forest_plot: output/st04_03_all_factors.png
-        lc_only_forest_plot: output/st04_03_lc_factors.png
-        nolc_forest_plot: output/st04_03_nolc_factors.png
-        predicted_subgroups_visits: output/st04_03_sub_all_subset_predicted_visits.png
-
+ 
 # # Supplementary 3: stratified by hospitalisation, sex, age - hurdle
   report_04_04_stratified_by_cov:
     needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
