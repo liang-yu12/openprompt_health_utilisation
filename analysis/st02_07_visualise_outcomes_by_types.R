@@ -8,7 +8,7 @@ source("analysis/settings_packages.R")
 # Wrap visualisation codes into a function:
 
 # Forest plots function:
-forest_plot_function <- function(binomial_file, hurdle_file, predicted_file){
+forest_plot_function <- function(binomial_file, hurdle_file,x_axis_setting){
       # Binomial models:
       bi_total_visits <- binomial_file
       
@@ -53,7 +53,7 @@ forest_plot_function <- function(binomial_file, hurdle_file, predicted_file){
             lower = list(combine$lci, combine$lci2),
             upper = list(combine$hci,combine$hci2),
             ci_column = c(2, 4),
-            xlim = list(c(0.5, 2), c(0.8, 1.5)),
+            xlim = x_axis_setting,
             ref_line = 1,
             theme = tm)
       plot(two_forest)
@@ -108,7 +108,10 @@ primary_hurdle <- read_csv("output/st02_02_gp_hurdle.csv") %>%
       arrange(Group)
 
 # Primary care forest plot:
-primary_care_forest_plot <- forest_plot_function(primary_binomial, primary_hurdle)
+primary_care_x_setting <- list(c(0, 8), c(0.8, 1.5))
+primary_care_forest_plot <- forest_plot_function(primary_binomial, 
+                                                 primary_hurdle,
+                                                 x_axis_setting = primary_care_x_setting)
 
 
 # Read in predicted counts
@@ -151,7 +154,10 @@ predicted_hos_admin_counts<- read_csv("output/st02_03_hos_predicted_counts.csv")
       filter(model == "Adjusted")
 
 # hospitalisation forest plot:
-hos_forest <- forest_plot_function(hos_binomial, hos_hurdle)
+hos_axis_setting <- list(c(0.5, 2), c(0.8, 1.5))
+hos_forest <- forest_plot_function(hos_binomial, 
+                                   hos_hurdle,
+                                   x_axis_setting = hos_axis_setting)
 
 # Hospitalisation bar plot: 
 hos_bar <- visit_bar_fc(predicted_hos_admin_counts, "Average hospitalisation frequency")
@@ -192,7 +198,9 @@ predicted_ane_visits <- read_csv("output/st02_04_ane_predicted_counts.csv") %>%
       filter(model == "Adjusted")
 
 # Forest plot A&E: 
-ane_forest <- forest_plot_function(ane_binomial, ane_hurdle)
+ane_x_setting <- list(c(0.5, 2), c(0.8, 1.5))
+ane_forest <- forest_plot_function(ane_binomial, ane_hurdle,
+                                   x_axis_setting = ane_x_setting)
 
 # bar plot A&E:
 ane_bar  <- visit_bar_fc(predicted_ane_visits, "Average A&E visit frequencies")
@@ -279,6 +287,7 @@ opa_forest <- forest(
       lower = list(combine$lci, combine$lci2),
       upper = list(combine$hci,combine$hci2),
       ci_column = c(2, 4),
+      xlim = list(c(0.5, 3), c(0.8, 1.5)),
       ref_line = 1,
       theme = tm)
 plot(opa_forest)
