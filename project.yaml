@@ -546,7 +546,7 @@ actions:
       r:latest analysis/st04_06_02_plot_visualise_sens_gp1y_outcome.R
     outputs: 
       moderately_sensitive: 
-        sens_gp1y_plot: output/st06_02_plot_sens_total_healthcare_visits.png
+        sens_gp1y_plot: output/st04_06_02_plot_sens_gp1y_total_visits.png
 
 # # Sensitivity analyses: main analyses among people who had positive covid before follow-up
   report04_07_sens_covid_positive_all_visits_hurdle:
