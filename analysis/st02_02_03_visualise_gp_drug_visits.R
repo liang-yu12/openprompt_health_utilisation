@@ -53,7 +53,7 @@ forest_plot_function <- function(binomial_file, hurdle_file, predicted_file){
             lower = list(combine$lci, combine$lci2),
             upper = list(combine$hci,combine$hci2),
             ci_column = c(2, 4),
-            xlim = list(c(0, 8.5), c(0, 2)),
+            xlim = list(c(0, 4), c(0, 1.8)),
             ref_line = 1,
             theme = tm)
       plot(two_forest)
