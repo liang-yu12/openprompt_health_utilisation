@@ -86,7 +86,7 @@ visit_bar_fc <- function(predicted_data, fig_title){
 
 # 2. Visualise primary care outcomes: ------------
 primary_binomial <- read_csv("output/st02_02_parimarycare_binomial.csv")  %>% 
-      filter(time == "12 months" & Adjustment == "GP Adjusted") %>% 
+      filter(time == "12 months" & Adjustment == "parimarycare Adjusted") %>% 
       mutate(Group = "Long COVID group") %>% 
       dplyr::select(Group, estimate, lci, hci) %>% 
       add_row(
@@ -97,7 +97,7 @@ primary_binomial <- read_csv("output/st02_02_parimarycare_binomial.csv")  %>%
       arrange(Group)
 
 primary_hurdle <- read_csv("output/st02_02_parimarycare_hurdle.csv") %>% 
-      filter(time == "12 months" & Adjustment == "GP Adjusted") %>% 
+      filter(time == "12 months" & Adjustment == "parimarycare Adjusted") %>% 
       mutate(Group = "Long COVID group") %>% 
       dplyr::select(Group, estimate, lci, hci) %>% 
       add_row(
