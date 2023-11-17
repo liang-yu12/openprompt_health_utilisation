@@ -399,7 +399,7 @@ actions:
         ane_cost_gamma_model_check: output/st03_06_ane_gamma_model_counts.csv
 
 # OPA costs: run two part model and predict costs
-  report_st03_07_opa_cost_twopm:
+  report_03_07_opa_cost_twopm:
     needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
       r:latest analysis/st03_07_now_opa_cost_twopart.R
@@ -414,7 +414,7 @@ actions:
 
 # # Visulize different types of cost outcome:
   report_03_09_plot_types_cost_outcomes:
-    needs: [report_03_04_gp_cost_twopm, report_03_05_apc_cost_twopm, report_03_06_a_and_e_cost_twopm, report_st03_07_opa_cost_twopm]
+    needs: [report_03_04_gp_cost_twopm, report_03_05_apc_cost_twopm, report_03_06_a_and_e_cost_twopm, report_03_07_opa_cost_twopm]
     run:
       r:latest analysis/st03_09_visualise_type_cost_outcomes.R
     outputs:
