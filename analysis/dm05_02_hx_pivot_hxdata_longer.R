@@ -12,7 +12,7 @@ source("analysis/dm05_01_hx_read_munge_vars.R")
 
 common_vars <- c("patient_id","sex","age_cat", "age", "ethnicity_6", "bmi_cat", 
                  "cov_asthma", "cov_mental_health",
-                 "region", "imd_q5", "number_comorbidities_cat", "total_hx_drug_visit", "total_drug_visit")
+                 "region", "imd_q5", "number_comorbidities_cat")
 
 # Extract the column names for each month: -----
 # Recognise the column name patterns, and then use prefix to separate the historical and current visits
