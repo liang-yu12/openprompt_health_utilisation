@@ -87,7 +87,7 @@ matched_cost_12m <- matched_drug_cost_ts %>%
       filter(!is.na(follow_up_time)) %>% 
       group_by(patient_id, exposure) %>% 
       summarise(
-            gp_cost = sum(monthly_drug_cost, na.rm =T),
+            drug_cost = sum(monthly_drug_cost, na.rm =T),
             follow_up = sum(follow_up_time, na.rm = T)) %>% 
       ungroup()
 
