@@ -20,7 +20,7 @@ exp_cost_ts <- lc_exp_matched %>%
             values_to = "monthly_gp_cost"
       )
 
-exp_cost_ts$month <- str_sub(exp_cost_ts$month, 15) # remove "total_gp_cost_"
+exp_cost_ts$month <- str_sub(exp_cost_ts$month, 9) # remove "total_gp_cost_"
 exp_cost_ts$month <- as.numeric(exp_cost_ts$month)
 
 # pivot exposure follow-up time
@@ -52,7 +52,7 @@ com_cost_ts <- com_matched %>%
             values_to = "monthly_gp_cost"
       )
 
-com_cost_ts$month <- str_sub(com_cost_ts$month, 15)
+com_cost_ts$month <- str_sub(com_cost_ts$month, 9)
 com_cost_ts$month <- as.numeric(com_cost_ts$month)
 
 # Pivot the comparator follow_up time: 
