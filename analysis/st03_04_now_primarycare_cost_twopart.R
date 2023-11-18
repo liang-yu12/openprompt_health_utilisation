@@ -113,15 +113,15 @@ adj_gamma_glm_gp <- tidy_gamma_glm_fn(adj_gamma_12m) %>% mutate(time = "12 month
 # save the output:
 bind_rows(crude_binomial_gp,
           adj_binomial_gp) %>% 
-      write_csv(here("output", "st03_04_now_gp_cost_binomial_output.csv"))
+      write_csv(here("output", "st03_04_now_primarycare_cost_binomial_output.csv"))
 
 
 bind_rows(crude_gamma_glm_gp, adj_gamma_glm_gp) %>% 
-      write_csv(here("output", "st03_04_now_gp_cost_twopm_output.csv"))
+      write_csv(here("output", "st03_04_now_primarycare_cost_twopm_output.csv"))
 
 
 # Save the detailed outputs to a text file:
-sink(here("output", "st03_04_now_gp_reg_summary.txt"))
+sink(here("output", "st03_04_now_primarycare_reg_summary.txt"))
 print("# Crude binomial model output part 1 ---------")
 print(summary(crude_binomial_gp))
 print("# Crude hurdle model output part 2 ---------")
@@ -190,7 +190,7 @@ adj_gp_costs <- predict_avg_gp_cost_fn(dataset = matched_cost_12m,
 
 total_gp_costs <- bind_rows(crude_gp_costs, adj_gp_costs) 
 
-total_gp_costs %>% write_csv(here("output","st03_04_predict_gp_cost_tpm.csv"))
+total_gp_costs %>% write_csv(here("output","st03_04_predict_primarycare_cost_tpm.csv"))
 
 
 
@@ -226,11 +226,11 @@ bind_rows(bi_model_count_fn(crude_gp_cost_complete_12m) %>% mutate(time = "12m")
             mutate(model = "Crude"),
             bi_model_count_fn(adj_gp_cost_complete_12m) %>% mutate(time = "12m") %>% 
             mutate(model = "Adjusted")) %>% 
-      write_csv("output/st03_04_gp_binomial_model_counts.csv")
+      write_csv("output/st03_04_primarycare_binomial_model_counts.csv")
 
 
 bind_rows(gamma_model_count_fn(crude_gp_cost_complete_12m) %>% mutate(time = "12m") %>% 
             mutate(model = "Crude"),
           gamma_model_count_fn(adj_gp_cost_complete_12m) %>% mutate(time = "12m") %>% 
             mutate(model = "Adjusted")) %>% 
-      write_csv("output/st03_04_gp_gamma_model_counts.csv")
+      write_csv("output/st03_04_primarycare_gamma_model_counts.csv")
