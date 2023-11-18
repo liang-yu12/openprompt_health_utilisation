@@ -447,6 +447,7 @@ actions:
     outputs:
       moderately_sensitive:
         gp_cost_plot: output/st03_09_gp_costs.png
+        drug_cost_plot: output/st03_09_drug_costs.png
         apc_cost_plot: output/st03_09_apc_costs.png
         ane_cost_plot: output/st03_09_ane_costs.png
         opa_cost_plot: output/st03_09_opa_costs.png
