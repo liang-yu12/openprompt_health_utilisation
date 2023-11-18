@@ -202,6 +202,10 @@ bi_gp_costs <- read_csv("output/st03_04_now_gp_cost_binomial_output.csv") %>%
       filter(adjustment == "Adjusted" & term == "exposureLong covid exposure" & time == "12 months") %>% 
       add_ref_fn()
 
+bi_drug_costs <- read_csv("output/st03_04_now_drug_cost_binomial_output.csv") %>% 
+      filter(adjustment == "Adjusted" & term == "exposureLong covid exposure" & time == "12 months") %>% 
+      add_ref_fn()
+
 bi_apc_admin <- read_csv("output/st03_05_now_apc_cost_binomial_output.csv") %>% 
       filter(adjustment == "Adjusted" & term == "exposureLong covid exposure" & time == "12 months")  %>% 
       add_ref_fn()
@@ -218,6 +222,10 @@ bi_opa_costs <- read_csv("output/st03_07_opa_cost_binomial_output.csv") %>%
 # tpm models: -------------
 # Read in tpm results: 
 gp_tpm <- read_csv("output/st03_04_now_gp_cost_twopm_output.csv")  %>% 
+      filter(adjustment == "Adjusted" & term == "exposureLong covid exposure" & time == "12 months") %>% 
+      add_ref_fn()
+
+drug_tpm  <- read_csv("output/st03_04_now_drug_cost_twopm_output.csv") %>% 
       filter(adjustment == "Adjusted" & term == "exposureLong covid exposure" & time == "12 months") %>% 
       add_ref_fn()
 
@@ -238,6 +246,9 @@ opa_tpm <- read_csv("output/st03_07_opa_cost_twopm_output.csv") %>%
 # GP
 gp_forest <- gp_cost_forest_fn(bi_gp_costs, gp_tpm)
 
+# Drug costs: 
+drug_forest <- gp_cost_forest_fn(bi_drug_costs, drug_tpm)
+
 # Hospital APC:
 apc_forest <- cost_forest_fn(bi_apc_admin, apc_tpm)
 
@@ -249,13 +260,15 @@ opa_forest <- cost_forest_fn(bi_opa_costs, opa_tpm)
 
 
 
-
 # Barplot: -----------
 
 new_level <- c("Long covid exposure", "Comparator")  # for changing the plot order
 
 # Read in outcome data:
 gp_predicted_cost <- read_csv("output/st03_04_predict_gp_cost_tpm.csv") %>% 
+      select_and_relevel_for_plot_fn()
+
+drug_predicted_cost <- read_csv("output/st03_04_predict_drug_cost_tpm.csv") %>% 
       select_and_relevel_for_plot_fn()
 
 hos_predicted_cost <- read_csv("output/st03_05_predict_apc_cost_tpm.csv") %>% 
@@ -272,7 +285,8 @@ opa_predicted_cost <- read_csv("output/st03_07_predict_opa_cost_tpm.csv") %>%
 cbp1 <- c("#E66100", "#5D3A9B")
 
 # Plot bar plots:
-gp_cost_plot <- barplot_fn(gp_predicted_cost, "Average primary care cost in 12 months")
+gp_cost_plot <- barplot_fn(gp_predicted_cost, "Average GP consultation cost in 12 months")
+drug_cost_plot <- barplot_fn(drug_predicted_cost, "Average GP prescription cost in 12 months")
 hos_cost_plot <- barplot_fn(hos_predicted_cost, "Average hospital admission cost in 12 months")
 ane_cost_plot <- barplot_fn(ane_predicted_cost, "Average A&E visits cost in 12 months")
 ops_cost_plot <- barplot_fn(opa_predicted_cost, "Average outpatient clinic visits cost in 12 months")
@@ -281,6 +295,11 @@ ops_cost_plot <- barplot_fn(opa_predicted_cost, "Average outpatient clinic visit
 # GP plots
 gp_all_plots <- ggarrange(gp_forest, gp_cost_plot, ncol = 1, labels = c("a", "b"))
 ggsave(gp_all_plots, file = "output/st03_09_gp_costs.png",
+       width=12, height=5, units = "in", dpi = 300)
+
+# drug plots
+drug_all_plots <- ggarrange(drug_forest, drug_cost_plot, ncol = 1, labels = c("a", "b"))
+ggsave(drug_all_plots, file = "output/st03_09_drug_costs.png",
        width=12, height=5, units = "in", dpi = 300)
 
 # hospital admission plot:
