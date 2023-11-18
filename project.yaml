@@ -441,7 +441,7 @@ actions:
 
 # # Visulize different types of cost outcome:
   report_03_09_plot_types_cost_outcomes:
-    needs: [report_03_04_gp_cost_twopm, report_03_05_apc_cost_twopm, report_03_06_a_and_e_cost_twopm, report_03_07_opa_cost_twopm]
+    needs: [report_03_04_gp_cost_twopm, report_03_04_drug_cost_twopm, report_03_05_apc_cost_twopm, report_03_06_a_and_e_cost_twopm, report_03_07_opa_cost_twopm]
     run:
       r:latest analysis/st03_09_visualise_type_cost_outcomes.R
     outputs:
