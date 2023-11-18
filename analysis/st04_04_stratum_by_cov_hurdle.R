@@ -185,16 +185,17 @@ predicted_by_hos <- bind_rows(
       mutate(group = "Previous hospitalisation") %>% relocate(group)
 
 ## By sex:-----
-# Ref: female
-adj_complete_12m$sex %>% levels  #"female" "male"
-adj_complete_12m$sex_f <- adj_complete_12m$sex
 # Ref: male
-adj_complete_12m$sex_m <- factor(adj_complete_12m$sex, levels = c("male","female"))
-
+adj_complete_12m$sex %>% levels  #"male"   "female"
+adj_complete_12m$sex_m <- adj_complete_12m$sex
+adj_complete_12m$sex_m %>% levels # "male"   "female"
+# Ref: female
+adj_complete_12m$sex_f <- factor(adj_complete_12m$sex, levels = c("female","male"))
+adj_complete_12m$sex_f %>% levels # "female" "male"  
 # Part 1: Binomial model:
 
 # No interaction:
-sex_no_binomial_12m <- glm(visits_binary ~ exposure + sex_f + offset(log(follow_up)) +
+sex_no_binomial_12m <- glm(visits_binary ~ exposure + sex_m + offset(log(follow_up)) +
                                  age + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
                                  previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat,
                               data = adj_complete_12m,
@@ -215,7 +216,7 @@ sex_m_binomial <- glm(visits_binary ~ exposure*sex_m + offset(log(follow_up)) +
                       family=binomial(link="logit"))
 
 # LR test:
-lrt_sex_bi <- lmtest::lrtest(sex_f_binomial, sex_no_binomial_12m) %>%
+lrt_sex_bi <- lmtest::lrtest(sex_m_binomial, sex_no_binomial_12m) %>%
       dplyr::select(`Pr(>Chisq)`)
 
 # Organise binomial outcomes:
@@ -227,7 +228,7 @@ sex_bi_sub <- bind_rows(
 # Part 2: Truncated negative binomial reg
 
 # No interaction:
-sex_no_hurdle_12m <- vglm(visits ~ exposure + sex_f + offset(log(follow_up)) +
+sex_no_hurdle_12m <- vglm(visits ~ exposure + sex_m + offset(log(follow_up)) +
                                 age + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
                                 previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat,
                           family = posnegbinomial(),
