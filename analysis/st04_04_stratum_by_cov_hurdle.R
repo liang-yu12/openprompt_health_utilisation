@@ -56,10 +56,10 @@ adj_predic_fn <- function(factor, value, part_1, part_2){
             filter(factor == value) %>% 
             mutate(follow_up = 360)
       
-      input$nonzero_prob <- predict(hos_f_binomial_12m, newdata = input, type = "response")                     
+      input$nonzero_prob <- predict(part_1, newdata = input, type = "response")                     
       
       
-      p2 <- predict(hos_f_hurdle_12m, newdata = input, type = "link", se.fit = T)
+      p2 <- predict(part_2, newdata = input, type = "link", se.fit = T)
       
       input<- bind_cols(
             input, 
@@ -89,7 +89,12 @@ adj_predic_fn <- function(factor, value, part_1, part_2){
       return(results)
 }
 
-
+# LR test for hurdle moderl: Write a function to organise the vglm outcomes
+lrt_hurdle <- function(interaction, no_interaction){
+      compare_hurdle_lrt <- VGAM::lrtest_vglm(interaction, no_interaction)
+      results <- compare_hurdle_lrt@Body %>% as.data.frame() %>% dplyr::select(`Pr(>Chisq)`)
+      return(results)
+}
 # Stats: Subgroup analyses by different covariates -----
 # Fit an interaction term between exposure and the cov.
 
@@ -155,13 +160,7 @@ hos_t_hurdle_12m <- vglm(visits ~ exposure*previous_covid_hosp_true + offset(log
                            cov_covid_vax_n_cat +number_comorbidities_cat, 
                          family = posnegbinomial(),
                          data = subset(adj_complete_12m, visits_binary > 0))
-# LR test:
-# Write a function to organise the vglm outcomes
-lrt_hurdle <- function(interaction, no_interaction){
-      compare_hurdle_lrt <- VGAM::lrtest_vglm(interaction, no_interaction)
-      results <- compare_hurdle_lrt@Body %>% as.data.frame() %>% dplyr::select(`Pr(>Chisq)`)
-      return(results)
-}
+
       
 lrt_hos_tpm <- lrt_hurdle(hos_f_hurdle_12m, hos_no_hurdle_12m)      
 
