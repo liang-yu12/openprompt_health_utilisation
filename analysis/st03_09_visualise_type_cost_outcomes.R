@@ -175,7 +175,7 @@ gp_cost_forest_fn <- function(bi_data, tpm_data){
             lower = list(combine$lci, combine$lci2),
             upper = list(combine$hci,combine$hci2),
             ci_column = c(2, 4),
-            xlim = list(c(0, 3.5), c(0, 2)),
+            xlim = list(c(0, 4), c(0, 2)),
             ref_line = 1,
             theme = tm)
       
