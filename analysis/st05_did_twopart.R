@@ -216,3 +216,62 @@ print("# Adjusted hurdle model output part 2 ---------")
 print(tidy.vglm(adj_nb_12m, conf.int=T))
 sink()
 
+
+# Check the mean difference ------
+# Revise the predicted function 
+data_predic_fn <- function(i.exp, i.time){
+      
+      # # set up input new data frame
+      input <- adj_did_tpm_12m %>% filter(exposure == i.exp, time == i.time) %>% 
+            mutate(follow_up = 360)
+      
+      p1 <- predict(adj_binomial_12m, newdata = input, type = "response")                     
+      p2 <- predict(adj_nb_12m, newdata = input, type = "link", se.fit = T)
+      
+      
+      # the fitted value outcome is a matrix. Only need the mean value
+      p2_fit<- p2$fitted.values %>% as.data.frame() %>% 
+            dplyr::select(`loglink(munb)`) %>% rename(fitted = `loglink(munb)`) 
+      
+      p2_se <- p2$se.fit %>% as.data.frame()%>% 
+            dplyr::select(`loglink(munb)`)  %>% rename(se = `loglink(munb)`)
+      
+      # multiply the first part and the second part:
+      predicted_visits <- data.frame(
+            nonzero_prob = p1,
+            p_visits = p2_fit$fitted,
+            p_se= p2_se$se) %>% 
+            mutate(c_visits = exp(p_visits)*nonzero_prob,
+                   c_lci = exp(p_visits - 1.96*p_se)*nonzero_prob,
+                   c_hci = exp(p_visits + 1.96*p_se)*nonzero_prob) %>% 
+            dplyr::select(c_visits, c_lci, c_hci) %>% 
+            mutate(exposure = i.exp,
+                   time = i.time)
+}
+
+
+# Predicted counts by groups 
+com_predicted <- bind_rows(
+      data_predic_fn(i.exp = "Comparator", i.time = "Historical"),
+      data_predic_fn(i.exp = "Comparator", i.time = "Contemporary")
+)
+
+exp_predicted <- bind_rows(
+      data_predic_fn(i.exp = "Long COVID exposure", i.time = "Historical"),
+      data_predic_fn(i.exp = "Long COVID exposure", i.time = "Contemporary")
+)
+
+# Test the paired mean difference
+com_diff <- t.test(c_visits ~ time, data =  com_predicted, paired = T) %>% 
+      tidy %>% rename(mean_difference = estimate) %>% 
+      mutate(exposure = "Comparator") %>% 
+      relocate(exposure, mean_difference, conf.low, conf.high, p.value)
+
+
+exp_diff <- t.test(c_visits ~ time, data =  exp_predicted, paired = T) %>% 
+      tidy %>% rename(mean_difference = estimate) %>% 
+      mutate(exposure = "Exposure") %>% 
+      relocate(exposure, mean_difference, conf.low, conf.high, p.value)
+
+# Combined and save the outputs 
+bind_rows(exp_diff, com_diff) %>% write_csv("output/st05_did_mean_difference.csv")
