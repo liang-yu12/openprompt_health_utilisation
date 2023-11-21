@@ -261,17 +261,16 @@ exp_predicted <- bind_rows(
       data_predic_fn(i.exp = "Long COVID exposure", i.time = "Contemporary")
 )
 
-# Test the paired mean difference
-com_diff <- t.test(c_visits ~ time, data =  com_predicted, paired = T) %>% 
-      tidy %>% rename(mean_difference = estimate) %>% 
-      mutate(exposure = "Comparator") %>% 
-      relocate(exposure, mean_difference, conf.low, conf.high, p.value)
+total_predicted <- bind_rows(com_predicted, exp_predicted )
 
+total_predicted$exposure <- factor(total_predicted$exposure, 
+                                   levels = c("Comparator","Long COVID exposure"))
 
-exp_diff <- t.test(c_visits ~ time, data =  exp_predicted, paired = T) %>% 
-      tidy %>% rename(mean_difference = estimate) %>% 
-      mutate(exposure = "Exposure") %>% 
-      relocate(exposure, mean_difference, conf.low, conf.high, p.value)
+total_predicted$time <- factor(total_predicted$time, 
+                               levels = c("Historical", "Contemporary"))
 
-# Combined and save the outputs 
-bind_rows(exp_diff, com_diff) %>% write_csv("output/st05_did_mean_difference.csv")
+# Difference in difference:
+lm(c_visits ~ exposure*time, 
+   data = total_predicted) %>% 
+      tidy() %>% 
+      write_csv("output/st05_did_mean_difference.csv")
