@@ -55,6 +55,49 @@ com_matched$primary_cost_10 <- rowSums(com_matched[p_10], na.rm = T)
 com_matched$primary_cost_11 <- rowSums(com_matched[p_11], na.rm = T)
 com_matched$primary_cost_12 <- rowSums(com_matched[p_12], na.rm = T)
 
+# analyse drug costs only:
+drug_1 <- p_1[p_1 != "gp_cost_1"]
+drug_2 <- p_2[p_2 != "gp_cost_2"]
+drug_3 <- p_3[p_3 != "gp_cost_3"]
+drug_4 <- p_4[p_4 != "gp_cost_4"]
+drug_5 <- p_5[p_5 != "gp_cost_5"]
+drug_6 <- p_6[p_6 != "gp_cost_6"]
+drug_7 <- p_7[p_7 != "gp_cost_7"]
+drug_8 <- p_8[p_8 != "gp_cost_8"]
+drug_9 <- p_9[p_9 != "gp_cost_9"]
+drug_10 <- p_10[p_10 != "gp_cost_10"]
+drug_11 <- p_11[p_11 != "gp_cost_11"]
+drug_12 <- p_12[p_12 != "gp_cost_12"]
+
+# Add drug codes together: 
+
+# Exposure group:
+lc_exp_matched$drug_cost_1 <- rowSums(lc_exp_matched[drug_1], na.rm = T)
+lc_exp_matched$drug_cost_2 <- rowSums(lc_exp_matched[drug_2], na.rm = T)
+lc_exp_matched$drug_cost_3 <- rowSums(lc_exp_matched[drug_3], na.rm = T)
+lc_exp_matched$drug_cost_4 <- rowSums(lc_exp_matched[drug_4], na.rm = T)
+lc_exp_matched$drug_cost_5 <- rowSums(lc_exp_matched[drug_5], na.rm = T)
+lc_exp_matched$drug_cost_6 <- rowSums(lc_exp_matched[drug_6], na.rm = T)
+lc_exp_matched$drug_cost_7 <- rowSums(lc_exp_matched[drug_7], na.rm = T)
+lc_exp_matched$drug_cost_8 <- rowSums(lc_exp_matched[drug_8], na.rm = T)
+lc_exp_matched$drug_cost_9 <- rowSums(lc_exp_matched[drug_9], na.rm = T)
+lc_exp_matched$drug_cost_10 <- rowSums(lc_exp_matched[drug_10], na.rm = T)
+lc_exp_matched$drug_cost_11 <- rowSums(lc_exp_matched[drug_11], na.rm = T)
+lc_exp_matched$drug_cost_12 <- rowSums(lc_exp_matched[drug_12], na.rm = T)
+
+# Comparator: 
+com_matched$drug_cost_1 <- rowSums(com_matched[drug_1], na.rm = T)
+com_matched$drug_cost_2 <- rowSums(com_matched[drug_2], na.rm = T)
+com_matched$drug_cost_3 <- rowSums(com_matched[drug_3], na.rm = T)
+com_matched$drug_cost_4 <- rowSums(com_matched[drug_4], na.rm = T)
+com_matched$drug_cost_5 <- rowSums(com_matched[drug_5], na.rm = T)
+com_matched$drug_cost_6 <- rowSums(com_matched[drug_6], na.rm = T)
+com_matched$drug_cost_7 <- rowSums(com_matched[drug_7], na.rm = T)
+com_matched$drug_cost_8 <- rowSums(com_matched[drug_8], na.rm = T)
+com_matched$drug_cost_9 <- rowSums(com_matched[drug_9], na.rm = T)
+com_matched$drug_cost_10 <- rowSums(com_matched[drug_10], na.rm = T)
+com_matched$drug_cost_11 <- rowSums(com_matched[drug_11], na.rm = T)
+com_matched$drug_cost_12 <- rowSums(com_matched[drug_12], na.rm = T)
 
 # 2. Combine secondary care -----
 # Secondary care: apc_cost_m, er_cost_m, opd_cost_m

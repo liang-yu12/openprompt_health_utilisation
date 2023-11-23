@@ -5,9 +5,9 @@ source("analysis/dm03_02_now_add_primary_sec_care_costs.R")
 # Pivot the GP cost ------
 
 # set the columns to pivot
-total_gp_cost <- c()
+total_drug_cost <- c()
 for (i in 1:12) {
-      total_gp_cost <- c(total_gp_cost, paste0("gp_cost_", i))
+      total_drug_cost <- c(total_drug_cost, paste0("drug_cost_", i))
 }
 
 
@@ -15,12 +15,12 @@ for (i in 1:12) {
 # pivot costs
 exp_cost_ts <- lc_exp_matched %>% 
       pivot_longer(
-            cols = all_of(total_gp_cost),
+            cols = all_of(total_drug_cost),
             names_to = c("month"),
-            values_to = "monthly_gp_cost"
+            values_to = "monthly_drug_cost"
       )
 
-exp_cost_ts$month <- str_sub(exp_cost_ts$month, 9) # remove "total_gp_cost_"
+exp_cost_ts$month <- str_sub(exp_cost_ts$month, 11) # remove "total_drug_cost_"
 exp_cost_ts$month <- as.numeric(exp_cost_ts$month)
 
 # pivot exposure follow-up time
@@ -47,12 +47,12 @@ exp_cost_long <- left_join(exp_cost_ts, exp_fu_ts,
 # Pivot the comparator costs
 com_cost_ts <- com_matched %>% 
       pivot_longer(
-            cols = all_of(total_gp_cost),
+            cols = all_of(total_drug_cost),
             names_to = c("month"),
-            values_to = "monthly_gp_cost"
+            values_to = "monthly_drug_cost"
       )
 
-com_cost_ts$month <- str_sub(com_cost_ts$month, 9)
+com_cost_ts$month <- str_sub(com_cost_ts$month, 11)
 com_cost_ts$month <- as.numeric(com_cost_ts$month)
 
 # Pivot the comparator follow_up time: 
@@ -75,25 +75,25 @@ com_cost_long <- left_join(com_cost_ts, com_fu_ts,
 
 
 # Combine two datasets: ---------
-matched_gp_cost_ts <- bind_rows(exp_cost_long, com_cost_long)
+matched_drug_cost_ts <- bind_rows(exp_cost_long, com_cost_long)
 # fix the exposure levels
-matched_gp_cost_ts$exposure <- factor(matched_gp_cost_ts$exposure, levels = c("Comparator", "Long covid exposure"))
-matched_gp_cost_ts$exposure %>% levels()
+matched_drug_cost_ts$exposure <- factor(matched_drug_cost_ts$exposure, levels = c("Comparator", "Long covid exposure"))
+matched_drug_cost_ts$exposure %>% levels()
 
 # Data management for model ------
 
 # 12 months
-matched_cost_12m <- matched_gp_cost_ts %>% 
+matched_cost_12m <- matched_drug_cost_ts %>% 
       filter(!is.na(follow_up_time)) %>% 
       group_by(patient_id, exposure) %>% 
       summarise(
-            gp_cost = sum(monthly_gp_cost, na.rm =T),
+            drug_cost = sum(monthly_drug_cost, na.rm =T),
             follow_up = sum(follow_up_time, na.rm = T)) %>% 
       ungroup()
 
 
 # # Add covariates for adjustment
-for_covariates <- matched_gp_cost_ts %>% distinct(patient_id, exposure, .keep_all = T) %>% 
+for_covariates <- matched_drug_cost_ts %>% distinct(patient_id, exposure, .keep_all = T) %>% 
       dplyr::select("patient_id",     
                     "exposure",           
                     "age", "age_cat",               

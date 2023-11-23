@@ -101,7 +101,7 @@ ggplot(predicted_crude_value, aes(x= time,
                                   y= visits,
                                   color = exposure)) +
       geom_point() + geom_errorbar(aes(ymin=lci, ymax=hci), width=0.5) +
-      geom_line(aes(group = exposure), size = 1)  + theme_bw() +
+      geom_line(aes(group = exposure), linewidth = 1)  + theme_bw() +
       xlab("Time period") + ylab("Average healthcare visits") +
       scale_color_manual(values=c("#E1BE6A", "#40B0A6")) +
       guides(color=guide_legend(title="Exposure group")) 
@@ -187,7 +187,7 @@ predicted_adj_value$time <- factor(predicted_adj_value$time, levels = time_order
 
 ggplot(predicted_adj_value, aes(x= time, y= visits, color = exposure)) +
       geom_point() + geom_errorbar(aes(ymin=lci, ymax=hci), width=0.1) +
-      geom_line(aes(group = exposure), size = 1)  + theme_bw() +
+      geom_line(aes(group = exposure), linewidth = 1)  + theme_bw() +
       xlab("Time period") + ylab("Average healthcare visits") +
       scale_color_manual(values=c("#E1BE6A", "#40B0A6")) +
       guides(color=guide_legend(title="Exposure group")) 
@@ -216,3 +216,61 @@ print("# Adjusted hurdle model output part 2 ---------")
 print(tidy.vglm(adj_nb_12m, conf.int=T))
 sink()
 
+
+# Check the mean difference ------
+# Revise the predicted function 
+data_predic_fn <- function(i.exp, i.time){
+      
+      # # set up input new data frame
+      input <- adj_did_tpm_12m %>% filter(exposure == i.exp, time == i.time) %>% 
+            mutate(follow_up = 360)
+      
+      p1 <- predict(adj_binomial_12m, newdata = input, type = "response")                     
+      p2 <- predict(adj_nb_12m, newdata = input, type = "link", se.fit = T)
+      
+      
+      # the fitted value outcome is a matrix. Only need the mean value
+      p2_fit<- p2$fitted.values %>% as.data.frame() %>% 
+            dplyr::select(`loglink(munb)`) %>% rename(fitted = `loglink(munb)`) 
+      
+      p2_se <- p2$se.fit %>% as.data.frame()%>% 
+            dplyr::select(`loglink(munb)`)  %>% rename(se = `loglink(munb)`)
+      
+      # multiply the first part and the second part:
+      predicted_visits <- data.frame(
+            nonzero_prob = p1,
+            p_visits = p2_fit$fitted,
+            p_se= p2_se$se) %>% 
+            mutate(c_visits = exp(p_visits)*nonzero_prob,
+                   c_lci = exp(p_visits - 1.96*p_se)*nonzero_prob,
+                   c_hci = exp(p_visits + 1.96*p_se)*nonzero_prob) %>% 
+            dplyr::select(c_visits, c_lci, c_hci) %>% 
+            mutate(exposure = i.exp,
+                   time = i.time)
+}
+
+
+# Predicted counts by groups 
+com_predicted <- bind_rows(
+      data_predic_fn(i.exp = "Comparator", i.time = "Historical"),
+      data_predic_fn(i.exp = "Comparator", i.time = "Contemporary")
+)
+
+exp_predicted <- bind_rows(
+      data_predic_fn(i.exp = "Long COVID exposure", i.time = "Historical"),
+      data_predic_fn(i.exp = "Long COVID exposure", i.time = "Contemporary")
+)
+
+total_predicted <- bind_rows(com_predicted, exp_predicted )
+
+total_predicted$exposure <- factor(total_predicted$exposure, 
+                                   levels = c("Comparator","Long COVID exposure"))
+
+total_predicted$time <- factor(total_predicted$time, 
+                               levels = c("Historical", "Contemporary"))
+
+# Difference in difference:
+lm(c_visits ~ exposure*time, 
+   data = total_predicted) %>% 
+      tidy() %>% 
+      write_csv("output/st05_did_mean_difference.csv")

@@ -354,7 +354,7 @@ actions:
         total_cost_outcomes_plots: output/st03_08_total_cost.png
 
 
-#  Total primary care costs: run two part model and predict costs
+#  GP costs: run two part model and predict costs
   report_03_04_gp_cost_twopm:
     needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
@@ -367,6 +367,33 @@ actions:
         gp_predicted_costs: output/st03_04_predict_gp_cost_tpm.csv
         gp_cost_bi_model_check: output/st03_04_gp_binomial_model_counts.csv
         gp_cost_gamma_model_check: output/st03_04_gp_gamma_model_counts.csv
+
+
+  report_03_04_drug_cost_twopm:
+    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+    run: 
+      r:latest analysis/st03_04_now_drug_cost_twopart.R
+    outputs: 
+      moderately_sensitive: 
+        drug_cost-binomial: output/st03_04_now_drug_cost_binomial_output.csv
+        drug_cost_twopm: output/st03_04_now_drug_cost_twopm_output.csv
+        drug_cost_tpm_reg_summary: output/st03_04_now_drug_reg_summary.txt
+        drug_predicted_costs: output/st03_04_predict_drug_cost_tpm.csv
+        drug_cost_bi_model_check: output/st03_04_drug_binomial_model_counts.csv
+        drug_cost_gamma_model_check: output/st03_04_drug_gamma_model_counts.csv
+
+  report_03_04_primarycare_cost_twopm:
+    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+    run: 
+      r:latest analysis/st03_04_now_primarycare_cost_twopart.R
+    outputs: 
+      moderately_sensitive: 
+        primarycare_cost-binomial: output/st03_04_now_primarycare_cost_binomial_output.csv
+        primarycare_cost_twopm: output/st03_04_now_primarycare_cost_twopm_output.csv
+        primarycare_cost_tpm_reg_summary: output/st03_04_now_primarycare_reg_summary.txt
+        primarycare_predicted_costs: output/st03_04_predict_primarycare_cost_tpm.csv
+        primarycare_cost_bi_model_check: output/st03_04_primarycare_binomial_model_counts.csv
+        primarycare_cost_gamma_model_check: output/st03_04_primarycare_gamma_model_counts.csv
 
 
 # APC costs: run two part model and predict costs
@@ -414,12 +441,13 @@ actions:
 
 # # Visulize different types of cost outcome:
   report_03_09_plot_types_cost_outcomes:
-    needs: [report_03_04_gp_cost_twopm, report_03_05_apc_cost_twopm, report_03_06_a_and_e_cost_twopm, report_03_07_opa_cost_twopm]
+    needs: [report_03_04_gp_cost_twopm, report_03_04_drug_cost_twopm, report_03_05_apc_cost_twopm, report_03_06_a_and_e_cost_twopm, report_03_07_opa_cost_twopm]
     run:
       r:latest analysis/st03_09_visualise_type_cost_outcomes.R
     outputs:
       moderately_sensitive:
         gp_cost_plot: output/st03_09_gp_costs.png
+        drug_cost_plot: output/st03_09_drug_costs.png
         apc_cost_plot: output/st03_09_apc_costs.png
         ane_cost_plot: output/st03_09_ane_costs.png
         opa_cost_plot: output/st03_09_opa_costs.png
@@ -447,6 +475,7 @@ actions:
         did_adj_plot: output/st05_did_adj.png
         did_reg_table: output/st05_did_tpm_predicted.csv
         did_reg_summary: output/st05_did_reg_summary_output.txt
+        did_mean_diff: output/st05_did_mean_difference.csv
 
 
 # Supplementary materials ===========================

@@ -56,10 +56,10 @@ adj_predic_fn <- function(factor, value, part_1, part_2){
             filter(factor == value) %>% 
             mutate(follow_up = 360)
       
-      input$nonzero_prob <- predict(hos_f_binomial_12m, newdata = input, type = "response")                     
+      input$nonzero_prob <- predict(part_1, newdata = input, type = "response")                     
       
       
-      p2 <- predict(hos_f_hurdle_12m, newdata = input, type = "link", se.fit = T)
+      p2 <- predict(part_2, newdata = input, type = "link", se.fit = T)
       
       input<- bind_cols(
             input, 
@@ -89,7 +89,12 @@ adj_predic_fn <- function(factor, value, part_1, part_2){
       return(results)
 }
 
-
+# LR test for hurdle moderl: Write a function to organise the vglm outcomes
+lrt_hurdle <- function(interaction, no_interaction){
+      compare_hurdle_lrt <- VGAM::lrtest_vglm(interaction, no_interaction)
+      results <- compare_hurdle_lrt@Body %>% as.data.frame() %>% dplyr::select(`Pr(>Chisq)`)
+      return(results)
+}
 # Stats: Subgroup analyses by different covariates -----
 # Fit an interaction term between exposure and the cov.
 
@@ -155,13 +160,7 @@ hos_t_hurdle_12m <- vglm(visits ~ exposure*previous_covid_hosp_true + offset(log
                            cov_covid_vax_n_cat +number_comorbidities_cat, 
                          family = posnegbinomial(),
                          data = subset(adj_complete_12m, visits_binary > 0))
-# LR test:
-# Write a function to organise the vglm outcomes
-lrt_hurdle <- function(interaction, no_interaction){
-      compare_hurdle_lrt <- VGAM::lrtest_vglm(interaction, no_interaction)
-      results <- compare_hurdle_lrt@Body %>% as.data.frame() %>% dplyr::select(`Pr(>Chisq)`)
-      return(results)
-}
+
       
 lrt_hos_tpm <- lrt_hurdle(hos_f_hurdle_12m, hos_no_hurdle_12m)      
 
@@ -185,16 +184,17 @@ predicted_by_hos <- bind_rows(
       mutate(group = "Previous hospitalisation") %>% relocate(group)
 
 ## By sex:-----
-# Ref: female
-adj_complete_12m$sex %>% levels  #"female" "male"
-adj_complete_12m$sex_f <- adj_complete_12m$sex
 # Ref: male
-adj_complete_12m$sex_m <- factor(adj_complete_12m$sex, levels = c("male","female"))
-
+adj_complete_12m$sex %>% levels  #"male"   "female"
+adj_complete_12m$sex_m <- adj_complete_12m$sex
+adj_complete_12m$sex_m %>% levels # "male"   "female"
+# Ref: female
+adj_complete_12m$sex_f <- factor(adj_complete_12m$sex, levels = c("female","male"))
+adj_complete_12m$sex_f %>% levels # "female" "male"  
 # Part 1: Binomial model:
 
 # No interaction:
-sex_no_binomial_12m <- glm(visits_binary ~ exposure + sex_f + offset(log(follow_up)) +
+sex_no_binomial_12m <- glm(visits_binary ~ exposure + sex_m + offset(log(follow_up)) +
                                  age + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
                                  previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat,
                               data = adj_complete_12m,
@@ -215,7 +215,7 @@ sex_m_binomial <- glm(visits_binary ~ exposure*sex_m + offset(log(follow_up)) +
                       family=binomial(link="logit"))
 
 # LR test:
-lrt_sex_bi <- lmtest::lrtest(sex_f_binomial, sex_no_binomial_12m) %>%
+lrt_sex_bi <- lmtest::lrtest(sex_m_binomial, sex_no_binomial_12m) %>%
       dplyr::select(`Pr(>Chisq)`)
 
 # Organise binomial outcomes:
@@ -227,7 +227,7 @@ sex_bi_sub <- bind_rows(
 # Part 2: Truncated negative binomial reg
 
 # No interaction:
-sex_no_hurdle_12m <- vglm(visits ~ exposure + sex_f + offset(log(follow_up)) +
+sex_no_hurdle_12m <- vglm(visits ~ exposure + sex_m + offset(log(follow_up)) +
                                 age + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
                                 previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat,
                           family = posnegbinomial(),
@@ -274,49 +274,78 @@ predicted_by_sex <- bind_rows(
 # set ref for each stratum
 adj_complete_12m$age_cat %>% levels #"18-29" "30-39" "40-49" "50-59" "60-69" "70+"
 # ref: 18-29
-adj_complete_12m$age_cat_18 <- relevel(adj_complete_12m$age_cat, ref = "18-29")
+adj_complete_12m$age_cat_18 <- factor(adj_complete_12m$age_cat, 
+                                      levels = c("18-29", "30-39", "40-49",
+                                                 "50-59", "60-69", "70+"))
 # ref: "30-39"
-adj_complete_12m$age_cat_30 <- relevel(adj_complete_12m$age_cat, ref = "30-39")
+adj_complete_12m$age_cat_30 <-factor(adj_complete_12m$age_cat, 
+                                     levels = c("30-39","18-29", "40-49",
+                                                "50-59", "60-69", "70+"))
 # ref: "40-49"
-adj_complete_12m$age_cat_40 <- relevel(adj_complete_12m$age_cat, ref = "40-49")
+adj_complete_12m$age_cat_40 <- factor(adj_complete_12m$age_cat, 
+                                      levels = c("40-49", "18-29", "30-39",
+                                                 "50-59", "60-69", "70+"))
 # ref: "50-59"
-adj_complete_12m$age_cat_50 <- relevel(adj_complete_12m$age_cat, ref = "50-59")
+adj_complete_12m$age_cat_50 <- factor(adj_complete_12m$age_cat, 
+                                      levels = c("50-59", "18-29", "30-39", 
+                                                 "40-49", "60-69", "70+"))
 # ref: "60-69"
-adj_complete_12m$age_cat_60 <- relevel(adj_complete_12m$age_cat, ref = "60-69")
+adj_complete_12m$age_cat_60 <- factor(adj_complete_12m$age_cat, 
+                                      levels = c("60-69", "18-29", "30-39", 
+                                                 "40-49", "50-59", "70+"))
 # ref: "70+"
-adj_complete_12m$age_cat_70 <- relevel(adj_complete_12m$age_cat, ref = "70+"  )
+adj_complete_12m$age_cat_70 <- factor(adj_complete_12m$age_cat, 
+                                      levels = c("70+", "18-29", "30-39", 
+                                                 "40-49", "50-59", "60-69"))
 
 
 
 # Part 1: Binomial model:
 
 # No interaction:
-age_no_binomial_12m <- glm(visits_binary ~ exposure + sex + offset(log(follow_up)) +
-                                 age_cat_18 + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+age_no_binomial_12m <- glm(visits_binary ~ exposure + age_cat_18 + offset(log(follow_up)) +
+                                 sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
                                  previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat,
                            data = adj_complete_12m,
                            family=binomial(link="logit"))
-# set up a function to shorten the codes:
-age_bi_interaction_fn <- function(cat){
-      glm(visits_binary ~ exposure*cat + sex + offset(log(follow_up)) +
-                bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
-                previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat,
-          data = adj_complete_12m,
-          family=binomial(link="logit"))
-}
 
 # Age 18 group (same as default)
-age_18_bi <- age_bi_interaction_fn(adj_complete_12m$age_cat_18)
+age_18_bi <- glm(visits_binary ~ exposure*age_cat_18 + offset(log(follow_up)) +
+                       sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                       previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat,
+                 data = adj_complete_12m,
+                 family=binomial(link="logit"))
 # Age 30 group
-age_30_bi <- age_bi_interaction_fn(adj_complete_12m$age_cat_30)
+age_30_bi <- glm(visits_binary ~ exposure*age_cat_30 + offset(log(follow_up)) +
+                       sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                       previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat,
+                 data = adj_complete_12m,
+                 family=binomial(link="logit"))
 # Age 40:
-age_40_bi <- age_bi_interaction_fn(adj_complete_12m$age_cat_40)
+age_40_bi <- glm(visits_binary ~ exposure*age_cat_40 + offset(log(follow_up)) +
+                       sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                       previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat,
+                 data = adj_complete_12m,
+                 family=binomial(link="logit"))
+
 # Age 50:
-age_50_bi <- age_bi_interaction_fn(adj_complete_12m$age_cat_50)
+age_50_bi <- glm(visits_binary ~ exposure*age_cat_50 + offset(log(follow_up)) +
+                       sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                       previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat,
+                 data = adj_complete_12m,
+                 family=binomial(link="logit"))
 # Age 60:
-age_60_bi <- age_bi_interaction_fn(adj_complete_12m$age_cat_60)
+age_60_bi <- glm(visits_binary ~ exposure*age_cat_60 + offset(log(follow_up)) +
+                       sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                       previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat,
+                 data = adj_complete_12m,
+                 family=binomial(link="logit"))
 # Age 70:
-age_70_bi <- age_bi_interaction_fn(adj_complete_12m$age_cat_70)
+age_70_bi <- glm(visits_binary ~ exposure*age_cat_70 + offset(log(follow_up)) +
+                       sex + bmi_cat + ethnicity_6 + imd_q5 + region + cov_asthma + cov_mental_health +
+                       previous_covid_hosp + cov_covid_vax_n_cat +number_comorbidities_cat,
+                 data = adj_complete_12m,
+                 family=binomial(link="logit"))
 
 # LR test
 lr_age_bi <- lmtest::lrtest(age_18_bi, age_no_binomial_12m) %>%

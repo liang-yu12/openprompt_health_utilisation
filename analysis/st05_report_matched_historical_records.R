@@ -40,5 +40,5 @@ ggplot() +
       annotate("text", x = 5, y=0.35, label = "Historical healthcare utilisation",hjust = 0.2) 
 
 
-ggsave(file = "output/st05_historical_smooth.jpg", width = 8, height = 6)
+ggsave(file = "output/st05_historical_smooth.jpg", width = 12, height = 6)
 
