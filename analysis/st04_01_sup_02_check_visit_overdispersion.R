@@ -27,7 +27,7 @@ total_healthcare_visits <- with(poisson_crude, cbind(res.deviance = deviance,
 
 
 # 2. Primary care visits------
-source("analysis/dm02_02_now_pivot_gp_visits_long.R")
+source("analysis/dm02_02_02_now_pivot_gp_visits_long.R")
 
 gp_crude <- glm(visits ~ exposure + offset(log(follow_up)), 
                      data = matched_data_gp_12m, 
