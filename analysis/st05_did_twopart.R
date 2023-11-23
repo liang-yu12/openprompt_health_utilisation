@@ -188,6 +188,7 @@ predicted_adj_value$time <- factor(predicted_adj_value$time, levels = time_order
 ggplot(predicted_adj_value, aes(x= time, y= visits, color = exposure)) +
       geom_point() + geom_errorbar(aes(ymin=lci, ymax=hci), width=0.1) +
       geom_line(aes(group = exposure), linewidth = 1)  + theme_bw() +
+      ylim(c(0, 30)) +
       xlab("Time period") + ylab("Average healthcare visits") +
       scale_color_manual(values=c("#E1BE6A", "#40B0A6")) +
       guides(color=guide_legend(title="Exposure group")) 
