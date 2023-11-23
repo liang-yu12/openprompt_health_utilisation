@@ -2,8 +2,6 @@
 # Healthcare visits:
 source("analysis/dm02_01_now_pivot_total_visits_long.R")
 
-matched_data_12m <- matched_data_12m %>% dplyr::select(-total_drug_visit)
-
 visit_distribution_his <- matched_data_12m %>% 
       ggplot(aes(x=visits, fill = exposure)) + 
       geom_histogram(position = "dodge") + 
