@@ -42,3 +42,34 @@ ggplot() +
 
 ggsave(file = "output/st05_historical_smooth.jpg", width = 12, height = 6)
 
+
+
+# Additional plots: plot observed counts: 
+# data management: select complete cases:
+adj_did_complete_12m <- did_data_12m[complete.cases(did_data_12m),]
+adj_did_complete_12m$ethnicity_6 <- droplevels(adj_did_complete_12m$ethnicity_6)
+
+adj_did_complete_12m %>% names
+ 
+summary_crude_data <- adj_did_complete_12m %>% 
+      filter(!is.na(follow_up)) %>% 
+      group_by(time, exposure) %>% 
+      summarise(
+            mean_visits = mean(visits, na.rm = T),
+            sd_visits = sd(visits, na.rm = T)
+      ) %>% 
+      mutate(lci = mean_visits - 1.96*sd_visits,
+             hci = mean_visits + 1.96*sd_visits)
+      
+
+# Plot: 
+ggplot(summary_crude_data, aes(x = time, y = mean_visits, color = exposure)) +
+      geom_point() + geom_errorbar(aes(ymin=lci, ymax=hci), width=0.1) +
+      geom_line(aes(group = exposure), linewidth = 1)  + theme_bw() +
+      ylim(c(0, 30)) +
+      xlab("Time period") + ylab("Average healthcare visits") +
+      scale_color_manual(values=c("#1E88E5", "#D81B60")) +
+      guides(color=guide_legend(title="Exposure group")) 
+
+ggsave(file = "output/st05_observed_his_now_line.jpg", 
+       width = 9, height = 4, units = "in")
