@@ -52,7 +52,8 @@ all_binomial <- all_binomial%>% mutate(
             str_detect(term, "region") ~ "Region",
             str_detect(term, "previous_covid_") ~ "Hospitalisation",
             str_detect(term, "cov_covid_vax_n_") ~ "COVID vaccine doses",
-            (str_detect(term, "cov_asthma") | str_detect(term, "cov_mental_health")) ~ "Underlying diseases",
+            str_detect(term, "cov_asthma") ~ "Asthma",
+            str_detect(term, "cov_mental_health")  ~ "Mental health conditions",
             str_detect(term, "number_comorbidities_cat") ~ "Comorbidities",
             Factors == "Long COVID" ~ "Exposure")) %>% 
       dplyr::select(Categories, Factors, estimate, lci, hci) 
@@ -86,8 +87,12 @@ all_binomial <- all_binomial %>%
               Factors = "London",
               estimate = 1, lci =1, hci =1,
               Order = 0) %>% 
-      add_row(Categories = "Underlying diseases", 
-              Factors = "No underlying diseases",
+      add_row(Categories = "Asthma", 
+              Factors = "No asthma",
+              estimate = 1, lci =1, hci =1,
+              Order = 0) %>% 
+      add_row(Categories = "Mental health conditions", 
+              Factors = "No mental health conditions",
               estimate = 1, lci =1, hci =1,
               Order = 0) %>% 
       add_row(Categories = "COVID vaccine doses", 
@@ -105,10 +110,11 @@ all_binomial <- all_binomial %>%
             Categories == "Region" ~ 4,
             Categories == "Index for Multiple Deprivation" ~ 5,
             Categories == "BMI categories"~ 6,
-            Categories == "Underlying diseases"~ 7,
-            Categories == "Comorbidities" ~ 8,
-            Categories == "Hospitalisation"~ 9,
-            Categories == "COVID vaccine doses" ~ 10)) %>% 
+            Categories == "Asthma"~ 7,
+            Categories == "Mental health conditions"~ 8,
+            Categories == "Comorbidities" ~ 9,
+            Categories == "Hospitalisation"~ 10,
+            Categories == "COVID vaccine doses" ~ 11)) %>% 
       arrange(cat_order, Order) %>% 
       mutate(Categories = ifelse(Order == 0, Categories, " ")) %>% 
       mutate(Categories = ifelse(Factors == "Age", "Age", Categories)) %>% 
@@ -187,10 +193,12 @@ all_hurdle <- read_csv("output/st04_02_all_factors_hurdle.csv") %>%
             str_detect(term, "region") ~ "Region",
             str_detect(term, "previous_covid_") ~ "Hospitalisation",
             str_detect(term, "cov_covid_vax_n_") ~ "COVID vaccine doses",
-            (str_detect(term, "cov_asthma") | str_detect(term, "cov_mental_health")) ~ "Underlying diseases",
+            str_detect(term, "cov_asthma") ~ "Asthma",
+            str_detect(term, "cov_mental_health")  ~ "Mental health conditions",
             str_detect(term, "number_comorbidities_cat") ~ "Comorbidities",
             Factors == "Long COVID" ~ "Exposure")) %>% 
       dplyr::select(Categories, Factors, estimate, lci, hci) 
+
 
 
 
@@ -222,8 +230,12 @@ all_hurdle <- all_hurdle %>%
               Factors = "London",
               estimate = 1, lci =1, hci =1,
               Order = 0) %>% 
-      add_row(Categories = "Underlying diseases", 
-              Factors = "No underlying diseases",
+      add_row(Categories = "Asthma", 
+              Factors = "No asthma",
+              estimate = 1, lci =1, hci =1,
+              Order = 0) %>% 
+      add_row(Categories = "Mental health conditions", 
+              Factors = "No mental health conditions",
               estimate = 1, lci =1, hci =1,
               Order = 0) %>% 
       add_row(Categories = "COVID vaccine doses", 
@@ -241,10 +253,11 @@ all_hurdle <- all_hurdle %>%
             Categories == "Region" ~ 4,
             Categories == "Index for Multiple Deprivation" ~ 5,
             Categories == "BMI categories"~ 6,
-            Categories == "Underlying diseases"~ 7,
-            Categories == "Comorbidities" ~ 8,
-            Categories == "Hospitalisation"~ 9,
-            Categories == "COVID vaccine doses" ~ 10)) %>% 
+            Categories == "Asthma"~ 7,
+            Categories == "Mental health conditions"~ 8,
+            Categories == "Comorbidities" ~ 9,
+            Categories == "Hospitalisation"~ 10,
+            Categories == "COVID vaccine doses" ~ 11)) %>% 
       arrange(cat_order, Order) %>% 
       mutate(Categories = ifelse(Order == 0, Categories, " ")) %>% 
       mutate(Categories = ifelse(Factors == "Age", "Age", Categories)) %>% 
