@@ -46,10 +46,7 @@ ggsave(file = "output/st05_historical_smooth.jpg", width = 12, height = 6)
 
 # Additional plots: plot observed counts: 
 # data management: select complete cases:
-adj_did_complete_12m <- did_data_12m[complete.cases(did_data_12m),]
-adj_did_complete_12m$ethnicity_6 <- droplevels(adj_did_complete_12m$ethnicity_6)
-
-adj_did_complete_12m %>% names
+adj_did_complete_12m <- did_data_12m
  
 summary_crude_data <- adj_did_complete_12m %>% 
       filter(!is.na(follow_up)) %>% 
