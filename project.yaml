@@ -181,9 +181,9 @@ actions:
       moderately_sensitive: 
         matched_table: output/st01_matched_numbers_table.csv  # Table 1
         explore_fu_time: output/st01_matched_numbers_check_fu.csv # check the incorrect follow-up time
-        explore_vax_fig: output/st1_exporing_vax_index_date.png # Check vax date
+        explore_vax_fig: output/st1_exporing_vax_index_date.svg # Check vax date
         missing_table: output/missing_distribution_table.csv # Missing pattern tab
-        missing_pattern: output/missing_pattern_current.png # Missing patter plot
+        missing_pattern: output/missing_pattern_current.svg # Missing patter plot
 
 # Contemporary comparison
 
@@ -264,8 +264,8 @@ actions:
       r:latest analysis/st02_02_03_visualise_gp_drug_visits.R
     outputs: 
       moderately_sensitive: 
-        gp_only_visits: output/st02_02_03_gp_only_visits.png
-        prescription_visits: output/st02_02_03_prescription_visits.png
+        gp_only_visits: output/st02_02_03_gp_only_visits.svg
+        prescription_visits: output/st02_02_03_prescription_visits.svg
 
 
 # # Hospital admission - hurdle
@@ -321,10 +321,10 @@ actions:
       r:latest analysis/st02_07_visualise_outcomes_by_types.R
     outputs:
       moderately_sensitive:
-        primary_care_plots: output/st02_07_parimary_care_visits.png
-        hos_admin_plots: output/st02_07_hospitalisations.png
-        a_and_e_visit_plots: output/st02_07_a_and_e_visits.png
-        opa_visit_plots: output/st02_07_opa_visits.png
+        primary_care_plots: output/st02_07_parimary_care_visits.svg
+        hos_admin_plots: output/st02_07_hospitalisations.svg
+        a_and_e_visit_plots: output/st02_07_a_and_e_visits.svg
+        opa_visit_plots: output/st02_07_opa_visits.svg
 
 
 # Main outcome: total Costs using twopart model
@@ -351,7 +351,7 @@ actions:
       r:latest analysis/st03_08_visualise_total_cost_outcomes.R
     outputs:
       moderately_sensitive:
-        total_cost_outcomes_plots: output/st03_08_total_cost.png
+        total_cost_outcomes_plots: output/st03_08_total_cost.svg
 
 
 #  GP costs: run two part model and predict costs
@@ -446,11 +446,11 @@ actions:
       r:latest analysis/st03_09_visualise_type_cost_outcomes.R
     outputs:
       moderately_sensitive:
-        gp_cost_plot: output/st03_09_gp_costs.png
-        drug_cost_plot: output/st03_09_drug_costs.png
-        apc_cost_plot: output/st03_09_apc_costs.png
-        ane_cost_plot: output/st03_09_ane_costs.png
-        opa_cost_plot: output/st03_09_opa_costs.png
+        gp_cost_plot: output/st03_09_gp_costs.svg
+        drug_cost_plot: output/st03_09_drug_costs.svg
+        apc_cost_plot: output/st03_09_apc_costs.svg
+        ane_cost_plot: output/st03_09_ane_costs.svg
+        opa_cost_plot: output/st03_09_opa_costs.svg
 
 # Historical: data distribution
   report05_hx_matched_data_distribution:
@@ -472,8 +472,8 @@ actions:
       r:latest analysis/st05_did_twopart.R
     outputs: 
       moderately_sensitive: 
-        did_crude_plot: output/st05_did_crude.png
-        did_adj_plot: output/st05_did_adj.png
+        did_crude_plot: output/st05_did_crude.svg
+        did_adj_plot: output/st05_did_adj.svg
         did_reg_table: output/st05_did_tpm_predicted.csv
         did_reg_summary: output/st05_did_reg_summary_output.txt
         did_mean_diff: output/st05_did_mean_difference.csv
@@ -487,8 +487,8 @@ actions:
       r:latest analysis/st04_01_outcome_distribution_plots.R
     outputs: 
       moderately_sensitive: 
-        outcome_distribution_plot: output/st04_01_total_outcome_distribution.png
-        zero_percent_fig: output/st04_01_explore_zero_percentage.png
+        outcome_distribution_plot: output/st04_01_total_outcome_distribution.svg
+        zero_percent_fig: output/st04_01_explore_zero_percentage.svg
         monthly_oucome_tb: output/st04_01_monthly_outcome_distribution.csv
         visit_explore: output/st04_01_cat_visits_summary.csv
 
@@ -520,7 +520,7 @@ actions:
       r:latest analysis/st04_03_now_visualise_associated_factors.R
     outputs:
       moderately_sensitive:
-        all_factor_forest_plot: output/st04_03_all_factors.png
+        all_factor_forest_plot: output/st04_03_all_factors.svg
  
 # # Supplementary 3: stratified by hospitalisation, sex, age - hurdle
   report_04_04_stratified_by_cov:
@@ -541,9 +541,9 @@ actions:
       r:latest analysis/st04_05_stratified_visualisation.R
     outputs: 
       moderately_sensitive: 
-        previous_hos_stratum_plot: output/st04_05_stratum_hos_visits.png
-        sex_stratum_plot: output/st04_05_stratum_sex_visits.png
-        age_stratum_plot: output/st04_05_stratum_age_visits.png
+        previous_hos_stratum_plot: output/st04_05_stratum_hos_visits.svg
+        sex_stratum_plot: output/st04_05_stratum_sex_visits.svg
+        age_stratum_plot: output/st04_05_stratum_age_visits.svg
 
 # # Sensitivity analyses: main analyses among people who had GP registeration and visits 
 # 1 year before study started.
@@ -567,7 +567,7 @@ actions:
       r:latest analysis/st04_06_02_plot_visualise_sens_gp1y_outcome.R
     outputs: 
       moderately_sensitive: 
-        sens_gp1y_plot: output/st04_06_02_plot_sens_gp1y_total_visits.png
+        sens_gp1y_plot: output/st04_06_02_plot_sens_gp1y_total_visits.svg
 
 # # Sensitivity analyses: main analyses among people who had positive covid before follow-up
   report04_07_sens_covid_positive_all_visits_hurdle:
@@ -590,7 +590,7 @@ actions:
       r:latest analysis/st04_07_02_plot_visualise_cov_positive_outcome.R
     outputs: 
       moderately_sensitive: 
-        sens_gp1y_plot: output/st04_07_plot_sens_covid_plus_total_healthcare_visits.png
+        sens_gp1y_plot: output/st04_07_plot_sens_covid_plus_total_healthcare_visits.svg
         
 # Sensitivity analyses: inpute missing costs
 
@@ -615,7 +615,7 @@ actions:
       r:latest analysis/st03_08_v2_visualise_inputed_total_cost_outcomes.R
     outputs:
       moderately_sensitive:
-        total_cost_outcomes_plots: output/st03_08_v2_inputed_total_cost.png
+        total_cost_outcomes_plots: output/st03_08_v2_inputed_total_cost.svg
 
 
 # Impute APC cost 
