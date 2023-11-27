@@ -317,5 +317,6 @@ all_two_forest <- forest(
 plot(all_two_forest)
 
 
-ggsave(all_two_forest, file = "output/st04_03_all_factors.png",
+ggsave(all_two_forest, file = "output/st04_03_all_factors.svg",
+       device = "svg",
        width=20, height=14, units = "in", dpi = 300)
