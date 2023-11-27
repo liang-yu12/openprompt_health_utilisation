@@ -294,25 +294,30 @@ ops_cost_plot <- barplot_fn(opa_predicted_cost, "Average outpatient clinic visit
 # Combine plots together and save : ----------
 # GP plots
 gp_all_plots <- ggarrange(gp_forest, gp_cost_plot, ncol = 1, labels = c("a", "b"))
-ggsave(gp_all_plots, file = "output/st03_09_gp_costs.png",
+ggsave(gp_all_plots, file = "output/st03_09_gp_costs.svg",
+       device = "svg",
        width=12, height=5, units = "in", dpi = 300)
 
 # drug plots
 drug_all_plots <- ggarrange(drug_forest, drug_cost_plot, ncol = 1, labels = c("a", "b"))
-ggsave(drug_all_plots, file = "output/st03_09_drug_costs.png",
+ggsave(drug_all_plots, file = "output/st03_09_drug_costs.svg",
+       device = "svg",
        width=12, height=5, units = "in", dpi = 300)
 
 # hospital admission plot:
 hos_all_plots <- ggarrange(apc_forest,hos_cost_plot, ncol = 1, labels = c("a", "b"))
-ggsave(hos_all_plots, file = "output/st03_09_apc_costs.png",
+ggsave(hos_all_plots, file = "output/st03_09_apc_costs.svg",
+       device = "svg",
        width=12, height=5, units = "in", dpi = 300)
 
 # A&E plot:
 ane_plots <- ggarrange(ane_forest, ane_cost_plot, ncol = 1, labels = c("a", "b"))
-ggsave(ane_plots, file = "output/st03_09_ane_costs.png",
+ggsave(ane_plots, file = "output/st03_09_ane_costs.svg",
+       device = "svg",
        width=12, height=5, units = "in", dpi = 300)
 
 # opa plots: 
 opa_plots <- ggarrange(opa_forest, ops_cost_plot, ncol = 1, labels = c("a", "b"))
-ggsave(opa_plots, file = "output/st03_09_opa_costs.png",
+ggsave(opa_plots, file = "output/st03_09_opa_costs.svg",
+       device = "svg",
        width=12, height=5, units = "in", dpi = 300)
