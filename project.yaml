@@ -677,7 +677,13 @@ actions:
       highly_sensitive:
         total_cohort: output/dataset_total_n.csv.gz
 
-        
+  qc_00_check_exlcusion_flow_chart:
+    needs: [generate_list_gp_use_long_covid_dx, generate_dataset_comparator_exclude_gp_no_long_covid, qc_00_flow_chart_total_N]  
+    run: 
+      r:latest analysis/qc00_check_exclusion.R
+    outputs:
+      moderately_sensitive:
+        for_flow_chart: output/qc00_check_exclusion_flow_chart.csv           
         
 # # # QC step:         
   qc_01examine_unmatched_data:
