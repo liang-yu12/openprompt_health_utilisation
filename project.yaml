@@ -666,6 +666,18 @@ actions:
 
 
 # QC steps: -----------
+
+# # # QC step: for flow chart  
+  qc_00_flow_chart_total_N:
+    run: 
+      ehrql:v0 generate-dataset
+        analysis/dataset_definition_qc_total_n.py
+        --output output/dataset_total_n.csv.gz
+    outputs:
+      highly_sensitive:
+        total_cohort: output/dataset_total_n.csv.gz
+
+        
         
 # # # QC step:         
   qc_01examine_unmatched_data:
