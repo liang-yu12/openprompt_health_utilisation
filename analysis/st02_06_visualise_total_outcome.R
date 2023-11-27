@@ -92,7 +92,7 @@ two_forest <- forest(
       lower = list(combine$lci, combine$lci2),
       upper = list(combine$hci,combine$hci2),
       ci_column = c(2, 4),
-      xlim = list(c(1, 9), c(1, 2)),
+      xlim = list(c(1, 9), c(1, 1.7)),
       ref_line = 1,
       theme = tm)
 plot(two_forest)
