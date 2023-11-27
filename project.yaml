@@ -211,7 +211,7 @@ actions:
       r:latest analysis/st02_06_visualise_total_outcome.R
     outputs:
       moderately_sensitive:
-        outcomes_plots: output/st02_06_total_healthcare_visits.png
+        outcomes_plots: output/st02_06_total_healthcare_visits.svg
 
 
 # # Total primary care utilisation  - hurdle
