@@ -43,8 +43,8 @@ ggplot() +
       annotate("text", x = 5, y=0.35, label = "Historical records",hjust = 0.2) 
 
 
-ggsave(file = "output/st05_historical_smooth.jpg", width = 8, height = 4)
+ggsave(file = "output/st05_historical_smooth.svg", width = 8, height = 4)
 
 
-ggsave(file = "output/st05_smooth_comparison.jpg", width = 12, height = 4)
+ggsave(file = "output/st05_smooth_comparison.svg", width = 12, height = 4)
 

@@ -70,5 +70,5 @@ ggplot() +
       annotate("text", x = 25, y=0.35, label = "Contemporary records",hjust = 0.2)
 
 
-ggsave(file = "output/st05_smooth_comparison.jpg", width = 12, height = 4)
+ggsave(file = "output/st05_smooth_comparison.svg", width = 12, height = 4)
 
