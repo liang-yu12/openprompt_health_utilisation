@@ -15,7 +15,8 @@ full <- all_cost %>%
       scale_y_continuous("Average healthcare cost (£)")
 
 ggsave(full, 
-       filename = "st_fig_04_cumulative_costs.png",
+       filename = "st_fig_04_cumulative_costs.svg",
+       device = "svg", 
        path = here("output"),
        dpi = 400)
 

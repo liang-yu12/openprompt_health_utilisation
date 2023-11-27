@@ -8,7 +8,7 @@ source("analysis/dm03_5_matched_pivot_long.R")
 
 # Showing the percentage of zero ----
 
-png(file=here("output", "st_sup_1_5_explore_zero_percentage.png"),
+svg(file=here("output", "st_sup_1_5_explore_zero_percentage.svg"),
     width=1200, height=600)
 # plots
 matched_data_ts %>% mutate(month=as.numeric(month)) %>% 

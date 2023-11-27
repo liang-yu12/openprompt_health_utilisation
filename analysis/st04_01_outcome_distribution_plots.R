@@ -27,12 +27,12 @@ cost_distribution_his <- matched_cost_12m %>%
 both_distribution_plot <- ggarrange(visit_distribution_his, cost_distribution_his, 
           ncol = 1, labels = c("a", "b")) 
 
-ggsave(both_distribution_plot, file = "output/st04_01_total_outcome_distribution.png",
+ggsave(both_distribution_plot, file = "output/st04_01_total_outcome_distribution.svg",
        width=9, height=12, units = "in", dpi = 300)
 
 # Showing the percentage of zero ----
 
-png(file=here("output", "st04_01_explore_zero_percentage.png"),
+png(file=here("output", "st04_01_explore_zero_percentage.svg"),
     width=1200, height=600)
 # plots
 matched_data_ts %>% mutate(month=as.numeric(month)) %>% 

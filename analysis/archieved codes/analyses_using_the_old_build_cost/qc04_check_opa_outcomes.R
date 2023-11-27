@@ -139,7 +139,7 @@ explore_hx_opa_non_zero <- hx_data %>% filter(non_zero>0) %>%
 
 
 # Plots checking distribution:
-png(file=here("output", "opa_distribution_compare.png"),
+svg(file=here("output", "opa_distribution_compare.svg"),
     width=1800, height=900)
 
 ggarrange((matched_data_opa_12m %>% filter(non_zero>0) %>% 

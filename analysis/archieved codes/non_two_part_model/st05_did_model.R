@@ -44,7 +44,7 @@ predicted_crude_value <- predicted_crude_value %>%
 
 
 # visualised the data
-png(file=here("output", "st05_did_crude.png"), width=1200, height=600)
+svg(file=here("output", "st05_did_crude.svg"), width=1200, height=600)
 
 ggplot(predicted_crude_value, aes(x= time,
                                   y= visits,
@@ -107,7 +107,7 @@ predicted_adj_value <- predicted_adj_value %>%
 
 
 # visualised the data
-png(file=here("output", "st05_did_adj.png"), width=1200, height=600)
+svg(file=here("output", "st05_did_adj.svg"), width=1200, height=600)
 
 ggplot(predicted_adj_value, aes(x= time, y= visits, color = exposure)) +
       geom_point() + geom_errorbar(aes(ymin=lci, ymax=hci), width=0.2) +

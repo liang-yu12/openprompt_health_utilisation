@@ -58,8 +58,8 @@ hos_bar <- ggplot(data = hos_visits, aes(x = stratum, y = visits, fill = exposur
 # Combine plots: 
 hos_plots <- ggarrange(hos_forest, hos_bar, ncol = 1)
 
-ggsave(hos_plots, file = "output/st03_05_stratum_hos_visits.png",
-       width=10, height=5, units = "in", dpi = 300)
+ggsave(hos_plots, file = "output/st03_05_stratum_hos_visits.svg",
+       device = "svg", width=10, height=5, units = "in", dpi = 300)
 
 
 # 2. Sex stratum -----
@@ -107,8 +107,8 @@ sex_bar <- ggplot(data = sex_visits, aes(x = stratum, y = visits, fill = exposur
 # Combine plots: 
 sex_plots <- ggarrange(sex_forest, sex_bar, ncol = 1)
 
-ggsave(sex_plots, file = "output/st03_05_stratum_sex_visits.png",
-       width=8, height=5, units = "in", dpi = 300)
+ggsave(sex_plots, file = "output/st03_05_stratum_sex_visits.svg",
+       device = "svg", width=8, height=5, units = "in", dpi = 300)
 
 
 # 3. Age categories: ------
@@ -156,5 +156,5 @@ age_bar <- ggplot(data = age_visits, aes(x = stratum, y = visits, fill = exposur
 # Combine plots: 
 age_plots <- ggarrange(age_forest, age_bar, ncol = 1)
 
-ggsave(age_plots, file = "output/st03_05_stratum_age_visits.png",
-       width=8, height=5, units = "in", dpi = 300)
+ggsave(age_plots, file = "output/st03_05_stratum_age_visits.svg",
+       device = "svg", width=8, height=5, units = "in", dpi = 300)

@@ -16,7 +16,7 @@ crude <- all_visit %>% filter(model == "Crude") %>%
 
 # save
 ggsave(crude, 
-       filename = "st_04_crude_healthcare_visit.png",
+       filename = "st_04_crude_healthcare_visit.svg",device = "svg", 
        path = here("output"),
        dpi = 400)
 
@@ -30,7 +30,8 @@ partially <- all_visit %>% filter(model == "Partially adjusted") %>%
 
 
 ggsave(partially, 
-       filename = "st_04_partial_adj_healthcare_visit.png",
+       filename = "st_04_partial_adj_healthcare_visit.svg",
+       device = "svg", 
        path = here("output"),
        dpi = 400)
 
@@ -43,7 +44,8 @@ full <- all_visit %>% filter(model == "Fully adjusted") %>%
       geom_errorbar(aes(ymin = (mean-sd), ymax = (mean+sd)), width=0.2)
 
 ggsave(full, 
-       filename = "st_04_full_adj_healthcare_visit.png",
+       filename = "st_04_full_adj_healthcare_visit.svg",
+       device = "svg", 
        path = here("output"),
        dpi = 400)
 

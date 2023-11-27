@@ -105,7 +105,8 @@ ggplot(predicted_crude_value, aes(x= time,
       xlab("Time period") + ylab("Average healthcare visits") +
       guides(color=guide_legend(title="Exposure group")) 
 
-ggsave("output/st05_did_crude.png", width = 9, height = 4, units = "in")
+ggsave("output/st05_did_crude.svg", 
+       device = "svg", width = 9, height = 4, units = "in")
 
 
 # Adjusted two-part model -------
@@ -189,7 +190,8 @@ ggplot(predicted_adj_value, aes(x= time, y= visits, color = exposure)) +
   xlab("Time period") + ylab("Average healthcare visits") +
   guides(color=guide_legend(title="Exposure group")) 
 
-ggsave("output/st05_did_adj.png", width = 9, height = 4, units = "in")
+ggsave("output/st05_did_adj.svg", 
+       device = "svg", width = 9, height = 4, units = "in")
 
 
 # save the output table

@@ -107,7 +107,7 @@ ggplot(predicted_crude_value, aes(x= time,
       guides(color=guide_legend(title="Exposure group")) 
 
 
-ggsave("output/st05_did_crude.png", width = 9, height = 4, units = "in")
+ggsave("output/st05_did_crude.svg", width = 9, height = 4, units = "in")
 
 
 # Adjusted two-part model -------
@@ -193,7 +193,7 @@ ggplot(predicted_adj_value, aes(x= time, y= visits, color = exposure)) +
       scale_color_manual(values=c("#E1BE6A", "#40B0A6")) +
       guides(color=guide_legend(title="Exposure group")) 
 
-ggsave("output/st05_did_adj.png", width = 9, height = 4, units = "in")
+ggsave("output/st05_did_adj.svg", width = 9, height = 4, units = "in")
 
 
 # save the output table

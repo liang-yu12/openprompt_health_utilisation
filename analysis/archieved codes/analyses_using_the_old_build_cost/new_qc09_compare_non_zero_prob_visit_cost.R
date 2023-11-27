@@ -212,7 +212,8 @@ ggarrange(exp_inconsistent, com_inconsistent, common.legend = T,
           ncol = 2, labels = c("Long COVID group", "Comparator group")
           )%>% annotate_figure(top = text_grob("Total visits and costs comparison"))
 # save outputs:
-ggsave(file = "output/new_qc09_non_zero_counts_comparison.png", width = 12, height = 4)
+ggsave(file = "output/new_qc09_non_zero_counts_comparison.svg", 
+       device = "svg",width = 12, height = 4)
 
 
 # 2. GP visits comparisons -----
@@ -413,7 +414,8 @@ ggarrange(exp_gp_inconsistent, com_gp_inconsistent, common.legend = T,
           ncol = 2, labels = c("Long COVID group", "Comparator group")
 )%>% annotate_figure(top = text_grob("GP visits and costs comparison"))
 # save outputs:
-ggsave(file = "output/new_qc09_gp_non_zero_counts_comparison.png", width = 12, height = 4)
+ggsave(file = "output/new_qc09_gp_non_zero_counts_comparison.svg", 
+       device = "svg",width = 12, height = 4)
 
 
 # 3. Hospitalisation comparison: -------
@@ -615,7 +617,8 @@ ggarrange(exp_hos_inconsistent, com_hos_inconsistent, common.legend = T,
           ncol = 2, labels = c("Long COVID group", "Comparator group")
 )%>% annotate_figure(top = text_grob("Hospital admission and costs comparison"))
 # save outputs:
-ggsave(file = "output/new_qc09_hos_non_zero_counts_comparison.png", width = 12, height = 4)
+ggsave(file = "output/new_qc09_hos_non_zero_counts_comparison.svg", 
+       device = "svg",width = 12, height = 4)
 
 
 # 4. A&E visit/costs: ----------
@@ -817,7 +820,8 @@ ggarrange(exp_ae_inconsistent, com_ae_inconsistent, common.legend = T,
           ncol = 2, labels = c("Long COVID group", "Comparator group")
 ) %>% annotate_figure(top = text_grob("A&E visits and costs comparison"))
 # save outputs:
-ggsave(file = "output/new_qc09_ae_non_zero_counts_comparison.png", width = 12, height = 4)
+ggsave(file = "output/new_qc09_ae_non_zero_counts_comparison.svg", 
+       device = "svg",width = 12, height = 4)
 
 # 5. Outpatient clinic visit/costs -----
 # # Long COVID exposure group: -----
@@ -1012,4 +1016,5 @@ ggarrange(exp_opa_inconsistent, com_opa_inconsistent, common.legend = T,
           ncol = 2, labels = c("Long COVID group", "Comparator group")
 ) %>% annotate_figure(top = text_grob("Outpatient clinic visits and costs comparison"))
 # save outputs:
-ggsave(file = "output/new_qc09_opa_non_zero_counts_comparison.png", width = 12, height = 4)
+ggsave(file = "output/new_qc09_opa_non_zero_counts_comparison.svg", 
+       device = "svg",width = 12, height = 4)

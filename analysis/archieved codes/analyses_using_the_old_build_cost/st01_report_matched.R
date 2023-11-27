@@ -144,7 +144,7 @@ c_2dose <- plot_vaccine_distribution("2 doses")
 d_3dose <- plot_vaccine_distribution("3 or more doses")
 
 # combine and save the outputs in a picture
-png(file=here("output", "st1_exporing_vax_index_date.png"),
+svg(file=here("output", "st1_exporing_vax_index_date.svg"),
     width=800, height=1200)
 ggarrange(a_0dose,b_1dose,c_2dose, d_3dose,
           ncol = 1, nrow = 4) 
@@ -158,7 +158,7 @@ matched_data %>%
 
 
 # check missing pattern:
-png(file=here("output", "missing_pattern_current.png"),
+svg(file=here("output", "missing_pattern_current.svg"),
     width=600, height=600)
 matched_data %>% 
       missing_pattern(dependent, explanatory)

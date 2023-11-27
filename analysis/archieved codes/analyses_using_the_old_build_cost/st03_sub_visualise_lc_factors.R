@@ -292,8 +292,8 @@ all_two_forest <- forest(
 plot(all_two_forest)
 
 
-ggsave(all_two_forest, file = "output/st03_sub_all_factors.png",
-       width=20, height=14, units = "in", dpi = 300)
+ggsave(all_two_forest, file = "output/st03_sub_all_factors.svg",
+       device = "svg", width=20, height=14, units = "in", dpi = 300)
 
 
 # 2. LC only subgroup -----
@@ -581,8 +581,8 @@ two_forest <- forest(
 plot(two_forest)
 
 
-ggsave(two_forest, file = "output/st03_sub_lc_factors.png",
-       width=20, height=14, units = "in", dpi = 300)
+ggsave(two_forest, file = "output/st03_sub_lc_factors.svg",
+       device = "svg", width=20, height=14, units = "in", dpi = 300)
 
 
 
@@ -857,8 +857,8 @@ nolc_two_forest <- forest(
 plot(nolc_two_forest)
 
 
-ggsave(nolc_two_forest, file = "output/st03_sub_nolc_factors.png",
-       width=20, height=14, units = "in", dpi = 300)
+ggsave(nolc_two_forest, file = "output/st03_sub_nolc_factors.svg",
+       device = "svg", width=20, height=14, units = "in", dpi = 300)
 
 
 # Predicted across subgroups:
@@ -876,5 +876,5 @@ subgroup_visit_bar <- ggplot(data = subgroup_visits,
       scale_x_discrete(labels = c("All participants", "Long COVID only subgroup", "No long COVID subgroup"))
 
 
-ggsave(subgroup_visit_bar, file = "output/st03_sub_all_lc_nolc_predicted_visits.png",
-       width=8, height=6, units = "in", dpi = 300)
+ggsave(subgroup_visit_bar, file = "output/st03_sub_all_lc_nolc_predicted_visits.svg",
+       device = "svg", width=8, height=6, units = "in", dpi = 300)
