@@ -40,7 +40,8 @@ ggplot() +
       annotate("text", x = 5, y=0.35, label = "Historical healthcare utilisation",hjust = 0.2) 
 
 
-ggsave(file = "output/st05_historical_smooth.jpg", width = 12, height = 6)
+ggsave(file = "output/st05_historical_smooth.svg", 
+       device = "svg",width = 12, height = 6)
 
 
 
@@ -68,5 +69,5 @@ ggplot(summary_crude_data, aes(x = time, y = mean_visits, color = exposure)) +
       scale_color_manual(values=c("#1E88E5", "#D81B60")) +
       guides(color=guide_legend(title="Exposure group")) 
 
-ggsave(file = "output/st05_observed_his_now_line.jpg", 
-       width = 9, height = 4, units = "in")
+ggsave(file = "output/st05_observed_his_now_line.svg", 
+       device = "svg", width = 9, height = 4, units = "in")
