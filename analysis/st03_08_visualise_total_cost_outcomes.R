@@ -124,7 +124,8 @@ cbp1 <- c("#E66100", "#5D3A9B")
 # Combine plots together : ----------
 
 all_cost_plots <- ggarrange(two_forest, cost_barplot, ncol = 1, labels = c("a", "b"))
-ggsave(all_cost_plots, file = "output/st03_08_total_cost.png",
+ggsave(all_cost_plots, file = "output/st03_08_total_cost.svg",
+       device = "svg",
        width=14, height=5,  units = "in", dpi = 300)
 
 
