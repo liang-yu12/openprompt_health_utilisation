@@ -120,7 +120,8 @@ gp_bar <- visit_bar_fc(predicted_gp_visits, "Average GP consultation frequency")
 
 # combine and save outputs
 gp_plots <- ggarrange(gp_only_forest_plot, gp_bar, ncol = 1, labels = c("a", "b"))
-ggsave(gp_plots, file = "output/st02_02_03_gp_only_visits.png",
+ggsave(gp_plots, file = "output/st02_02_03_gp_only_visits.svg",
+       device = "svg",
        width=14, height=5, units = "in", dpi = 300)
 
 
@@ -164,5 +165,6 @@ drug_bar <- visit_bar_fc(predicted_drug_visits, "Average prescription visit freq
 
 # combine and save outputs
 drug_visit_plots <- ggarrange(drug_visit_forest_plot, drug_bar, ncol = 1, labels = c("a", "b"))
-ggsave(drug_visit_plots, file = "output/st02_02_03_prescription_visits.png",
+ggsave(drug_visit_plots, file = "output/st02_02_03_prescription_visits.svg",
+       device = "svg",
        width=14, height=5, units = "in", dpi = 300)
