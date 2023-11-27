@@ -123,7 +123,8 @@ cbp1 <- c("#FFC20A", "#0C7BDC")
 # Combine plots together : ----------
 
 visits_all_plots <- ggarrange(two_forest, visits_barplot, ncol = 1, labels = c("a", "b"))
-ggsave(visits_all_plots, file = "output/st02_06_total_healthcare_visits.png",
+ggsave(visits_all_plots, file = "output/st02_06_total_healthcare_visits.svg",
+       device = "svg",
        width=12, height=5, units = "in", dpi = 300)
 
 
