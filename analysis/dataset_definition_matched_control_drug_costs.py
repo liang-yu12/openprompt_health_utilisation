@@ -44,7 +44,7 @@ dataset.end_date = minimum_of(dataset.end_death, dataset.end_deregist, dataset.e
 dataset.exposure = matched_matches.exposure
 
 # Add visits for any prescriptions:
-total_drug_visit(dataset, dataset.index_date, end_date=dataset.end_date)
+# total_drug_visit(dataset, dataset.index_date, end_date=dataset.end_date)
 
 # Add drug prescription frequencies by BNF chapters 
 # drugs: bnf ch1 : gi drugs
