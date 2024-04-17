@@ -92,7 +92,7 @@ adj_hurdle_outputs <- positive_nb_tidy_fu(adj_nb_12m) %>%
       mutate(time="12 months") %>% mutate(Adjustment = "Adjusted")
 
 # Save the detailed outputs to a text file:
-sink(here("output", "st02_01_total_reg_summary.txt"))
+sink(here("output", "st02_01_total_reg_summary_sens_gp_exclude1.txt"))
 print("# Crude binomial model output part 1 ---------")
 print(summary(crude_binomial_12m))
 print("# Crude hurdle model output part 2 ---------")
@@ -108,10 +108,10 @@ sink()
 
 # Combine total outputs and save:
 st03_01_total_binomial <- bind_rows(crude_binomial_outputs, adj_binomial_outputs)
-st03_01_total_binomial %>% write_csv(here("output", "st02_01_total_binomial.csv"))
+st03_01_total_binomial %>% write_csv(here("output", "st02_01_total_binomial_sens_gp_exclude1.csv"))
 
 st03_01_total_hurdle <- bind_rows(crude_hurdle_outputs, adj_hurdle_outputs)
-st03_01_total_hurdle %>% write_csv(here("output", "st02_01_total_hurdle.csv"))
+st03_01_total_hurdle %>% write_csv(here("output", "st02_01_total_hurdle_sens_gp_exclude1.csv"))
 
 
 # Predict the average healthcare visits in each group:  ----
@@ -169,7 +169,7 @@ adj_summarised_results <- avg_visit_predict_fn(dataset = adj_complete_12m,
       mutate(adjustment = "Adjusted")
 
 bind_rows(crude_summarised_results, adj_summarised_results) %>% 
-  write_csv(here("output", "st02_01_total_predicted_counts.csv"))
+  write_csv(here("output", "st02_01_total_predicted_counts_sens_gp_exclude1.csv"))
 
 
 # Summarize the datasets for output checking: -----
@@ -204,13 +204,13 @@ hurdle_model_count_fn <- function(data){
 bind_rows(
          (bi_model_count_fn(crude_complete_12m) %>% mutate(time = "12m") %>% mutate(model = "Crude")),
          (bi_model_count_fn(adj_complete_12m) %>% mutate(time = "12m") %>% mutate(model = "Adjusted"))) %>% 
-      write_csv("output/st02_01_total_binomial_model_counts.csv")
+      write_csv("output/st02_01_total_binomial_model_counts_sens_gp_exclude1.csv")
 
 
 bind_rows(
          (hurdle_model_count_fn(crude_complete_12m) %>% mutate(time = "12m") %>% mutate(model = "Crude")),
          (hurdle_model_count_fn(adj_complete_12m) %>% mutate(time = "12m") %>% mutate(model = "Adjusted"))) %>% 
-      write_csv("output/st02_01_total_hurdle_model_counts.csv")
+      write_csv("output/st02_01_total_hurdle_model_counts_sens_gp_exclude1.csv")
 
 
 
