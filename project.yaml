@@ -663,6 +663,29 @@ actions:
         inpute_opa_cost_gamma_model_check: output/st03_07_v2_inputed_opa_gamma_model_counts.csv
 
 
+# Sesntivity analysis: excluding the first GP visit record:
+  report_st02_01__sens_gp_exclude_1st:
+    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+    run: 
+      r:latest analysis/st02_01_now_total_visit_hurdel_sens_analysis
+    outputs: 
+      moderately_sensitive:
+        total_reg_summary_sens_gp_exclude1: output/st02_01_total_reg_summary_sens_gp_exclude1.txt
+        binomial_visits_sens_gp_exclude1: output/st02_01_total_binomial_sens_gp_exclude1.csv
+        hurdle_all_visits_sens_gp_exclude1: output/st02_01_total_hurdle_sens_gp_exclude1.csv
+        predicted_visits_sens_gp_exclude1: output/st02_01_total_predicted_counts_sens_gp_exclude1.csv
+        total_visit_bi_model_count_sens_gp_exclude1: output/st02_01_total_binomial_model_counts_sens_gp_exclude1.csv
+        total_visit_hurdle_count_sens_gp_exclude1: output/st02_01_total_hurdle_model_counts_sens_gp_exclude1.csv
+
+
+# Visualise the sensitivity analysis of exclusing first GP visit:
+  report_02_06_plot_main_visit_outcomes_sens_gp_exclude1:
+    needs: [report_st02_01__sens_gp_exclude_1st]
+    run:
+      r:latest analysis/st02_06_visualise_total_outcome_sens_gp_exclude1.R
+    outputs:
+      moderately_sensitive:
+        outcomes_plots_sens_gp_exclude1: output/st02_06_total_healthcare_visits_sens_gp_exclude1.svg
 
 
 # QC steps: -----------
