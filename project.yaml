@@ -327,6 +327,16 @@ actions:
         opa_visit_plots: output/st02_07_opa_visits.svg
 
 
+# # model counts combines
+  report_02_08_hurdle_model_counts:
+    needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
+    run: 
+      r:latest analysis/st02_01_now_visit_model_counts_rev.R
+    outputs: 
+      moderately_sensitive: 
+        visit_hurdle_model_count: output/st02_rev_model_counts.csv
+
+
 # Main outcome: total Costs using twopart model
 
   report_03_03_total_costs_twopart:
