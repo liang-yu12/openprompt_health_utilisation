@@ -677,7 +677,7 @@ actions:
   report_st02_01__sens_gp_exclude_1st:
     needs: [import_matched_exposure_update, import_matched_control_updates, import_matched_exposure_drug_cost, import_matched_controls_drug_costs]
     run: 
-      r:latest analysis/st02_01_now_total_visit_hurdel_sens_analysis
+      r:latest analysis/st02_01_now_total_visit_hurdel_sens_analysis.R
     outputs: 
       moderately_sensitive:
         total_reg_summary_sens_gp_exclude1: output/st02_01_total_reg_summary_sens_gp_exclude1.txt
