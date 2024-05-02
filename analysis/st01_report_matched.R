@@ -4,6 +4,54 @@ source("analysis/dm01_02_now_monthly_follow_up.R")
 # manually combine data
 matched_data <- bind_rows(lc_exp_matched, com_matched)
 
+
+# Additional data management of cost data: 
+# set cost = 0 if visit == 0; cost = existing cost if visit !=0
+# APC costs:
+matched_data <- matched_data %>% 
+      mutate(apc_cost_m1 = ifelse(hos_visit_m1!=0, apc_cost_m1, 0)) %>% 
+      mutate(apc_cost_m2 = ifelse(hos_visit_m2!=0, apc_cost_m2, 0)) %>%
+      mutate(apc_cost_m3 = ifelse(hos_visit_m3!=0, apc_cost_m3, 0)) %>%
+      mutate(apc_cost_m4 = ifelse(hos_visit_m4!=0, apc_cost_m4, 0)) %>%
+      mutate(apc_cost_m5 = ifelse(hos_visit_m5!=0, apc_cost_m5, 0)) %>%
+      mutate(apc_cost_m6 = ifelse(hos_visit_m6!=0, apc_cost_m6, 0)) %>%
+      mutate(apc_cost_m7 = ifelse(hos_visit_m7!=0, apc_cost_m7, 0)) %>%
+      mutate(apc_cost_m8 = ifelse(hos_visit_m8!=0, apc_cost_m8, 0)) %>%
+      mutate(apc_cost_m9 = ifelse(hos_visit_m9!=0, apc_cost_m9, 0)) %>%
+      mutate(apc_cost_m10 = ifelse(hos_visit_m10!=0, apc_cost_m10, 0)) %>%
+      mutate(apc_cost_m11 = ifelse(hos_visit_m11!=0, apc_cost_m11, 0)) %>%
+      mutate(apc_cost_m12 = ifelse(hos_visit_m12!=0, apc_cost_m12, 0))
+
+# OPA costs: 
+matched_data <- matched_data %>% 
+      mutate(opd_cost_m1 = ifelse(opa_visit_m1!=0, opd_cost_m1, 0)) %>% 
+      mutate(opd_cost_m2 = ifelse(opa_visit_m2!=0, opd_cost_m2, 0)) %>%
+      mutate(opd_cost_m3 = ifelse(opa_visit_m3!=0, opd_cost_m3, 0)) %>%
+      mutate(opd_cost_m4 = ifelse(opa_visit_m4!=0, opd_cost_m4, 0)) %>%
+      mutate(opd_cost_m5 = ifelse(opa_visit_m5!=0, opd_cost_m5, 0)) %>%
+      mutate(opd_cost_m6 = ifelse(opa_visit_m6!=0, opd_cost_m6, 0)) %>%
+      mutate(opd_cost_m7 = ifelse(opa_visit_m7!=0, opd_cost_m7, 0)) %>%
+      mutate(opd_cost_m8 = ifelse(opa_visit_m8!=0, opd_cost_m8, 0)) %>%
+      mutate(opd_cost_m9 = ifelse(opa_visit_m9!=0, opd_cost_m9, 0)) %>%
+      mutate(opd_cost_m10 = ifelse(opa_visit_m10!=0, opd_cost_m10, 0)) %>%
+      mutate(opd_cost_m11 = ifelse(opa_visit_m11!=0, opd_cost_m11, 0)) %>%
+      mutate(opd_cost_m12 = ifelse(opa_visit_m12!=0, opd_cost_m12, 0))
+
+# A&E cost:
+matched_data <- matched_data %>% 
+      mutate(er_cost_m1 = ifelse(ae_visit_m1!=0, er_cost_m1, 0)) %>% 
+      mutate(er_cost_m2 = ifelse(ae_visit_m2!=0, er_cost_m2, 0)) %>%
+      mutate(er_cost_m3 = ifelse(ae_visit_m3!=0, er_cost_m3, 0)) %>%
+      mutate(er_cost_m4 = ifelse(ae_visit_m4!=0, er_cost_m4, 0)) %>%
+      mutate(er_cost_m5 = ifelse(ae_visit_m5!=0, er_cost_m5, 0)) %>%
+      mutate(er_cost_m6 = ifelse(ae_visit_m6!=0, er_cost_m6, 0)) %>%
+      mutate(er_cost_m7 = ifelse(ae_visit_m7!=0, er_cost_m7, 0)) %>%
+      mutate(er_cost_m8 = ifelse(ae_visit_m8!=0, er_cost_m8, 0)) %>%
+      mutate(er_cost_m9 = ifelse(ae_visit_m9!=0, er_cost_m9, 0)) %>%
+      mutate(er_cost_m10 = ifelse(ae_visit_m10!=0, er_cost_m10, 0)) %>%
+      mutate(er_cost_m11 = ifelse(ae_visit_m11!=0, er_cost_m11, 0)) %>%
+      mutate(er_cost_m12 = ifelse(ae_visit_m12!=0, er_cost_m12, 0))
+
 # define total visits variables
 visit_cols <- c()
 for (i in 1:12) {
